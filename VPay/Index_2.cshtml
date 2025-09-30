@@ -1,0 +1,1700 @@
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+
+    string CheckPermission = "success";
+
+    string PermissionName = Request.Path.Split('/').Last().Split('.').First();
+    var result = bc.CheckPermission(BID,PermissionName);
+
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    string CheckLoginPermission = "success";
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckLoginPermission = "false";
+    }
+}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>VPay</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Favicon-->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap Select Css -->
+    <link href="~/VPay/assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/morrisjs/morris.min.css" />
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/VPay/assets/css/main.css">
+    <link rel="stylesheet" href="~/VPay/assets/css/color_skins.css">
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+
+    <!-- JQuery sweetalert Css -->
+    <link href="~/VPay/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!-- JQuery jquery-nestable Css -->
+    <link href="~/VPay/assets/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <!-- datetimepicker Css-->
+    <link href="~/VPay/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <!-- JQuery multi-select Css -->
+    <link href="~/VPay/assets/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ecommerce.css" rel="stylesheet" />
+    <!-- jquery-ui Css -->
+    <link href="~/VPay/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ui.tabs.overflowResize.css" rel="stylesheet" />
+    <!-- Jquery Core Js -->
+    <script src="~/VPay/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/VPay/assets/js/D3/d3.min.js"></script>
+    <script src="~/VPay/assets/bundles/libscripts.bundle.js"></script> <!--Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js)-->
+    <script src="~/VPay/assets/bundles/vendorscripts.bundle.js"></script>  <!--slimscroll, waves Scripts Plugin Js-->
+    <script src="~/VPay/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/VPay/assets/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
+    <script src="~/VPay/assets/bundles/morrisscripts.bundle.js"></script><!-- Morris Plugin Js -->
+    <script src="~/VPay/assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <script src="~/VPay/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+    <script src="~/VPay/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/VPay/assets/js/pages/index.js"></script>
+    <script src="~/VPay/assets/plugins/nestable/jquery.nestable.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="~/VPay/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
+    <script src="~/VPay/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/VPay/assets/plugins/jquery-datatable/dataTables.responsive.min.js"></script>
+    <script src="~/VPay/assets/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <!-- basic-form-elements Js -->
+    @*<script src="assets/js/pages/forms/basic-form-elements.js"></script>*@
+    <!-- datetimepicker Js -->
+    <script src="~/VPay/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/VPay/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <script src="~/VPay/assets/js/BackendJS/BackendAPI.js?20200326"></script>
+    <script src="~/VPay/assets/js/AutoNumeric.js"></script>
+    <script src="~/VPay/assets/js/ion.sound.min.js"></script>
+    <!-- JQuery 頁籤 Js -->
+    <script src="~/VPay/assets/js/jquery-ui.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.overflowResize.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.addTab.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.closable.js"></script>
+
+    <script src="~/VPay/assets/js/common.js"></script>
+
+    <style>
+
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black !important;
+            opacity: 1; /* Firefox */
+        }
+
+        .filter-option {
+            color: black !important;
+            opacity: 0.8;
+        }
+        /* fallback */
+        @@font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dtp-buttons {
+            display: none;
+        }
+
+        .navbar
+
+        .divided:hover {
+            cursor: pointer;
+        }
+
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: "Microsoft JhengHei";
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        form > label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            color: forestgreen !important;
+            background: #DDDDDD !important;
+            border-color: black !important;
+        }
+
+            .selectedItem:hover {
+                color: forestgreen;
+                background: #DDDDDD;
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #dff0d8 !important;
+        }
+
+        .show > .dropdown-toggle {
+            color: #fff !important;
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .btn-timeZone:hover {
+            cursor: pointer;
+        }
+        /*.dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }*/
+        .dtr-title {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: normal;
+        }
+
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .card_title {
+            font-size: 22px;
+        }
+
+        .card_subtitle {
+            padding: 20px;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft JhengHei";
+        }
+
+        * {
+            font-family: 微軟正黑體, 微軟雅黑體, Arial;
+        }
+        /*body{min-width: 1200px;}*/
+        /*body > .bg{background-image: url('../bg/davide-ragusa-716-unsplash.jpg');}*/
+        body > .bg {
+            background-image: url('assets/background/bg.jpg');
+        }
+        /*body > .bg{background-image: url('backgrounds/1.jpg');}*/
+        /*body > .bg{background-image: url('../bg/jeremy-bishop-171845-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/paul-carmona-276464-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/vinoth-ragunathan-96670-unsplash.jpg');}*/
+        body > .bg {
+            background-size: cover;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            filter: brightness(10);
+        }
+
+        .navbar-brand span {
+            color: #fff;
+        }
+        /*.navbar-nav > li > a i.fa-sync-alt, .navbar-nav > li > a i.fa-bell, .navbar-nav > li > a i.fa-caret-down{font-size: inherit;}*/
+        nav.navbar li > a {
+            color: #fff !important;
+        }
+
+        li.divided > a {
+            display: inline-block;
+            line-height: 30px;
+            padding: 0 15px;
+        }
+
+        span.label.label-transparent-black {
+            position: absolute;
+            top: -10px;
+            left: 26px;
+            z-index: 2;
+        }
+
+            span.label.label-transparent-black:before {
+                content: '';
+                background-color: #FF6B6B;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+            }
+
+        .displaynone, .overlay, .sidebar .menu .list .ml-menu, .menu_sm .sidebar .list li.header, .menu_sm .sidebar .list .detail, .menu_sm .sidebar .list a::before, .menu_sm .sidebar .list a::after, .menu_sm .sidebar .list a span {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .user .profile-photo {
+            display: inline-block;
+            width: 92px;
+            height: 92px;
+            margin: 0 0 4px 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+            transition: 0.2s all;
+        }
+
+            .user .profile-photo img {
+                width: 100%;
+            }
+
+        #current-user {
+            text-align: center;
+            list-style: none;
+            margin: 16px 0 0;
+        }
+
+            #current-user .account p {
+                color: #fff;
+            }
+
+            #current-user .account #layoutCompanyName {
+                font-size: 18px;
+                margin: 6px 0;
+            }
+
+            #current-user .account #layoutLoginAccount {
+                font-size: 14px;
+                font-weight: lighter;
+                margin: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+        #leftsidebar {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sidebar .menu .list a {
+            color: #eee;
+            padding: 12px 16px;
+        }
+
+            .sidebar .menu .list a span {
+                font-size: 16px;
+            }
+
+        .sidebar .menu .list .ml-menu li a {
+            padding: 10px 0 10px 60px;
+        }
+
+            .sidebar .menu .list .ml-menu li a:before {
+                content: '';
+            }
+
+        #timeShowBox {
+            color: #fff;
+            margin: 0;
+        }
+
+        #timeZoneSelect {
+            width: 90%;
+            height: 0;
+            margin: 8px auto 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 32px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+            transition: 0.3s all;
+            font-size: 0;
+        }
+
+            #timeZoneSelect:before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active {
+                height: 54px;
+                padding: 12px 0;
+            }
+
+                #timeZoneSelect.active:before {
+                    border-bottom: 5px solid #fff;
+                }
+
+            #timeZoneSelect .btn-timeZone {
+                display: -webkit-inline-flex;
+                display: -moz-inline-flex;
+                display: -ms-inline-flex;
+                display: -o-inline-flex;
+                display: inline-flex;
+                justify-content: center;
+                -ms-align-items: center;
+                align-items: center;
+                width: 88px;
+                height: 30px;
+                margin: 0 4px;
+                font-size: 12px;
+                color: transparent;
+                background-color: transparent;
+                border-radius: 4px;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active .btn-timeZone {
+                color: #fff;
+                background-color: #65C3DF;
+            }
+
+        .navbar {
+            min-height: 65px;
+            background-image: url('assets/background/nav_bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        ul.flex, .navLeft, .navRight {
+            display: -webkit-inline-flex !important;
+            display: -moz-inline-flex !important;
+            display: -ms-inline-flex !important;
+            display: -o-inline-flex !important;
+            display: inline-flex !important;
+            justify-content: space-between;
+            -ms-align-items: center;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+            .navLeft li:last-child {
+                position: absolute;
+                left: 214px;
+            }
+
+            .navRight li:nth-child(1), .navRight li:nth-child(2), .navRight li:nth-child(3) {
+                border-right: 1px solid #888;
+                height: 30px;
+            }
+
+        .navRight {
+            margin-right: 12px;
+        }
+        /*.navbar ul.nav li{position: absolute; top: 50%; transform: translateY(-50%);}*/
+        /*.navbar ul.nav li:nth-child(2){left: 150px;}
+        .navbar ul.nav li:nth-child(3){right: 340px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(3) p{margin: 0;}
+        .navbar ul.nav li:nth-child(4){right: 290px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(5){right: 242px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(6){right: 52px;}
+        .navbar ul.nav li:nth-child(7){right: 6px; border-left: 1px solid #888; height: 30px;}*/
+        .copyright {
+            position: absolute;
+            left: 28px;
+            bottom: 12px;
+            transition: 0.2s all;
+        }
+
+        body .copyright p {
+            margin: 0;
+            font-size: 12px;
+            color: #eee;
+        }
+
+        body.theme-cyan.menu_sm .copyright {
+            left: 4px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .profile-photo {
+            width: 52px;
+            height: 52px;
+            border-width: 2px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .account p {
+            display: none;
+        }
+
+        section.content {
+            margin: 65px 0px 0 250px;
+            background-color: #f5f5f5;
+            border-radius: 0;
+        }
+
+        .container-fluid > .row {
+            padding: 12px 0;
+        }
+
+        .dd-handle {
+            background: none;
+            border: 0;
+        }
+
+            .dd-handle:hover {
+                color: #45B6B0;
+            }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item > .dd-handle {
+            color: #575b61;
+            padding-left: 24px;
+        }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            width: 1px;
+            height: calc(100% + 10px);
+            height: -moz-calc(100% + 10px);
+            height: -webkit-calc(100% + 10px);
+            border-left: 0.5px solid #ddd;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item {
+            /*border-bottom: 1px solid #ddd;*/
+            margin: 6px 0;
+        }
+
+        li.dd-item {
+            padding: 0 12px;
+        }
+
+            li.dd-item > button {
+                position: absolute;
+                left: 10px;
+            }
+
+        .divCompanyTree > ol.dd-list > li.dd-item:last-child {
+            border: 0;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item > .dd-handle {
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 24px;
+        }
+
+        .theme-cyan .sidebar .menu .list {
+            padding: 0;
+        }
+
+            .theme-cyan .sidebar .menu .list > li {
+                padding: 0;
+                margin: 4px 12px;
+            }
+            /*.theme-cyan .sidebar .menu .list li ul li{padding: 0 12px;}*/
+            .theme-cyan .sidebar .menu .list li a:hover {
+                background-color: rgba(0,0,0,0.2);
+            }
+
+            .theme-cyan .sidebar .menu .list li ul {
+                background: rgba(0,0,0,0.35);
+            }
+
+            .theme-cyan .sidebar .menu .list li a:hover {
+                color: #fff;
+            }
+        /*.strongtitle{color: #6f7884; font-size: 22px;}*/
+        .col-lg-7.col-md-7.col-sm-7 > p {
+            margin: 0;
+        }
+
+        .block-header {
+            padding: 0 64px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+            .block-header h2 {
+                color: #565d67;
+                font-weight: bold;
+            }
+
+            .block-header .col {
+                padding: 16px;
+            }
+
+                .block-header .col.col-lg-9.col-md-9.col-sm-9 {
+                    display: -webkit-inline-flex;
+                    display: -moz-inline-flex;
+                    display: -ms-inline-flex;
+                    display: -o-inline-flex;
+                    display: inline-flex;
+                    -ms-align-items: center;
+                    align-items: center;
+                    border-left: 1px dashed #ddd;
+                }
+
+        .tips {
+            font-size: 12px;
+            color: #565d67;
+            padding-left: 12px;
+        }
+
+        #divtree {
+            padding: 0 24px;
+        }
+
+        @@media screen and (min-width: 1600px) {
+            #divtree {
+                padding: 0 56px;
+            }
+        }
+
+        .divtreeTool {
+            font-size: 0;
+        }
+
+            .divtreeTool button {
+                width: calc((100% - 6px * 2)/ 3 );
+                margin: 0 6px 6px 0;
+                font-size: 12px;
+            }
+
+                .divtreeTool button:last-child {
+                    margin-right: 0;
+                }
+
+            .divtreeTool .btn-divtreeTool {
+                padding: 12px 0;
+            }
+
+        .paper-wrap:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 0 42px 42px 0;
+            border-style: solid;
+            border-color: #ffffff #253856;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+        }
+
+        .card .header .row .col-lg-7.col-md-7.col-sm-7 {
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            -ms-align-items: center;
+            align-items: center;
+        }
+
+        table {
+            font-size: 14px !important;
+            color: #575b61 !important;
+        }
+
+        .card .body {
+            font-size: 14px !important;
+            color: #575b61 !important;
+            padding: 0 20px !important;
+        }
+
+            .card .body .row, #divCompanyPoint.card .body {
+                margin: 0 0 8px 0;
+            }
+
+        /*.card.wallet {
+            width: 120px;
+        }*/
+
+        .footer {
+            padding: 16px 0;
+        }
+        /*.theme-cyan .card .header h2:before{background: #45B6B0; top: -17px;}*/
+        .ortherText button {
+            margin: 0 8px;
+        }
+
+        .theme-cyan .btn-primary {
+            background: #65C3DF;
+        }
+
+        .dataTables_wrapper input[type="search"]:focus, .dataTables_wrapper input[type="search"]:active {
+            border-bottom: 2px solid #65C3DF;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+            margin: 16px 0 8px;
+        }
+
+
+        .theme-cyan .btn-primary:active, .theme-cyan .btn-primary:hover, .theme-cyan .btn-primary:focus {
+            background: #45B6B0;
+        }
+
+        .sorting_1:focus {
+            outline: 0;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #446288;
+        }
+
+        button.btn-circle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            line-height: 36px;
+        }
+
+        button.btn-round {
+            padding: 9px 24px;
+        }
+
+        table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+            background-color: #65C3DF;
+        }
+
+        footer.footer {
+            text-align: right;
+            padding: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+            footer.footer p {
+                display: inline-block;
+                margin: 0 20px 0 0;
+                font-size: 12px;
+                color: #aaa;
+            }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            /*color: forestgreen;*/
+            /*background: #DDDDDD;*/
+            border-color: black;
+        }
+
+            .selectedItem:hover {
+                /*color: forestgreen;*/
+                /*background: #DDDDDD;*/
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #a2aec7 !important;
+        }
+
+        .show > .dropdown-toggle {
+            /*color: #fff !important;*/
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+
+        .divDetailData .card {
+            background-color: #fff;
+        }
+
+        .divDetailData > .card > .header {
+            padding: 12px 16px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .divPointDetail {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+            .divPointDetail .footer {
+                padding: 0;
+            }
+
+            .divPointDetail .card.wallet {
+                border-right: 1px solid rgba(0,0,0,0.1) !important;
+                margin-bottom: 30px;
+                border-radius: 0;
+            }
+
+                .divPointDetail .card.wallet:last-child {
+                    border-right: 0;
+                }
+
+            .divPointDetail .card.wallet {
+                background: none;
+                box-shadow: none;
+            }
+
+                .divPointDetail .card.wallet .header {
+                    padding: 4px 20px 8px;
+                }
+
+                .divPointDetail .card.wallet h2:before {
+                    width: 16px;
+                    height: 2px;
+                    top: -4px;
+                }
+
+                .divPointDetail .card.wallet p.text-muted, .divPointDetail .card.wallet p.wallettext-muted {
+                    color: #6f7884 !important;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 18px;
+                }
+
+        /*.table-responsive .dataTables_length .btn-group button {
+            border-radius: 8px !important;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:active,
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:focus {
+            border-color: #fff;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button span {
+            color: #fff;
+        }*/
+
+        .table-responsive table th {
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+
+<link href="~/VPay/assets/chart/Chart.min.css" rel="stylesheet" />
+<style>
+    .index {
+        font-family: 'Microsoft JhengHei';
+    }
+
+    .engText {
+        font-family: monospace;
+    }
+
+    .header_div {
+        padding-left: 20px;
+        padding-bottom: 10px;
+    }
+
+    .bootstrap-select .btn.btn-round.btn-simple .filter-option {
+        font-family: sans-serif;
+        font-size: 22px;
+        color: burlywood;
+        font-weight: 800;
+    }
+
+    #DoughnutChart_percentages {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+<!-- Jquery Core Js -->
+<script src="~/VPay/assets/chart/Chart.min.js"></script>
+
+<body class="theme-cyan">
+    <div class="block-header paper-wrap">
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-3">
+                <h2>商户基本资料</h2>
+
+            </div>
+            <div class="col col-lg-9 col-md-9 col-sm-9 ortherText">
+
+                <div class="tips">
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="header">
+
+            </div>
+            <div class="body">
+
+
+                <div class="header_div" style="display:inline-block">
+                    <h6 style="font-size:18px;display:inline-block;margin-top: 10px;margin-right:10px;"> 切换钱包 : </h6>
+                    <select class="show-tick" id="select_currency"></select>
+                </div>
+                <div style="padding:10px;display:inline-block">
+                    <div style="margin:0" id="divCompanyPoint"></div>
+                </div>
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item inlineblock"><a class="nav-link engText" href="#" data-toggle="tab" data-day="1" aria-expanded="true">1Day</a></li>
+                    <li class="nav-item inlineblock"><a class="nav-link active engText" href="#" data-toggle="tab" data-day="7" aria-expanded="false">7Day</a></li>
+                    <li class="nav-item inlineblock"><a class="nav-link engText" href="#" data-toggle="tab" data-day="15" aria-expanded="false">15Day</a></li>
+                    <li class="nav-item inlineblock"><a class="nav-link engText" href="#" data-toggle="tab" data-day="30" aria-expanded="false">30Day</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>代收</strong>数据</h2>
+
+                    </div>
+                    <div class="body">
+                        <div>
+                            <canvas id="canvas_DoughnutChart"></canvas>
+                        </div>
+
+                        <div id="DoughnutChart_percentages">
+
+                        </div>
+                        <div id="DoughnutChart_NoData" style="text-align:center;display:none">
+                            <h5>没有符合的结果</h5>
+                        </div>
+                    </div>
+                    <div class="footer"></div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>详细</strong>数据</h2>
+                    </div>
+                    <div class="body">
+                        <div id="div_table_SummaryCompanyByDateTable">
+                            <table class="table table-bordered table-striped table-hover dataTable nowrap" id="table_SummaryCompanyByDateTable" style="width:100%"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>钱包</strong> 数据</h2>
+
+                    </div>
+                    <div class="body">
+                        <div>
+                            <canvas id="canvasLine"></canvas>
+
+                            <div id="canvasLine_NoData" style="text-align:center;display:none">
+                                <h5>没有符合的结果</h5>
+                            </div>
+                        </div>
+                        <div class="footer"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    var selCompanyid;
+    var selCurrencyType;
+    var isCreatedTable = false;
+    var seldays;
+    var DoughnutChart;
+    var lineChart;
+
+    $(document).ready(function () {
+                 if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        pageLoad();
+    });
+
+    function pageLoad() {
+        if ('@CheckLoginPermission' == 'false') {
+                location.href = "Login.cshtml";
+            }
+
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+        //取得目前商户ID
+        selCompanyid = AdminObject.forCompanyID;
+        //預設日期區間
+        seldays = "7";
+        //建立詳細數據空Table
+        createSummaryCompanyByDateTable2();
+        //建立幣別清單
+        createCurrencySelect();
+
+    }
+
+    function getDoughnutChartData() {
+        var StartDate = new Date();
+        switch (seldays) {
+            case "1":
+                break;
+            case "7":
+                StartDate.setDate(StartDate.getDate() - 7 + 1);
+                break;
+            case "15":
+                StartDate.setDate(StartDate.getDate() - 15 + 1);
+                break;
+            case "30":
+                StartDate.setDate(StartDate.getDate() - 30 + 1);
+                break;
+            default:
+        }
+
+        var searchData = {
+
+            CompanyID: selCompanyid,
+            StartDate: StartDate.toLocaleDateString(),
+            EndDate: new Date().toLocaleDateString(),
+            CurrencyType: selCurrencyType
+        }
+
+        api.getSummaryCompanyByDateResultForChart(searchData, function (success, obj) {
+
+            if (obj.ResultCode == 0) {
+                $('#DoughnutChart_NoData').hide();
+                $('#canvas_DoughnutChart').show();
+                $('#DoughnutChart_percentages').show();
+                createDoughnutChart(obj.SummaryCompanyByDates);
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+                    case 5:
+
+                        if (isCreatedTable) {
+                            Table.clear().draw();
+                        }
+                        $('#DoughnutChart_percentages').empty();
+                        $('#DoughnutChart_NoData').show();
+                        $('#canvas_DoughnutChart').hide();
+                        $('#DoughnutChart_percentages').hide();
+
+                        //warningAlert("沒有資料");
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+            }
+        });
+    }
+
+    function createDoughnutChart(data) {
+        var percentAmounts = [];
+        var backgroundColors = [];
+        var labels = [];
+        var percenthtml = '';
+        var array_li = [];
+
+        if (data.length > 0) {
+            getSummaryCompanyByDateTableResult(data[0].ServiceType);
+        }
+
+        $('#DoughnutChart_percentages').empty();
+        for (var i = 0; i < data.length; i++) {
+            var color = createColor();
+            percentAmounts.push(data[i].SummaryNetAmounts);
+            backgroundColors.push(color);
+            labels.push(data[i].ServiceTypeName);
+
+            array_li.push('<li class="col-3" style="border-top: 4px solid ' + color + '" ><p class= "os text-muted" >' + data[i].ServiceTypeName + '</p ><p class="os-percentage">' + data[i].SummaryNetAmountPercent + '<sup>%</sup></p></li >');
+        }
+        if (array_li.length != 0) {
+            if (array_li.length <= 4) {
+                var doc_ul = $('<ul class="os-percentages row"></ul>');
+                for (var i = 0; i < array_li.length; i++) {
+                    doc_ul.append(array_li[i]);
+                }
+                $('#DoughnutChart_percentages').append(doc_ul);
+            } else {
+
+                for (var i = 0; i < array_li.length; i++) {
+                    if (i == 0) {
+                        doc_ul = $('<ul class="os-percentages row"></ul>');
+                    }
+
+                    doc_ul.append(array_li[i]);
+
+                    if (i / 4 == 0 && i != 0) {
+                        $('#DoughnutChart_percentages').append(doc_ul);
+                        doc_ul = $('<ul class="os-percentages row"></ul>');
+                    }
+                }
+
+                if (doc_ul.children().length > 0) {
+                    $('#DoughnutChart_percentages').append(doc_ul);
+                }
+            }
+        }
+
+        var ctx = document.getElementById('canvas_DoughnutChart').getContext('2d');
+
+        //修正切換資料有殘影的問題
+        if (DoughnutChart) {
+            DoughnutChart.destroy();
+        }
+
+        DoughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: backgroundColors,
+                    data: percentAmounts
+                }]
+            },
+            options: {
+                scrollX: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false,
+                    text: ''
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                onClick: function (doc, e) {
+
+                    if (e.length > 0) {
+                        var serviceTypeEle = data.find(function (element) {
+                            return element.ServiceTypeName == e[0]._view.label
+                        })
+                        getSummaryCompanyByDateTableResult(serviceTypeEle.ServiceType);
+                    }
+                }
+            }
+        });
+        DoughnutChart.update();
+
+    }
+
+    function createSummaryCompanyByDateTable2() {
+        $("#table_SummaryCompanyByDateTable").DataTable({
+            columns: [
+                { "title": "日期", "data": "SummaryDate2" },
+                { "title": "服务名称", "data": "ServiceTypeName" },
+                { "title": "币别", "data": "CurrencyType" },
+                {
+                    "title": "每日代理储值量", "data": "SummaryAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日代理储值量(扣掉成本)", "data": "SummaryNetAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日占成金额变量", "data": "SummaryAgentAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            autoWidth: false,
+            pageLength: 5,
+            bLengthChange: false,
+            language: chineseTableLang,
+            order: [[0, "desc"]]
+        });
+    }
+
+    function createSummaryCompanyByDateTable(data) {
+        isCreatedTable = true;
+        Table = $("#table_SummaryCompanyByDateTable").DataTable({
+            data: data,
+            columns: [
+                { "title": "日期", "data": "SummaryDate2" },
+                { "title": "服务名称", "data": "ServiceTypeName" },
+                { "title": "币别", "data": "CurrencyType" },
+                {
+                    "title": "每日代理储值量", "data": "SummaryAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日代理储值量(扣掉成本)", "data": "SummaryNetAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日占成金额变量", "data": "SummaryAgentAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            autoWidth: false,
+            pageLength: 5,
+            bLengthChange: false,
+            order: [[0, "desc"]],
+            language: chineseTableLang
+        });
+    }
+
+    function createPointHistoryLineChartData(data) {
+
+        // y 軸的顯示
+        var yAxis = [];
+        // 資料集合，之後只要更新這個就好了。
+        var datas = [];
+        //設定Y軸數據
+        switch (seldays) {
+            case "1":
+                for (var i = 1; i < 25; i++) {
+                    yAxis.push(i + "时");
+                }
+                break;
+            case "7":
+                var StartDate = new Date();
+                StartDate.setDate(StartDate.getDate() - 7);
+                for (var i = 0; i < 7; i++) {
+                    yAxis.push(dateFormate(StartDate.setDate(StartDate.getDate() + 1)));
+                }
+                break;
+            case "15":
+                var StartDate = new Date();
+                StartDate.setDate(StartDate.getDate() - 15);
+                for (var i = 0; i < 15; i++) {
+                    yAxis.push(dateFormate(StartDate.setDate(StartDate.getDate() + 1)));
+                }
+                break;
+            case "30":
+                var StartDate = new Date();
+                StartDate.setDate(StartDate.getDate() - 30);
+                for (var i = 0; i < 30; i++) {
+                    yAxis.push(dateFormate(StartDate.setDate(StartDate.getDate() + 1)));
+                }
+                break;
+            default:
+                break;
+        }
+        var tmp_index = 0;
+        for (var i = 0; i < yAxis.length; i++) {
+            var tmpdata = "";
+            if (seldays == "1") {
+                if (tmp_index < data.length && yAxis[i] == data[tmp_index].CreateDate2 + "时") {
+                    tmpdata = data[tmp_index].Value;
+                    datas.push(tmpdata);
+                    tmp_index++;
+                }
+            }
+            else {
+                if (tmp_index < data.length && yAxis[i] == data[tmp_index].CreateDate2) {
+                    tmpdata = data[tmp_index].Value;
+                    datas.push(tmpdata);
+                    tmp_index++;
+                }
+            }
+
+
+            if (tmpdata == "") {
+                datas.push(0);
+            }
+        }
+
+        if (seldays == "30") {
+            var tmp_yAxis = [];
+            for (var i = 0; i < yAxis.length; i++) {
+                if (i % 3 == 0 || i == yAxis.length - 1) {
+                    tmp_yAxis.push(yAxis[i]);
+                }
+            }
+            yAxis = tmp_yAxis;
+
+            var tmp_data = [];
+            tmp_data.push(datas[0]);
+            for (var i = 0; i < datas.length; i++) {
+                if (i != 0 && i % 3 == 0) {
+                    tmp_data.push(datas[i] + datas[i - 1] + datas[i - 2]);
+                }
+            }
+
+            tmp_data.push(datas[datas.length - 1]);
+
+            datas = tmp_data;
+        }
+
+
+        var ctx = document.getElementById('canvasLine').getContext('2d');
+
+        //修正切換資料有殘影的問題
+        if (lineChart) {
+            lineChart.destroy();
+        }
+
+        lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: yAxis,
+                datasets: [{
+                    label: '钱包金额',
+                    data: datas,
+                    backgroundColor: "rgba(0,148,255,0.6)",
+                    lineTension: 0
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    mode: 'label',
+                    label: 'mylabel',
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+
+                            callback: function (value, index, values) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }]
+                }
+            }
+
+        });
+
+        lineChart.update();
+    }
+
+    function getCompanyPointHistoryTableResult() {
+        var StartDate = new Date();
+        switch (seldays) {
+            case "1":
+                break;
+            case "7":
+                StartDate.setDate(StartDate.getDate() - 7 + 1);
+                break;
+            case "15":
+                StartDate.setDate(StartDate.getDate() - 15 + 1);
+                break;
+            case "30":
+                StartDate.setDate(StartDate.getDate() - 30 + 1);
+                break;
+            default:
+        }
+
+        var data = {
+            CompanyID: selCompanyid,
+            StartDate: StartDate.toLocaleDateString(),
+            EndDate: new Date().toLocaleDateString(),
+            CurrencyType: selCurrencyType,
+            SearchDays: seldays
+        }
+
+        api.getCompanyPointHistoryTableResult(data, function (success, obj) {
+
+            if (obj.ResultCode == 0) {
+                $('#canvasLine').show();
+                $('#canvasLine_NoData').hide();
+                createPointHistoryLineChartData(obj.CompanyPointHistoryDates);
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+                    case 5:
+                        $('#canvasLine').hide();
+                        $('#canvasLine_NoData').show();
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+            }
+        });
+    }
+
+    function getSummaryCompanyByDateTableResult(serviceType) {
+        var StartDate = new Date();
+        switch (seldays) {
+            case "1":
+                break;
+            case "7":
+                StartDate.setDate(StartDate.getDate() - 7 + 1);
+                break;
+            case "15":
+                StartDate.setDate(StartDate.getDate() - 15 + 1);
+                break;
+            case "30":
+                StartDate.setDate(StartDate.getDate() - 30 + 1);
+                break;
+            default:
+        }
+
+        var data = {
+            CompanyID: selCompanyid,
+            StartDate: StartDate.toLocaleDateString(),
+            EndDate: new Date().toLocaleDateString(),
+            CurrencyType: selCurrencyType,
+            ServiceType: serviceType
+        }
+
+        api.getSummaryCompanyByDateResultByCurrencyType(data, function (success, obj) {
+            if (isCreatedTable) {
+                Table.clear().draw();
+            }
+            if (obj.ResultCode == 0) {
+                if (!isCreatedTable) {
+                    $("#div_table_SummaryCompanyByDateTable").empty();
+                    $("#div_table_SummaryCompanyByDateTable").append('<table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap" id="table_SummaryCompanyByDateTable"></table>');
+                    createSummaryCompanyByDateTable(obj.SummaryCompanyByDates);
+                } else {
+                    Table.rows.add(obj.SummaryCompanyByDates).draw(); // Add new data
+                }
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+                    case 5:
+                        //warningAlert("沒有資料");
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+            }
+        });
+    }
+
+    //新增幣別選項
+    function createCurrencySelect() {
+
+        $('#select_currency').html("");
+        let strCompanyPointDetail = "";
+        api.getCompanyPointTableResult(selCompanyid, function (s, o) {
+            if (s) {
+                if (o.ResultCode == 0) {
+                    $.each(o.CompanyPoints, function (i, item) {
+                        $("#select_currency").append('<option value="' + o.CompanyPoints[i].CurrencyType + '">' + o.CompanyPoints[i].CurrencyType + '</option>');
+                        if (i == 0) {
+                            selCurrencyType = o.CompanyPoints[i].CurrencyType;
+                        }
+                    })
+
+                    $('#select_currency').change(function () {
+
+                        selCurrencyType = $(this).val();
+
+                        changeCurrency();
+
+                    });
+
+                    if (selCurrencyType) {
+
+                        $("#select_currency").val(selCurrencyType);
+                        changeCurrency();
+                    }
+
+                    $('#select_currency').selectpicker('refresh');
+
+                } else {
+                    switch (o.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    //#region 商戶錢包資料
+    function reloadCompanyPoint() {
+
+        $("#divCompanyPoint").empty();
+        let strCompanyPointDetail = "";
+
+        api.getCompanyPointTableResult(selCompanyid, function (s, o) {
+            if (s) {
+                if (o.ResultCode == 0) {
+                    tempCompanyPoint = o.CompanyPoints;
+                    $.each(o.CompanyPoints, function (i, item) {
+                        if (selCurrencyType == o.CompanyPoints[i].CurrencyType) {
+                            var canUsePoint = toCurrency(o.CompanyPoints[i].PointValue - o.CompanyPoints[i].LockPointValue - o.CompanyPoints[i].FrozenPoint);
+                            strCompanyPointDetail += '<strong style="font-size:18px;">帐户金额： ' + toCurrency(o.CompanyPoints[i].PointValue) + ' ,可用金额 : ' + canUsePoint + ' ,不可用金额 : ' + toCurrency(o.CompanyPoints[i].LockPointValue) + ' ,冻结金额 : ' + toCurrency(o.CompanyPoints[i].FrozenPoint) + '</strong>';
+                        }
+                    })
+
+                    $("#divCompanyPoint").html(strCompanyPointDetail);
+                } else {
+                    switch (o.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+    //#endregion
+
+    function dateFormate(date) {
+        var today = new Date(date);
+        var year = today.getFullYear().toString();
+        var month = (today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1).toString() : (today.getMonth() + 1).toString();
+        var date = today.getDate() < 10 ? "0" + (today.getDate().toString()).toString() : today.getDate().toString();
+
+        return year + "/" + month + "/" + date;
+
+    }
+
+    function changeCurrency() {
+        //餘額
+        reloadCompanyPoint();
+        getDoughnutChartData();
+        getCompanyPointHistoryTableResult();
+    }
+
+    function createColor() {
+        var max = 255;
+        var min = 125;
+        var r = Math.floor(Math.random() * (max - min) + min);
+        var g = Math.floor(Math.random() * (max - min) + min);
+        var b = Math.floor(Math.random() * (max - min) + min);
+        var color = 'rgba(' + r + ',' + g + ',' + b + ',0.8)';
+        return color;
+    }
+    //切換日期事件
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+        seldays = $(this).attr("data-day") // activated tab;
+        getDoughnutChartData();
+        getCompanyPointHistoryTableResult();
+    });
+
+</script>

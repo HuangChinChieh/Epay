@@ -1,0 +1,95 @@
+﻿@{ 
+    string FileType;
+    string FileName;
+    string GetFilename;
+    string ID;
+    string MIMEName = "application/octet-stream";
+
+    FileType = Request["FileType"];
+    FileName = Request["FileName"];
+    ID = Request["ID"];
+    if (string.IsNullOrEmpty(FileName) == false)
+    {
+        int tmpIndex;
+        string extName = null;
+
+
+
+        if(string.IsNullOrEmpty(ID) == true)
+        {
+            GetFilename = Pay.SharedFolder + Pay.DirSplit + FileType + Pay.DirSplit + FileName;
+        }
+        else
+        {
+            GetFilename = Pay.SharedFolder + Pay.DirSplit + FileType + Pay.DirSplit + ID + Pay.DirSplit + FileName;
+        }
+
+        tmpIndex = GetFilename.LastIndexOf(".");
+        if (tmpIndex != -1)
+        {
+            extName = GetFilename.Substring(tmpIndex + 1).ToLower();
+        }
+
+        if (string.IsNullOrEmpty(extName) == false)
+        {
+            switch (extName)
+            {
+                case "jpg":
+                case "jpeg":
+                    MIMEName = "image/jpeg";
+                    break;
+                case "gif":
+                    MIMEName = "image/gif";
+                    break;
+                case "png":
+                    MIMEName = "image/png";
+                    break;
+                case "txt":
+                    MIMEName = "text/plain";
+                    break;
+                case "html":
+                    MIMEName = "text/html";
+                    break;
+                case "pdf":
+                    MIMEName = "application/pdf";
+                    break;
+                case "svg":
+                    MIMEName = "image/svg+xml";
+                    break;
+            }
+        }
+
+
+        try
+        {
+            if (extName == "pdf")
+            {
+                Response.AddHeader("Content-Type", MIMEName);
+                Response.AppendHeader("Content-Disposition", "attachment;filename=" + FileName);
+                Response.WriteFile(GetFilename);
+
+            }
+            else
+            {
+                Response.AddHeader("Content-Type", MIMEName);
+                Response.TransmitFile(GetFilename);
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
+        //Response.End();
+        Response.Flush();
+        Response.Close();
+    }
+    }
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <asp:Literal ID="Literal1" runat="server"></asp:Literal>
+    </body>
+</html>

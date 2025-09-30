@@ -1,0 +1,1822 @@
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+
+    string CheckPermission = "success";
+
+    string PermissionName = Request.Path.Split('/').Last().Split('.').First();
+    var result = bc.CheckPermission(BID,PermissionName);
+
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    string CheckLoginPermission = "success";
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckLoginPermission = "false";
+    }
+}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>VPay</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Favicon-->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap Select Css -->
+    <link href="~/VPay/assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/morrisjs/morris.min.css" />
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/VPay/assets/css/main.css">
+    <link rel="stylesheet" href="~/VPay/assets/css/color_skins.css">
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+
+    <!-- JQuery sweetalert Css -->
+    <link href="~/VPay/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!-- JQuery jquery-nestable Css -->
+    <link href="~/VPay/assets/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <!-- datetimepicker Css-->
+    <link href="~/VPay/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <!-- JQuery multi-select Css -->
+    <link href="~/VPay/assets/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ecommerce.css" rel="stylesheet" />
+    <!-- jquery-ui Css -->
+    <link href="~/VPay/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ui.tabs.overflowResize.css" rel="stylesheet" />
+    <!-- Jquery Core Js -->
+    <script src="~/VPay/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/VPay/assets/js/D3/d3.min.js"></script>
+    <script src="~/VPay/assets/bundles/libscripts.bundle.js"></script> <!--Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js)-->
+    <script src="~/VPay/assets/bundles/vendorscripts.bundle.js"></script>  <!--slimscroll, waves Scripts Plugin Js-->
+    <script src="~/VPay/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/VPay/assets/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
+    <script src="~/VPay/assets/bundles/morrisscripts.bundle.js"></script><!-- Morris Plugin Js -->
+    <script src="~/VPay/assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <script src="~/VPay/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+    <script src="~/VPay/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/VPay/assets/js/pages/index.js"></script>
+    <script src="~/VPay/assets/plugins/nestable/jquery.nestable.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="~/VPay/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
+    <script src="~/VPay/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/VPay/assets/plugins/jquery-datatable/dataTables.responsive.min.js"></script>
+    <script src="~/VPay/assets/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <!-- basic-form-elements Js -->
+    @*<script src="assets/js/pages/forms/basic-form-elements.js"></script>*@
+    <!-- datetimepicker Js -->
+    <script src="~/VPay/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/VPay/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <script src="~/VPay/assets/js/BackendJS/BackendAPI.js?20200326"></script>
+    <script src="~/VPay/assets/js/AutoNumeric.js"></script>
+    <script src="~/VPay/assets/js/ion.sound.min.js"></script>
+    <!-- JQuery 頁籤 Js -->
+    <script src="~/VPay/assets/js/jquery-ui.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.overflowResize.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.addTab.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.closable.js"></script>
+
+    <script src="~/VPay/assets/js/common.js"></script>
+
+    <style>
+
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black !important;
+            opacity: 1; /* Firefox */
+        }
+
+        .filter-option {
+            color: black !important;
+            opacity: 0.8;
+        }
+        /* fallback */
+        @@font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dtp-buttons {
+            display: none;
+        }
+
+        .navbar
+
+        .divided:hover {
+            cursor: pointer;
+        }
+
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: "Microsoft JhengHei";
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        form > label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            color: forestgreen !important;
+            background: #DDDDDD !important;
+            border-color: black !important;
+        }
+
+            .selectedItem:hover {
+                color: forestgreen;
+                background: #DDDDDD;
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #dff0d8 !important;
+        }
+
+        .show > .dropdown-toggle {
+            color: #fff !important;
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .btn-timeZone:hover {
+            cursor: pointer;
+        }
+        /*.dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }*/
+        .dtr-title {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: normal;
+        }
+
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .card_title {
+            font-size: 22px;
+        }
+
+        .card_subtitle {
+            padding: 20px;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft JhengHei";
+        }
+
+        * {
+            font-family: 微軟正黑體, 微軟雅黑體, Arial;
+        }
+        /*body{min-width: 1200px;}*/
+        /*body > .bg{background-image: url('../bg/davide-ragusa-716-unsplash.jpg');}*/
+        body > .bg {
+            background-image: url('assets/background/bg.jpg');
+        }
+        /*body > .bg{background-image: url('backgrounds/1.jpg');}*/
+        /*body > .bg{background-image: url('../bg/jeremy-bishop-171845-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/paul-carmona-276464-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/vinoth-ragunathan-96670-unsplash.jpg');}*/
+        body > .bg {
+            background-size: cover;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            filter: brightness(10);
+        }
+
+        .navbar-brand span {
+            color: #fff;
+        }
+        /*.navbar-nav > li > a i.fa-sync-alt, .navbar-nav > li > a i.fa-bell, .navbar-nav > li > a i.fa-caret-down{font-size: inherit;}*/
+        nav.navbar li > a {
+            color: #fff !important;
+        }
+
+        li.divided > a {
+            display: inline-block;
+            line-height: 30px;
+            padding: 0 15px;
+        }
+
+        span.label.label-transparent-black {
+            position: absolute;
+            top: -10px;
+            left: 26px;
+            z-index: 2;
+        }
+
+            span.label.label-transparent-black:before {
+                content: '';
+                background-color: #FF6B6B;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+            }
+
+        .displaynone, .overlay, .sidebar .menu .list .ml-menu, .menu_sm .sidebar .list li.header, .menu_sm .sidebar .list .detail, .menu_sm .sidebar .list a::before, .menu_sm .sidebar .list a::after, .menu_sm .sidebar .list a span {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .user .profile-photo {
+            display: inline-block;
+            width: 92px;
+            height: 92px;
+            margin: 0 0 4px 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+            transition: 0.2s all;
+        }
+
+            .user .profile-photo img {
+                width: 100%;
+            }
+
+        #current-user {
+            text-align: center;
+            list-style: none;
+            margin: 16px 0 0;
+        }
+
+            #current-user .account p {
+                color: #fff;
+            }
+
+            #current-user .account #layoutCompanyName {
+                font-size: 18px;
+                margin: 6px 0;
+            }
+
+            #current-user .account #layoutLoginAccount {
+                font-size: 14px;
+                font-weight: lighter;
+                margin: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+        #leftsidebar {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sidebar .menu .list a {
+            color: #eee;
+            padding: 12px 16px;
+        }
+
+            .sidebar .menu .list a span {
+                font-size: 16px;
+            }
+
+        .sidebar .menu .list .ml-menu li a {
+            padding: 10px 0 10px 60px;
+        }
+
+            .sidebar .menu .list .ml-menu li a:before {
+                content: '';
+            }
+
+        #timeShowBox {
+            color: #fff;
+            margin: 0;
+        }
+
+        #timeZoneSelect {
+            width: 90%;
+            height: 0;
+            margin: 8px auto 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 32px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+            transition: 0.3s all;
+            font-size: 0;
+        }
+
+            #timeZoneSelect:before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active {
+                height: 54px;
+                padding: 12px 0;
+            }
+
+                #timeZoneSelect.active:before {
+                    border-bottom: 5px solid #fff;
+                }
+
+            #timeZoneSelect .btn-timeZone {
+                display: -webkit-inline-flex;
+                display: -moz-inline-flex;
+                display: -ms-inline-flex;
+                display: -o-inline-flex;
+                display: inline-flex;
+                justify-content: center;
+                -ms-align-items: center;
+                align-items: center;
+                width: 88px;
+                height: 30px;
+                margin: 0 4px;
+                font-size: 12px;
+                color: transparent;
+                background-color: transparent;
+                border-radius: 4px;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active .btn-timeZone {
+                color: #fff;
+                background-color: #65C3DF;
+            }
+
+        .navbar {
+            min-height: 65px;
+            background-image: url('assets/background/nav_bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        ul.flex, .navLeft, .navRight {
+            display: -webkit-inline-flex !important;
+            display: -moz-inline-flex !important;
+            display: -ms-inline-flex !important;
+            display: -o-inline-flex !important;
+            display: inline-flex !important;
+            justify-content: space-between;
+            -ms-align-items: center;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+            .navLeft li:last-child {
+                position: absolute;
+                left: 214px;
+            }
+
+            .navRight li:nth-child(1), .navRight li:nth-child(2), .navRight li:nth-child(3) {
+                border-right: 1px solid #888;
+                height: 30px;
+            }
+
+        .navRight {
+            margin-right: 12px;
+        }
+        /*.navbar ul.nav li{position: absolute; top: 50%; transform: translateY(-50%);}*/
+        /*.navbar ul.nav li:nth-child(2){left: 150px;}
+        .navbar ul.nav li:nth-child(3){right: 340px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(3) p{margin: 0;}
+        .navbar ul.nav li:nth-child(4){right: 290px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(5){right: 242px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(6){right: 52px;}
+        .navbar ul.nav li:nth-child(7){right: 6px; border-left: 1px solid #888; height: 30px;}*/
+        .copyright {
+            position: absolute;
+            left: 28px;
+            bottom: 12px;
+            transition: 0.2s all;
+        }
+
+        body .copyright p {
+            margin: 0;
+            font-size: 12px;
+            color: #eee;
+        }
+
+        body.theme-cyan.menu_sm .copyright {
+            left: 4px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .profile-photo {
+            width: 52px;
+            height: 52px;
+            border-width: 2px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .account p {
+            display: none;
+        }
+
+        section.content {
+            margin: 65px 0px 0 250px;
+            background-color: #f5f5f5;
+            border-radius: 0;
+        }
+
+        .container-fluid > .row {
+            padding: 12px 0;
+        }
+
+        .dd-handle {
+            background: none;
+            border: 0;
+        }
+
+            .dd-handle:hover {
+                color: #45B6B0;
+            }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item > .dd-handle {
+            color: #575b61;
+            padding-left: 24px;
+        }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            width: 1px;
+            height: calc(100% + 10px);
+            height: -moz-calc(100% + 10px);
+            height: -webkit-calc(100% + 10px);
+            border-left: 0.5px solid #ddd;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item {
+            /*border-bottom: 1px solid #ddd;*/
+            margin: 6px 0;
+        }
+
+        li.dd-item {
+            padding: 0 12px;
+        }
+
+            li.dd-item > button {
+                position: absolute;
+                left: 10px;
+            }
+
+        .divCompanyTree > ol.dd-list > li.dd-item:last-child {
+            border: 0;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item > .dd-handle {
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 24px;
+        }
+
+        .theme-cyan .sidebar .menu .list {
+            padding: 0;
+        }
+
+            .theme-cyan .sidebar .menu .list > li {
+                padding: 0;
+                margin: 4px 12px;
+            }
+            /*.theme-cyan .sidebar .menu .list li ul li{padding: 0 12px;}*/
+            .theme-cyan .sidebar .menu .list li a:hover {
+                background-color: rgba(0,0,0,0.2);
+            }
+
+            .theme-cyan .sidebar .menu .list li ul {
+                background: rgba(0,0,0,0.35);
+            }
+
+            .theme-cyan .sidebar .menu .list li a:hover {
+                color: #fff;
+            }
+        /*.strongtitle{color: #6f7884; font-size: 22px;}*/
+        .col-lg-7.col-md-7.col-sm-7 > p {
+            margin: 0;
+        }
+
+        .block-header {
+            padding: 0 64px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+            .block-header h2 {
+                color: #565d67;
+                font-weight: bold;
+            }
+
+            .block-header .col {
+                padding: 16px;
+            }
+
+                .block-header .col.col-lg-9.col-md-9.col-sm-9 {
+                    display: -webkit-inline-flex;
+                    display: -moz-inline-flex;
+                    display: -ms-inline-flex;
+                    display: -o-inline-flex;
+                    display: inline-flex;
+                    -ms-align-items: center;
+                    align-items: center;
+                    border-left: 1px dashed #ddd;
+                }
+
+        .tips {
+            font-size: 12px;
+            color: #565d67;
+            padding-left: 12px;
+        }
+
+        #divtree {
+            padding: 0 24px;
+        }
+
+        @@media screen and (min-width: 1600px) {
+            #divtree {
+                padding: 0 56px;
+            }
+        }
+
+        .divtreeTool {
+            font-size: 0;
+        }
+
+            .divtreeTool button {
+                width: calc((100% - 6px * 2)/ 3 );
+                margin: 0 6px 6px 0;
+                font-size: 12px;
+            }
+
+                .divtreeTool button:last-child {
+                    margin-right: 0;
+                }
+
+            .divtreeTool .btn-divtreeTool {
+                padding: 12px 0;
+            }
+
+        .paper-wrap:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 0 42px 42px 0;
+            border-style: solid;
+            border-color: #ffffff #253856;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+        }
+
+        .card .header .row .col-lg-7.col-md-7.col-sm-7 {
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            -ms-align-items: center;
+            align-items: center;
+        }
+
+        table {
+            font-size: 14px !important;
+            color: #575b61 !important;
+        }
+
+        .card .body {
+            font-size: 14px !important;
+            color: #575b61 !important;
+            padding: 0 20px !important;
+        }
+
+            .card .body .row, #divCompanyPoint.card .body {
+                margin: 0 0 8px 0;
+            }
+
+        /*.card.wallet {
+            width: 120px;
+        }*/
+
+        .footer {
+            padding: 16px 0;
+        }
+        /*.theme-cyan .card .header h2:before{background: #45B6B0; top: -17px;}*/
+        .ortherText button {
+            margin: 0 8px;
+        }
+
+        .theme-cyan .btn-primary {
+            background: #65C3DF;
+        }
+
+        .dataTables_wrapper input[type="search"]:focus, .dataTables_wrapper input[type="search"]:active {
+            border-bottom: 2px solid #65C3DF;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+            margin: 16px 0 8px;
+        }
+
+
+        .theme-cyan .btn-primary:active, .theme-cyan .btn-primary:hover, .theme-cyan .btn-primary:focus {
+            background: #45B6B0;
+        }
+
+        .sorting_1:focus {
+            outline: 0;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #446288;
+        }
+
+        button.btn-circle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            line-height: 36px;
+        }
+
+        button.btn-round {
+            padding: 9px 24px;
+        }
+
+        table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+            background-color: #65C3DF;
+        }
+
+        footer.footer {
+            text-align: right;
+            padding: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+            footer.footer p {
+                display: inline-block;
+                margin: 0 20px 0 0;
+                font-size: 12px;
+                color: #aaa;
+            }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            /*color: forestgreen;*/
+            /*background: #DDDDDD;*/
+            border-color: black;
+        }
+
+            .selectedItem:hover {
+                /*color: forestgreen;*/
+                /*background: #DDDDDD;*/
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #a2aec7 !important;
+        }
+
+        .show > .dropdown-toggle {
+            /*color: #fff !important;*/
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+
+        .divDetailData .card {
+            background-color: #fff;
+        }
+
+        .divDetailData > .card > .header {
+            padding: 12px 16px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .divPointDetail {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+            .divPointDetail .footer {
+                padding: 0;
+            }
+
+            .divPointDetail .card.wallet {
+                border-right: 1px solid rgba(0,0,0,0.1) !important;
+                margin-bottom: 30px;
+                border-radius: 0;
+            }
+
+                .divPointDetail .card.wallet:last-child {
+                    border-right: 0;
+                }
+
+            .divPointDetail .card.wallet {
+                background: none;
+                box-shadow: none;
+            }
+
+                .divPointDetail .card.wallet .header {
+                    padding: 4px 20px 8px;
+                }
+
+                .divPointDetail .card.wallet h2:before {
+                    width: 16px;
+                    height: 2px;
+                    top: -4px;
+                }
+
+                .divPointDetail .card.wallet p.text-muted, .divPointDetail .card.wallet p.wallettext-muted {
+                    color: #6f7884 !important;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 18px;
+                }
+
+        /*.table-responsive .dataTables_length .btn-group button {
+            border-radius: 8px !important;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:active,
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:focus {
+            border-color: #fff;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button span {
+            color: #fff;
+        }*/
+
+        .table-responsive table th {
+            font-weight: normal;
+        }
+    </style>
+</head>
+<script src="~/VPay/assets/js/xlsx.core.min.js"></script>
+<script src="~/VPay/assets/js/moment.min.js"></script>
+<script src="~/VPay/assets/js/daterangepicker.js"></script>
+<link href="~/VPay/assets/css/daterangepicker.css" rel="stylesheet" />
+<style>
+    .dropdown-menu {
+        max-height: 300px !important;
+    }
+</style>
+<body class="theme-cyan">
+    <div class="block-header paper-wrap">
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-3">
+                <h2>提现查询</h2>
+            </div>
+            <div class="col col-lg-9 col-md-9 col-sm-9">
+                <div class="tips">
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col col-lg-7 col-md-7 col-sm-7">
+
+                            </div>
+                            <div class="col col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button id="btnadd" type="button" class="btn btn-raised btn-primary btn-round waves-effect float-right">提现申请</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div>
+                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 状态 : </h6>
+                            </div>
+                            <select class="show-tick" id="select_Status"></select>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;margin-top:10px">
+
+                            <div>
+                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 序号 : </h6>
+                            </div>
+                            <div style="width:300px">
+                                <div class="input-group">
+                                    <input id="input_WithdrawSerial" type="text" class="form-control date">
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div id="searchfield" class="row" style="margin-bottom: 10px;">
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 时间 : </h6>
+                            <input id="dateinput" style="width:250px;height: 41px;margin-right:5px" class="form-control" />
+                            <select id="deteselect" style="width: 110px;">
+                                <option value="0">今日</option>
+                                <option value="1">昨日</option>
+                                <option value="2">过去7日</option>
+                                <option value="3">过去30日</option>
+                                <option value="4">这个月</option>
+                                <option value="5">上个月</option>
+                                <option value="6">自定义</option>
+                            </select>
+                            <div>
+                                <button style="margin-left: 15px;" class="btn btn-raised btn-primary btn-round waves-effect" type="button" id="btnsearch">搜寻</button>
+                                <button id="Excel_download" type="button" class="btn btn-raised btn-round waves-effect">汇出Excel</button>
+                            </div>
+                        </div>
+                        <div class="row" style="background-color: #23c6c8;line-height: 30px;">
+                            <span style="color:white;font-size:15px;margin-left:5px"> 成功总金额 : </span><span style="font-size:15px;margin-left:5px" id="count1"></span>
+                            <span style="color:white;font-size:15px;margin-left:5px"> 成功总笔数 : </span><span style="font-size:15px;margin-left:5px" id="count3"></span>
+                        </div>
+                        <div id="div_table_WithdrawalTable">
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap" id="table_WithdrawalTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Examples -->
+
+    </div>
+</body>
+
+
+<script>
+    var Table;
+    var isCreatedTable = false;
+    var withdrawalRecordTable;
+
+    $(document).ready(function () {
+        pageLoad();
+    });
+
+    function pageLoad() {
+        
+        if ('@CheckLoginPermission' == 'false') {
+                location.href = "Login.cshtml";
+            }
+
+        if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+        //啟用日期
+        var start = moment().hour(00).minute(00);
+        var end = moment().hour(23).minute(59);
+
+        $('#dateinput').daterangepicker({
+            startDate: start,
+            endDate: end,
+            timePicker: true,
+            timePicker24Hour: true,
+            locale: {
+
+                "applyLabel": "確認",
+                "cancelLabel": "取消",
+                "format": 'YYYY/MM/DD HH:mm',
+                "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+                "monthNames": ["1月", "2月", "3月", "4月", "5月", "6月",
+                    "7月", "8月", "9月", "10月", "11月", "12月"]
+            }
+        }, function (start, end, label) {
+            $('#deteselect').val("6");
+            $('#deteselect').selectpicker('refresh');
+            });
+
+        CreateWithdrawalStatusSelect();
+        createWithdrawalTable2();
+        //getWithdrawalTableResult();
+        var objWithdrawalRecordTable = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="WithdrawalRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <h4 class="title">条帐记录</h4>
+                            </div>
+                            <div class="modal-body">
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap " id="withdrawalRecordTable"></table>
+                            </div>
+                            <div class="modal-footer">
+                            <button onclick="contentcancel2()" type="button" class="btn btn-primary btn-round waves-effect">关闭</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>`;
+        $('body').append(objWithdrawalRecordTable);
+
+        parent.wrapperFadeOut();
+    };
+
+    function statisticsAmount(data) {
+        var count1 = 0;   
+        var count3 = 0;
+
+        if (data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+              if (data[i].Status == 2) {
+                    count1 += data[i].FinishAmount;
+                    count3++;
+                }
+            }
+
+            $('#count1').text(toCurrency(parseFloat(count1.toFixed(4))));
+            $('#count3').text(count3);
+
+        }
+
+    }
+
+    $('#deteselect').change(function () {
+
+        switch ($(this).val()) {
+            case "0"://今日
+                var start = moment().hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "1"://昨日
+                var start = moment().subtract(1, 'days').hour(00).minute(00);
+                var end = moment().subtract(1, 'days').hour(23).minute(59);
+                break;
+            case "2"://过去7日
+                var start = moment().subtract(6, 'days').hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "3"://过去30日
+                var start = moment().subtract(29, 'days').hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "4"://这个月
+                var start = moment().startOf('month').hour(00).minute(00);
+                var end = moment().endOf('month').hour(23).minute(59);
+                break;
+            case "5"://上个月
+                var start = moment().subtract(1, 'month').startOf('month').hour(00).minute(00);
+                var end = moment().subtract(1, 'month').endOf('month').hour(23).minute(59);
+                break;
+            default:
+        }
+        $('#dateinput').data('daterangepicker').setStartDate(start);
+        $('#dateinput').data('daterangepicker').setEndDate(end);
+
+    })
+
+    function createWithdrawalTable2() {
+
+        $("#table_WithdrawalTable").DataTable({
+            columns: [
+                { "title": "平台订单号", "data": "WithdrawSerial" },
+                {  //下發狀態，0=建立/1=進行中/2=成功/3=失敗/4=審核確認中/5=匯款處理中/6=匯款完成，成功，審核中/7=匯款完成，失敗，審核中
+                    "title": "状态", "data": "Status",
+                    "render": function (data) {
+                        switch (data) {
+                            case 0:
+                                return '建立';
+                                break;
+                            case 1:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 2:
+                                return '<span style="color:green;font-weight:900">成功</span>';
+                                break;
+                            case 3:
+                                return '<span style="color:red;font-weight:900">失敗</span>';
+                                break;
+                            case 4:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 5:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 6:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 7:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 9:
+                                return '审核退回';
+                                break;
+                            case 10:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 11:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 12:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 13:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 13:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 14:
+                                return '<span style="color:orange;font-weight:900">系统问题单</span>';
+                                break;
+                            default:
+                                return '';
+                                break;
+                        }
+                    }
+                },
+                { "title": "币别", "data": "CurrencyType" },
+                {
+                    "title": "申请金额", "data": "Amount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费", "data": "CollectCharge",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "实际金额", "data": "FinishAmount",
+                    "render": function (data, display, rowdata) {
+                        if (data != 0) {
+                            return toCurrency(rowdata.CollectCharge + rowdata.Amount);
+                        } else {
+                            return toCurrency(data);
+                        }
+                    }
+                },
+                { "title": "银行", "data": "BankName" },
+                { "title": "卡号", "data": "BankCard" },
+                { "title": "开户名", "data": "BankCardName" },
+                {
+                    "title": "建立日期", "data": "CreateDate",
+                    "render": function (data, display, rowdata) {
+                        return rowdata.CreateDate2;
+                    }
+                },
+                {
+                    "title": "完成日期", "data": "FinishDate",
+                    "render": function (data, display, rowdata) {
+                        return rowdata.FinishDate2;
+                    }
+                },
+                { "title": "城市", "data": "OwnCity" },
+                { "title": "省份", "data": "OwnProvince" },
+                { "title": "支行", "data": "BankBranchName" },
+                //{
+                //    "title": "退回原因", "data": "RejectDescription",
+                //    "render": function (data, display, rowdata) {
+                //        return data;
+                //    }
+                //},
+                { "title": "", "data": "WithdrawID", "visible": false }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            order: [[10, "desc"]],
+            autoWidth: false,
+            language: chineseTableLang
+        });
+
+    }
+
+    function createWithdrawalTable(data) {
+        isCreatedTable = true;
+
+        Table = $("#table_WithdrawalTable").DataTable({
+            data: data,
+            columns: [
+                { "title": "平台订单号", "data": "WithdrawSerial" },
+                {  //下發狀態，0=建立/1=進行中/2=成功/3=失敗/4=審核確認中/5=匯款處理中/6=匯款完成，成功，審核中/7=匯款完成，失敗，審核中
+                    "title": "状态", "data": "Status",
+                    "render": function (data) {
+                        switch (data) {
+                            case 0:
+                                return '建立';
+                                break;
+                            case 1:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 2:
+                                return '<span style="color:green;font-weight:900">成功</span>';
+                                break;
+                            case 3:
+                                return '<span style="color:red;font-weight:900">失敗</span>';
+                                break;
+                            case 4:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 5:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 6:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 7:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 9:
+                                return '审核退回';
+                                break;
+                            case 10:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 11:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 12:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 13:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 13:
+                                return '<span style="color:orange;font-weight:900">审核中</span>';
+                                break;
+                            case 14:
+                                return '<span style="color:orange;font-weight:900">系统问题单</span>';
+                                break;
+                            default:
+                                return '';
+                                break;
+                        }
+                    }
+                },
+                { "title": "币别", "data": "CurrencyType" },
+                {
+                    "title": "申请金额", "data": "Amount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费", "data": "CollectCharge",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "实际金额", "data": "FinishAmount",
+                    "render": function (data, display, rowdata) {
+                        if (data != 0) {
+                            return toCurrency(rowdata.CollectCharge + rowdata.Amount);
+                        } else {
+                            return toCurrency(data);
+                        }
+                    }
+                },
+                { "title": "银行", "data": "BankName" },
+                { "title": "卡号", "data": "BankCard" },
+                { "title": "开户名", "data": "BankCardName" },
+                {
+                    "title": "建立日期", "data": "CreateDate",
+                    "render": function (data, display, rowdata) {
+                        return rowdata.CreateDate2;
+                    }
+                },
+                {
+                    "title": "完成日期", "data": "FinishDate",
+                    "render": function (data, display, rowdata) {
+                        return rowdata.FinishDate2;
+                    }
+                },
+                { "title": "城市", "data": "OwnCity" },
+                { "title": "省份", "data": "OwnProvince" },
+                { "title": "支行", "data": "BankBranchName" },
+                //{
+                //    "title": "退回原因", "data": "RejectDescription",
+                //    "render": function (data, display, rowdata) {
+                //        return data;
+                //    }
+                //},
+                { "title": "", "data": "WithdrawID", "visible": false }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            order: [[10, "desc"]],
+            autoWidth: false,
+            language: chineseTableLang
+        });
+
+        Table.on('page.dt', function () {
+            Table.columns.adjust();
+        });
+    }
+
+    $('#btnsearch').click(function () {
+        getWithdrawalTableResult();
+    })
+
+
+    $('#Excel_download').click(function () {
+        CreateExcel();
+    })
+
+    function CreateExcel() {
+        if (Table == null) {
+            parent.warningAlert("没有汇出资料");
+            return;
+        }
+
+
+        if (Table.rows().data().length > 0) {
+            var exceldata = [
+                ['平台订单号', '状态', '申请金额', '手续费', '实际金额', '银行', '卡号', '开户名', '建立日期', '完成日期', '城市','省份','支行']
+            ];
+            var TableData = Table.rows().data();
+            for (var i = 0; i < TableData.length; i++) {
+                var data = TableData[i];
+
+                var FinishDate = "";
+                var ProcessStatus = "";
+                var DownStatus = "";
+                if (data.FinishDate2 != null) {
+                    FinishDate = data.FinishDate2;
+                }
+
+        
+                switch (data.Status) {
+                    case 0:
+                        ProcessStatus = '建立';
+                        break;
+                    case 1:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 2:
+                        ProcessStatus = '成功';
+                        break;
+                    case 3:
+                        ProcessStatus = '失败';
+                        break;
+                    case 4:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 5:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 6:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 7:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 10:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 11:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 12:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 13:
+                        ProcessStatus = '审核中';
+                        break;
+                    case 14:
+                        ProcessStatus = '系统问题单';
+                        break;
+                    default:
+                        ProcessStatus = '';
+                        break;
+                }
+
+                var tmpArray = new Array(data.WithdrawSerial, ProcessStatus, data.Amount, data.CollectCharge, data.FinishAmount, data.BankName, data.BankCard, data.BankCardName, data.CreateDate2, FinishDate, data.OwnCity, data.OwnProvince, data.BankBranchName);
+                exceldata.push(tmpArray);
+            }
+
+            var sheet = XLSX.utils.aoa_to_sheet(exceldata);
+            openDownloadDialog(sheet2blob(sheet), dateTimeStr() + '.xlsx');
+        } else {
+            parent.warningAlert("没有汇出资料");
+        }
+    }
+
+    function dateTimeStr() {
+        var dateTime = new Date();
+        var year = dateTime.getFullYear();
+        var month = dateTime.getMonth() + 1;//js從0開始取
+        var date = dateTime.getDate();
+
+
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (date < 10) {
+            date = "0" + date;
+        }
+
+
+
+        return "VPayBackendWithdrawal_" + year + "-" + month + "-" + date + " ";
+    }
+
+    function openDownloadDialog(url, saveName) {
+        if (typeof url == 'object' && url instanceof Blob) {
+            url = URL.createObjectURL(url); // 创建blob地址
+        }
+        var aLink = document.createElement('a');
+        aLink.href = url;
+        aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+        var event;
+        if (window.MouseEvent) event = new MouseEvent('click');
+        else {
+            event = document.createEvent('MouseEvents');
+            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        }
+        aLink.dispatchEvent(event);
+    }
+
+    function sheet2blob(sheet, sheetName) {
+        sheetName = sheetName || 'sheet1';
+        var workbook = {
+            SheetNames: [sheetName],
+            Sheets: {}
+        };
+        workbook.Sheets[sheetName] = sheet;
+        // 生成excel的配置项
+        var wopts = {
+            bookType: 'xlsx', // 要生成的文件类型
+            bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+            type: 'binary'
+        };
+        var wbout = XLSX.write(workbook, wopts);
+        var blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
+        // 字符串转ArrayBuffer
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+        return blob;
+    }
+
+
+    function getWithdrawalTableResult() {
+        var dateinputval = $('#dateinput').val().split('-');
+        var startdate = dateinputval[0];
+        var enddate = dateinputval[1] + ":59.999";
+        var withdrawSerial = $('#input_WithdrawSerial').val();
+        var companyid = AdminObject.forCompanyID;
+        var status = $('#select_Status').val();
+
+        api.getWithdrawalTableResult(withdrawSerial, companyid, startdate, enddate, status, function (success, obj) {
+
+            if (isCreatedTable) {
+                Table.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+                if (!isCreatedTable) {
+                    $("#div_table_WithdrawalTable").empty();
+                    $("#div_table_WithdrawalTable").append('<table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap" id="table_WithdrawalTable"></table>');
+                    createWithdrawalTable(obj.WithdrawalResults);
+
+
+                } else {
+                    Table.rows.add(obj.WithdrawalResults).draw();
+
+                }
+
+                statisticsAmount(obj.WithdrawalResults);
+                //Table.rows.add(obj.WithdrawalResult).draw(); // Add new data
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+                    case 5:
+                        parent.warningAlert("没有资料");
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    $('#btnadd').click(function () {
+        parent.GoPageByUrl("ApplyWithdrawal_Create2.cshtml");
+    })
+
+    function CreateWithdrawalStatusSelect() {
+        //流程狀態，0=建立/1=進行中/2=成功/3=失敗/99=全部
+        $("#select_Status").children().remove();
+        $("#select_Status").append('<option value="99">全部</option>');
+        $("#select_Status").append('<option value="0">审核中</option>');
+
+        $("#select_Status").append('<option value="2">成功</option>');
+        $("#select_Status").append('<option value="3">失败</option>');
+        $("#select_Status").append('<option value="9">审核退回</option>');
+        $('#select_Status').selectpicker('refresh');
+
+    }
+
+    function WithdrawalReview(objbtn) {
+
+        var withdrawSerial = $($(objbtn).parent().parent().find('td')[0]).html();
+
+        api.getWithdrawalResultByWithdrawSerial(withdrawSerial, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                if (obj.WithdrawalResult.Status == 9) {
+                    var row = Table.row(function (idx, data, node) {
+                        if (data.WithdrawSerial == withdrawSerial) {
+                            index = idx;
+                            return this;
+                        }
+                    });
+
+                    modifyWithdrawal(row.data());
+                } else {
+                    parent.warningAlert("目前状态无法重审");
+                }
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                }
+            }
+        });
+
+    }
+
+    function modifyWithdrawal(rowdata) {
+
+        $("#WithdrawalCreateModal_WithdrawID2").val(rowdata.WithdrawID);
+
+        $('#WithdrawalCreateModal_BankName2').val(rowdata.BankName);
+        $('#WithdrawalCreateModal_BankBranchName2').val(rowdata.BankBranchName);
+        $('#WithdrawalCreateModal_BankCardName2').val(rowdata.BankCardName);
+        $('#WithdrawalCreateModal_OwnProvince2').val(rowdata.OwnProvince);
+        $('#WithdrawalCreateModal_OwnCity2').val(rowdata.OwnCity);
+        $('#WithdrawalCreateModal_BankCard2').val(rowdata.BankCard);
+        $('#WithdrawalCreateModal_Amount2').text(toCurrency(rowdata.Amount));
+        $('#WithdrawalCreateModal_CurrencyType2').text(rowdata.CurrencyType);
+        $('#WithdrawalCreateModal_RejectDescription2').text(rowdata.RejectDescription);
+
+        //彈出視窗
+        $('#WithdrawalCreateModal2').css('display', 'block');
+        $('#WithdrawalCreateModal2').css('overflow-x', 'hidden');
+        $('#WithdrawalCreateModal2').css('overflow-y', 'auto');
+        $('#WithdrawalCreateModal2').css('opacity', 1);
+        $('#WithdrawalCreateModal2 .modal-content').css('margin-top', '250px');
+    }
+
+    function WithdrawalCreateModal_Cancel() {
+        closeWithdrawalCreateModal();
+    }
+
+    function closeWithdrawalCreateModal() {
+
+        $('#WithdrawalCreateModal2').css('display', 'none');
+        $('#WithdrawalCreateModal2').css('overflow-x', 'hidden');
+        $('#WithdrawalCreateModal2').css('overflow-y', 'hidden');
+        $('#WithdrawalCreateModal2').css('opacity', 0);
+        $('#WithdrawalCreateModal2 .modal-content').css('margin-top', '0px');
+    }
+
+    function WithdrawalCreateModal_Confirm() {
+
+        if ($('#WithdrawalCreateModal_BankName2').val().trim() == "") {
+            parent.warningAlert("银行名称为必填");
+            return;
+        }
+
+        if ($('#WithdrawalCreateModal_BankCardName2').val().trim() == "") {
+            parent.warningAlert("持卡人姓名为必填");
+            return;
+        }
+
+        if ($('#WithdrawalCreateModal_BankCard2').val().trim() == "") {
+            parent.warningAlert("卡号为必填");
+            return;
+        }
+
+        var data = new Object();
+        data.BankName = $('#WithdrawalCreateModal_BankName2').val();
+        data.BankBranchName = $('#WithdrawalCreateModal_BankBranchName2').val();
+        data.BankCardName = $('#WithdrawalCreateModal_BankCardName2').val();
+        data.OwnProvince = $('#WithdrawalCreateModal_OwnProvince2').val();
+        data.OwnCity = $('#WithdrawalCreateModal_OwnCity2').val();
+        data.BankCard = $('#WithdrawalCreateModal_BankCard2').val();
+        data.CurrencyType = $("#WithdrawalCreateModal_CurrencyType2").text();
+        data.Amount = toNumber($('#WithdrawalCreateModal_Amount2').text());
+        data.WithdrawID = toNumber($('#WithdrawalCreateModal_WithdrawID2').val());
+
+        WithdrawalUpdate(data);
+
+    }
+
+    function WithdrawalUpdate(data) {
+
+        api.withdrawalUpdate(data, function (s, o) {
+            if (s) {
+                if (o.ResultCode == 0) {
+
+                    var row = Table.row(function (idx, data, node) {
+                        if (data.WithdrawID == o.WithdrawalResult.WithdrawID) {
+                            index = idx;
+                            return this;
+                        }
+                    });
+
+                    Table.row(row).data(o.WithdrawalResult).draw(false);
+
+                    closeWithdrawalCreateModal();
+                    parent.successAlert3("送审成功");
+                } else {
+                    switch (o.ResultCode) {
+                        case 6:
+                            parent.warningAlert("修改失败");
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    function WithdrawalRecord(objbtn) {
+        var withdrawalSerial = $($(objbtn).parent().parent().find('td')[1]).html();
+
+        parent.wrapperFadeIn();
+        api.WithdrawalRecord(withdrawalSerial, function (success, obj) {
+            if (success) {
+                if (obj.ResultCode == 0) {
+                    if (!withdrawalRecordTable) {
+                        createWithdrawalRecordTable(obj.CompanyPointHistoryDates);
+                    } else {
+                        withdrawalRecordTable.clear();
+                        withdrawalRecordTable.rows.add(obj.CompanyPointHistoryDates).draw(); // Add new data
+                    }
+                    $('#WithdrawalRecordModal').modal('show');
+                    withdrawalRecordTable.columns.adjust();
+
+                } else {
+                    switch (obj.ResultCode) {
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        case 6:
+                            parent.warningAlert("没有资料");
+                            break;
+                        default:
+
+                            //warningAlert(obj.Message);
+                            break;
+                    }
+                }
+
+                parent.wrapperFadeOut();
+            } else {
+                parent.wrapperFadeOut();
+                parent.warningAlert("网路异常");
+            }
+
+        });
+    }
+
+    function createWithdrawalRecordTable(data) {
+
+        withdrawalRecordTable = $("#withdrawalRecordTable").DataTable({
+            data: data,
+            columns: [
+                { "title": "建立时间", "data": "CreateDate2" },
+                { "title": "支付通道", "data": "ServiceTypeName" },
+                {
+                    "title": "调整前额度", "data": "BeforeValueByService",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "调整后额度", "data": "ValueByService",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data + rowdata.BeforeValueByService);
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            order: [[2, "asc"]],
+            autoWidth: false,
+
+            language: chineseTableLang
+        });
+
+        withdrawalRecordTable.on('page.dt', function () {
+            withdrawalRecordTable.columns.adjust();
+        });
+    }
+
+    function contentcancel2() {
+        $('#WithdrawalRecordModal').modal('hide');
+    }
+</script>

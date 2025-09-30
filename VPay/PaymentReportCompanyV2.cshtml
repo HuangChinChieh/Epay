@@ -1,0 +1,1941 @@
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var result = bc.CheckLoginPermission(BID);
+    string CheckPermission = "success";
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    string PermissionName = Request.Path.Split('/').Last().Split('.').First();
+    result = bc.CheckPermission(BID,PermissionName);
+
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    string CheckLoginPermission = "success";
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckLoginPermission = "false";
+    }
+}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>VPay</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Favicon-->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap Select Css -->
+    <link href="~/VPay/assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
+    <link rel="stylesheet" href="~/VPay/assets/plugins/morrisjs/morris.min.css" />
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/VPay/assets/css/main.css">
+    <link rel="stylesheet" href="~/VPay/assets/css/color_skins.css">
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="~/VPay/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+
+    <!-- JQuery sweetalert Css -->
+    <link href="~/VPay/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!-- JQuery jquery-nestable Css -->
+    <link href="~/VPay/assets/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <!-- datetimepicker Css-->
+    <link href="~/VPay/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <!-- JQuery multi-select Css -->
+    <link href="~/VPay/assets/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ecommerce.css" rel="stylesheet" />
+    <!-- jquery-ui Css -->
+    <link href="~/VPay/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/VPay/assets/css/ui.tabs.overflowResize.css" rel="stylesheet" />
+    <!-- Jquery Core Js -->
+    <script src="~/VPay/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/VPay/assets/js/D3/d3.min.js"></script>
+    <script src="~/VPay/assets/bundles/libscripts.bundle.js"></script> <!--Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js)-->
+    <script src="~/VPay/assets/bundles/vendorscripts.bundle.js"></script>  <!--slimscroll, waves Scripts Plugin Js-->
+    <script src="~/VPay/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/VPay/assets/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
+    <script src="~/VPay/assets/bundles/morrisscripts.bundle.js"></script><!-- Morris Plugin Js -->
+    <script src="~/VPay/assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <script src="~/VPay/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+    <script src="~/VPay/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/VPay/assets/js/pages/index.js"></script>
+    <script src="~/VPay/assets/plugins/nestable/jquery.nestable.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="~/VPay/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
+    <script src="~/VPay/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/VPay/assets/plugins/jquery-datatable/dataTables.responsive.min.js"></script>
+    <script src="~/VPay/assets/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <!-- basic-form-elements Js -->
+    @*<script src="assets/js/pages/forms/basic-form-elements.js"></script>*@
+    <!-- datetimepicker Js -->
+    <script src="~/VPay/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/VPay/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/VPay/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <script src="~/VPay/assets/js/BackendJS/BackendAPI.js?20200408"></script>
+    <script src="~/VPay/assets/js/AutoNumeric.js"></script>
+    <script src="~/VPay/assets/js/ion.sound.min.js"></script>
+    <!-- JQuery 頁籤 Js -->
+    <script src="~/VPay/assets/js/jquery-ui.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.overflowResize.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.addTab.js"></script>
+    <script src="~/VPay/assets/js/ui.tabs.closable.js"></script>
+
+    <script src="~/VPay/assets/js/common.js"></script>
+
+    <style>
+   
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black !important;
+            opacity: 1; /* Firefox */
+        }
+
+        .filter-option {
+            color: black !important;
+            opacity: 0.8;
+        }
+        /* fallback */
+        @@font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dtp-buttons {
+            display: none;
+        }
+
+        .navbar
+
+        .divided:hover {
+            cursor: pointer;
+        }
+
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: "Microsoft JhengHei";
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        form > label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            color: forestgreen !important;
+            background: #DDDDDD !important;
+            border-color: black !important;
+        }
+
+            .selectedItem:hover {
+                color: forestgreen;
+                background: #DDDDDD;
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #dff0d8 !important;
+        }
+
+        .show > .dropdown-toggle {
+            color: #fff !important;
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .btn-timeZone:hover {
+            cursor: pointer;
+        }
+        /*.dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }*/
+        .dtr-title {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: normal;
+        }
+
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .card_title {
+            font-size: 22px;
+        }
+
+        .card_subtitle {
+            padding: 20px;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft JhengHei";
+        }
+
+        * {
+            font-family: 微軟正黑體, 微軟雅黑體, Arial;
+        }
+        /*body{min-width: 1200px;}*/
+        /*body > .bg{background-image: url('../bg/davide-ragusa-716-unsplash.jpg');}*/
+        body > .bg {
+            background-image: url('assets/background/bg.jpg');
+        }
+        /*body > .bg{background-image: url('backgrounds/1.jpg');}*/
+        /*body > .bg{background-image: url('../bg/jeremy-bishop-171845-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/paul-carmona-276464-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/vinoth-ragunathan-96670-unsplash.jpg');}*/
+        body > .bg {
+            background-size: cover;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            filter: brightness(10);
+        }
+
+        .navbar-brand span {
+            color: #fff;
+        }
+        /*.navbar-nav > li > a i.fa-sync-alt, .navbar-nav > li > a i.fa-bell, .navbar-nav > li > a i.fa-caret-down{font-size: inherit;}*/
+        nav.navbar li > a {
+            color: #fff !important;
+        }
+
+        li.divided > a {
+            display: inline-block;
+            line-height: 30px;
+            padding: 0 15px;
+        }
+
+        span.label.label-transparent-black {
+            position: absolute;
+            top: -10px;
+            left: 26px;
+            z-index: 2;
+        }
+
+            span.label.label-transparent-black:before {
+                content: '';
+                background-color: #FF6B6B;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+            }
+
+        .displaynone, .overlay, .sidebar .menu .list .ml-menu, .menu_sm .sidebar .list li.header, .menu_sm .sidebar .list .detail, .menu_sm .sidebar .list a::before, .menu_sm .sidebar .list a::after, .menu_sm .sidebar .list a span {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .user .profile-photo {
+            display: inline-block;
+            width: 92px;
+            height: 92px;
+            margin: 0 0 4px 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+            transition: 0.2s all;
+        }
+
+            .user .profile-photo img {
+                width: 100%;
+            }
+
+        #current-user {
+            text-align: center;
+            list-style: none;
+            margin: 16px 0 0;
+        }
+
+            #current-user .account p {
+                color: #fff;
+            }
+
+            #current-user .account #layoutCompanyName {
+                font-size: 18px;
+                margin: 6px 0;
+            }
+
+            #current-user .account #layoutLoginAccount {
+                font-size: 14px;
+                font-weight: lighter;
+                margin: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+        #leftsidebar {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sidebar .menu .list a {
+            color: #eee;
+            padding: 12px 16px;
+        }
+
+            .sidebar .menu .list a span {
+                font-size: 16px;
+            }
+
+        .sidebar .menu .list .ml-menu li a {
+            padding: 10px 0 10px 60px;
+        }
+
+            .sidebar .menu .list .ml-menu li a:before {
+                content: '';
+            }
+
+        #timeShowBox {
+            color: #fff;
+            margin: 0;
+        }
+
+        #timeZoneSelect {
+            width: 90%;
+            height: 0;
+            margin: 8px auto 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 32px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+            transition: 0.3s all;
+            font-size: 0;
+        }
+
+            #timeZoneSelect:before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active {
+                height: 54px;
+                padding: 12px 0;
+            }
+
+                #timeZoneSelect.active:before {
+                    border-bottom: 5px solid #fff;
+                }
+
+            #timeZoneSelect .btn-timeZone {
+                display: -webkit-inline-flex;
+                display: -moz-inline-flex;
+                display: -ms-inline-flex;
+                display: -o-inline-flex;
+                display: inline-flex;
+                justify-content: center;
+                -ms-align-items: center;
+                align-items: center;
+                width: 88px;
+                height: 30px;
+                margin: 0 4px;
+                font-size: 12px;
+                color: transparent;
+                background-color: transparent;
+                border-radius: 4px;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active .btn-timeZone {
+                color: #fff;
+                background-color: #65C3DF;
+            }
+
+        .navbar {
+            min-height: 65px;
+            background-image: url('assets/background/nav_bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        ul.flex, .navLeft, .navRight {
+            display: -webkit-inline-flex !important;
+            display: -moz-inline-flex !important;
+            display: -ms-inline-flex !important;
+            display: -o-inline-flex !important;
+            display: inline-flex !important;
+            justify-content: space-between;
+            -ms-align-items: center;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+            .navLeft li:last-child {
+                position: absolute;
+                left: 214px;
+            }
+
+            .navRight li:nth-child(1), .navRight li:nth-child(2), .navRight li:nth-child(3) {
+                border-right: 1px solid #888;
+                height: 30px;
+            }
+
+        .navRight {
+            margin-right: 12px;
+        }
+        /*.navbar ul.nav li{position: absolute; top: 50%; transform: translateY(-50%);}*/
+        /*.navbar ul.nav li:nth-child(2){left: 150px;}
+        .navbar ul.nav li:nth-child(3){right: 340px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(3) p{margin: 0;}
+        .navbar ul.nav li:nth-child(4){right: 290px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(5){right: 242px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(6){right: 52px;}
+        .navbar ul.nav li:nth-child(7){right: 6px; border-left: 1px solid #888; height: 30px;}*/
+        .copyright {
+            position: absolute;
+            left: 28px;
+            bottom: 12px;
+            transition: 0.2s all;
+        }
+
+        body .copyright p {
+            margin: 0;
+            font-size: 12px;
+            color: #eee;
+        }
+
+        body.theme-cyan.menu_sm .copyright {
+            left: 4px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .profile-photo {
+            width: 52px;
+            height: 52px;
+            border-width: 2px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .account p {
+            display: none;
+        }
+
+        section.content {
+            margin: 65px 0px 0 250px;
+            background-color: #f5f5f5;
+            border-radius: 0;
+        }
+
+        .container-fluid > .row {
+            padding: 12px 0;
+        }
+
+        .dd-handle {
+            background: none;
+            border: 0;
+        }
+
+            .dd-handle:hover {
+                color: #45B6B0;
+            }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item > .dd-handle {
+            color: #575b61;
+            padding-left: 24px;
+        }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            width: 1px;
+            height: calc(100% + 10px);
+            height: -moz-calc(100% + 10px);
+            height: -webkit-calc(100% + 10px);
+            border-left: 0.5px solid #ddd;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item {
+            /*border-bottom: 1px solid #ddd;*/
+            margin: 6px 0;
+        }
+
+        li.dd-item {
+            padding: 0 12px;
+        }
+
+            li.dd-item > button {
+                position: absolute;
+                left: 10px;
+            }
+
+        .divCompanyTree > ol.dd-list > li.dd-item:last-child {
+            border: 0;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item > .dd-handle {
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 24px;
+        }
+
+        .theme-cyan .sidebar .menu .list {
+            padding: 0;
+        }
+
+            .theme-cyan .sidebar .menu .list > li {
+                padding: 0;
+                margin: 4px 12px;
+            }
+            /*.theme-cyan .sidebar .menu .list li ul li{padding: 0 12px;}*/
+            .theme-cyan .sidebar .menu .list li a:hover {
+                background-color: rgba(0,0,0,0.2);
+            }
+
+            .theme-cyan .sidebar .menu .list li ul {
+                background: rgba(0,0,0,0.35);
+            }
+
+            .theme-cyan .sidebar .menu .list li a:hover {
+                color: #fff;
+            }
+        /*.strongtitle{color: #6f7884; font-size: 22px;}*/
+        .col-lg-7.col-md-7.col-sm-7 > p {
+            margin: 0;
+        }
+
+        .block-header {
+            padding: 0 64px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+            .block-header h2 {
+                color: #565d67;
+                font-weight: bold;
+            }
+
+            .block-header .col {
+                padding: 16px;
+            }
+
+                .block-header .col.col-lg-9.col-md-9.col-sm-9 {
+                    display: -webkit-inline-flex;
+                    display: -moz-inline-flex;
+                    display: -ms-inline-flex;
+                    display: -o-inline-flex;
+                    display: inline-flex;
+                    -ms-align-items: center;
+                    align-items: center;
+                    border-left: 1px dashed #ddd;
+                }
+
+        .tips {
+            font-size: 12px;
+            color: #565d67;
+            padding-left: 12px;
+        }
+
+        #divtree {
+            padding: 0 24px;
+        }
+
+        @@media screen and (min-width: 1600px) {
+            #divtree {
+                padding: 0 56px;
+            }
+        }
+
+        .divtreeTool {
+            font-size: 0;
+        }
+
+            .divtreeTool button {
+                width: calc((100% - 6px * 2)/ 3 );
+                margin: 0 6px 6px 0;
+                font-size: 12px;
+            }
+
+                .divtreeTool button:last-child {
+                    margin-right: 0;
+                }
+
+            .divtreeTool .btn-divtreeTool {
+                padding: 12px 0;
+            }
+
+        .paper-wrap:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 0 42px 42px 0;
+            border-style: solid;
+            border-color: #ffffff #253856;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+        }
+
+        .card .header .row .col-lg-7.col-md-7.col-sm-7 {
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            -ms-align-items: center;
+            align-items: center;
+        }
+
+        table {
+            font-size: 14px !important;
+            color: #575b61 !important;
+        }
+
+        .card .body {
+            font-size:14px !important;
+            color: #575b61 !important;
+            padding: 0 20px !important;
+        }
+
+            .card .body .row, #divCompanyPoint.card .body {
+                margin: 0 0 8px 0;
+            }
+
+        /*.card.wallet {
+            width: 120px;
+        }*/
+
+        .footer {
+            padding: 16px 0;
+        }
+        /*.theme-cyan .card .header h2:before{background: #45B6B0; top: -17px;}*/
+        .ortherText button {
+            margin: 0 8px;
+        }
+
+        .theme-cyan .btn-primary {
+            background: #65C3DF;
+        }
+
+        .dataTables_wrapper input[type="search"]:focus, .dataTables_wrapper input[type="search"]:active {
+            border-bottom: 2px solid #65C3DF;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+            margin: 16px 0 8px;
+        }
+
+
+        .theme-cyan .btn-primary:active, .theme-cyan .btn-primary:hover, .theme-cyan .btn-primary:focus {
+            background: #45B6B0;
+        }
+
+        .sorting_1:focus {
+            outline: 0;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #446288;
+        }
+
+        button.btn-circle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            line-height: 36px;
+        }
+
+        button.btn-round {
+            padding: 9px 24px;
+        }
+
+        table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+            background-color: #65C3DF;
+        }
+
+        footer.footer {
+            text-align: right;
+            padding: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+            footer.footer p {
+                display: inline-block;
+                margin: 0 20px 0 0;
+                font-size: 12px;
+                color: #aaa;
+            }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            /*color: forestgreen;*/
+            /*background: #DDDDDD;*/
+            border-color: black;
+        }
+
+            .selectedItem:hover {
+                /*color: forestgreen;*/
+                /*background: #DDDDDD;*/
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #a2aec7 !important;
+        }
+
+        .show > .dropdown-toggle {
+            /*color: #fff !important;*/
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+
+        .divDetailData .card {
+            background-color: #fff;
+        }
+
+        .divDetailData > .card > .header {
+            padding: 12px 16px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .divPointDetail {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+            .divPointDetail .footer {
+                padding: 0;
+            }
+
+            .divPointDetail .card.wallet {
+                border-right: 1px solid rgba(0,0,0,0.1) !important;
+                margin-bottom: 30px;
+                border-radius: 0;
+            }
+
+                .divPointDetail .card.wallet:last-child {
+                    border-right: 0;
+                }
+
+            .divPointDetail .card.wallet {
+                background: none;
+                box-shadow: none;
+            }
+
+                .divPointDetail .card.wallet .header {
+                    padding: 4px 20px 8px;
+                }
+
+                .divPointDetail .card.wallet h2:before {
+                    width: 16px;
+                    height: 2px;
+                    top: -4px;
+                }
+
+                .divPointDetail .card.wallet p.text-muted, .divPointDetail .card.wallet p.wallettext-muted {
+                    color: #6f7884 !important;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 18px;
+                }
+
+        /*.table-responsive .dataTables_length .btn-group button {
+            border-radius: 8px !important;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:active,
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:focus {
+            border-color: #fff;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button span {
+            color: #fff;
+        }*/
+
+        .table-responsive table th {
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+<script src="~/VPay/assets/js/xlsx.core.min.js"></script>
+<script src="~/VPay/assets/js/moment.min.js"></script>
+<script src="~/VPay/assets/js/daterangepicker.js"></script>
+<link href="~/VPay/assets/css/daterangepicker.css" rel="stylesheet" />
+
+<style>
+    #searchfield > .bootstrap-select {
+        width: 110px;
+    }
+
+    .dropdown-menu {
+        max-height: 500px !important;
+    }
+
+
+    .hidden {
+        display: none !important;
+    }
+
+</style>
+
+<body class="theme-cyan">
+    <div class="block-header paper-wrap">
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-3">
+                <h2>订单查询</h2>
+            </div>
+            <div class="col col-lg-9 col-md-9 col-sm-9">
+                <div class="tips">
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header"></div>
+                    <div class="body">
+                        <div class="row">
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 切换渠道 : </h6>
+                            <span style="z-index:500;">
+                                <select class="show-tick" id="select_providercode" data-live-search="true"></select>
+                            </span>
+                        </div>
+                        <label style="color:red;margin-left:10px;margin-top: 5px;"> ( 订单号多笔查询请用 "," 分隔 ex:PT001,PT002 ) </label>
+                        <div id="searchfield" class="row">
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 订单号 : </h6>
+                            <div class="input-group" style="width:350px">
+                                <input autocomplete="off" type="text" id="input_OrderID" placeholder="订单号" class="form-control" style="width:70%;line-height: inherit;">
+                            </div>
+
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 提交方式 : </h6>
+                            <div class="row" style="margin-bottom: 10px;width: 100px;">
+                                <select class="show-tick" id="select_submitType"></select>
+                            </div>
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 时间 : </h6>
+                            <input id="dateinput" style="width:250px;height: 41px;margin-right:5px" class="form-control" />
+                            <select id="deteselect" style="width: 110px;">
+                                <option value="0">今日</option>
+                                <option value="1">昨日</option>
+                                <option value="2">过去7日</option>
+                                <option value="3">过去30日</option>
+                                <option value="4">这个月</option>
+                                <option value="5">上个月</option>
+                                <option value="6">自定义</option>
+                            </select>
+                            <div style="margin-left: 10px;" class="form-group">
+                                <input id="setsecond" style="width:52px" class="form-control" type="text" placeholder="" value="20">
+                            </div>
+                            <button style="margin-left: 15px;margin-bottom: 10px;background-color: darkorange;" class="btn btn-raised btn-default btn-round waves-effect" type="button" id="btnsetsecond">设定</button>
+                            <div style="margin-left: 10px;" class="form-group">
+                                <input id="showtime" style="width:52px" class="form-control" type="text" readonly="readonly">
+                            </div>
+                            <button style="margin-left: 15px;margin-bottom: 10px;background-color: crimson;" class="btn btn-raised btn-default btn-round waves-effect" type="button" id="btnstopTime">停止</button>
+                            @*<h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 商户名称 : </h6>
+                                <div class="input-group" style="width:250px;margin-left:10px">
+                                    <input type="text" id="input_CompanyName" placeholder="商户名称" class="form-control" style="width:70%;line-height: inherit;">
+                                </div>
+                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;">  渠道 : </h6>
+                                <div class="input-group" style="width:250px;margin-left:10px">
+                                    <input type="text" id="input_ProviderName" placeholder="渠道名称" class="form-control" style="width:70%;line-height: inherit;">
+                                </div>*@
+                        </div>
+
+
+                        <div class="row">
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 支付方式 : </h6>
+                            <span style="z-index:500;">
+                                <select class="show-tick" id="select_serviceType"></select>
+                            </span>
+                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 状态 : </h6>
+                                <div class="row" style="margin-bottom: 10px;width: 185px;">
+                                    <select class="show-tick" id="select_processStatus"></select>
+                                </div>
+
+                                <div>
+                                    @*<div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
+                        <input id="startdate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
+                    </div>
+
+                </div>
+                <div>
+                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> ~ </h6>
+                </div>
+                                <div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
+                                        <input id="enddate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
+                                    </div>
+                                </div>*@
+
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 申请金额 : </h6>
+                                </div>
+                                <div>
+                                    <div class="input-group" style="width: 80px;">
+                                        <input id="startAmount" type="text" class="form-control">
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> ~ </h6>
+                                </div>
+                                <div>
+                                    <div class="input-group" style="width: 80px;">
+                                        <input id="endAmount" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button style="margin-left: 15px;" class="btn btn-raised btn-primary btn-round waves-effect" type="button" id="btnsearch">搜寻</button>
+                                    <button id="Excel_download" type="button" class="btn btn-raised btn-round waves-effect">汇出Excel</button>
+                                </div>
+
+                        </div>
+
+                        <div id="divCompanyPoint" class="divPoint" style="padding:10px;display:inline-block">
+                            <div style="margin:0" id="divCompanyPointDetail">
+                            </div>
+                        </div>
+                        <div class="row" style="background-color: #99FF99;line-height: 30px;">
+                            <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 交易总金额 : </span><span style="font-size:15px;margin-left:5px" id="count1"></span>
+                            <span style="display:none;font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功总金额(不含手续费) : </span><span style="display:none;font-size:15px;margin-left:5px" id="count2"></span>
+                            <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 交易总笔数 : </span><span style="font-size:15px;margin-left:5px" id="count3"></span>
+                            <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功总笔数 : </span><span style="font-size:15px;margin-left:5px" id="count4"></span>
+                            <span style="display:none;font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 手续费总金额 : </span><span style="display:none;font-size:15px;margin-left:5px" id="count5"></span>
+                            <span style="display:none;font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功总金额(含手续费) : </span><span style="display:none;font-size:15px;margin-left:5px" id="count6"></span>
+                        </div>
+
+                        <div class="row" style="display:none;background-color:#66FFFF;line-height: 30px;">
+                            <span style="font-weight:900;color:#0000AA;font-size:15px;margin-left:5px"> 毛利 : </span><span style="font-size:15px;margin-left:5px" id="count7"></span>
+
+                        </div>
+
+                        <div id="div_table_PaymentTable">
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap " id="table_PaymentTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Examples -->
+
+    </div>
+
+</body>
+
+<script>
+    var second = 20;
+    var setsecond = 20;
+    var PaymentTimeOut;
+    var Table;
+    var paymentRecordTable;
+    var isCreatedTable = false;
+    var boolTimeStop = false;
+    var IsAutoLoad = false;  
+    var PageInfoStart = 0;  //起始查询为第X笔资料
+    $(document).ready(function () {
+        
+if ('@CheckLoginPermission' == 'false') {
+                location.href = "Login.cshtml";
+            }
+
+              if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        pageLoad();
+    });
+
+    function pageLoad() {
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+ 
+        var start = moment().hour(00).minute(00);
+        var end = moment().hour(23).minute(59);
+
+        $('#dateinput').daterangepicker({
+            startDate: start,
+            endDate: end,
+            timePicker: true,
+            timePicker24Hour: true,
+            locale: {
+
+                "applyLabel": "確認",
+                "cancelLabel": "取消",
+                "format": 'YYYY/MM/DD HH:mm',
+                "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+                "monthNames": ["1月", "2月", "3月", "4月", "5月", "6月",
+                    "7月", "8月", "9月", "10月", "11月", "12月"]
+            }
+        }, function (start, end, label) {
+            $('#deteselect').val("6");
+            $('#deteselect').selectpicker('refresh');
+        });
+
+        new AutoNumeric.multiple('#setsecond', 'integer', { decimalPlaces: 0, minimumValue: 0, maximumValue: 100 });
+
+        getProviderCodeResult();
+        createProcessStatus();
+        createSubmitType();
+        getServiceTypeResult();
+        createPaymentTable2();
+
+        reciprocal();
+     
+        var paymentRecordTable = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="PaymentRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <h4 class="title">订单记录</h4>
+                            </div>
+                            <div class="modal-body">
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap " id="paymentRecordTable"></table>
+                            </div>
+                            <div class="modal-footer">
+                            <button onclick="contentcancel()" type="button" class="btn btn-primary btn-round waves-effect">关闭</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>`;
+        $('body').append(paymentRecordTable);
+
+        var paymentRecordTable = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="IPcountryModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <h4 class="title">IP查询</h4>
+                            </div>
+                            <div class="modal-body">
+                            <span style="display:block">IP:<span id="IPcountryModal_ip" style="margin-left:5px"></span></span>
+                            <span style="display:block">国家:<span id="IPcountryModal_country" style="margin-left:5px"></span></span>
+                            <span style="display:block">省份:<span id="IPcountryModal_region" style="margin-left:5px"></span></span>
+                            <span style="display:block">城市:<span id="IPcountryModal_city" style="margin-left:5px"></span></span>
+                            </div>
+                            <div class="modal-footer">
+                            <button onclick="contentcancel2()" type="button" class="btn btn-primary btn-round waves-effect">关闭</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>`;
+        $('body').append(paymentRecordTable);
+
+        parent.wrapperFadeOut();
+    };
+
+    function createPaymentRecordTable(data) {
+
+        paymentRecordTable = $("#paymentRecordTable").DataTable({
+            data: data,
+            columns: [
+                { "title": "建立时间", "data": "CreateDate2" },
+                {
+                    "title": "资讯", "data": "Message",
+                    "render": function (data, display, rowdata) {
+                        return '<span style="width:500px;display:black;">' + data + '</span>'
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            scrollX: true,
+            order: [[0, "asc"]],
+            autoWidth: false,
+
+            language: chineseTableLang
+        });
+
+        paymentRecordTable.on('page.dt', function () {
+            paymentRecordTable.columns.adjust();
+        });
+    }
+
+    $('#deteselect').change(function () {
+
+        switch ($(this).val()) {
+            case "0"://今日
+                var start = moment().hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "1"://昨日
+                var start = moment().subtract(1, 'days').hour(00).minute(00);
+                var end = moment().subtract(1, 'days').hour(23).minute(59);
+                break;
+            case "2"://过去7日
+                var start = moment().subtract(6, 'days').hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "3"://过去30日
+                var start = moment().subtract(29, 'days').hour(00).minute(00);
+                var end = moment().hour(23).minute(59);
+                break;
+            case "4"://这个月
+                var start = moment().startOf('month').hour(00).minute(00);
+                var end = moment().endOf('month').hour(23).minute(59);
+                break;
+            case "5"://上个月
+                var start = moment().subtract(1, 'month').startOf('month').hour(00).minute(00);
+                var end = moment().subtract(1, 'month').endOf('month').hour(23).minute(59);
+                break;
+            default:
+        }
+        $('#dateinput').data('daterangepicker').setStartDate(start);
+        $('#dateinput').data('daterangepicker').setEndDate(end);
+
+    })
+
+    $('#btnstopTime').click(function () {
+        if (boolTimeStop) {
+            boolTimeStop = false;
+            $('#btnstopTime').text('停止');
+            reciprocal();
+        } else {
+            boolTimeStop = true;
+            $('#btnstopTime').text('启动');
+        }
+    })
+
+    function reciprocal() {
+        clearTimeout(PaymentTimeOut);
+        if (!boolTimeStop) {
+            if (second == 0) {
+                document.getElementById("showtime").value = 0;
+                getPaymentTableResult2();
+            } else {
+                document.getElementById("showtime").value = second;
+                PaymentTimeOut = setTimeout(reciprocal, 1000);
+                second -= 1;
+            }
+        }
+
+    }
+
+      
+
+
+    $('#btnsetsecond').click(function () {
+        if ($('#setsecond').val() < 5) {
+            $('#setsecond').val(5);
+            parent.warningAlert('重整时间不能低于5秒');
+
+        } else {
+            setsecond = $('#setsecond').val();
+            parent.successAlert3('设定完成');
+        }
+    });
+
+    function createPaymentTable2() {
+
+        var dateinputval = $('#dateinput').val().split('-');
+
+            Table =$("#table_PaymentTable").DataTable({
+
+            columns: [
+                {
+                    "title": "平台订单号", "data": "PaymentSerial",
+                    "render": function (data, display, rowdata) {
+                            return rowdata.PaymentSerial;
+                    }
+                },
+                { "title": "商户订单号", "data": "OrderID" },
+                { "title": "商户名称", "data": "CompanyName" },
+                { "title": "渠道名称", "data": "ProviderName" },
+                //{ "title": "供应商订单号", "data": "ProviderOrderID" },
+                { "title": "支付方式", "data": "ServiceTypeName" },
+                {
+                    "title": "状态", "data": "ProcessStatus",
+                    "render": function (data) {//0=新建(準備 PaymentSerial)/1=尚未提交/2=交易成功，尚未通知商戶/3=交易失敗/4=交易成功，通知商戶成功/5=供應商資料不一致/6=系統問題
+                        switch (data) {
+                            case 0:
+                                return '<span style="color:red;font-weight:900">未处理</span>';
+                                break;
+                            case 1:
+                                return '<span style="color:red;font-weight:900">未处理</span>';
+                                break;
+                            case 2:
+                                return '<span style="color:orange;font-weight:900">交易成功，未返回</span>';
+                                break;
+                            case 3:
+                                return '交易失败';
+                                break;
+                            case 4:
+                                return '<span style="color:green;font-weight:900">交易成功，已返回</span>';
+                                break;
+                            case 5:
+                                return '供应商资料不一致';
+                                break;
+                            case 6:
+                                return '系统问题';
+                                break;
+                            case 7:
+                                return '补单';
+                                break;
+                            case 8:
+                                return '<span style="color:orange;font-weight:900">上游审核中</span>';
+                                break;
+                            default:
+                                return '';
+                                break;
+                        }
+                    }
+                },
+                {
+                    "title": "申请金额", "data": "OrderAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+
+                { "title": "费率(%)", "data": "CollectRate" },
+                {
+                    "title": "手续费", "data": "PartialOrderAmount",
+                    "render": function (data, display, rowdata) {
+                        if (data != 0) {
+                            return toCurrency((rowdata.PartialOrderAmount * rowdata.CollectRate * 0.01) + rowdata.CollectCharge);
+                        } else {
+                            return data;
+                        }
+                    }
+                },
+
+                {
+                    "title": "实际金额", "data": "PaymentAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "毛利", "data": "PartialOrderAmount",
+                    "render": function (data, display, rowdata) {
+                        if (data != 0) {
+                            return toCurrency(((rowdata.PartialOrderAmount * rowdata.CollectRate * 0.01) + rowdata.CollectCharge) - ((rowdata.PartialOrderAmount * rowdata.CostRate * 0.01) + rowdata.CostCharge));
+                        } else {
+                            return data;
+                        }
+                    }
+                    },
+
+                {
+                    "title": "提交方式", "data": "SubmitType",
+                    "render": function (data, display, rowdata) {
+                        if (data == 0) {
+                            return 'API';
+                        } else if (data == 1) {
+                            return '人工';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                { "title": "会员实名", "data": "UserName" },
+
+                {
+                    "title": "提交时间", "data": "CreateDate2"
+                },
+                {
+                    "title": "完成时间", "data": "FinishDate2"
+                },
+
+                {
+                    "title": "商户提供IP", "data": "ClientIP"
+                },
+                {
+                    "title": "系统取得IP", "data": "UserIP"
+                },
+                {
+                    "title": "功能", "data": "ProcessStatus",
+                    "render": function (data, display, rowdata) {
+                        switch (data) {
+                            case 2:
+                                return '<button onclick="reSendPayment(this)">补单</button><button style="margin-left:5px" onclick="PaymentRecord(this)">订单记录</button><button style="margin-left:5px" data-ip="' + rowdata.UserIP + '" onclick="SearchIP_County(this)">IP位置</button><button style="margin-left:5px" data-returnurl="' + rowdata.ReturnURL + '"  onclick="CompanyUrl(this)">回调网址</button>';
+                                break;
+                      
+                            default:
+                                return '<button  onclick="PaymentRecord(this)">订单记录</button><button style="margin-left:5px" data-ip="' + rowdata.UserIP + '" onclick="SearchIP_County(this)">IP位置</button><button style="margin-left:5px" data-returnurl="' + rowdata.ReturnURL + '"  onclick="CompanyUrl(this)">回调网址</button>';
+                                break;
+                        }
+                    }
+                }
+
+
+                ],
+            serverSide: true,
+            ajax: {
+                         method:"post",
+                         url: "/api/Backend/GetPaymentResultV2", 
+                         data: function (d)
+                         {
+ 
+                             var dateinputval = $('#dateinput').val().split('-');
+                             d.BID = AdminObject.BID;
+                             d.Companyid = $('#companyLabel').attr("data-id");
+                             d.StartDate = dateinputval[0];
+                             d.EndDate = dateinputval[1] + ":59.999";
+                             d.IsAutoLoad = IsAutoLoad;
+                            
+                             d.OrderID = $('#input_OrderID').val().trim();
+                             d.SubmitType = $('#select_submitType').val();
+                             d.ServiceType = $('#select_serviceType').val();
+                             d.StartAmount = $('#startAmount').val().trim();
+                             d.EndAmount = $('#endAmount').val().trim();
+                             d.ProcessStatus = $('#select_processStatus').val().split(",");
+                             d.ProviderCode = $('#select_providercode').val();
+                }
+            },
+            deferLoading: 0,
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            order: [[13, "desc"]],
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+            }).on('xhr.dt', function (e, settings, d, xhr) {
+             
+                if (d.ResultCode == 0) {
+                    if (d.IsAutoLoad) {
+                        IsAutoLoad = false;
+                        second = setsecond;
+                        PaymentTimeOut = setTimeout(reciprocal, 1000);
+
+                    }
+
+                    if (d.StatisticsPaymentAmount != null) {
+                        statisticsAmount(d.StatisticsPaymentAmount);
+                    }
+                }
+                else {
+                    var message = "";
+                    switch (d.ResultCode) {
+                        case 5:
+                            if (!d.IsAutoLoad) {
+                                message = "没有资料";
+                                parent.warningAlert(message);
+                            } else {
+                                IsAutoLoad = false;
+                                second = setsecond;
+                                PaymentTimeOut = setTimeout(reciprocal, 1000);
+                            }
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            message = "其他错误";
+                            parent.warningAlert(message);
+                            break;
+                    }
+                }
+            });
+    }
+
+    function reSendPayment(objbtn) {
+        var paymentSerial = $($(objbtn).parent().parent().find('td')[0]).html();
+
+        parent.wrapperFadeIn();
+        api.reSendPayment(paymentSerial, function (success, obj) {
+            if (success) {
+                if (obj.ResultCode == 0) {
+                    swal({
+                        title: "已成功发送",
+                        type: "success",
+                        confirmButtonText: "确认",
+                        closeOnConfirm: true
+                    }, function () {
+                        parent.wrapperFadeOut();
+                        Table.draw(false);
+                    })
+
+                } else {
+                    switch (obj.ResultCode) {
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert(obj.Message);
+                            break;
+                    }
+                }
+
+                parent.wrapperFadeOut();
+            } else {
+                parent.wrapperFadeOut();
+                parent.warningAlert("网路异常");
+            }
+
+        });
+    }
+
+     function CompanyUrl(objbtn) {  
+         alert($(objbtn).data('returnurl'));
+        }
+
+    function PaymentRecord(objbtn) {
+            var paymentSerial = $($(objbtn).parent().parent().find('td')[0]).html();
+
+            parent.wrapperFadeIn();
+            api.PaymentRecord(paymentSerial, function (success, obj) {
+                if (success) {
+                    if (obj.ResultCode == 0) {
+                        if (!paymentRecordTable) {
+                            createPaymentRecordTable(obj.PaymentTableResults);
+                        } else {
+                            paymentRecordTable.clear();
+                            paymentRecordTable.rows.add(obj.PaymentTableResults).draw(); // Add new data
+                        }
+                        $('#PaymentRecordModal').modal('show');
+                        paymentRecordTable.columns.adjust();
+
+                    } else {
+                        switch (obj.ResultCode) {
+                            case 7:
+                                parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                break;
+                            case 6:
+                                parent.warningAlert("没有资料");
+                                break;
+                            default:
+
+                                //warningAlert(obj.Message);
+                                break;
+                        }
+                    }
+
+                    parent.wrapperFadeOut();
+                } else {
+                    parent.wrapperFadeOut();
+                    parent.warningAlert("网路异常");
+
+                }
+
+            });
+        }
+
+    function SearchIP_County(objbtn) {
+
+            var ip = $(objbtn).data('ip');
+            parent.wrapperFadeIn();
+            api.searchIPCounty(ip, function (success, obj) {
+                if (success) {
+                    if (obj.ResultCode == 0) {
+                        $('#IPcountryModal_city').text(obj.Result.City);
+                        $('#IPcountryModal_country').text(obj.Result.Country);
+                        $('#IPcountryModal_region').text(obj.Result.Region);
+                        $('#IPcountryModal_ip').text(obj.Result.IP);
+                        $('#IPcountryModal').modal('show');
+
+                    } else {
+                        switch (obj.ResultCode) {
+                            case 7:
+                                parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                break;
+                            case 6:
+                                parent.warningAlert("没有资料");
+                                break;
+                            default:
+                                parent.warningAlert("其他错误");
+                                //warningAlert(obj.Message);
+                                break;
+                        }
+                    }
+
+                    parent.wrapperFadeOut();
+                } else {
+                    parent.wrapperFadeOut();
+                    parent.warningAlert("网路异常");
+
+                }
+
+            });
+
+        }
+
+    function contentcancel() {
+        $('#PaymentRecordModal').modal('hide');
+    }
+
+    function contentcancel2() {
+            $('#IPcountryModal').modal('hide');
+        }
+
+    function getPaymentTableResult2() {
+
+        if (Table) {
+            IsAutoLoad = true;
+            Table.draw(false);
+        } else {
+            second = setsecond;
+            PaymentTimeOut = setTimeout(reciprocal, 1000);
+        }
+
+    }
+
+    $('#btnsearch').click(function () {
+        IsAutoLoad = false;
+        Table.draw();
+    })
+
+    //選擇供應商事件
+    $('#btn_selectCompany').click(function () {
+        parent.showSelectCompany_menu($('#companyLabel'), window.frameElement.id);
+    });
+
+    function getProviderCodeResult() {
+        api.getProviderCodeResultByShowType(function (success, obj) {
+            if (obj.ResultCode == 0) {
+                createProviderSelect(obj.ProviderTypes);
+                parent.wrapperFadeOut();
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    case 5:
+
+                        break;
+                    default:
+                        message = "其他错误";
+                        parent.warningAlert(message);
+                        break;
+                }
+                parent.wrapperFadeOut();
+
+            }
+        });
+    }
+
+    function getServiceTypeResult() {
+        api.getServiceType(AdminObject.forCompanyID, function (s, o) {
+            if (s) {
+                if (o.ResultCode == 0) {
+                    var data = o.ServiceTypes;
+                    $("#select_serviceType").append('<option value="99">' + "全部" + '</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#select_serviceType").append('<option value="' + data[i].ServiceType + '">' + data[i].ServiceTypeName + '</option>');
+                    }
+                    $('#select_serviceType').selectpicker('refresh');
+                } else {
+                    var message = ""
+                    switch (obj.ResultCode) {
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            //message = "其他錯誤";
+                            //warningAlert(message);
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    function createProviderSelect(providerdata) {
+        $("#select_providercode").append('<option value="0">' + "全部" + '</option>');
+        if (providerdata) {
+            $.each(providerdata, function (i, item) {
+
+                $("#select_providercode").append('<option value="' + providerdata[i].ProviderCode + '">' + providerdata[i].ProviderName + '</option>');
+            })
+
+            $('#select_providercode').selectpicker('refresh');
+        }
+    }
+
+    function createSubmitType() {
+
+        $("#select_submitType").append('<option value="99">' + "全部" + '</option>');
+        $("#select_submitType").append('<option value="0">' + "API" + '</option>');
+        $("#select_submitType").append('<option value="1">' + "人工" + '</option>');
+        $('#select_submitType').selectpicker('refresh');
+    }
+
+    function createProcessStatus() {
+        //0=新建(準備 PaymentSerial)/1=尚未提交/2=交易成功，尚未通知商戶/3=交易失敗/4=交易成功，通知商戶成功/5=供應商資料不一致/6=系統問題
+        $("#select_processStatus").append('<option value="99">' + "全部" + '</option>');
+        $("#select_processStatus").append('<option value="0,1">' + "未处理" + '</option>');
+        $("#select_processStatus").append('<option value="2">' + "交易成功，未返回" + '</option>');
+        $("#select_processStatus").append('<option value="3">' + "交易失败" + '</option>');
+        $("#select_processStatus").append('<option value="4">' + "交易成功，已返回" + '</option>');
+        $("#select_processStatus").append('<option value="6">' + "系统问题" + '</option>');
+        $("#select_processStatus").append('<option value="7">' + "补单" + '</option>');
+        $("#select_processStatus").append('<option value="8">' + "上游审核中" + '</option>');
+        $('#select_processStatus').selectpicker('refresh');
+    }
+
+    $('#Excel_download').click(function () {
+        CreateExcel();
+    })
+
+    function CreateExcel() {
+
+            if (Table.rows().data().length > 0) {
+
+                var dateinputval = $('#dateinput').val().split('-');
+                var companyid = $('#companyLabel').attr("data-id");
+
+                var startDate = dateinputval[0];
+                //补上秒数
+                var endDate = dateinputval[1] + ":59.999";
+                var orderID = $('#input_OrderID').val().trim();
+                var companyName = "";
+                var providerName = "";
+                var submitType = $('#select_submitType').val();
+                var serviceType = $('#select_serviceType').val();
+                var startAmount = $('#startAmount').val().trim();
+                var endAmount = $('#endAmount').val().trim();
+                var processStatus = $('#select_processStatus').val().split(",");
+                var providerCode = $('#select_providercode').val();
+
+                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, serviceType, processStatus, startAmount, endAmount, providerCode, function (success, obj) {
+                    if (success) {
+
+
+                        if (obj.ResultCode == 0) {
+                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '支付方式', '状态', '申请金额', '费率(%)', '手续率', '实际金额', '提交方式', '提交时间', '完成时间', '商户提供IP', '上游手续费(%)', '净利']];
+
+                            for (var i = 0; i < obj.PaymentTableResults.length; i++) {
+                                var data = obj.PaymentTableResults[i];
+                                var partialOrderAmount = 0
+                                var PaymentSerial = "";
+                                var CreateDate = data.CreateDate2;
+                                var FinishDate = "";
+                                var ProcessStatus = "";
+                                var SubmitType = "";
+                                var netincome = 0;
+                                if (data.FinishDate2 != null) {
+                                    FinishDate = data.FinishDate2;
+                                }
+
+                                if (data.SubmitType == 0) {
+                                    SubmitType = 'API';
+                                } else if (data.SubmitType == 1) {
+                                    SubmitType = '人工';
+                                } else {
+                                    SubmitType = '';
+                                }
+
+                                if (data.forPaymentSerial != null && data.forPaymentSerial != "")
+                                    PaymentSerial = data.PaymentSerial;
+                                else
+                                    PaymentSerial = data.PaymentSerial;
+
+                                switch (data.ProcessStatus) {
+                                    case 0:
+                                        ProcessStatus = '未处理';
+                                        break;
+                                    case 1:
+                                        ProcessStatus = '未处理';
+                                        break;
+                                    case 2:
+                                        ProcessStatus = '交易成功，未返回';
+                                        break;
+                                    case 3:
+                                        ProcessStatus = '交易失败';
+                                        break;
+                                    case 4:
+                                        ProcessStatus = '交易成功，已返回';
+                                        break;
+                                    case 5:
+                                        ProcessStatus = '交易失败';
+                                        break;
+                                    case 6:
+                                        ProcessStatus = '交易失败';
+                                        break;
+                                    case 7:
+                                        ProcessStatus = '补单';
+                                        break;
+                                    default:
+                                        ProcessStatus = '';
+                                        break;
+                                }
+
+                                netincome = (data.PartialOrderAmount * (data.CollectRate - data.CostRate) * 0.01) + data.CostCharge;
+
+                                partialOrderAmount = (data.PartialOrderAmount * data.CollectRate * 0.01) + data.CollectCharge;
+
+                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, SubmitType, CreateDate, FinishDate, data.ClientIP, data.CostRate, netincome);
+                                exceldata.push(tmpArray);
+                            }
+
+                            var sheet = XLSX.utils.aoa_to_sheet(exceldata);
+                            openDownloadDialog(sheet2blob(sheet), dateTimeStr() + '.xlsx');
+                        }
+                        else {
+                            var message = ""
+                            switch (obj.ResultCode) {
+                                case 5:
+                                    parent.warningAlert("没有汇出资料");
+
+                                    break;
+                                case 7:
+                                    parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                    break;
+                                default:
+                                    message = "其他错误";
+                                    parent.warningAlert(message);
+                                    break;
+                            }
+                        }
+                    } else {
+                        message = "伺服器忙碌中";
+                        parent.warningAlert(message);
+                    }
+
+                });
+            } else {
+                parent.warningAlert("没有汇出资料");
+            }
+        }
+
+    function dateTimeStr() {
+        var dateTime = new Date();
+        var year = dateTime.getFullYear();
+        var month = dateTime.getMonth() + 1;//js從0開始取
+        var date = dateTime.getDate();
+
+
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (date < 10) {
+            date = "0" + date;
+        }
+
+
+
+        return "VPay_" + year + "-" + month + "-" + date + " ";
+    }
+
+    function openDownloadDialog(url, saveName) {
+        if (typeof url == 'object' && url instanceof Blob) {
+            url = URL.createObjectURL(url); // 创建blob地址
+        }
+        var aLink = document.createElement('a');
+        aLink.href = url;
+        aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+        var event;
+        if (window.MouseEvent) event = new MouseEvent('click');
+        else {
+            event = document.createEvent('MouseEvents');
+            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        }
+        aLink.dispatchEvent(event);
+    }
+
+    function sheet2blob(sheet, sheetName) {
+        sheetName = sheetName || 'sheet1';
+        var workbook = {
+            SheetNames: [sheetName],
+            Sheets: {}
+        };
+        workbook.Sheets[sheetName] = sheet;
+        // 生成excel的配置项
+        var wopts = {
+            bookType: 'xlsx', // 要生成的文件类型
+            bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+            type: 'binary'
+        };
+        var wbout = XLSX.write(workbook, wopts);
+        var blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
+        // 字符串转ArrayBuffer
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+        return blob;
+    }
+
+    function statisticsAmount(data) {
+        $('#count1').text(toCurrency(data.SumOrderAmount));
+        $('#count2').text(toCurrency(data.SumSuccessAmount));
+        $('#count3').text(data.OrderCount);
+        $('#count4').text(data.SuccessOrderCount);
+        $('#count5').text(toCurrency(data.SumCharge));
+        $('#count6').text(toCurrency(data.SumChargeAndSuccessOrderAmount));
+        $('#count7').text(toCurrency(data.ProfitAmount));
+    }
+
+    </script>

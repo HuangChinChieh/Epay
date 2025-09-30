@@ -1,0 +1,177 @@
+﻿@{
+    //CodingControl.LoginRecord();
+    //bc.CheckLoginIP();
+}
+
+<!doctype html>
+<html class="no-js " lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>eWinPay 后台登入</title>
+    <!-- Favicon-->
+
+    <link rel="icon" href="" type="image/x-icon">
+    <link href="/VPay/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+
+    <link href="/VPay/assets/css/main.css" rel="stylesheet" />
+    <link href="/VPay/assets/css/color_skins.css" rel="stylesheet" />
+    <!-- JQuery sweetalert Css -->
+    <link href="~/VPay/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!--  Core Js -->
+    <script src="/VPay/assets/bundles/libscripts.bundle.js"></script>
+    <script src="/VPay/assets/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
+    <script src="/VPay/assets/js/pages/authentication/page.js"></script>
+
+    <script src="/VPay/assets/js/BackendJS/BackendAPI.js?20210129"></script>
+    <script src="/VPay/assets/js/jquery-3.3.1.min.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/VPay/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/VPay/assets/js/hashes.min.js"></script>
+    <script>
+
+        var apiURL = "/api/Backend";
+        var api;
+        // Get the input field
+        var MD5 = new Hashes.MD5
+        // new SHA256 instance
+        var SHA256 = new Hashes.SHA256
+
+
+        function init() {
+            api = new BackendAPI("",apiURL);
+        }
+
+        function userLogin() {
+            var loginAccount = $('#accountInput').val().trim();
+            var password = $('#passwordInput').val().trim();
+            var userKey = $('#googleInput').val().trim();
+
+            password = SHA256.hex((MD5.b64(password) + userKey));
+            if (loginAccount == "") {
+
+                swal({
+                    title: "尚未输入账号",
+                    type: "warning",
+                    confirmButtonText: "确认",
+                    closeOnConfirm: true
+                });
+                return false;
+            }
+
+            if (password == "") {
+
+                swal({
+                    title: "尚未输入密码",
+                    type: "warning",
+                    confirmButtonText: "确认",
+                    closeOnConfirm: true
+                });
+                return false;
+            }
+
+            //if (userKey == "") {
+
+            //    swal({
+            //        title: "尚未输入谷歌验证码",
+            //        type: "warning",
+            //        confirmButtonText: "确认",
+            //        closeOnConfirm: false
+            //    });
+            //    return false;
+            //}
+
+
+            api.userLoginByGoogle(loginAccount, password, userKey, function (success, obj) {
+                if (obj.ResultCode == 0) {
+                    location.href = "Index.cshtml";
+                    //setCookie("BID", obj.BID);
+                } else {
+                    var message = ""
+                    switch (obj.ResultCode) {
+                        case 14:
+                            message = "谷歌验证码有误";
+                            break;
+                        case 13:
+                            location.href = "Index.cshtml";
+                            break;
+                        case 4:
+                            message = "帐号或密码错误";
+                            break;
+                        case 6:
+                            message = "非法操作";
+                            break;
+                        default:
+                            message = "其他错误";
+                            break;
+                    }
+
+                    swal({
+                        title: message,
+                        type: "warning",
+                        confirmButtonText: "确认",
+                        closeOnConfirm: true
+                    });
+                }
+            });
+        }
+
+        function enterlogin() {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                userLogin();
+            }    
+        } 
+        
+
+        window.onload = init;
+    </script>
+</head>
+
+<body class="theme-violet bg_login" onkeydown="enterlogin()">
+<!-- <body class="theme-cyan bg_login" onkeydown="enterlogin()"> -->
+    <div class="authentication sidebar-collapse">
+        <div class="page-header">
+            <div class="container">
+                <div class="col-md-12 content-center">
+                    <div class="card-plain">
+                        <form class="form">
+                            <div class="header">
+                            <div class="logo"> <img src="/VPay/assets/images/eWinPay1.svg"></div>   
+                                <h5 class="title">后台登入</h5>
+                            </div>
+                            <div class="content">
+                                <div class="input-group">
+                                    <input id="accountInput" type="text" class="form-control" placeholder="请输入帐号">
+                                    <span class="input-group-addon">
+                                        <i class="zmdi zmdi-account-circle"></i>
+                                    </span>
+                                </div>
+                                <div class="input-group">
+                                    <input id="passwordInput" type="password" placeholder="请输入密码" class="form-control" />
+                                    <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
+                                </div>
+                                <div class="input-group">
+                                    <input id="googleInput" type="text" class="form-control" placeholder="请输入谷歌验证码">
+                                    <span class="input-group-addon">
+                                        <i class="zmdi zmdi-google"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <a id="userLogin" onclick="userLogin()" class="btn btn-primary btn-round btn-lg btn-block ">登入</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

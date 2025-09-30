@@ -1,0 +1,2662 @@
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var result = bc.CheckLoginPermission(BID);
+    string CheckPermission = "success";
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    string PermissionName = Request.Path.Split('/').Last().Split('.').First();
+    result = bc.CheckPermission(BID,PermissionName);
+
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    string CheckLoginPermission = "success";
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckLoginPermission = "false";
+    }
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Favicon-->
+    <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap Select Css -->
+    <link href="~/Backend/assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Backend/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
+    <link rel="stylesheet" href="~/Backend/assets/plugins/morrisjs/morris.min.css" />
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/Backend/assets/css/main.css">
+    <link rel="stylesheet" href="~/Backend/assets/css/color_skins.css">
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="~/Backend/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+
+    <!-- JQuery sweetalert Css -->
+    <link href="~/Backend/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!-- JQuery jquery-nestable Css -->
+    <link href="~/Backend/assets/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <!-- datetimepicker Css-->
+    <link href="~/Backend/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <!-- JQuery multi-select Css -->
+    <link href="~/Backend/assets/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/Backend/assets/css/ecommerce.css" rel="stylesheet" />
+    <!-- jquery-ui Css -->
+    <link href="~/Backend/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Backend/assets/css/ui.tabs.overflowResize.css" rel="stylesheet" />
+    <!-- Jquery Core Js -->
+    <script src="~/Backend/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/Backend/assets/js/D3/d3.min.js"></script>
+    <script src="~/Backend/assets/bundles/libscripts.bundle.js"></script> <!--Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js)-->
+    <script src="~/Backend/assets/bundles/vendorscripts.bundle.js"></script>  <!--slimscroll, waves Scripts Plugin Js-->
+    <script src="~/Backend/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/Backend/assets/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
+    <script src="~/Backend/assets/bundles/morrisscripts.bundle.js"></script><!-- Morris Plugin Js -->
+    <script src="~/Backend/assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <script src="~/Backend/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+    <script src="~/Backend/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/Backend/assets/js/pages/index.js"></script>
+    <script src="~/Backend/assets/plugins/nestable/jquery.nestable.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="~/Backend/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
+    <script src="~/Backend/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/Backend/assets/plugins/jquery-datatable/dataTables.responsive.min.js"></script>
+    <script src="~/Backend/assets/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <!-- basic-form-elements Js -->
+    @*<script src="assets/js/pages/forms/basic-form-elements.js"></script>*@
+    <!-- datetimepicker Js -->
+    <script src="~/Backend/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/Backend/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <script src="~/Backend/assets/js/BackendJS/BackendAPI.js?20200409"></script>
+    <script src="~/Backend/assets/js/AutoNumeric.js"></script>
+    <script src="~/Backend/assets/js/ion.sound.min.js"></script>
+    <!-- JQuery 頁籤 Js -->
+    <script src="~/Backend/assets/js/jquery-ui.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.overflowResize.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.addTab.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.closable.js"></script>
+
+    <script src="~/Backend/assets/js/common.js"></script>
+
+    <style>
+
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black !important;
+            opacity: 1; /* Firefox */
+        }
+
+        .filter-option {
+            color: black !important;
+            opacity: 0.8;
+        }
+        /* fallback */
+        @@font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dtp-buttons {
+            display: none;
+        }
+
+        .navbar
+
+        .divided:hover {
+            cursor: pointer;
+        }
+
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: "Microsoft JhengHei";
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        form > label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            color: forestgreen !important;
+            background: #DDDDDD !important;
+            border-color: black !important;
+        }
+
+            .selectedItem:hover {
+                color: forestgreen;
+                background: #DDDDDD;
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #dff0d8 !important;
+        }
+
+        .show > .dropdown-toggle {
+            color: #fff !important;
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .btn-timeZone:hover {
+            cursor: pointer;
+        }
+        /*.dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }*/
+        .dtr-title {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: normal;
+        }
+
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .card_title {
+            font-size: 22px;
+        }
+
+        .card_subtitle {
+            padding: 20px;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft JhengHei";
+        }
+
+        * {
+            font-family: 微軟正黑體, 微軟雅黑體, Arial;
+        }
+        /*body{min-width: 1200px;}*/
+        /*body > .bg{background-image: url('../bg/davide-ragusa-716-unsplash.jpg');}*/
+        body > .bg {
+            background-image: url('assets/background/bg.jpg');
+        }
+        /*body > .bg{background-image: url('backgrounds/1.jpg');}*/
+        /*body > .bg{background-image: url('../bg/jeremy-bishop-171845-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/paul-carmona-276464-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/vinoth-ragunathan-96670-unsplash.jpg');}*/
+        body > .bg {
+            background-size: cover;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            filter: brightness(10);
+        }
+
+        .navbar-brand span {
+            color: #fff;
+        }
+        /*.navbar-nav > li > a i.fa-sync-alt, .navbar-nav > li > a i.fa-bell, .navbar-nav > li > a i.fa-caret-down{font-size: inherit;}*/
+        nav.navbar li > a {
+            color: #fff !important;
+        }
+
+        li.divided > a {
+            display: inline-block;
+            line-height: 30px;
+            padding: 0 15px;
+        }
+
+        span.label.label-transparent-black {
+            position: absolute;
+            top: -10px;
+            left: 26px;
+            z-index: 2;
+        }
+
+            span.label.label-transparent-black:before {
+                content: '';
+                background-color: #FF6B6B;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+            }
+
+        .displaynone, .overlay, .sidebar .menu .list .ml-menu, .menu_sm .sidebar .list li.header, .menu_sm .sidebar .list .detail, .menu_sm .sidebar .list a::before, .menu_sm .sidebar .list a::after, .menu_sm .sidebar .list a span {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .user .profile-photo {
+            display: inline-block;
+            width: 92px;
+            height: 92px;
+            margin: 0 0 4px 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+            transition: 0.2s all;
+        }
+
+            .user .profile-photo img {
+                width: 100%;
+            }
+
+        #current-user {
+            text-align: center;
+            list-style: none;
+            margin: 16px 0 0;
+        }
+
+            #current-user .account p {
+                color: #fff;
+            }
+
+            #current-user .account #layoutCompanyName {
+                font-size: 18px;
+                margin: 6px 0;
+            }
+
+            #current-user .account #layoutLoginAccount {
+                font-size: 14px;
+                font-weight: lighter;
+                margin: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+        #leftsidebar {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sidebar .menu .list a {
+            color: #eee;
+            padding: 12px 16px;
+        }
+
+            .sidebar .menu .list a span {
+                font-size: 16px;
+            }
+
+        .sidebar .menu .list .ml-menu li a {
+            padding: 10px 0 10px 60px;
+        }
+
+            .sidebar .menu .list .ml-menu li a:before {
+                content: '';
+            }
+
+        #timeShowBox {
+            color: #fff;
+            margin: 0;
+        }
+
+        #timeZoneSelect {
+            width: 90%;
+            height: 0;
+            margin: 8px auto 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 32px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+            transition: 0.3s all;
+            font-size: 0;
+        }
+
+            #timeZoneSelect:before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active {
+                height: 54px;
+                padding: 12px 0;
+            }
+
+                #timeZoneSelect.active:before {
+                    border-bottom: 5px solid #fff;
+                }
+
+            #timeZoneSelect .btn-timeZone {
+                display: -webkit-inline-flex;
+                display: -moz-inline-flex;
+                display: -ms-inline-flex;
+                display: -o-inline-flex;
+                display: inline-flex;
+                justify-content: center;
+                -ms-align-items: center;
+                align-items: center;
+                width: 88px;
+                height: 30px;
+                margin: 0 4px;
+                font-size: 12px;
+                color: transparent;
+                background-color: transparent;
+                border-radius: 4px;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active .btn-timeZone {
+                color: #fff;
+                background-color: #65C3DF;
+            }
+
+        .navbar {
+            min-height: 65px;
+            background-image: url('assets/background/nav_bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        ul.flex, .navLeft, .navRight {
+            display: -webkit-inline-flex !important;
+            display: -moz-inline-flex !important;
+            display: -ms-inline-flex !important;
+            display: -o-inline-flex !important;
+            display: inline-flex !important;
+            justify-content: space-between;
+            -ms-align-items: center;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+            .navLeft li:last-child {
+                position: absolute;
+                left: 214px;
+            }
+
+            .navRight li:nth-child(1), .navRight li:nth-child(2), .navRight li:nth-child(3) {
+                border-right: 1px solid #888;
+                height: 30px;
+            }
+
+        .navRight {
+            margin-right: 12px;
+        }
+        /*.navbar ul.nav li{position: absolute; top: 50%; transform: translateY(-50%);}*/
+        /*.navbar ul.nav li:nth-child(2){left: 150px;}
+        .navbar ul.nav li:nth-child(3){right: 340px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(3) p{margin: 0;}
+        .navbar ul.nav li:nth-child(4){right: 290px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(5){right: 242px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(6){right: 52px;}
+        .navbar ul.nav li:nth-child(7){right: 6px; border-left: 1px solid #888; height: 30px;}*/
+        .copyright {
+            position: absolute;
+            left: 28px;
+            bottom: 12px;
+            transition: 0.2s all;
+        }
+
+        body .copyright p {
+            margin: 0;
+            font-size: 12px;
+            color: #eee;
+        }
+
+        body.theme-cyan.menu_sm .copyright {
+            left: 4px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .profile-photo {
+            width: 52px;
+            height: 52px;
+            border-width: 2px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .account p {
+            display: none;
+        }
+
+        section.content {
+            margin: 65px 0px 0 250px;
+            background-color: #f5f5f5;
+            border-radius: 0;
+        }
+
+        .container-fluid > .row {
+            padding: 12px 0;
+        }
+
+        .dd-handle {
+            background: none;
+            border: 0;
+        }
+
+            .dd-handle:hover {
+                color: #45B6B0;
+            }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item > .dd-handle {
+            color: #575b61;
+            padding-left: 24px;
+        }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            width: 1px;
+            height: calc(100% + 10px);
+            height: -moz-calc(100% + 10px);
+            height: -webkit-calc(100% + 10px);
+            border-left: 0.5px solid #ddd;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item {
+            /*border-bottom: 1px solid #ddd;*/
+            margin: 6px 0;
+        }
+
+        li.dd-item {
+            padding: 0 12px;
+        }
+
+            li.dd-item > button {
+                position: absolute;
+                left: 10px;
+            }
+
+        .divCompanyTree > ol.dd-list > li.dd-item:last-child {
+            border: 0;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item > .dd-handle {
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 24px;
+        }
+
+        .theme-cyan .sidebar .menu .list {
+            padding: 0;
+        }
+
+            .theme-cyan .sidebar .menu .list > li {
+                padding: 0;
+                margin: 4px 12px;
+            }
+            /*.theme-cyan .sidebar .menu .list li ul li{padding: 0 12px;}*/
+            .theme-cyan .sidebar .menu .list li a:hover {
+                background-color: rgba(0,0,0,0.2);
+            }
+
+            .theme-cyan .sidebar .menu .list li ul {
+                background: rgba(0,0,0,0.35);
+            }
+
+            .theme-cyan .sidebar .menu .list li a:hover {
+                color: #fff;
+            }
+        /*.strongtitle{color: #6f7884; font-size: 22px;}*/
+        .col-lg-7.col-md-7.col-sm-7 > p {
+            margin: 0;
+        }
+
+        .block-header {
+            padding: 0 64px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+            .block-header h2 {
+                color: #565d67;
+                font-weight: bold;
+            }
+
+            .block-header .col {
+                padding: 16px;
+            }
+
+                .block-header .col.col-lg-9.col-md-9.col-sm-9 {
+                    display: -webkit-inline-flex;
+                    display: -moz-inline-flex;
+                    display: -ms-inline-flex;
+                    display: -o-inline-flex;
+                    display: inline-flex;
+                    -ms-align-items: center;
+                    align-items: center;
+                    border-left: 1px dashed #ddd;
+                }
+
+        .tips {
+            font-size: 12px;
+            color: #565d67;
+            padding-left: 12px;
+        }
+
+        #divtree {
+            padding: 0 24px;
+        }
+
+        @@media screen and (min-width: 1600px) {
+            #divtree {
+                padding: 0 56px;
+            }
+        }
+
+        .divtreeTool {
+            font-size: 0;
+        }
+
+            .divtreeTool button {
+                width: calc((100% - 6px * 2)/ 3 );
+                margin: 0 6px 6px 0;
+                font-size: 12px;
+            }
+
+                .divtreeTool button:last-child {
+                    margin-right: 0;
+                }
+
+            .divtreeTool .btn-divtreeTool {
+                padding: 12px 0;
+            }
+
+        .paper-wrap:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 0 42px 42px 0;
+            border-style: solid;
+            border-color: #ffffff #253856;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+        }
+
+        .card .header .row .col-lg-7.col-md-7.col-sm-7 {
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            -ms-align-items: center;
+            align-items: center;
+        }
+
+        table {
+            font-size: 14px !important;
+            color: #575b61 !important;
+        }
+
+        .card .body {
+            font-size: 14px !important;
+            color: #575b61 !important;
+            padding: 0 20px !important;
+        }
+
+            .card .body .row, #divCompanyPoint.card .body {
+                margin: 0 0 8px 0;
+            }
+
+        /*.card.wallet {
+            width: 120px;
+        }*/
+
+        .footer {
+            padding: 16px 0;
+        }
+        /*.theme-cyan .card .header h2:before{background: #45B6B0; top: -17px;}*/
+        .ortherText button {
+            margin: 0 8px;
+        }
+
+        .theme-cyan .btn-primary {
+            background: #65C3DF;
+        }
+
+        .dataTables_wrapper input[type="search"]:focus, .dataTables_wrapper input[type="search"]:active {
+            border-bottom: 2px solid #65C3DF;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+            margin: 16px 0 8px;
+        }
+
+
+        .theme-cyan .btn-primary:active, .theme-cyan .btn-primary:hover, .theme-cyan .btn-primary:focus {
+            background: #45B6B0;
+        }
+
+        .sorting_1:focus {
+            outline: 0;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #446288;
+        }
+
+        button.btn-circle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            line-height: 36px;
+        }
+
+        button.btn-round {
+            padding: 9px 24px;
+        }
+
+        table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+            background-color: #65C3DF;
+        }
+
+        footer.footer {
+            text-align: right;
+            padding: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+            footer.footer p {
+                display: inline-block;
+                margin: 0 20px 0 0;
+                font-size: 12px;
+                color: #aaa;
+            }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            /*color: forestgreen;*/
+            /*background: #DDDDDD;*/
+            border-color: black;
+        }
+
+            .selectedItem:hover {
+                /*color: forestgreen;*/
+                /*background: #DDDDDD;*/
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #a2aec7 !important;
+        }
+
+        .show > .dropdown-toggle {
+            /*color: #fff !important;*/
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+
+        .divDetailData .card {
+            background-color: #fff;
+        }
+
+        .divDetailData > .card > .header {
+            padding: 12px 16px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .divPointDetail {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+            .divPointDetail .footer {
+                padding: 0;
+            }
+
+            .divPointDetail .card.wallet {
+                border-right: 1px solid rgba(0,0,0,0.1) !important;
+                margin-bottom: 30px;
+                border-radius: 0;
+            }
+
+                .divPointDetail .card.wallet:last-child {
+                    border-right: 0;
+                }
+
+            .divPointDetail .card.wallet {
+                background: none;
+                box-shadow: none;
+            }
+
+                .divPointDetail .card.wallet .header {
+                    padding: 4px 20px 8px;
+                }
+
+                .divPointDetail .card.wallet h2:before {
+                    width: 16px;
+                    height: 2px;
+                    top: -4px;
+                }
+
+                .divPointDetail .card.wallet p.text-muted, .divPointDetail .card.wallet p.wallettext-muted {
+                    color: #6f7884 !important;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 18px;
+                }
+
+        /*.table-responsive .dataTables_length .btn-group button {
+            border-radius: 8px !important;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:active,
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:focus {
+            border-color: #fff;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button span {
+            color: #fff;
+        }*/
+
+        .table-responsive table th {
+            font-weight: normal;
+        }
+    </style>
+
+    <style>
+        .dropdown-menu > .inner {
+            max-height: 500px !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+<body class="theme-cyan">
+    <div class="block-header paper-wrap">
+        <div class="row">
+            <div class="col col-lg-9 col-md-9 col-sm-9">
+                <h2>供应商管理</h2>
+                <span class="" style="padding:10px;"> 切换供应商 : </span>
+                <span style="z-index:500;">
+                    <select data-live-search="true" class="show-tick" id="select_providercode"></select>
+                </span>
+                <button style="margin-left:5px" title="新增" id="btnProviderCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect "><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="col col-lg-3 col-md-3 col-sm-3 hideDiv">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>供应商资讯</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="停用" id="btnProviderDisable" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right" style="background: #FF6B6B;"><i class="fas fa-ban"></i></button>
+                                <button title="修改" id="btnProviderEdit" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="body">
+
+                        <div id="divProviderDetail" style="display:none;">
+                            <span id="b_ProviderAPIType" style="display:none;"></span>
+                            <div class="row" style="margin:0">
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 供应商名称：</span>
+                                    <span id="b_ProviderName"></span>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 供应商代码：</span>
+                                    <span id="b_ProviderCode"></span>
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin:0">
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 介绍人：</span>
+                                    <span id="b_Introducer"></span>
+                                </div>
+
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 商户代码：</span>
+                                    <span id="b_MerchantCode"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:0">
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 供应商网址：</span>
+                                    <span id="b_ProviderUrl"></span>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 商户号：</span>
+                                    <span id="b_MerchantKey"></span>
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin:0">
+
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 類型：</span>
+                                    <span id="b_CollectType"></span>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 页面异步通知地址：</span>
+                                    <span id="b_NotifyAsyncUrl"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:0">
+
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 是否为预付：</span>
+                                    <span id="b_isPrePaid"></span>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 狀態：</span>
+                                    <span id="b_ProviderState"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:0">
+
+                                <div style="display:none;" class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 提款手續費率：</span>
+                                    <span id="b_WithdrawRate"></span>
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin:0">
+
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 銀行卡充值過期時間：</span>
+                                    <span id="b_BankCardTimeoutSecond"></span>
+                                </div>
+
+                            </div>
+                            <div class="row" style="display:none;margin:0">
+
+                                <div class="col-lg-6 col-sm-6 col-md-6">
+                                    <span> 錢包過期時間：</span>
+                                    <span id="b_WalletTimeoutSecond"></span>
+                                </div>
+
+                            </div>
+                            <div class="footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>支付方式</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="停用" id="btnProviderServiceDisable" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right" style="background: #FF6B6B;"><i class="fas fa-ban"></i></button>
+                                <button title="修改" id="btnProviderServiceEdit" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+                                <button title="新增" id="btnProviderServiceCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_ProviderService">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>後台下發設定</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+
+                                <button title="修改" id="btnProviderWithdrawLimitEdit" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+                                <button title="新增" id="btnProviderWithdrawLimitCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_ProviderWithdrawLimit">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>API 出款設定</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+
+                                <button title="修改" id="btnProviderWithdrawLimitEditAPI" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+                                <button title="新增" id="btnProviderWithdrawLimitCreateAPI" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_ProviderWithdrawLimitAPI">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>銀行卡設定</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="停用" id="btnProviderBankCardTableDelete" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right" style="background: #FF6B6B;"><i class="fas fa-ban"></i></button>
+                                <button title="修改" id="btnProviderBankCardTableEdit" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+                                <button title="新增" id="btnProviderBankCardTableCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_ProviderBankCardTable">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>支付寶設定</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="停用" id="btnProviderAlipayTableDelete" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right" style="background: #FF6B6B;"><i class="fas fa-ban"></i></button>
+                                <button title="修改" id="btnProviderAlipayTableEdit" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-pen"></i></button>
+                                <button title="新增" id="btnProviderAlipayTableCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_ProviderAlipayTable">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix" id="table_GPayRelationDiv">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>已设定商户</strong></h2>
+                    </div>
+                    <div class="body">
+
+                        <div>
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable tt-table nowrap" id="table_GPayRelation">
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    var ProviderServiceTable;
+    var WithdrawLimitTable;
+    var WithdrawLimitAPITable;
+    var ProviderBankCardTable;
+    var ProviderAlipayTable;
+    var GPayRelationTable;
+    var providerdata = null;
+    var isCreatedProviderServiceTable = false;
+    var isCreatedWithdrawLimitTable = false;
+    var isCreatedWithdrawLimitAPITable = false;
+    var isCreatedProviderBankCardTable = false;
+    var isCreatedProviderAlipayTable = false;
+    var isCreatedGPayRelationTable = false;
+    var providerCompanyID = 0;
+    $(document).ready(function () {
+           if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        pageLoad();
+    });
+
+    function pageLoad() {
+        
+if ('@CheckLoginPermission' == 'false') {
+                location.href = "Login.cshtml";
+            }
+
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+
+        getProviderCodeResult();
+
+        $('#table_ProviderService tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                ProviderServiceTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#table_ProviderWithdrawLimit tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                WithdrawLimitTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#table_ProviderWithdrawLimitAPI tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                WithdrawLimitTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#table_ProviderBankCardTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                ProviderBankCardTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#table_ProviderAlipayTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                ProviderAlipayTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        //新增供應商
+        $("#btnProviderCreate").on("click", function () {
+            var data = {
+                backID: window.frameElement.id.split('_')[1]
+            }
+
+            var tmpdata = {
+                type: "Provider_Create",
+                data: data
+            };
+            sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+            parent.GoPage("Provider_Create", "供应商新增", "Provider_Create.cshtml");
+
+        })
+        //編輯供應商
+        $("#btnProviderEdit").on("click", function () {
+            var modifyProviderData = {};
+
+            modifyProviderData.ProviderCode = $('#b_ProviderCode').text();
+            modifyProviderData.ProviderName = $('#b_ProviderName').text();
+            modifyProviderData.Introducer = $('#b_Introducer').text();
+            modifyProviderData.ProviderUrl = $('#b_ProviderUrl').text();
+            modifyProviderData.MerchantCode = $('#b_MerchantCode').text();
+            modifyProviderData.MerchantKey = $('#b_MerchantKey').text();
+            modifyProviderData.NotifySyncUrl = $('#b_NotifySyncUrl').text();
+            modifyProviderData.NotifyAsyncUrl = $('#b_NotifyAsyncUrl').text();
+            modifyProviderData.ProviderAPIType = $('#b_ProviderAPIType').text();
+            modifyProviderData.WithdrawRate = $('#b_WithdrawRate').text();
+            modifyProviderData.BankCardTimeoutSecond = $('#b_BankCardTimeoutSecond').text();
+            modifyProviderData.WalletTimeoutSecond = $('#b_WalletTimeoutSecond').text();
+            modifyProviderData.forCompanyID = providerCompanyID;
+            
+            if ($('#b_CollectType').text() == "一般") {
+                modifyProviderData.CollectType = 0;
+            } else {
+                modifyProviderData.CollectType = 1;
+            }
+
+
+            if ($('#b_isPrePaid').text() == "是") {
+                modifyProviderData.isPrePaid = 0;
+            } else {
+                modifyProviderData.isPrePaid = 1;
+            }
+            
+            var backID = window.frameElement.id.split('_')[1];
+            parent.CreateSessionStorage("Provider_Maint", modifyProviderData, `供应商修改(${modifyProviderData.ProviderName})`, "Provider_Update.cshtml", backID, "Provider_Update_" + modifyProviderData.ProviderCode);
+
+
+        })
+        parent.wrapperFadeOut();
+    }
+
+    //新增供應商渠道
+    $("#btnProviderServiceCreate").on("click", function () {
+        var data = {
+            ProviderCode: $('#select_providercode').val(),
+            ProviderName: $('#b_ProviderName').text(),
+            backID: window.frameElement.id.split('_')[1]
+        }
+
+        var tmpdata = {
+            type: "ProviderServiceCreate",
+            data: data
+        };
+
+        sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+        parent.GoPage("ProviderServiceCreate", "支付方式新增", "ProviderService_Create.cshtml");
+    })
+    //編輯供應商渠道
+    $("#btnProviderServiceEdit").on("click", function () {
+        if (ProviderServiceTable == undefined) {
+            parent.warningAlert("尚未选择供应商渠道");
+        }
+        else if (ProviderServiceTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要编辑的资料");
+        } else {
+
+            var backID = window.frameElement.id.split('_')[1];
+            ProviderServiceTable.row(".selected").data().ProviderName = $('#b_ProviderName').text();
+            parent.CreateSessionStorage("ProviderService_Maint", ProviderServiceTable.row(".selected").data(), `支付方式修改(${ProviderServiceTable.row(".selected").data().ServiceTypeName})`, "ProviderService_Update.cshtml", backID, "ProviderService_Update_" + ProviderServiceTable.row(".selected").data().ProviderCode + "_" + ProviderServiceTable.row(".selected").data().ServiceType);
+        }
+
+    })
+    //停用供应商
+
+    $("#btnProviderDisable").on("click", function () {
+
+        swal({
+            title: "是否要修改商户状态(停用/启用)？",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: true,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            confirmButtonColor: "#DD6B55",
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    disableProvider($('#select_providercode').val());
+                }
+            });
+
+    })
+
+    function changeProviderServiceType(objbtn) {
+
+        var providerCode = $('#select_providercode').val();
+        var ServiceType = $(objbtn).data("ServiceType");
+        var currencyType = $(objbtn).data("currencytype");
+
+        disableProviderService(providerCode, ServiceType, currencyType);
+
+    }
+    //停用供應商渠道
+    $("#btnProviderServiceDisable").on("click", function () {
+        if (ProviderServiceTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要修改的资料");
+        } else {
+            swal({
+                title: "是否要(停用/启用)？",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                confirmButtonColor: "#DD6B55",
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        disableProviderService(ProviderServiceTable.row(".selected").data().ProviderCode, ProviderServiceTable.row(".selected").data().ServiceType, ProviderServiceTable.row(".selected").data().CurrencyType);
+                    }
+                });
+        }
+    })
+    //新增供應商代付限額
+    $("#btnProviderWithdrawLimitCreate").on("click", function () {
+        var data = {
+            ProviderCode: $('#select_providercode').val(),
+            ProviderName: $('#b_ProviderName').text(),
+            backID: window.frameElement.id.split('_')[1],
+            WithdrawLimitType: 0
+        }
+
+        var tmpdata = {
+            type: "ProviderWithdrawLimitCreate",
+            data: data
+        };
+        sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+        parent.GoPage("ProviderWithdrawLimitCreate", "供应商後台下發設定新增", "ProviderWithdrawLimit_Create.cshtml");
+
+    })
+    //編輯供應商代付限額
+    $("#btnProviderWithdrawLimitEdit").on("click", function () {
+        if (WithdrawLimitTable == undefined) {
+            parent.warningAlert("尚未有供应商代付资料");
+        }
+        else if (WithdrawLimitTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要编辑的资料");
+        } else {
+            var backID = window.frameElement.id.split('_')[1];
+            WithdrawLimitTable.row(".selected").data().ProviderName = $('#b_ProviderName').text();
+            WithdrawLimitTable.row(".selected").data().WithdrawLimitType = 0;
+            parent.CreateSessionStorage("ProviderWithdrawLimit_Maint", WithdrawLimitTable.row(".selected").data(), `供应商後台下發設定修改(${WithdrawLimitTable.row(".selected").data().ProviderName})`, "ProviderWithdrawLimit_Update.cshtml", backID, "ProviderWithdrawLimit_Update_" + WithdrawLimitTable.row(".selected").data().ProviderCode);
+        }
+    })
+
+    function ProviderBankCardReview(BankCardGuid, BankNumber) {
+        var backID = window.frameElement.id.split('_')[1];
+        var data = {
+            BankCardGUID: BankCardGuid,
+            BankNumber: BankNumber
+        };
+  
+        parent.CreateSessionStorage("CompanyWhiteListProviderBankCard_Maint", data, `供應商專卡設定(${BankNumber})`, "CompanyWhiteListProviderBankCard_Maint.cshtml", backID, "CompanyWhiteListProviderBankCard_Maint_" + BankNumber);
+    }
+    
+
+    //新增供應商api代付限額
+    $("#btnProviderWithdrawLimitCreateAPI").on("click", function () {
+        var data = {
+            ProviderCode: $('#select_providercode').val(),
+            ProviderName: $('#b_ProviderName').text(),
+            backID: window.frameElement.id.split('_')[1],
+            WithdrawLimitType: 3
+        }
+
+        var tmpdata = {
+            type: "ProviderWithdrawLimitCreate",
+            data: data
+        };
+        sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+        parent.GoPage("ProviderWithdrawLimitCreate", "供应商API 出款新增", "ProviderWithdrawLimit_Create.cshtml");
+
+    })
+    //編輯供應商api代付限額
+    $("#btnProviderWithdrawLimitEditAPI").on("click", function () {
+        if (WithdrawLimitAPITable == undefined) {
+            parent.warningAlert("尚未有供应商代付资料");
+        }
+        else if (WithdrawLimitAPITable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要编辑的资料");
+        } else {
+            var backID = window.frameElement.id.split('_')[1];
+            WithdrawLimitAPITable.row(".selected").data().ProviderName = $('#b_ProviderName').text();
+            WithdrawLimitAPITable.row(".selected").data().WithdrawLimitType = 3;
+            parent.CreateSessionStorage("ProviderWithdrawLimit_Maint", WithdrawLimitAPITable.row(".selected").data(), `代付API 出款修改${WithdrawLimitAPITable.row(".selected").data().ProviderName})`, "ProviderWithdrawLimit_Update.cshtml", backID, "ProviderWithdrawLimit_Update_" + WithdrawLimitAPITable.row(".selected").data().ProviderCode);
+        }
+    })
+
+    //新增銀行卡
+    $("#btnProviderBankCardTableCreate").on("click", function () {
+        var data = {
+            ProviderCode: $('#select_providercode').val(),
+            ProviderName: $('#b_ProviderName').text(),
+            backID: window.frameElement.id.split('_')[1]
+        }
+
+        var tmpdata = {
+            type: "ProviderBankCardTableCreate",
+            data: data
+        };
+        sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+        parent.GoPage("ProviderBankCardTableCreate", "供应商銀行卡新增", "ProviderBankCard_Add.cshtml");
+
+    })
+    //編輯銀行卡
+    $("#btnProviderBankCardTableEdit").on("click", function () {
+        if (ProviderBankCardTable == undefined) {
+            parent.warningAlert("尚未有供应商銀行卡资料");
+        }
+        else if (ProviderBankCardTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要编辑的资料");
+        } else {
+            var backID = window.frameElement.id.split('_')[1];
+            ProviderBankCardTable.row(".selected").data().ProviderName = $('#b_ProviderName').text();
+            parent.CreateSessionStorage("ProviderBankCard_Maint", ProviderBankCardTable.row(".selected").data(), `供應商銀行卡修改(${ProviderBankCardTable.row(".selected").data().ProviderName})`, "ProviderBankCard_Update.cshtml", backID, "ProviderBankCard_Update_" + ProviderBankCardTable.row(".selected").data().ProviderCode);
+        }
+    })
+    //刪除銀行卡
+    $("#btnProviderBankCardTableDelete").on("click", function () {
+        if (ProviderBankCardTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要修改的资料");
+        } else {
+            swal({
+                title: "是否要刪除銀行卡(" + ProviderBankCardTable.row(".selected").data().BankCardName +")",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                confirmButtonColor: "#DD6B55",
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var data = ProviderBankCardTable.row(".selected").data();
+                        deleteProviderBankCard(data.BankCardGUID,data.forProviderCode);
+                    }
+                });
+        }
+    })
+
+    function deleteProviderBankCard(BankCardGUID, ProviderCode) {
+        parent.wrapperFadeIn();
+        api.deleteProviderBankCard(BankCardGUID, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                getProviderBankCardResult(ProviderCode);
+                parent.wrapperFadeOut();
+                parent.successAlert(function () {
+                });
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    //新增支付寶
+    $("#btnProviderAlipayTableCreate").on("click", function () {
+        var data = {
+            ProviderCode: $('#select_providercode').val(),
+            ProviderName: $('#b_ProviderName').text(),
+            backID: window.frameElement.id.split('_')[1]
+        }
+
+        var tmpdata = {
+            type: "ProviderAlipayTableCreate",
+            data: data
+        };
+        sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+        parent.GoPage("ProviderAlipayTableCreate", "供应商支付寶新增", "ProviderAlipay_Add.cshtml");
+
+    })
+    //編輯支付寶
+    $("#btnProviderAlipayTableEdit").on("click", function () {
+        if (ProviderAlipayTable == undefined) {
+            parent.warningAlert("尚未有供应商支付寶资料");
+        }
+        else if (ProviderAlipayTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要编辑的资料");
+        } else {
+            var backID = window.frameElement.id.split('_')[1];
+            ProviderAlipayTable.row(".selected").data().ProviderName = $('#b_ProviderName').text();
+            parent.CreateSessionStorage("ProviderAlipay_Maint", ProviderAlipayTable.row(".selected").data(), `供應商支付寶修改(${ProviderAlipayTable.row(".selected").data().ProviderName})`, "ProviderAlipay_Update.cshtml", backID, "ProviderAlipay_Update_" + ProviderAlipayTable.row(".selected").data().ProviderCode);
+        }
+    })
+    //刪除支付寶
+    $("#btnProviderAlipayTableDelete").on("click", function () {
+        if (ProviderAlipayTable.row(".selected").data() == undefined) {
+            parent.warningAlert("请先选择要修改的资料");
+        } else {
+            swal({
+                title: "是否要刪除支付寶(" + ProviderAlipayTable.row(".selected").data().AlipayName + ")",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                confirmButtonColor: "#DD6B55",
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        var data = ProviderAlipayTable.row(".selected").data();
+                        deleteProviderAlipay(data.BankCardGUID, data.forProviderCode);
+                    }
+                });
+        }
+    })
+
+    function deleteProviderAlipay(BankCardGUID, ProviderCode) {
+        parent.wrapperFadeIn();
+        api.deleteProviderAlipay(BankCardGUID, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                getProviderAlipayResult(ProviderCode);
+                parent.wrapperFadeOut();
+                parent.successAlert(function () {
+                });
+            } else {
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+
+    function disableProviderService(providerCode, ServiceType, currencyType) {
+        api.disableProviderServiceResult(providerCode, ServiceType, currencyType, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                TempData = {
+                    "type": "afterModifyProvider",
+                    "data": providerCode
+                }
+                sessionStorage.setItem("TempData", JSON.stringify(TempData));
+                parent.successAlert(function () {
+                    parent.refreshPage(window.frameElement.id.split('_')[1]);
+                });
+            } else {
+
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+
+            }
+        });
+    }
+
+    function disableProvider(providerCode) {
+        api.disableProvider(providerCode, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                TempData = {
+                    "type": "afterModifyProvider",
+                    "data": providerCode
+                }
+                sessionStorage.setItem("TempData", JSON.stringify(TempData));
+                parent.successAlert(function () {
+                    parent.refreshPage(window.frameElement.id.split('_')[1]);
+                });
+            } else {
+
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    case 9:
+                        parent.warningAlert(obj.Message);
+                        break;
+                    default:
+                        parent.warningAlert("其他错误");
+                        break;
+                }
+
+            }
+        });
+    }
+
+    function getProviderCodeResult() {
+        api.getProviderCodeResult(function (success, obj) {
+            if (isCreatedProviderServiceTable) {
+                ProviderServiceTable.clear().draw();
+            }
+
+            if (isCreatedGPayRelationTable) {
+                GPayRelationTable.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+                providerdata = obj.ProviderTypes;
+                createProviderSelect();
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    case 5:
+                        //message = "沒有資料";
+                        //warningAlert(message);
+                        break;
+                    default:
+                        //message = "其他錯誤";
+                        //warningAlert(message);
+                        break;
+                }
+
+
+            }
+        });
+    }
+
+    function createProviderSelect() {
+
+        if (providerdata) {
+
+            var selectedproviderdata;
+
+            $.each(providerdata, function (i, item) {
+                $("#select_providercode").append('<option value="' + providerdata[i].ProviderCode + '">' + providerdata[i].ProviderName + '</option>');
+            })
+
+            //確認是否從新增或修改頁面完成後進入,如果是的話找出剛剛修改後的供應商資料
+            if (window.sessionStorage["TempData"]) {
+                var tempData = JSON.parse(window.sessionStorage["TempData"]);
+                if (tempData.type == "afterModifyProvider") {
+                    selectedproviderdata = providerdata.find(function (d) { return d.ProviderCode == tempData.data });
+                } else {
+                    selectedproviderdata = providerdata[0];
+                }
+            } else {
+                selectedproviderdata = providerdata[0];
+            }
+
+
+            $("#select_providercode").val(selectedproviderdata.ProviderCode);
+
+            $('#select_providercode').selectpicker('refresh');
+
+            if (selectedproviderdata) {
+                providerCompanyID = selectedproviderdata.forCompanyID;
+                $('#b_ProviderCode').text(selectedproviderdata.ProviderCode);
+                $('#b_ProviderName').text(selectedproviderdata.ProviderName);
+                $('#b_Introducer').text(selectedproviderdata.Introducer);
+                $('#b_ProviderUrl').text(selectedproviderdata.ProviderUrl);
+                $('#b_MerchantCode').text(selectedproviderdata.MerchantCode);
+                $('#b_MerchantKey').text(selectedproviderdata.MerchantKey);
+                $('#b_NotifySyncUrl').text(selectedproviderdata.NotifySyncUrl);
+                $('#b_NotifyAsyncUrl').text(selectedproviderdata.NotifyAsyncUrl);
+                $('#b_ProviderAPIType').text(selectedproviderdata.ProviderAPIType);
+                $('#b_WithdrawRate').text(selectedproviderdata.WithdrawRate);
+                $('#b_BankCardTimeoutSecond').text(selectedproviderdata.BankCardTimeoutSecond);
+                $('#b_WalletTimeoutSecond').text(selectedproviderdata.WalletTimeoutSecond);
+          
+                $('#b_ProviderAPITypeStr').text(checkedProviderAPIType(selectedproviderdata.ProviderAPIType));
+                if (selectedproviderdata.ProviderState == 0) {
+                    $('#b_ProviderState').text('启用');
+                    $('#b_ProviderState').css('color', 'blue');
+                } else {
+                    $('#b_ProviderState').text('停用');
+                    $('#b_ProviderState').css('color', 'red');
+                }
+
+                if (selectedproviderdata.CollectType == 0) {
+                    $('#b_CollectType').text('一般');
+                    $('#b_CollectType').css('color', 'blue');
+                } else {
+                    $('#b_CollectType').text('專屬廠商');
+                    $('#b_CollectType').css('color', 'red');
+                }
+
+
+                if (selectedproviderdata.isPrePaid == 0) {
+                    $('#b_isPrePaid').text('是');
+                    $('#b_isPrePaid').css('color', 'blue');
+                } else {
+                    $('#b_isPrePaid').text('否');
+                    $('#b_isPrePaid').css('color', 'red');
+                }
+
+               
+                
+
+                $('#divProviderDetail').show();
+                getProviderServiceTableResult(selectedproviderdata.ProviderCode);
+                getProviderWithdrawLimitResult(selectedproviderdata.ProviderCode);
+                getProviderBankCardResult(selectedproviderdata.ProviderCode);
+                getGPayRelationTableResult(selectedproviderdata.ProviderCode);
+            }
+        }
+    }
+
+    function CreateProviderServiceTable(data) {
+
+        ProviderServiceTable = $('#table_ProviderService').DataTable({
+            data: data,
+            columns: [
+                {
+                    "title": "支付类型", "data": "ServiceTypeName"
+                },
+                {
+                    "title": "币别", "data": "CurrencyType"
+                },
+                { "title": "费率", "data": "CostRate" },
+                {
+                    "title": "手续费(次) ", "data": "CostCharge" },
+                {
+                    "title": "最低金额", "data": "MinOnceAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "最高金额", "data": "MaxOnceAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日交易量", "data": "MaxDaliyAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "结算时间", "data": "CheckoutType",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return 'D0(当日结算)';
+                        } else if (data == 1) {
+                            return 'D+1(隔日结算)';
+                        } else {
+                            return 'T0(当周结算)';
+                        }
+                    }
+                },
+                {
+                    "title": "装置", "data": "DeviceType",
+                    "render": function (data) {
+                        if (data == 1) {
+                            return 'PC';
+                        } else if (data == 2) {
+                            return '手机';
+                        } else {
+                            return 'PC+手机';
+                        }
+                    }
+                },
+                {
+                    "title": "状态", "data": "State",
+                    "render": function (data, display, rowdata) {
+                        if (data == 0) {
+                            return `<input type="checkbox" data-currencytype="${rowdata.CurrencyType}" data-ServiceType="${rowdata.ServiceType}" onclick="changeProviderServiceType(this)" ${data == 0 ? checked = "checked" : checked = ""}/><span style="color:blue;">启用</span>`;
+                        } else {
+                            return `<input type="checkbox" data-currencytype="${rowdata.CurrencyType}" data-ServiceType="${rowdata.ServiceType}" onclick="changeProviderServiceType(this)" ${data == 0 ? checked = "checked" : checked = ""}/><span style="color:red;">停用</span>`;
+                        }
+                    }
+                },
+                {
+                    "title": "备注", "data": "Description"
+                },
+                {
+                    "title": "功能", "data": "ServiceType", "render": function (data, display, rowdata) {
+                        return '<button data-currencytype="' + rowdata.CurrencyType + '" data-ServiceType="' + data + '" onclick="deleteProviderService(this)">删除</button>';
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function CreateWithdrawLimitTable(data) {
+
+        WithdrawLimitTable = $('#table_ProviderWithdrawLimit').DataTable({
+            data: data,
+            columns: [
+                {
+                    "title": "币别", "data": "CurrencyType"
+                },
+                {
+                    "title": "单笔交易最低金额", "data": "MinLimit",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "单笔交易最高金额", "data": "MaxLimit",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费", "data": "Charge",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费(%)", "data": "Rate",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function CreateWithdrawLimitAPITable(data) {
+
+        WithdrawLimitAPITable = $('#table_ProviderWithdrawLimitAPI').DataTable({
+            data: data,
+            columns: [
+                {
+                    "title": "币别", "data": "CurrencyType"
+                },
+                {
+                    "title": "单笔交易最低金额", "data": "MinLimit",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "单笔交易最高金额", "data": "MaxLimit",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费", "data": "Charge",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "手续费(%)", "data": "Rate",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function CreateProviderBankCardTable(data) {
+
+        ProviderBankCardTable = $('#table_ProviderBankCardTable').DataTable({
+            data: data,
+            columns: [
+                {
+                    "title": "專卡", "data": "BankCardGUID",
+                    "render": function (data, display, rowdata) {
+                        return '<button onclick=\'event.stopPropagation(); ProviderBankCardReview(\"' + rowdata.BankCardGUID + '\", \"' + rowdata.BankNumber + '\")\'>設定</button>';
+                    }
+                },
+                { "title": "卡片名稱", "data": "BankCardName" },
+                {
+                    "title": "卡片狀態", "data": "BankCardState",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return '<span style="color:blue;">啟用</span>';
+                        } else {
+                            return '<span style="color:red;">停用</span>';
+                        }
+                    }
+                },
+                {
+                    "title": "卡片類型", "data": "CardType",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return '<span">輪詢卡</span>';
+                        } else if (data == 1) {
+                            return '<span">非輪詢卡</span>';
+                        } else if (data == 2) {
+                            return '<span">專卡專用銀行卡</span>';
+                        }
+                    }
+                },
+                { "title": "幣別", "data": "CurrencyType" },
+                { "title": "系統序號", "data": "BankCardGUID" },
+                { "title": "銀行代碼", "data": "BankCode" },
+                { "title": "銀行名稱", "data": "BankName" },
+                { "title": "分行名稱", "data": "BranchName" },
+                { "title": "銀行帳號", "data": "BankNumber" },
+                { "title": "戶名", "data": "AccountName" },
+                //{ "title": "銀行城市", "data": "BankCity" },
+                //{ "title": "銀行省分", "data": "BankProvince" },
+                { "title": "備註", "data": "Description" },
+                {
+                    "title": "銀行卡運行時間", "data": "ServiceStartDate",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        let datetimeEndStr = rowdata.ServiceEndDate; // '2025-07-10T18:00:00'
+                        let timeEnd = datetimeEndStr.substring(11, 16); // 取出 '18:00'
+
+                        let ServiceStartDateStr = rowdata.ServiceStartDate; // '2025-07-10T18:00:00'
+                        let timeStart = ServiceStartDateStr.substring(11, 16); // 取出 '18:00'
+
+                        retValue += timeStart + "-" + timeEnd;
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "單次最大用量", "data": "AmountMax",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (data == -1) {
+                            retValue += "<div><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div>" + data + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "單次最低用量", "data": "AmountMin",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (data == -1) {
+                            retValue += "<div><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div>" + data + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "可用用量", "data": "TotalCreditValue",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (rowdata.TotalCreditValueDay == -1) {
+                            retValue += "<div><span>每日：</span'><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueDay) + "</div>";
+                        }
+
+
+                        if (rowdata.TotalCreditValueWeek == -1) {
+                            retValue += "<div><span>每日：</span><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueWeek) + "</div>";
+                        }
+
+                        if (rowdata.TotalCreditValueMonth == -1) {
+                            retValue += "<div><span>每日：</span><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueMonth) + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "目前用量", "data": "CreditValue",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        retValue += "<div><span>每日：</span>" + toCurrency(rowdata.CreditValueDay) + "</div>";
+                        retValue += "<div><span>每周：</span>" + toCurrency(rowdata.CreditValueWeek) + "</div>";
+                        retValue += "<div><span>每月：</span>" + toCurrency(rowdata.CreditValueMonth) + "</div>";
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "更新日期", "data": "LastDate",
+                    "render": function (data, display, rowdata) {
+                        return data.replace("T", " ");
+                    }
+                },
+                {
+                    "title": "建立日期", "data": "CreateDate",
+                    "render": function (data, display, rowdata) {
+                        return data.replace("T", " ");
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function CreateProviderAlipayTable(data) {
+
+        ProviderAlipayTable = $('#table_ProviderAlipayTable').DataTable({
+            data: data,
+            columns: [
+                { "title": "卡片名稱", "data": "BankCardName" },
+                {
+                    "title": "卡片狀態", "data": "BankCardState",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return '<span style="color:blue;">啟用</span>';
+                        } else {
+                            return '<span style="color:red;">停用</span>';
+                        }
+                    }
+                },
+                {
+                    "title": "卡片類型", "data": "CardType",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return '<span">輪詢卡</span>';
+                        } else if (data == 1) {
+                            return '<span">非輪詢卡</span>';
+                        } else if (data == 2) {
+                            return '<span">專卡專用銀行卡</span>';
+                        }
+                    }
+                },
+                { "title": "幣別", "data": "CurrencyType" },
+                { "title": "系統序號", "data": "BankCardGUID" },
+                {
+                    "title": "图片", "data": "Description", render: function (data, display, rowdata) {
+                        //+ "&t=" + new Date().getTime()
+                        let k = new Date().getTime();
+                        return '<img  src="../GetQRCode.aspx?Download=2&QRCode=' + data + '&t='+ k +'" style = "height: 50px" />';
+                    }
+                },
+                {
+                    "title": "單次最大用量", "data": "AmountMax",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (data == -1) {
+                            retValue += "<div><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div>" + data + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "單次最低用量", "data": "AmountMin",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (data == -1) {
+                            retValue += "<div><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div>" + data + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "可用用量", "data": "TotalCreditValue",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (rowdata.TotalCreditValueDay == -1) {
+                            retValue += "<div><span>每日：</span'><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueDay) + "</div>";
+                        }
+
+
+                        if (rowdata.TotalCreditValueWeek == -1) {
+                            retValue += "<div><span>每日：</span><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueWeek) + "</div>";
+                        }
+
+                        if (rowdata.TotalCreditValueMonth == -1) {
+                            retValue += "<div><span>每日：</span><span style='color:green'>無限制</span></div>";
+                        } else {
+                            retValue += "<div><span>每日：</span>" + toCurrency(rowdata.TotalCreditValueMonth) + "</div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "目前用量", "data": "CreditValue",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        retValue += "<div><span>每日：</span>" + toCurrency(rowdata.CreditValueDay) + "</div>";
+                        retValue += "<div><span>每周：</span>" + toCurrency(rowdata.CreditValueWeek) + "</div>";
+                        retValue += "<div><span>每月：</span>" + toCurrency(rowdata.CreditValueMonth) + "</div>";
+
+                        return retValue;
+                    }
+                },
+                {
+                    "title": "更新日期", "data": "LastDate",
+                    "render": function (data, display, rowdata) {
+                        return data.replace("T", " ");
+                    }
+                },
+                {
+                    "title": "建立日期", "data": "CreateDate",
+                    "render": function (data, display, rowdata) {
+                        return data.replace("T", " ");
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function CreateGPayRelationTable(data) {
+
+        GPayRelationTable = $('#table_GPayRelation').DataTable({
+            data: data,
+            columns: [
+                { "title": "商户名称", "data": "CompanyName" },
+                { "title": "支付类型", "data": "ServiceTypeName" },
+                { "title": "币别", "data": "CurrencyType" }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function deleteProviderService(objbtn) {
+
+        var providerCode = $('#select_providercode').val();
+        var ServiceType = $(objbtn).data("ServiceType");
+        var currencyType = $(objbtn).data("currencytype");
+        swal({
+            title: "是否确定删除支付通道？",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: true,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            confirmButtonColor: "#DD6B55",
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    api.deleteProviderService(providerCode, ServiceType, currencyType, function (success, obj) {
+
+                        if (obj.ResultCode == 0) {
+                            TempData = {
+                                "type": "afterModifyProvider",
+                                "data": providerCode
+                            }
+                            sessionStorage.setItem("TempData", JSON.stringify(TempData));
+                            parent.successAlert(function () {
+                                parent.refreshPage(window.frameElement.id.split('_')[1]);
+                            });
+                        } else {
+
+                            switch (obj.ResultCode) {
+                                case 4:
+                                    parent.errorAlertCallback("权限不足", function () {
+                                        parent.ChangePage("Home");
+                                        parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                                    });
+                                    break;
+
+                                case 7:
+                                    parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                    break;
+
+                                default:
+                                    parent.warningAlert("其他错误");
+                                    break;
+                            }
+
+                        }
+                    });
+                }
+            });
+    }
+
+    function getProviderServiceTableResult(providercode) {
+        api.getProviderServiceResult(providercode, function (success, obj) {
+
+            if (isCreatedProviderServiceTable) {
+                ProviderServiceTable.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+                if (!isCreatedProviderServiceTable) {
+                    isCreatedProviderServiceTable = true;
+                    CreateProviderServiceTable(obj.ProviderServices);
+
+                } else {
+                    ProviderServiceTable.rows.add(obj.ProviderServices).draw();
+
+                }
+                parent.wrapperFadeOut();
+            } else {
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        //warningAlert("其他錯誤");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    function getProviderWithdrawLimitResult(providercode) {
+        api.getProviderWithdrawLimitResult(providercode, function (success, obj) {
+
+            if (isCreatedWithdrawLimitTable) {
+                WithdrawLimitTable.clear().draw();
+            }
+
+            if (isCreatedWithdrawLimitAPITable) {
+                WithdrawLimitAPITable.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+
+                var withdrawLimitDatas = [];
+                var withdrawLimitAPIDatas = [];
+                for (var i = 0; i < obj.WithdrawLimits.length; i++) {
+                    var withdrawLimitData = obj.WithdrawLimits[i];
+                    if (withdrawLimitData.WithdrawLimitType == 0) {
+                        withdrawLimitDatas.push(withdrawLimitData);
+                    }
+                    else if (withdrawLimitData.WithdrawLimitType == 3) {
+                        withdrawLimitAPIDatas.push(withdrawLimitData);
+                    }
+                }
+
+                if (withdrawLimitDatas.length > 0) {
+                    if (!isCreatedWithdrawLimitTable) {
+                        isCreatedWithdrawLimitTable = true;
+                        CreateWithdrawLimitTable(withdrawLimitDatas);
+
+                    } else {
+                        WithdrawLimitTable.rows.add(withdrawLimitDatas).draw();
+                    }
+                }
+
+                if (withdrawLimitAPIDatas.length > 0) {
+                    if (!isCreatedWithdrawLimitAPITable) {
+                        isCreatedWithdrawLimitAPITable = true;
+                        CreateWithdrawLimitAPITable(withdrawLimitAPIDatas);
+
+                    } else {
+                        WithdrawLimitAPITable.rows.add(withdrawLimitAPIDatas).draw();
+                    }
+                }
+
+
+                parent.wrapperFadeOut();
+            } else {
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        //warningAlert("其他錯誤");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    function getProviderBankCardResult(providercode) {
+        api.getProviderBankCardResult(providercode, function (success, obj) {
+
+            if (isCreatedProviderBankCardTable) {
+                ProviderBankCardTable.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+                let bankcardList = obj.ProviderBankCards.filter(x => x.Type == 0);
+                let alipayList = obj.ProviderBankCards.filter(x => x.Type == 1);
+
+                console.log("dd", obj.ProviderBankCards);
+                console.log("bankcardList", bankcardList);
+                console.log("alipayList", alipayList);
+
+                if (!isCreatedProviderBankCardTable) {
+                    isCreatedProviderBankCardTable = true;
+                    CreateProviderBankCardTable(bankcardList);
+
+                } else {
+                    ProviderBankCardTable.rows.add(bankcardList).draw();
+                }
+
+                if (!isCreatedProviderAlipayTable) {
+                    isCreatedProviderAlipayTable = true;
+                    CreateProviderAlipayTable(alipayList);
+
+                } else {
+                    ProviderBankCardTable.rows.add(alipayList).draw();
+                }
+                parent.wrapperFadeOut();
+            } else {
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        //warningAlert("其他錯誤");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    function getGPayRelationTableResult(providercode) {
+        api.getGPayRelationTableResult(providercode, function (success, obj) {
+            if (isCreatedGPayRelationTable) {
+                GPayRelationTable.clear().draw();
+            }
+
+            if (obj.ResultCode == 0) {
+                if (!isCreatedGPayRelationTable) {
+                    isCreatedGPayRelationTable = true;
+                    CreateGPayRelationTable(obj.GPayRelations);
+                } else {
+                    GPayRelationTable.rows.add(obj.GPayRelations).draw();
+                }
+
+
+            } else {
+                switch (obj.ResultCode) {
+                    default:
+                        //warningAlert("其他錯誤");
+                        break;
+                }
+            }
+        });
+    }
+
+    $('#select_providercode').change(function () {
+        var providerCode = $(this).val();
+        var selectedproviderdata = providerdata.find(function (d) { return d.ProviderCode == providerCode });
+        if (selectedproviderdata) {
+            getProviderServiceTableResult(selectedproviderdata.ProviderCode);
+            getProviderWithdrawLimitResult(selectedproviderdata.ProviderCode);
+            getProviderBankCardResult(selectedproviderdata.ProviderCode);
+            getGPayRelationTableResult(selectedproviderdata.ProviderCode);
+            $('#b_ProviderCode').text(selectedproviderdata.ProviderCode);
+            $('#b_ProviderName').text(selectedproviderdata.ProviderName);
+            $('#b_Introducer').text(selectedproviderdata.Introducer);
+            $('#b_ProviderUrl').text(selectedproviderdata.ProviderUrl);
+            $('#b_MerchantCode').text(selectedproviderdata.MerchantCode);
+            $('#b_MerchantKey').text(selectedproviderdata.MerchantKey);
+            $('#b_NotifySyncUrl').text(selectedproviderdata.NotifySyncUrl);
+            $('#b_NotifyAsyncUrl').text(selectedproviderdata.NotifyAsyncUrl);
+            $('#b_ProviderAPIType').text(selectedproviderdata.ProviderAPIType);
+            $('#b_WithdrawRate').text(selectedproviderdata.WithdrawRate);
+
+            $('#b_BankCardTimeoutSecond').text(selectedproviderdata.BankCardTimeoutSecond);
+            $('#b_WalletTimeoutSecond').text(selectedproviderdata.WalletTimeoutSecond);
+     
+            providerCompanyID = selectedproviderdata.forCompanyID;
+            if (selectedproviderdata.ProviderState == 0) {
+                $('#b_ProviderState').text('启用');
+                $('#b_ProviderState').css('color', 'blue');
+            } else {
+                $('#b_ProviderState').text('停用');
+                $('#b_ProviderState').css('color', 'red');
+            }
+
+            if (selectedproviderdata.CollectType == 0) {
+                $('#b_CollectType').text('一般');
+                $('#b_CollectType').css('color', 'blue');
+            } else {
+                $('#b_CollectType').text('專屬廠商');
+                $('#b_CollectType').css('color', 'red');
+            }
+
+            if (selectedproviderdata.isPrePaid == 0) {
+                $('#b_isPrePaid').text('是');
+                $('#b_isPrePaid').css('color', 'blue');
+            } else {
+                $('#b_isPrePaid').text('否');
+                $('#b_isPrePaid').css('color', 'red');
+            }
+
+            $('#b_ProviderAPITypeStr').text(checkedProviderAPIType(selectedproviderdata.ProviderAPIType));
+        } else {
+            $('#b_ProviderCode').text('');
+            $('#b_ProviderName').text('');
+            $('#b_Introducer').text('');
+            $('#b_ProviderUrl').text('');
+            $('#b_MerchantCode').text('');
+            $('#b_MerchantKey').text('');
+            $('#b_NotifySyncUrl').text('');
+            $('#b_NotifyAsyncUrl').text('');
+            $('#b_ProviderAPIType').text('');
+            $('#b_ProviderAPITypeStr').text('');
+            $('#b_ProviderState').text('');
+            $('#b_WithdrawRate').text('');
+            $('#b_CollectType').text('');
+            $('#b_isPrePaid').text('');
+
+
+            $('#b_BankCardTimeoutSecond').text('');
+            $('#b_WalletTimeoutSecond').text('');
+        }
+    });
+
+    function checkedProviderAPIType(providerAPIType) {
+        // 0=無/1=代收/2=代付/4=查詢餘額/8=查詢單/16=補單
+        var b_ProviderAPITypeStr = "";
+        var numProviderAPIType = parseInt(providerAPIType);
+        if (numProviderAPIType != 0) {
+            if ((numProviderAPIType & 1) == 1) {
+                b_ProviderAPITypeStr += "代收,"
+            }
+            if ((numProviderAPIType & 2) == 2) {
+                b_ProviderAPITypeStr += "代付,"
+            }
+            if ((numProviderAPIType & 4) == 4) {
+                b_ProviderAPITypeStr += "查询余额,"
+            }
+            if ((numProviderAPIType & 8) == 8) {
+                b_ProviderAPITypeStr += "查询单,"
+            }
+
+            if ((numProviderAPIType & 16) == 16) {
+                b_ProviderAPITypeStr += "补单,"
+            }
+
+            if (b_ProviderAPITypeStr.length > 0) {
+                b_ProviderAPITypeStr = b_ProviderAPITypeStr.substring(0, b_ProviderAPITypeStr.length - 1);
+            }
+        }
+
+        return b_ProviderAPITypeStr;
+    }
+</script>
