@@ -2091,10 +2091,10 @@ if ('@CheckLoginPermission' == 'false') {
                         var retValue = "";
 
                         let datetimeEndStr = rowdata.ServiceEndDate; // '2025-07-10T18:00:00'
-                        let timeEnd = datetimeEndStr.substring(11, 16); // 取出 '18:00'
+                        let timeEnd = datetimeEndStr.substring(11, 19); // 取出 '18:00'
 
                         let ServiceStartDateStr = rowdata.ServiceStartDate; // '2025-07-10T18:00:00'
-                        let timeStart = ServiceStartDateStr.substring(11, 16); // 取出 '18:00'
+                        let timeStart = ServiceStartDateStr.substring(11, 19); // 取出 '18:00'
 
                         retValue += timeStart + "-" + timeEnd;
 
@@ -2229,6 +2229,22 @@ if ('@CheckLoginPermission' == 'false') {
                         //+ "&t=" + new Date().getTime()
                         let k = new Date().getTime();
                         return '<img  src="../GetQRCode.aspx?Download=2&QRCode=' + data + '&t='+ k +'" style = "height: 50px" />';
+                    }
+                },
+                {
+                    "title": "運行時間", "data": "ServiceStartDate",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        let datetimeEndStr = rowdata.ServiceEndDate; // '2025-07-10T18:00:00'
+                        let timeEnd = datetimeEndStr.substring(11, 19); // 取出 '18:00'
+
+                        let ServiceStartDateStr = rowdata.ServiceStartDate; // '2025-07-10T18:00:00'
+                        let timeStart = ServiceStartDateStr.substring(11, 19); // 取出 '18:00'
+
+                        retValue += timeStart + "-" + timeEnd;
+
+                        return retValue;
                     }
                 },
                 {

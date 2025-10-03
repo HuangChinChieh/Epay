@@ -26,6 +26,7 @@ public static class Pay
     public static string MaintainUrl = System.Configuration.ConfigurationManager.AppSettings["MaintainUrl"];
     public static string ApiUrl = System.Configuration.ConfigurationManager.AppSettings["ApiUrl"];
     public static string SiteTitle = System.Configuration.ConfigurationManager.AppSettings["SiteTitle"];
+    public static string CurrencyType = System.Configuration.ConfigurationManager.AppSettings["CurrencyType"];
     
     /// <summary>
     /// 重建 SortKey 與 InsideLevel

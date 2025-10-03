@@ -943,10 +943,10 @@
         $("#input_Description").val(EditData.data.Description);
 
         let datetimeEndStr = EditData.data.ServiceEndDate; // '2025-07-10T18:00:00'
-        let timeEnd = datetimeEndStr.substring(11, 16); // 取出 '18:00'
+        let timeEnd = datetimeEndStr.substring(11, 19); // 取出 '18:00'
 
         let ServiceStartDateStr = EditData.data.ServiceStartDate; // '2025-07-10T18:00:00'
-        let timeStart = ServiceStartDateStr.substring(11, 16); // 取出 '18:00'
+        let timeStart = ServiceStartDateStr.substring(11, 19); // 取出 '18:00'
    
         $("#input_ServiceStartDate").val(timeStart);
         $("#input_ServiceEndDate").val(timeEnd);
@@ -1240,7 +1240,7 @@
                             </div>
                             <label for="input_AmountMax">銀行卡運行時間 : </label>
                             <div class="form-group">
-                                <input type="time" id="input_ServiceStartDate" value="" step="60"> -  <input type="time" id="input_ServiceEndDate" value="" step="60">
+                                <input type="time" id="input_ServiceStartDate" value="" step="1"> -  <input type="time" id="input_ServiceEndDate" value="" step="1">
                             </div>
                             <label for="input_AmountMax">單次入款上限 : </label>
                             <label>(無上限，請留空)</label>

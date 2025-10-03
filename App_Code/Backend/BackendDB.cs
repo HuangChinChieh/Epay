@@ -2839,7 +2839,7 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.StoredProcedure;
 
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
         DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
         DBCmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = Amount;
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = Description;
@@ -5046,7 +5046,7 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
@@ -6233,7 +6233,7 @@ public class BackendDB
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
             DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
-            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
@@ -6270,7 +6270,7 @@ public class BackendDB
         ServiceType = "PROXYJPY";
 
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@Return", SqlDbType.VarChar).Direction = System.Data.ParameterDirection.ReturnValue;
         DBAccess.ExecuteDB(DBConnStr, DBCmd);
@@ -7572,7 +7572,7 @@ public class BackendDB
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
@@ -7878,7 +7878,7 @@ public class BackendDB
             {
                 tempResult = DataTableExtensions.ToList<DBViewModel.CompanyPointVM>(DT) as List<DBViewModel.CompanyPointVM>;
                 tempdata.CompanyName = "ALL";
-                tempdata.CurrencyType = "JPY";
+                tempdata.CurrencyType = Pay.CurrencyType;
                 tempdata.CompanyCount = tempResult.Count;
                 foreach (var data in tempResult)
                 {
@@ -13624,7 +13624,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = SearchData.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = SearchData.CompanyID;
         DBCmd.Parameters.Add("@OperatorType", SqlDbType.Int).Value = SearchData.OperatorType;
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
@@ -15277,7 +15277,7 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@CompanyID", System.Data.SqlDbType.Int).Value = CompanyID;
-        DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = "JPY";
+        DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = Pay.CurrencyType;
         DBCmd.Parameters.Add("@UserIP", System.Data.SqlDbType.VarChar).Value = CodingControl.GetUserIP();
         DBCmd.Parameters.Add("@Description", System.Data.SqlDbType.NVarChar).Value = Description;
 

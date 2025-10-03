@@ -2113,7 +2113,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        var ProviderDatas = backendDB.GetProviderServiceResult(fromBody.GroupData.First().forProviderCode, "OOB02", "JPY");
+        var ProviderDatas = backendDB.GetProviderServiceResult(fromBody.GroupData.First().forProviderCode, "OOB02", Pay.CurrencyType);
 
         if (ProviderDatas == null)
         {
@@ -5582,7 +5582,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        retValue.ProviderTypes = backendDB.GetProviderByServiceType(fromBody.ServiceType, "JPY");
+        retValue.ProviderTypes = backendDB.GetProviderByServiceType(fromBody.ServiceType, Pay.CurrencyType);
         if (retValue.ProviderTypes != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7570,7 +7570,7 @@ public class BackendController : ApiController
         List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetCompanyServicePointDetail(AdminData.forCompanyID);
         if (companys != null)
         {
-            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == "JPY").ToList();
+            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == Pay.CurrencyType).ToList();
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -7667,7 +7667,7 @@ public class BackendController : ApiController
         List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetCompanyServicePointDetail(AdminData.forCompanyID);
         if (companys != null)
         {
-            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == "JPY").ToList();
+            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == Pay.CurrencyType).ToList();
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -8577,7 +8577,7 @@ public class BackendController : ApiController
         {
             AdminData = RedisCache.BIDContext.GetBIDInfo(SearchData.BID);
         }
-        SearchData.CurrencyType = "JPY";
+        SearchData.CurrencyType = Pay.CurrencyType;
         retValue.SummaryCompanyByDates = backendDB.GetSummaryCompanyByAgent2(SearchData, AdminData.forCompanyID);
 
         if (retValue.SummaryCompanyByDates != null)
@@ -14650,7 +14650,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         var CompanyModel = backendDB.GetCompanyWithKeyByCode("VPayTest");
         var CompanyCode = "VPayTest";
-        var CurrencyType = "JPY";
+        var CurrencyType = Pay.CurrencyType;
         var ClientIP = "";
         var OrderID = Guid.NewGuid().ToString("N");
         var OrderDate = DateTime.Now;
@@ -14731,7 +14731,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         var CompanyModel = backendDB.GetCompanyWithKeyByCode("test01");
         var CompanyCode = "test01";
-        var CurrencyType = "JPY";
+        var CurrencyType = Pay.CurrencyType;
         var ClientIP = "";
         var OrderID = Guid.NewGuid().ToString("N");
         var OrderDate = DateTime.Now;
