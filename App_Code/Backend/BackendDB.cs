@@ -4707,7 +4707,7 @@ public class BackendDB
             DBCmd.CommandText = SS;
             DBCmd.CommandType = CommandType.Text;
             DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
-            DBCmd.Parameters.Add("@RoleName", SqlDbType.VarChar).Value = RoleName;
+            DBCmd.Parameters.Add("@RoleName", SqlDbType.NVarChar).Value = RoleName;
 
             AdminRoleID = int.Parse(T.GetDBValue(DBCmd).ToString());
             returnValue = AdminRoleID;
@@ -6249,7 +6249,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int SetAgentClose(int CompanyID)
+    public int SetAgentClose(int CompanyID, string CurrencyType)
     {
         int returnValue = -4;
         String SS = String.Empty;
@@ -6267,10 +6267,16 @@ public class BackendDB
         DBCmd.CommandType = CommandType.StoredProcedure;
         var Comapny= GetCompanyByCompanyID(CompanyID).First();
         var ServiceType = "";
-        ServiceType = "PROXYJPY";
+        ServiceType = "PROXY";
+
+        if (CurrencyType == "CNY") {
+            ServiceType = "PROXY";
+        } else {
+            ServiceType = "PROXYJPY";
+        }
 
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
-        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Pay.CurrencyType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@Return", SqlDbType.VarChar).Direction = System.Data.ParameterDirection.ReturnValue;
         DBAccess.ExecuteDB(DBConnStr, DBCmd);

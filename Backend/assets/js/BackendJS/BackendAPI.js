@@ -5783,13 +5783,14 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.setAgentCloseByAdmin = function (companyID, cb) {
+    this.setAgentCloseByAdmin = function (companyID, CurrencyType, cb) {
 
         var url = APIUrl + "/SetAgentCloseByAdmin";
 
         var postData = {
             BID: BID,
-            CompanyID: companyID
+            CompanyID: companyID, 
+            CurrencyType: CurrencyType
         }
 
         callServiceByPost(url, postData, function (success, text) {

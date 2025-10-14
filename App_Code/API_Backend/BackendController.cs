@@ -987,6 +987,8 @@ public class BackendController : ApiController
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户代码:{0},商户名称:{1},代付API规则:{2},代付通道代码:{3},商户状态:{4},代付API规则 :{5},后台IP检查:{6},后台送单是否经过审核:{7},对应供应商群组:{8},是否开启确认商户送单功能:{9}", CompanyData.CompanyCode, CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, CompanyState, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType, ProviderGroups, CheckCompanyWithdrawType), IP);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
+            RedisCache.Company.UpdateCompanyByCode(CompanyData.CompanyCode);
+            RedisCache.CompanyPoint.UpdateCompanyPointByID(CompanyData.CompanyID);
             _CompanyTableResult.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -4560,7 +4562,7 @@ public class BackendController : ApiController
         int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算", IP);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
-        Result.Message = backendDB.SetAgentClose(AdminData.forCompanyID).ToString();
+        Result.Message = backendDB.SetAgentClose(AdminData.forCompanyID, Pay.CurrencyType).ToString();
         //--0 = success
         //--1 = 處理筆數為0
         //--2 = 鎖定失敗
@@ -4625,7 +4627,7 @@ public class BackendController : ApiController
         int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算(系统商操作)", IP);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
-        Result.Message = backendDB.SetAgentClose(fromBody.CompanyID).ToString();
+        Result.Message = backendDB.SetAgentClose(fromBody.CompanyID, fromBody.CurrencyType).ToString();
 
         //--0 = success
         //--1 = 處理筆數為0

@@ -1289,6 +1289,7 @@ public class FromBody {
 
     public class Company : DBModel.Company {
         public string BID { get; set; }
+        public string CurrencyType { get; set; }
     }
 
     public class GetBankDataSet

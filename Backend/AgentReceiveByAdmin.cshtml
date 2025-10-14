@@ -1454,8 +1454,11 @@
 
     //#region 商戶錢包資料
     function ShowCompanyPoint(tmpCurrencyType) {
-
-        $('#select_currency').html("");
+        const $select = $('#select_currency');
+        if ($select.data('selectpicker')) {
+            $select.selectpicker('destroy');
+        }
+        $select.empty();
         var compantid = $('#companyLabel').attr("data-id");
         $("#divCompanyPoint").hide();
         $("#divCompanyPointDetail").empty();
@@ -1465,9 +1468,8 @@
             if (s) {
                 if (o.ResultCode == 0) {
                     tempCompanyPoint = o.CompanyPoints;
-
-                    $.each(o.CompanyPoints, function (i, item) {
-
+         
+                    for (var i = 0; i < o.CompanyPoints.length; i++) {
                         $("#select_currency").append('<option value="' + o.CompanyPoints[i].CurrencyType + '">' + o.CompanyPoints[i].CurrencyType + '</option>');
 
                         if (i == 0) {
@@ -1480,8 +1482,8 @@
                             }
 
                         }
-                    })
-
+                    }
+                    $('#select_currency').selectpicker('render');
                     $('#select_currency').selectpicker('refresh');
                     $("#divCompanyPointDetail").html(strCompanyPointDetail);
 
@@ -1556,7 +1558,7 @@
 
     $('#btnAgentReceive').click(function () {
         var companyID = $('#companyLabel').attr("data-id");
-        api.setAgentCloseByAdmin(companyID, function (success, obj) {
+        api.setAgentCloseByAdmin(companyID, $('#select_currency').val(), function (success, obj) {
             if (obj.ResultCode == 0) {
                 parent.successAlert3(obj.Message);
                 ShowCompanyPoint(tmpReceiveData.CurrencyType);
