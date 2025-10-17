@@ -1024,8 +1024,8 @@
                                         <select class="show-tick" id="select_Type"></select>
                                     </div>
 
-                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 366群组 : </h6>
-                                    <select class="show-tick" id="select_proxyProviderGroup"></select>
+                                    @*<h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;display:none"> 366群组 : </h6>
+                                    <select class="show-tick" style="display:none" id="select_proxyProviderGroup"></select>*@
                                 </div>
                                 <div class="row" style="margin-top: 10px">
                                     <div>
@@ -1405,9 +1405,9 @@
         var providercode = $('#select_providercode').val();
         var CompanyID = $('#select_Company').val();
         var PaymentSerial = $("#input_PaymentSerial").val();
-        var groupID = $('#select_proxyProviderGroup').val();
+        //var groupID = $('#select_proxyProviderGroup').val();
 
-        api.getFrozenPointHistory(startDate, endDate, PaymentSerial, CompanyID, providercode, Status, groupID, function (success, obj) {
+        api.getFrozenPointHistory(startDate, endDate, PaymentSerial, CompanyID, providercode, Status, 0, function (success, obj) {
             if (isCreatedTable) {
                 Table.clear().draw();
             }

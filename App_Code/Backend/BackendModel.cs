@@ -515,6 +515,8 @@ public class DBModel {
         public string BranchName { get; set; }
         public string BankNumber { get; set; }
         public string AccountName { get; set; }
+        public string BankCardName { get; set; }
+        
     }
 
 

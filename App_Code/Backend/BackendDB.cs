@@ -14390,6 +14390,7 @@ public class BackendDB
              "       C.CompanyName, " +
              "       C.CompanyCode, " +
              "       C.MerchantCode, " +
+             "       PBC.BankCardName, " +
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.CreateDateUTC), 120) as CreateDate2, " +
              "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.FinishDateUTC), 120) as FinishDate2 " +
@@ -14397,7 +14398,9 @@ public class BackendDB
              "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode ";
+             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
+             " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID "+
+             " LEFT JOIN ProviderBankCard AS PBC ON PDB.forBankCardGUID = PBC.BankCardGUID ";
 
         if (fromBody.TimeType == "F")
         {
@@ -14728,6 +14731,7 @@ public class BackendDB
         SS += "       PBC.BranchName, ";
         SS += "       PBC.BankNumber, ";
         SS += "       PBC.AccountName, ";
+        SS += "       PBC.BankCardName, ";
         SS += "       S.ServiceTypeName, ";
         SS += "       PC.ProviderName, ";
         SS += "       PC.DecimalPlaces, ";

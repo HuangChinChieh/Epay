@@ -2,6 +2,8 @@
     var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
     var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
+    string CompanyCurrency = Pay.CurrencyType;
+
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
         CheckPermission = "false";
@@ -1235,7 +1237,8 @@
         var isCreatedTable = false;
         var selectCurrencyType;
         var tempCompanyPoint = null;
-        var CompanyServicePointTable;
+    var CompanyServicePointTable;
+    var CompanyCurrency = "@CompanyCurrency";
 
         $(document).ready(function () {
             if ('@CheckPermission' == 'false') {
@@ -2045,7 +2048,7 @@
 
                         $.each(o.CompanyPoints, function (i, item) {
 
-                            if (o.CompanyPoints[i].CurrencyType=='JPY') {
+                            if (o.CompanyPoints[i].CurrencyType == CompanyCurrency) {
                                 var canUsePoint = o.CompanyPoints[i].PointValue - o.CompanyPoints[i].LockPointValue - o.CompanyPoints[i].FrozenPoint;
 
                                 strCompanyPointDetail += '<strong style="font-size:18px" class="text-muted">帐户金额： ' + toCurrency(o.CompanyPoints[i].PointValue) + ', 可用金额 : ' + toCurrency(canUsePoint) + ', 不可用金额 : ' + toCurrency(o.CompanyPoints[i].LockPointValue) + ', </br>冻结金额 : ' + toCurrency(o.CompanyPoints[i].FrozenPoint) + '代付余额 : ' + toCurrency(o.CompanyPoints[i].AutoWithdrawAmount) + '</strong > ';
