@@ -43,6 +43,8 @@ public class DBModel {
 
         public string CompanyCode { get; set; }
         public string[] AlipayArray { get; set; }
+
+        public int IsAvailable { get; set; } //0可用/1不可用
     }
 
     public class ConfigSetting
