@@ -1198,16 +1198,17 @@ public class BackendDB
 
 
         SS = " SELECT * , " +
-                  "     CASE " +
-                  "         WHEN EXISTS ( " +
-                  "             SELECT 1  " +
-                  "             FROM MemOpt_ProviderBankCardLock M " +
-                  "             WHERE M.BankCardGUID = ProviderBankCard.BankCardGUID " +
-                  "         ) THEN 1   -- 有鎖定，不可使用 " +
-                  "         ELSE 0     -- 無鎖定，可使用 " +
-                  "     END AS IsAvailable " +
-                  " 	FROM ProviderBankCard  " +
-                  " WHERE forProviderCode =@ProviderCode AND (BankCardState=0 OR BankCardState=1) ";
+ "     CASE  " +
+ "         WHEN EXISTS ( " +
+ "               SELECT 1   " +
+ "               FROM MemOpt_ProviderBankCardLock M  " +
+ "               WHERE M.BankCardGUID = ProviderBankCard.BankCardGUID " +
+ "                 AND (M.ExpireDate IS NULL OR M.ExpireDate > GETUTCDATE()) " +
+ "         ) THEN 1    " +
+ "         ELSE 0   " +
+ "     END AS IsAvailable " +
+ " 	FROM ProviderBankCard  " +
+ " WHERE forProviderCode ='AliPay_QrCode' AND (BankCardState=0 OR BankCardState=1) ";
 
         if (!String.IsNullOrEmpty(SS))
         {

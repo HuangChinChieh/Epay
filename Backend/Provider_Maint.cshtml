@@ -2315,6 +2315,20 @@ if ('@CheckLoginPermission' == 'false') {
                     }
                 },
                 {
+                    "title": "使用狀態", "data": "IsAvailable",
+                    "render": function (data, display, rowdata) {
+                        var retValue = "";
+
+                        if (data == 0) {
+                            retValue += "<div><span style='color:green'>可使用</span></div>";
+                        } else {
+                            retValue += "<div><span style='color:red'>使用中</span></div>";
+                        }
+
+                        return retValue;
+                    }
+                },
+                {
                     "title": "更新日期", "data": "LastDate",
                     "render": function (data, display, rowdata) {
                         return data.replace("T", " ");
