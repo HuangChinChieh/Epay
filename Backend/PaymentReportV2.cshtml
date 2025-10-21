@@ -1,24 +1,21 @@
 ﻿@{
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckPermission = "false";
     }
 
     string PermissionName = Request.Path.Split('/').Last().Split('.').First();
-    result = bc.CheckPermission(BID,PermissionName);
+    result = bc.CheckPermission(BID, PermissionName);
 
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckPermission = "false";
     }
 
     var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
     string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckLoginPermission = "false";
     }
 }
@@ -29,7 +26,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -100,7 +97,7 @@
     <script src="~/Backend/assets/js/common.js"></script>
 
     <style>
-   
+
 
         ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
             color: black !important;
@@ -699,7 +696,7 @@
         }
 
         .card .body {
-            font-size:14px !important;
+            font-size: 14px !important;
             color: #575b61 !important;
             padding: 0 20px !important;
         }
@@ -937,7 +934,6 @@
     .hidden {
         display: none !important;
     }
-
 </style>
 
 <body class="theme-cyan">
@@ -1035,21 +1031,21 @@
 
                             <div>
                                 @*<div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
-                        <input id="startdate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
-                    </div>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
+                                            <input id="startdate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
+                                        </div>
 
-                </div>
-                <div>
-                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> ~ </h6>
-                </div>
-                                <div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
-                                        <input id="enddate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
                                     </div>
-                                </div>*@
+                                    <div>
+                                        <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> ~ </h6>
+                                    </div>
+                                                    <div>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i> </span>
+                                                            <input id="enddate" type="text" class="form-control date" placeholder="Ex: 2016/07/03">
+                                                        </div>
+                                                    </div>*@
 
                                 <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 申请金额 : </h6>
                             </div>
@@ -1118,7 +1114,7 @@
                     <span style="display:block">币别:<span id="PaymentManualModal_CurrencyType" style="margin-left:5px"></span></span>
                     <span style="display:block">訂單金额:<span id="PaymentManualModal_Amount" style="margin-left:5px"></span></span>
                     <span style="display:block;color:red">附言:<span id="PaymentManualModal_TransferRemark" style="margin-left:5px"></span></span>
-                    <span style="display:block">實際金额:<input id="PaymentManualModal_RealAmount" style="margin-left:5px"/></span>
+                    <span style="display:block">實際金额:<input id="PaymentManualModal_RealAmount" style="margin-left:5px" /></span>
                 </div>
                 <div class="modal-footer">
                     <button onclick="savePaymentManual()" type="button" class="btn btn-primary btn-round waves-effect">确认</button>
@@ -1138,10 +1134,10 @@
     var paymentRecordTable;
     var isCreatedTable = false;
     var boolTimeStop = false;
-    var IsAutoLoad = false;  
+    var IsAutoLoad = false;
     var PageInfoStart = 0;  //起始查询为第X笔资料
     $(document).ready(function () {
-        
+
 if ('@CheckLoginPermission' == 'false') {
                 location.href = "Login.cshtml";
             }
@@ -1182,7 +1178,7 @@ if ('@CheckLoginPermission' == 'false') {
                     }
             });
         }
-   
+
     }
 
     function changePaymentProcessStatusAndRealAmount(PaymentSerial, RealAmount) {
@@ -1226,7 +1222,7 @@ if ('@CheckLoginPermission' == 'false') {
     }
 
     function PaymentReview(targetSerial) {
-     
+
         // 從 DataTable 中找出符合的資料
         var row = Table.rows().data().toArray().find(function (item) {
             return item.PaymentSerial == targetSerial;
@@ -1242,7 +1238,7 @@ if ('@CheckLoginPermission' == 'false') {
             $('#PaymentManualModal_CurrencyType').text(row.CurrencyType);
             $('#PaymentManualModal_Amount').text(row.OrderAmount);
             $('#PaymentManualModal_TransferRemark').text(row.TransferRemark);
-            
+
             $('#PaymentManualModal_RealAmount').val(row.OrderAmount);
             $('#PaymentManualModal').modal('show');
         } else {
@@ -1265,7 +1261,7 @@ if ('@CheckLoginPermission' == 'false') {
         $('#PaymentManualModal_CompanyName').text('');
         $('#PaymentManualModal_OrderID').text('');
         $('#PaymentManualModal_PaymentSerial').text('');
-        
+
         $('#PaymentManualModal_ProviderName').text('');
         $('#PaymentManualModal_ServiceTypeName').text('');
         $('#PaymentManualModal_CurrencyType').text('');
@@ -1278,7 +1274,7 @@ if ('@CheckLoginPermission' == 'false') {
     function pageLoad() {
         AdminObject = parent.AdminObject;
         api = parent.api;
- 
+
         var start = moment.utc().add(9, 'hours').startOf('day');
         var end = moment.utc().add(9, 'hours').endOf('day');
 
@@ -1316,7 +1312,7 @@ if ('@CheckLoginPermission' == 'false') {
         $('#companyLabel').text("所有商户");
         $('#companyLabel').attr("data-id", -99);
         reciprocal();
-     
+
         var paymentRecordTable = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="PaymentRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
@@ -1449,7 +1445,7 @@ if ('@CheckLoginPermission' == 'false') {
 
     }
 
-      
+
 
 
     $('#btnsetsecond').click(function () {
@@ -1536,13 +1532,13 @@ if ('@CheckLoginPermission' == 'false') {
                     "render": function (data, display, rowdata) {
                         return toCurrency(data);
                 }
-                },
-                {
-                    "title": "附言", "data": "TransferRemark",
-                    "render": function (data, display, rowdata) {
-                        return data;
-                }
-                },
+                    },
+                    {
+                        "title": "提交时间", "data": "CreateDate2"
+                    },
+                    {
+                        "title": "完成时间", "data": "FinishDate2"
+                    },
                 {
                     "title": "收款卡資訊", "data": "BankName",
                     "render": function (data, display, rowdata) {
@@ -1557,7 +1553,7 @@ if ('@CheckLoginPermission' == 'false') {
                         } else {
                             return '';
                         }
-                    
+
                     }
                 },
                 { "title": "费率(%)", "data": "CollectRate" },
@@ -1618,12 +1614,12 @@ if ('@CheckLoginPermission' == 'false') {
                 },
                 { "title": "会员实名", "data": "UserName" },
 
-                {
-                    "title": "提交时间", "data": "CreateDate2"
-                },
-                {
-                    "title": "完成时间", "data": "FinishDate2"
-                },
+                    {
+                        "title": "附言", "data": "TransferRemark",
+                        "render": function (data, display, rowdata) {
+                            return data;
+                        }
+                    },
 
                 {
                     "title": "商户提供IP", "data": "ClientIP"
@@ -1638,7 +1634,7 @@ if ('@CheckLoginPermission' == 'false') {
                             case 2:
                                 return '<button onclick="reSendPayment(this)">补单</button><button style="margin-left:5px" onclick="PaymentRecord(this)">订单记录</button><button style="margin-left:5px" data-ip="' + rowdata.UserIP + '" onclick="SearchIP_County(this)">IP位置</button><button style="margin-left:5px" data-returnurl="' + rowdata.ReturnURL + '"  onclick="CompanyUrl(this)">回调网址</button>';
                                 break;
-                      
+
                             default:
                                 return '<button  onclick="PaymentRecord(this)">订单记录</button><button style="margin-left:5px" data-ip="' + rowdata.UserIP + '" onclick="SearchIP_County(this)">IP位置</button><button style="margin-left:5px" data-returnurl="' + rowdata.ReturnURL + '"  onclick="CompanyUrl(this)">回调网址</button>';
                                 break;
@@ -1651,17 +1647,17 @@ if ('@CheckLoginPermission' == 'false') {
             serverSide: true,
             ajax: {
                          method:"post",
-                         url: "/api/Backend/GetPaymentResultV2", 
+                         url: "/api/Backend/GetPaymentResultV2",
                          data: function (d)
                          {
- 
+
                              var dateinputval = $('#dateinput').val().split('-');
                              d.BID = AdminObject.BID;
                              d.Companyid = $('#companyLabel').attr("data-id");
                              d.StartDate = dateinputval[0];
                              d.EndDate = dateinputval[1] + ":59.999";
                              d.IsAutoLoad = IsAutoLoad;
-                            
+
                              d.OrderID = $('#input_OrderID').val().trim();
                              d.SubmitType = $('#select_submitType').val();
                              d.TimeType = $('#select_timeType').val();
@@ -1684,7 +1680,7 @@ if ('@CheckLoginPermission' == 'false') {
             autoWidth: false,
             language: chineseTableLang
             }).on('xhr.dt', function (e, settings, d, xhr) {
-             
+
                 if (d.ResultCode == 0) {
                     if (d.IsAutoLoad) {
                         IsAutoLoad = false;
@@ -1759,7 +1755,7 @@ if ('@CheckLoginPermission' == 'false') {
         });
     }
 
-     function CompanyUrl(objbtn) {  
+     function CompanyUrl(objbtn) {
          alert($(objbtn).data('returnurl'));
         }
 
@@ -1994,7 +1990,7 @@ if ('@CheckLoginPermission' == 'false') {
 
                         if (obj.ResultCode == 0) {
                             var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '收款資訊', '支付方式', '状态', '申请金额', '费率(%)', '手续率', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP', '上游手续费(%)', '净利']];
-                        
+
                             for (var i = 0; i < obj.PaymentTableResults.length; i++) {
                                 var data = obj.PaymentTableResults[i];
                                 var partialOrderAmount = 0
@@ -2261,4 +2257,4 @@ if ('@CheckLoginPermission' == 'false') {
         getAllCompanyServicePoint();
     })
 
-    </script>
+</script>

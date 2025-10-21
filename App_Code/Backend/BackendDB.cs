@@ -1208,7 +1208,7 @@ public class BackendDB
  "         ELSE 0   " +
  "     END AS IsAvailable " +
  " 	FROM ProviderBankCard  " +
- " WHERE forProviderCode ='AliPay_QrCode' AND (BankCardState=0 OR BankCardState=1) ";
+ " WHERE forProviderCode =@ProviderCode AND (BankCardState=0 OR BankCardState=1) ";
 
         if (!String.IsNullOrEmpty(SS))
         {
