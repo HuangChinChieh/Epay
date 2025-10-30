@@ -13600,28 +13600,33 @@ public class BackendDB
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT CT.CompanyName,CH.ServiceType,ISNULL(ST.ServiceTypeName,'') ServiceTypeName,CH.OperatorType,CH.Value,CH.BeforeValue,CH.ValueByService " +
-             " ,CH.BeforeValueByService,TransactionID,DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) AS CreateDate, " +
-             " Case when CH.OperatorType = 1" +
-             " then (select PaymentTable.PaymentSerial from PaymentTable  WITH (NOLOCK)  where PaymentTable.PaymentID = CH.TransactionID )" +
-             " when CH.OperatorType = 0" +
-             " then (select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
-             " when CH.OperatorType = 3" +
-             " then (select CompanyManualHistory.TransactionSerial from CompanyManualHistory  WITH (NOLOCK)  where CompanyManualHistory.CompanyManualID = CH.TransactionID )" +
-             " else (select PaymentTable.PaymentSerial from PaymentTable  WITH (NOLOCK)  where PaymentTable.PaymentID = CH.TransactionID )" +
-             " End as TransactionOrder," +
-               " Case when CH.OperatorType = 1" +
-             " then (select PaymentTable.OrderID from PaymentTable  WITH (NOLOCK)  where PaymentTable.PaymentID = CH.TransactionID )" +
-             " when CH.OperatorType = 0" +
-             " then (select Withdrawal.DownOrderID from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
-             " when CH.OperatorType = 3" +
-             " then (select '' )" +
-             " else (select PaymentTable.OrderID from PaymentTable  WITH (NOLOCK)  where PaymentTable.PaymentID = CH.TransactionID )" +
-             " End as DownOrderID" +
-             " FROM CompanyPointHistory CH WITH (NOLOCK) " +
-             " LEFT JOIN ServiceType ST  WITH (NOLOCK)  ON CH.ServiceType = ST.ServiceType " +
-             " LEFT JOIN CompanyTable CT  WITH (NOLOCK)  ON CH.forCompanyID = CT.CompanyID " +
-             " WHERE DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate AND CH.forCompanyID = @CompanyID ";
+        SS = " SELECT    CT.CompanyName, " +
+                 "           CH.ServiceType, " +
+                 "           Isnull(ST.ServiceTypeName,'') ServiceTypeName, " +
+                 "           CH.OperatorType, " +
+                 "           CH.Value, " +
+                 "           CH.BeforeValue, " +
+                 "           CH.ValueByService , " +
+                 "           CH.BeforeValueByService, " +
+                 "           TransactionID, " +
+                 "           Dateadd(HOUR, @TimeZone - 8, CH.CreateDate) AS CreateDate, " +
+                 "           (SELECT paymenttable.paymentserial FROM   paymenttable WITH (nolock) WHERE　paymenttable.paymentid = CH.transactionid) AS PaymentSerial, " +
+                 "           CASE " +
+                 "                     WHEN CH.OperatorType = 1 THEN ( SELECT PaymentTable.PaymentSerial FROM   PaymentTable WITH (NOLOCK) WHERE  PaymentTable.PaymentID = CH.TransactionID ) " +
+                 "                     WHEN CH.OperatorType = 0 THEN ( SELECT Withdrawal.WithdrawSerial FROM   Withdrawal WITH (NOLOCK) WHERE  Withdrawal.WithdrawID = CH.TransactionID ) " +
+                 "                     WHEN CH.OperatorType = 3 THEN ( SELECT CompanyManualHistory.TransactionSerial FROM   CompanyManualHistory WITH (NOLOCK) WHERE  CompanyManualHistory.CompanyManualID = CH.TransactionID ) " +
+                 "                     ELSE ( SELECT PaymentTable.PaymentSerial FROM   PaymentTable WITH (NOLOCK) WHERE  PaymentTable.PaymentID = CH.TransactionID ) " +
+                 "           END AS TransactionOrder, " +
+                 "           CASE " +
+                 "                     WHEN CH.OperatorType = 1 THEN ( SELECT PaymentTable.OrderID FROM   PaymentTable WITH (NOLOCK) WHERE  PaymentTable.PaymentID = CH.TransactionID ) " +
+                 "                     WHEN CH.OperatorType = 0 THEN ( SELECT Withdrawal.DownOrderID FROM   Withdrawal WITH (NOLOCK) WHERE  Withdrawal.WithdrawID = CH.TransactionID ) " +
+                 "                     WHEN CH.OperatorType = 3 THEN ( SELECT PaymentTable.OrderID FROM   PaymentTable WITH (nolock) WHERE  PaymentTable.PaymentSerial = ( SELECT CompanyManualHistory.TransactionSerial FROM                    CompanyManualHistory WITH (nolock) WHERE　CompanyManualHistory.CompanyManualID = CH.transactionid) ) " +
+                 "                     ELSE ( SELECT PaymentTable.OrderID FROM   PaymentTable WITH (NOLOCK) WHERE  PaymentTable.PaymentID = CH.TransactionID ) " +
+                 "           END AS DownOrderID " +
+                 " FROM      CompanyPointHistory CH WITH (NOLOCK) " +
+                 " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
+                 " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
+                 " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate AND CH.forCompanyID = @CompanyID ";
 
         if (SearchData.OperatorType != 99)
         {

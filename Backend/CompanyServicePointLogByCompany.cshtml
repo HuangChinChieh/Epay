@@ -1181,7 +1181,7 @@ if ('@CheckLoginPermission' == 'false') {
                     }
                 },
 
-
+                
                 { "title": "订单号", "data": "TransactionOrder" },
                 { "title": "商户订单号", "data": "DownOrderID" },
                 //{ "title": "支付代码", "data": "ServiceType" },
@@ -1363,7 +1363,7 @@ if ('@CheckLoginPermission' == 'false') {
         }
 
         if (Table.rows().data().length > 0) {
-            var exceldata = [['日期', '订单号','商户订单号' ,'支付通道', '类型', '异动额度', '异动前额度(商户)', '异动后额度(商户)', '异动前额度(通道)', '异动后额度(通道)']];
+            var exceldata = [['日期', '订单号', '商户订单号', '支付通道', '类型', '异动额度', '异动前额度(商户)', '异动后额度(商户)', '异动前额度(通道)', '异动后额度(通道)']];
             var TableData = Table.rows().data();  
             for (var i = 0; i < TableData.length; i++) {
                 var data = TableData[i];
@@ -1393,7 +1393,7 @@ if ('@CheckLoginPermission' == 'false') {
                     OperatorType = '';
                 }
 
-                var tmpArray = new Array(CreateDate, data.TransactionOrder,  data.DownOrderID,data.ServiceTypeName, OperatorType, data.Value, data.BeforeValue, data.BeforeValue + data.Value, data.BeforeValueByService, data.ValueByService + data.BeforeValueByService);
+                var tmpArray = new Array(CreateDate, data.TransactionOrder, data.DownOrderID, data.ServiceTypeName, OperatorType, data.Value, data.BeforeValue, data.BeforeValue + data.Value, data.BeforeValueByService, data.ValueByService + data.BeforeValueByService);
                 exceldata.push(tmpArray);
             }
 

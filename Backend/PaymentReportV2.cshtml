@@ -1719,7 +1719,7 @@ if ('@CheckLoginPermission' == 'false') {
     }
 
     function reSendPayment(objbtn) {
-        var paymentSerial = $($(objbtn).parent().parent().find('td')[0]).html();
+        var paymentSerial = $($(objbtn).parent().parent().find('td')[1]).html();
 
         parent.wrapperFadeIn();
         api.reSendPayment(paymentSerial, function (success, obj) {

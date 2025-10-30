@@ -1174,7 +1174,7 @@
                 if (o.ResultCode == 0) {
 
                     $.each(o.CompanyPoints, function (i, item) {
-                        if (o.CompanyPoints[i].CurrencyType =='JPY') {
+                        //if (o.CompanyPoints[i].CurrencyType =='JPY') {
                             var canUsePoint = toCurrency(o.CompanyPoints[i].PointValue - o.CompanyPoints[i].LockPointValue - o.CompanyPoints[i].FrozenPoint);
                             strCompanyPointDetail += '<div style="width:25%">' +
                                 '<div class="card wallet" >' +
@@ -1195,7 +1195,7 @@
                                 '<p class="text-muted">冻结金额 : ' + toCurrency(o.CompanyPoints[i].FrozenPoint) + '</p>' +
                                 '<p class="text-muted">代付余额 : ' + toCurrency(o.CompanyPoints[i].AutoWithdrawAmount) + '</p>' +
                                 '</div ></div ></div > ';
-                        }
+                        //}
                     })
                     $("#divCompanyPointDetail").html(strCompanyPointDetail);
                 } else {
