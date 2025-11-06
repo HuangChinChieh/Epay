@@ -482,7 +482,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.insertBankCode = function (bankCode, bankName, ETHContractNumber, bankState, bankType, cb) {
+    this.insertBankCode = function (bankCode, bankName, ETHContractNumber, bankState, bankType, currencyType, cb) {
         var url = APIUrl + "/InsertBankCode";
         var postData;
 
@@ -492,7 +492,8 @@ var BackendAPI = function (BID, APIUrl) {
             BankName: bankName,
             ETHContractNumber: ETHContractNumber,
             BankState: bankState,
-            BankType: bankType
+            BankType: bankType,
+            CurrencyType: currencyType
         };
 
         callServiceByPost(url, postData, function (success, text) {

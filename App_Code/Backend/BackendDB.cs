@@ -8024,8 +8024,8 @@ public class BackendDB
             return returnValue;
         }
 
-        SS = " INSERT INTO BankCode (BankCode,BankState,BankName,BankType,ETHContractNumber)" +
-             " VALUES(@BankCode,@BankState,@BankName,@BankType,@ETHContractNumber)";
+        SS = " INSERT INTO BankCode (BankCode,BankState,BankName,BankType,ETHContractNumber,CurrencyType)" +
+             " VALUES(@BankCode,@BankState,@BankName,@BankType,@ETHContractNumber,@CurrencyType)";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -8035,7 +8035,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@BankName", SqlDbType.NVarChar).Value = fromBody.BankName;
         DBCmd.Parameters.Add("@BankType", SqlDbType.Int).Value = fromBody.BankType;
         DBCmd.Parameters.Add("@ETHContractNumber", SqlDbType.VarChar).Value = fromBody.ETHContractNumber;
-
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
 
         returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
         RedisCache.BankCode.UpdateBankCode();

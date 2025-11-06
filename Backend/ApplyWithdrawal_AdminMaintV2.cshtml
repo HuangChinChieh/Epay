@@ -1502,12 +1502,12 @@
                     }
                 },
                 { "title": "审核者", "data": "RealName2" },
-                {
-                    "title": "城市/省份/分行", "data": "OwnCity",
-                    "render": function (data, display, rowdata) {
-                        return `${rowdata.OwnCity}/${rowdata.OwnProvince}/${rowdata.BankBranchName}`;
-                    }
-                },
+                //{
+                //    "title": "城市/省份/分行", "data": "OwnCity",
+                //    "render": function (data, display, rowdata) {
+                //        return `${rowdata.OwnCity}/${rowdata.OwnProvince}/${rowdata.BankBranchName}`;
+                //    }
+                //},
                 { "title": "", "data": "WithdrawType", "visible": false },
                 { "title": "实际金额", "data": "FinishAmount" },
                 {
@@ -2341,7 +2341,7 @@
             '<span style="display:block">提现序号:<span id="modal_WithdrawSerial" style="margin-left:5px"></span></span>' +
             '<span id="modal_BankName_Label" style="display:block">银行名称:<span id="modal_BankName" style="margin-left:5px"></span></span>' +
             '<span id="modal_BankBranchName_Label" style="display:block">分行名称:<span id="modal_BankBranchName" style="margin-left:5px"></span></span>' +
-            '<span id="modal_BankCard_Label" style="display:block">银行卡号:<span id="modal_BankCard" style="margin-left:5px"></span></span>' +
+            '<span id="modal_BankCard_Label" style="display:block">区块链地址/卡号:<span id="modal_BankCard" style="margin-left:5px"></span></span>' +
             '<span id="modal_BCAddress_Label" style="display:block">区块链地址:<span id="modal_BCAddress" style="margin-left:5px"></span></span>' +
             '<span id="modal_DownBlockChainRate_Label" style="display:block">商户浮动马数:<span id="modal_DownBlockChainRate" style="margin-left:5px"></span></span>' +
             '<span id="modal_DownBlockChainAmount_Label" style="display:block">商户取得 USDT 数量:<span id="modal_DownBlockChainAmount" style="margin-left:5px;color:red;"></span></span>' +

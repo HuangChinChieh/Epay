@@ -744,6 +744,7 @@ public class DBModel {
         public string ETHContractNumber { get; set; }
         public int BankState { get; set; }
         public int BankType { get; set; }
+        public string CurrencyType { get; set; }
     }
 
     public class BackendNotifyTable {
@@ -1799,6 +1800,7 @@ public class FromBody {
         public string ETHContractNumber { get; set; }
         public int BankState { get; set; }
         public int BankType { get; set; }
+        public string CurrencyType { get; set; }
     }
 
     public class WithdrawalSetV2 : WithdrawalSet {

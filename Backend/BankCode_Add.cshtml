@@ -1,5 +1,5 @@
 ﻿@{
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var result = bc.CheckLoginPermission(BID);
     if (result.ResultCode != BackendController.APIResult.enumResult.OK) {
         Response.Redirect("/Backend/Index.cshtml");
@@ -7,8 +7,7 @@
 
     var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
     string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckLoginPermission = "false";
     }
 
@@ -20,7 +19,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -915,17 +914,53 @@
     $(document).ready(function () {
         pageLoad();
     });
- 
+
     function pageLoad() {
-        
-if ('@CheckLoginPermission' == 'false') {
-                location.href = "Login.cshtml";
-            }
+
+        if ('@CheckLoginPermission' == 'false') {
+            location.href = "Login.cshtml";
+        }
 
         AdminObject = parent.AdminObject;
         api = parent.api;
-     
+
         parent.wrapperFadeOut();
+
+        api.getCurrency(function (success, obj) {
+            if (success) {
+                $("#selectCurrencyType").empty();
+                if (obj.ResultCode == 0) {
+                    var datas = obj.Currencies;
+                    $.each(datas, function (i, v) {
+                        if (i == 0) {
+                            $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        } else {
+                            $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        }
+                    })
+                } else {
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            parent.warningAlert("没有资料");
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+                $('#selectCurrencyType').selectpicker('refresh');
+            }
+        });
+
         $('#btnBankCodeSave').on('click', function () {
 
             if ($("#input_BankCode").val().trim() == "") {
@@ -943,7 +978,8 @@ if ('@CheckLoginPermission' == 'false') {
             var ETHContractNumber = $("#input_ETHContractNumber").val().trim();
             var bankState = $('input[name=radioBankState]:checked').val();
             var bankType = $('input[name=radioBankType]:checked').val();
-            api.insertBankCode(bankCode, bankName, ETHContractNumber, bankState, bankType, function (success, obj) {
+            var currencyType = $("#selectCurrencyType option:selected").attr("data-value");
+            api.insertBankCode(bankCode, bankName, ETHContractNumber, bankState, bankType, currencyType, function (success, obj) {
                 if (obj.ResultCode == 0) {
                     parent.successAlert(function () {
                         parent.refreshPage(EditData.data.backID);
@@ -966,7 +1002,7 @@ if ('@CheckLoginPermission' == 'false') {
                             break;
                     }
 
-        
+
                 }
             });
 
@@ -1017,6 +1053,10 @@ if ('@CheckLoginPermission' == 'false') {
                             <div class="form-group">
                                 <input class="form-control" id="input_ETHContractNumber" type="text" placeholder="请输入 ETH 合约代码(区块链货币)">
                             </div>
+
+                            <label for="CurrencyType">使用币别 : </label>
+
+                            <select class="form-control show-tick" id="selectCurrencyType"></select>
 
                             <label for="">状态 : </label>
                             <div class="radio">

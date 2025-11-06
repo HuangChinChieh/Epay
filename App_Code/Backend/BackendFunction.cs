@@ -58,24 +58,23 @@ public class BackendFunction {
             return null;
         }
 
-        public DBModel.AdminWithLoginPassword CheckLogin(FromBody.Login login) {
+    public DBModel.AdminWithLoginPassword CheckLogin(FromBody.Login login) {
 
-            BackendDB backendDB = new BackendDB();
-            DBModel.AdminWithLoginPassword admin;
-            string MD5Input;
+        BackendDB backendDB = new BackendDB();
+        DBModel.AdminWithLoginPassword admin;
+        string MD5Input;
 
-            admin = backendDB.GetAdminByLoginAccountWithLoginPassword(login.LoginAccount);
+        admin = backendDB.GetAdminByLoginAccountWithLoginPassword(login.LoginAccount);
 
-            if (admin != null) {
-                //MD5Input = CodingControl.GetMD5(login.Password);
-                if (login.Password.ToUpper() == CodingControl.GetSHA256(admin.LoginPassword+ login.UserKey,false).ToUpper())
-                {
-                    return admin;
-                }
+        if (admin != null) {
+            //MD5Input = CodingControl.GetMD5(login.Password);
+            if (login.Password.ToUpper() == CodingControl.GetSHA256(admin.LoginPassword + login.UserKey, false).ToUpper()) {
+                return admin;
             }
-
-            return null;
         }
+
+        return null;
+    }
 
         public bool CheckPassword(string Password,int AdminID)
         {

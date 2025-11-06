@@ -41,7 +41,7 @@
                                 <li><a href="#Header" title="Header" smoothhashscroll="">Header</a></li>
                                 <li><a href="#加密方式" title="加密方式" smoothhashscroll="">加密方式</a></li>
                                 <!--<li><a href="#Response" title="Response" smoothhashscroll="">Response</a></li>
-                                <li><a href="#Request" title="Request" smoothhashscroll="">Request</a></li>-->
+                            <li><a href="#Request" title="Request" smoothhashscroll="">Request</a></li>-->
                             </ul>
 
                         <li>
@@ -71,11 +71,11 @@
                     </ul>
                 </li>
                 <!--<li>
-                    <a href="#附錄" title="附錄" smoothhashscroll="">附錄</a>
-                    <ul>
-                        <li><a href="#詳細投注資料" title="詳細投注資料" smoothhashscroll="">附錄一 : 詳細投注資料</a></li>
-                    </ul>
-                </li>-->
+                <a href="#附錄" title="附錄" smoothhashscroll="">附錄</a>
+                <ul>
+                    <li><a href="#詳細投注資料" title="詳細投注資料" smoothhashscroll="">附錄一 : 詳細投注資料</a></li>
+                </ul>
+            </li>-->
             </ul>
         </div><p></p>
         <h2 class="" id="测试资讯"><a class="anchor hidden-xs" href="#测试资讯" title="测试资讯" smoothhashscroll=""><span class="octicon octicon-link"></span></a>测试资讯</h2>
@@ -168,7 +168,7 @@
                     <td>是</td>
                     <td><a class="anchor hidden-xs" href="#服务类型" title="服务类型" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;服务类型(详见对照表)</a></td>
                 </tr>
-             
+
                 <tr>
                     <td>CustomerIP</td>
                     <td>String</td>
@@ -213,7 +213,19 @@
                     <td>否</td>
                     <td>
                         汇款人户名<br />
-                        <code>如果为实名制渠道需填写</code>
+                        <code>如果为实名制渠道需填写</code><br />
+                        <code>如果使用BitPay需填寫。請注意如果傳入的匯款人名稱與實際使用者轉帳的匯款人名稱不相同，就算轉帳了訂單也無法完成</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>String</td>
+                    <td>否</td>
+                    <td>
+                        額外資訊<br />
+                        <code>如果使用BitPay需填寫， 格式：銀行帳號；銀行代碼， 範例：3140371234；KTB</code><br />
+                        <a class="anchor hidden-xs" href="#Bitpay銀行列表" title="Bitpay銀行列表" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;Bitpay銀行列表(详见对照表)</a><br />
+                        <code>請注意如果傳入的銀行資訊與實際使用者轉帳的銀行資訊不相同，就算轉帳了訂單也無法完成</code>
                     </td>
                 </tr>
                 <tr>
@@ -241,7 +253,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
 
                 {
                     ManageCode:'ManageCode',
@@ -298,7 +310,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "PayingSerial":"PT2019122212480000000575",
                     "OrderAmount":100.0000,
@@ -392,7 +404,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "PayingSerial": "PT001",
                     "PayingStatus": 0,
@@ -453,7 +465,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     ManageCode:'ManageCode',
                     OrderID:'PT001',
@@ -545,7 +557,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "PayingSerial": PT001,
                     "Status": 0,
@@ -685,7 +697,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "ManageCode": "ManageCode",
                     "Currency": "CNY",
@@ -841,7 +853,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
 
                 {
                     "WithdrawSerial":"WT2019122214100000000580",
@@ -905,7 +917,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     ManageCode:'Demo',
                     WithdrawSerial:'WT2019071918040000000530',
@@ -1008,7 +1020,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "WithdrawSerial":"WT0000001",
                     "Status": 0,
@@ -1071,7 +1083,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     ManageCode:'Demo',
                     OrderID:'WT2019071918040000000530',
@@ -1172,7 +1184,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "WithdrawSerial":"WT0000001",
                     "Status": 0,
@@ -1237,7 +1249,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     ManageCode:'Demo',
                     Currency:'CNY',
@@ -1290,7 +1302,7 @@
             </tbody>
         </table>
         <pre>
-            <code class="json">
+        <code class="json">
                 {
                     "ManageCode":"Demo",
                     "Currency":"CNY",
@@ -1315,25 +1327,25 @@
             </thead>
             <tbody>
                 <!--<tr>
-        <td>HK</td>
-        <td>港币</td>
-    </tr>
-    <tr>
-        <td>JPY</td>
-        <td>日币</td>
-    </tr>
-    <tr>
-        <td>KRW</td>
-        <td>韩币</td>
-    </tr>
-    <tr>
-        <td>TWD</td>
-        <td>台币</td>
-    </tr>
-    <tr>
-        <td>USD</td>
-        <td>美金</td>
-    </tr>-->
+                <td>HK</td>
+                <td>港币</td>
+            </tr>
+            <tr>
+                <td>JPY</td>
+                <td>日币</td>
+            </tr>
+            <tr>
+                <td>KRW</td>
+                <td>韩币</td>
+            </tr>
+            <tr>
+                <td>TWD</td>
+                <td>台币</td>
+            </tr>
+            <tr>
+                <td>USD</td>
+                <td>美金</td>
+            </tr>-->
                 <tr>
                     <td>JPY</td>
                     <td>日幣</td>
@@ -1341,105 +1353,105 @@
             </tbody>
         </table>
         <!--<h3 class="" id="银行代码"><a class="anchor hidden-xs" href="#银行代码" title="银行代码" smoothhashscroll=""><span class="octicon octicon-link "></span></a>银行代码</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Value</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ABC</td>
-                    <td>中国农业银行</td>
-                </tr>
-                <tr>
-                    <td>ALIPAY</td>
-                    <td>支付宝转帐银行卡</td>
-                </tr>
-                <tr>
-                    <td style="text-decoration:line-through;">BCCB</td>
-                    <td style="text-decoration:line-through;">北京银行</td>
-                </tr>
-                <tr>
-                    <td>BOC</td>
-                    <td>中国银行</td>
-                </tr>
-                <tr>
-                    <td>BOS</td>
-                    <td>上海银行</td>
-                </tr>
-                <tr>
-                    <td>CCB</td>
-                    <td>中国建设银行</td>
-                </tr>
-                <tr>
-                    <td>CEB</td>
-                    <td>中国光大银行</td>
-                </tr>
-                <tr>
-                    <td>CIB</td>
-                    <td>兴业银行</td>
-                </tr>
-                <tr>
-                    <td>CITIC</td>
-                    <td>中信银行</td>
-                </tr>
-                <tr>
-                    <td>CMB</td>
-                    <td>招商银行</td>
-                </tr>
-                <tr>
-                    <td>CMBC</td>
-                    <td>中国民生银行</td>
-                </tr>
-                <tr>
-                    <td>COMM</td>
-                    <td>交通银行</td>
-                </tr>
+    <table>
+        <thead>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ABC</td>
+                <td>中国农业银行</td>
+            </tr>
+            <tr>
+                <td>ALIPAY</td>
+                <td>支付宝转帐银行卡</td>
+            </tr>
+            <tr>
+                <td style="text-decoration:line-through;">BCCB</td>
+                <td style="text-decoration:line-through;">北京银行</td>
+            </tr>
+            <tr>
+                <td>BOC</td>
+                <td>中国银行</td>
+            </tr>
+            <tr>
+                <td>BOS</td>
+                <td>上海银行</td>
+            </tr>
+            <tr>
+                <td>CCB</td>
+                <td>中国建设银行</td>
+            </tr>
+            <tr>
+                <td>CEB</td>
+                <td>中国光大银行</td>
+            </tr>
+            <tr>
+                <td>CIB</td>
+                <td>兴业银行</td>
+            </tr>
+            <tr>
+                <td>CITIC</td>
+                <td>中信银行</td>
+            </tr>
+            <tr>
+                <td>CMB</td>
+                <td>招商银行</td>
+            </tr>
+            <tr>
+                <td>CMBC</td>
+                <td>中国民生银行</td>
+            </tr>
+            <tr>
+                <td>COMM</td>
+                <td>交通银行</td>
+            </tr>
 
-                <tr>
-                    <td>GDB</td>
-                    <td>广发银行</td>
-                </tr>
-                <tr>
-                    <td>HXB</td>
-                    <td>华夏银行</td>
-                </tr>
-                <tr>
-                    <td>ICBC</td>
-                    <td>中国工业银行</td>
-                </tr>
-                <tr>
-                    <td>PSBC</td>
-                    <td>中国邮政储蓄银行</td>
-                </tr>
-                <tr>
-                    <td>SPDB</td>
-                    <td>浦发银行</td>
-                </tr>
-                <tr>
-                    <td>NJCB</td>
-                    <td>南京银行</td>
-                </tr>
-                <tr>
-                    <td>HCCB</td>
-                    <td>杭州银行</td>
-                </tr>
-                <tr>
-                    <td>NBCB</td>
-                    <td>宁波银行</td>
-                </tr>
-                <tr>
-                    <td>SZPAB</td>
-                    <td>平安银行</td>
-                </tr>
-                <tr>
-                    <td>WECHAT</td>
-                    <td>微信转帐银行卡</td>
-                </tr>
-            </tbody>
-        </table>-->
+            <tr>
+                <td>GDB</td>
+                <td>广发银行</td>
+            </tr>
+            <tr>
+                <td>HXB</td>
+                <td>华夏银行</td>
+            </tr>
+            <tr>
+                <td>ICBC</td>
+                <td>中国工业银行</td>
+            </tr>
+            <tr>
+                <td>PSBC</td>
+                <td>中国邮政储蓄银行</td>
+            </tr>
+            <tr>
+                <td>SPDB</td>
+                <td>浦发银行</td>
+            </tr>
+            <tr>
+                <td>NJCB</td>
+                <td>南京银行</td>
+            </tr>
+            <tr>
+                <td>HCCB</td>
+                <td>杭州银行</td>
+            </tr>
+            <tr>
+                <td>NBCB</td>
+                <td>宁波银行</td>
+            </tr>
+            <tr>
+                <td>SZPAB</td>
+                <td>平安银行</td>
+            </tr>
+            <tr>
+                <td>WECHAT</td>
+                <td>微信转帐银行卡</td>
+            </tr>
+        </tbody>
+    </table>-->
         <h3 class="" id="服务类型"><a class="anchor hidden-xs" href="#服务类型" title="服务类型" smoothhashscroll=""><span class="octicon octicon-link "></span></a>服务类型</h3>
         <table>
             <thead>
@@ -1453,9 +1465,93 @@
                     <td></td>
                     <td>请联系客服</td>
                 </tr>
-                
 
-                
+
+
+            </tbody>
+        </table>
+
+        <h3 class="" id="Bitpay銀行列表"><a class="anchor hidden-xs" href="#Bitpay銀行列表" title="Bitpay銀行列表" smoothhashscroll=""><span class="octicon octicon-link "></span></a>Bitpay銀行列表</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>bankCode</th>
+                    <th>bankName</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PROMPTPAY</td>
+                    <td>PROMPTPAY</td>
+                </tr>
+                <tr>
+                    <td>BBL</td>
+                    <td>BANGKOK BANK</td>
+                </tr>
+                <tr>
+                    <td>KBANK</td>
+                    <td>KASIKORNBANK</td>
+                </tr>
+                <tr>
+                    <td>KTB</td>
+                    <td>KRUNG THAI BANK</td>
+                </tr>
+                <tr>
+                    <td>TMB</td>
+                    <td>TMB BANK</td>
+                </tr>
+                <tr>
+                    <td>SCB</td>
+                    <td>SIAM COMMERCIAL BANK</td>
+                </tr>
+                <tr>
+                    <td>CIMB</td>
+                    <td>CIMB THAI BANK</td>
+                </tr>
+                <tr>
+                    <td>UOB</td>
+                    <td>UNITED OVERSEAS BANK (THAI)</td>
+                </tr>
+                <tr>
+                    <td>BAY</td>
+                    <td>BANK OF AYUDHYA (KRUNGSRI)</td>
+                </tr>
+                <tr>
+                    <td>GSB</td>
+                    <td>THE GOVERNMENT SAVINGS BANK</td>
+                </tr>
+                <tr>
+                    <td>GHB</td>
+                    <td>THE GOVERNMENT HOUSING BANK</td>
+                </tr>
+                <tr>
+                    <td>BAAC</td>
+                    <td>BANK FOR AGRICULTURE AND AGRICULTURAL COOPERATIVES</td>
+                </tr>
+                <tr>
+                    <td>TISCO</td>
+                    <td>TISCO BANK</td>
+                </tr>
+                <tr>
+                    <td>KKP</td>
+                    <td>KIATNAKIN BANK</td>
+                </tr>
+                <tr>
+                    <td>TCRB</td>
+                    <td>THAI CREDIT BANK</td>
+                </tr>
+                <tr>
+                    <td>LHBANK</td>
+                    <td>LAND AND HOUSES BANK</td>
+                </tr>
+                <tr>
+                    <td>TTB</td>
+                    <td>TMBTHANACHART BANK</td>
+                </tr>
+                <tr>
+                    <td>USDT</td>
+                    <td>USDT</td>
+                </tr>
             </tbody>
         </table>
 
