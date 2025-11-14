@@ -41,6 +41,12 @@ namespace SkyPay.Backend
             var CompanyKey = IsTestSite
                 ? "81a5ad6e8048459590f47a13c4a48e09"
                 : "1aa1a43a2b5c4e0abf5b674943d1597d";
+            var Description = string.Empty;
+
+            if (ServiceType.ToUpper() == "BITPAY") {
+                //銀行帳號；銀行代碼
+                Description = "12354489184；KKP";
+            }
 
             var Sign = GetGPaySign(OrderID, OrderAmount, OrderDate, ServiceType, CurrencyType, CompanyCode, CompanyKey);
             var payload = new
@@ -54,6 +60,7 @@ namespace SkyPay.Backend
                 OrderAmount = OrderAmount.ToString("#.##"),
                 RevolveURL = ReturnURL,
                 UserName = "testUser",
+                Description= Description,
                 Sign = Sign
             };
 
