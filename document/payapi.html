@@ -223,9 +223,12 @@
                     <td>否</td>
                     <td>
                         額外資訊<br />
-                        <code>如果使用BitPay需填寫， 格式：銀行帳號；銀行代碼， 範例：3140371234；KTB</code><br />
+                        <code>如果使用BitPay需填寫， 格式：銀行帳號；銀行代碼；訂單金額變更通知網址， 範例：3140371234；KTB；https://xxxxx.xxx/xxxxxxx</code><br />
                         <a class="anchor hidden-xs" href="#Bitpay銀行列表" title="Bitpay銀行列表" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;Bitpay銀行列表(详见对照表)</a><br />
-                        <code>請注意如果傳入的銀行資訊與實際使用者轉帳的銀行資訊不相同，就算轉帳了訂單也無法完成</code>
+                        <a class="anchor hidden-xs" href="#Bitpay訂單金額變更通知" title="Bitpay訂單金額變更通知" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;Bitpay訂單金額變更通知(详见对照表)</a><br />
+                        <code>請注意如果傳入的銀行資訊與實際使用者轉帳的銀行資訊不相同，就算轉帳了訂單也無法完成</code><br />
+                        <code>BitPay 在建立訂單時，會依據申請的訂單金額隨機增加或減少最多 1.99 THB，以產生具有唯一性的實際付款金額。因此，系統需要提供「訂單金額變更通知網址」，以便將 BitPay 最終的實際付款金額回傳通知。</code><br />
+                        <code>**範例：**若使用者申請的金額為 100 THB，則 BitPay 實際產生的付款金額可能會落在 98.01 ~ 101.99 THB 之間</code>
                     </td>
                 </tr>
                 <tr>
@@ -1470,6 +1473,87 @@
 
             </tbody>
         </table>
+
+        <h3 class="" id="Bitpay訂單金額變更通知"><a class="anchor hidden-xs" href="#Bitpay訂單金額變更通知" title="Bitpay訂單金額變更通知" smoothhashscroll=""><span class="octicon octicon-link "></span></a>Bitpay訂單金額變更通知</h3>
+        <strong>PS : </strong>
+        <p>1 : API 需开启 Post 接口。 </p>
+        <p>2 : 回传格式为Json字串。 </p>
+        <p>3 : 成功后需回传 "SUCCESS"。 </p>
+        <p>4 : 如果未回传 "SUCCESS",系统会呼叫三次串接方API。 </p>
+        <p><strong>Response</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PayingSerial</td>
+                    <td>Integer</td>
+                    <td>交易编号</td>
+                </tr>
+                <tr>
+                    <td>OrderAmount</td>
+                    <td>Number</td>
+                    <td>实际收单金额</td>
+                </tr>
+                <tr>
+                    <td>Service</td>
+                    <td>String</td>
+                    <td><a class="anchor hidden-xs" href="#服务类型" title="服务类型" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;服务类型(详见对照表)</a></td>
+                </tr>
+                <tr>
+                    <td>Currency</td>
+                    <td>String</td>
+                    <td><a class="anchor hidden-xs" href="#币别" title="币别" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;币别(详见对照表)</a></td>
+                </tr>
+                <tr>
+                    <td>ManageCode</td>
+                    <td>String</td>
+                    <td>商户代码</td>
+                </tr>
+                <tr>
+                    <td>OrderID</td>
+                    <td>String</td>
+                    <td>
+                        订单编号
+                    </td>
+                </tr>
+                <tr>
+                    <td>OrderDate</td>
+                    <td>String</td>
+                    <td>
+                        订单日期
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sign</td>
+                    <td>String</td>
+                    <td>
+                        签章:<code>需再使用SHA256加密后转大写</code><br>
+                        格式:ManageCode=商户代码&Currency=币别&Service=服务类型&OrderID=订单编号&OrderAmount=实际收单金额&OrderDate=订单日期&CompanyKey=金钥<br />
+                        <code>只需依照格式内的参数加密，其余参数不加入签名。</code>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <pre>
+        <code class="json">
+                {
+                    "PayingSerial": "PT001",
+                    "OrderAmount": 100.00,
+                    "Service": "AA001",
+                    "Currency":"CNY",
+                    "ManageCode": "ManageCode",
+                    "OrderID": "OID001",
+                    "OrderDate":"2020-01-01 01:01:01",
+                    "Sign":详细内容请见说明
+                }
+            </code>
+        </pre>
 
         <h3 class="" id="Bitpay銀行列表"><a class="anchor hidden-xs" href="#Bitpay銀行列表" title="Bitpay銀行列表" smoothhashscroll=""><span class="octicon octicon-link "></span></a>Bitpay銀行列表</h3>
         <table>

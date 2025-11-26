@@ -44,8 +44,8 @@ namespace SkyPay.Backend
             var Description = string.Empty;
 
             if (ServiceType.ToUpper() == "BITPAY") {
-                //銀行帳號；銀行代碼
-                Description = "12354489184；KKP";
+                //銀行帳號；銀行代碼；訂單金額變更通知網址
+                Description = "12354489184；KKP；" + ReturnURL;
             }
 
             var Sign = GetGPaySign(OrderID, OrderAmount, OrderDate, ServiceType, CurrencyType, CompanyCode, CompanyKey);
