@@ -213,6 +213,7 @@ public class BackendController : ApiController
 
         BackendDB backendDB = new BackendDB();
         APIResult returnValue = new APIResult();
+        string fingerprint = GetFingerprint();
 
         try
         {
@@ -234,7 +235,7 @@ public class BackendController : ApiController
 
                     BackendFunction backendFunction = new BackendFunction();
                     string IP = backendFunction.CheckIPInTW(UserIP);
-                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "登入IP有误:" + UserIP+ ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP);
+                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "登入IP有误:" + UserIP+ ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
                     backendDB.InsertBotSendLog(AdminData.CompanyCode, "登入帳號:" + AdminData.AdminAccount + ",登入IP有误:" + UserIP);
                     string XForwardIP = CodingControl.GetXForwardedFor();
                     CodingControl.WriteXFowardForIP2(AdminOP);
@@ -253,7 +254,7 @@ public class BackendController : ApiController
                 {
                     BackendFunction backendFunction = new BackendFunction();
                     string IP = backendFunction.CheckIPInTW(UserIP);
-                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0,"登入 IP 有误:" + UserIP + ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP);
+                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0,"登入 IP 有误:" + UserIP + ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
                     backendDB.InsertBotSendLog(AdminData.CompanyCode, "登入帳號:" + AdminData.AdminAccount + ",登入IP有误:" + UserIP);
             
                     CodingControl.WriteXFowardForIP2(AdminOP);
@@ -639,7 +640,7 @@ public class BackendController : ApiController
         int InsertCompanyID = 0;
         BackendDB backendDB = new BackendDB();
         List<string> LstPermissions = new List<string>();
-
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(CompanyData.BID))
@@ -727,7 +728,7 @@ public class BackendController : ApiController
         }
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户:" + CompanyData.CompanyCode, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户:" + CompanyData.CompanyCode, IP, fingerprint);
 
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
@@ -746,6 +747,7 @@ public class BackendController : ApiController
         CompanyTableResult _CompanyTableResult = new CompanyTableResult();
         int companyResult = 0;
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(CompanyData.BID))
         {
@@ -842,7 +844,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户名称:{0},代付API规则:{1},代付通道代码:{2},代付API规则 :{3},后台IP检查:{4},后台送单是否经过审核:{5}", CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType), IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户名称:{0},代付API规则:{1},代付通道代码:{2},代付API规则 :{3},后台IP检查:{4},后台送单是否经过审核:{5}", CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             _CompanyTableResult.ResultCode = APIResult.enumResult.OK;
@@ -862,6 +864,7 @@ public class BackendController : ApiController
         CompanyTableResult _CompanyTableResult = new CompanyTableResult();
         int companyResult = 0;
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(CompanyData.BID))
         {
@@ -984,7 +987,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户代码:{0},商户名称:{1},代付API规则:{2},代付通道代码:{3},商户状态:{4},代付API规则 :{5},后台IP检查:{6},后台送单是否经过审核:{7},对应供应商群组:{8},是否开启确认商户送单功能:{9}", CompanyData.CompanyCode, CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, CompanyState, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType, ProviderGroups, CheckCompanyWithdrawType), IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户代码:{0},商户名称:{1},代付API规则:{2},代付通道代码:{3},商户状态:{4},代付API规则 :{5},后台IP检查:{6},后台送单是否经过审核:{7},对应供应商群组:{8},是否开启确认商户送单功能:{9}", CompanyData.CompanyCode, CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, CompanyState, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType, ProviderGroups, CheckCompanyWithdrawType), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             RedisCache.Company.UpdateCompanyByCode(CompanyData.CompanyCode);
@@ -1064,6 +1067,7 @@ public class BackendController : ApiController
         CompanyTableResult _CompanyTableResult = new CompanyTableResult();
         int companyResult = 0;
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -1087,7 +1091,7 @@ public class BackendController : ApiController
             string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "商户:" + CompanyName + ",状态为停用", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "商户:" + CompanyName + ",状态为停用", IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             _CompanyTableResult.ResultCode = APIResult.enumResult.OK;
@@ -1205,16 +1209,17 @@ public class BackendController : ApiController
             {
                
                 HttpContext.Current.Response.Cookies.Add(new HttpCookie("BID", RedisCache.BIDContext.CreateBID(admin.CompanyCode, admin.LoginAccount, admin.RealName, admin.forAdminRoleID, CodingControl.GetUserIP(), loginResult.CheckGoogleKeySuccess)));
+                HttpContext.Current.Response.Cookies.Add(new HttpCookie("Fingerprint", fromBody.Fingerprint));
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
 
-                int AdminOP = backendDB.InsertAdminOPLog(admin.forCompanyID, admin.AdminID, 0, fromBody.LoginAccount + ",登入成功", IP);
+                int AdminOP = backendDB.InsertAdminOPLog(admin.forCompanyID, admin.AdminID, 0, fromBody.LoginAccount + ",登入成功", IP, fromBody.Fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
             }
             else
             {
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(0, 0, 0, fromBody.LoginAccount + ",登入失败", IP);
+                int AdminOP = backendDB.InsertAdminOPLog(0, 0, 0, fromBody.LoginAccount + ",登入失败", IP, fromBody.Fingerprint);
                 backendDB.InsertBotSendLog(admin.CompanyCode, "登入帳號:" + fromBody.LoginAccount + ",登入失败,IP:" + IP);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
@@ -1224,7 +1229,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(0, 0, 0, fromBody.LoginAccount + ",登入失败", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(0, 0, 0, fromBody.LoginAccount + ",登入失败", IP, fromBody.Fingerprint);
             backendDB.InsertBotSendLog("", "登入帳號:" + fromBody.LoginAccount + ",登入失败,IP:" + IP);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -1270,6 +1275,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -1317,7 +1323,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "建立后台账号:" + fromBody.LoginAccount, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "建立后台账号:" + fromBody.LoginAccount, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -1344,6 +1350,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -1384,7 +1391,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台账号:" + fromBody.LoginAccount, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台账号:" + fromBody.LoginAccount, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -1411,6 +1418,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -1436,7 +1445,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "停用后台账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "停用后台账号:" + fromBody.LoginAccount, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -1458,6 +1467,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -1469,7 +1480,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台密码", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台密码", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -1499,6 +1510,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -1525,7 +1538,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商建立账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商建立账号:" + fromBody.LoginAccount, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -1543,6 +1556,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -1571,7 +1586,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商修改后台账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商修改后台账号:" + fromBody.LoginAccount, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -1589,6 +1604,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -1614,7 +1631,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商停用后台账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "专属供应商停用后台账号:" + fromBody.LoginAccount, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -2006,6 +2023,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2035,7 +2053,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "建立专属供应商群组:" + fromBody.GroupName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "建立专属供应商群组:" + fromBody.GroupName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             _Result.ResultCode = APIResult.enumResult.OK;
@@ -2053,6 +2071,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2080,7 +2099,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改专属供应商群组:" + fromBody.GroupName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改专属供应商群组:" + fromBody.GroupName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -2098,6 +2117,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2160,7 +2180,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改专属供应商权重", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改专属供应商权重", IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -2178,6 +2198,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2200,7 +2221,7 @@ public class BackendController : ApiController
         if (DBretValue >= 1)
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "(停用/启用)专属供应商群组:" + fromBody.GroupName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "(停用/启用)专属供应商群组:" + fromBody.GroupName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -2279,8 +2300,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         int DBretValue = -1;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2321,7 +2341,7 @@ public class BackendController : ApiController
 
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "增加后台角色:" + fromBody.RoleName, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "增加后台角色:" + fromBody.RoleName, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -2347,6 +2367,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2388,7 +2409,7 @@ public class BackendController : ApiController
 
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台角色:" + fromBody.RoleName, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台角色:" + fromBody.RoleName, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBretValue = backendDB.UpdateAdminRole(fromBody.CompanyID, fromBody.AdminRoleID, fromBody.RoleName, fromBody.AdminPermission, fromBody.NormalPermission);
@@ -2538,6 +2559,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2577,7 +2599,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增后台功能", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增后台功能", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBretValue = backendDB.InsertPermission(fromBody);
@@ -2603,6 +2625,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2642,7 +2665,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改后台功能", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改后台功能", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBretValue = backendDB.UpdatePermission(fromBody);
@@ -2668,8 +2691,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2709,7 +2731,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "删除后台功能", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "删除后台功能", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBretValue = backendDB.DeletePermission(fromBody);
@@ -2734,8 +2756,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         int DBretValue = -1;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -2776,7 +2797,7 @@ public class BackendController : ApiController
 
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台角色可用功能", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改后台角色可用功能", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBretValue = backendDB.UpdatePermissionRole(fromBody.PermissionName, fromBody.PermissionRoles);
@@ -3545,6 +3566,8 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBModel.CreatePatchPayment DBreturn;
         int CompanyID = 0;
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             result.ResultCode = APIResult.enumResult.SessionError;
@@ -3572,7 +3595,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(CompanyID, AdminData.AdminID, 1, "人工充值申请", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(CompanyID, AdminData.AdminID, 1, "人工充值申请", IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.PaymentResult = DBreturn;
@@ -3610,7 +3633,7 @@ public class BackendController : ApiController
     //    BackendDB backendDB = new BackendDB();
     //    BackendFunction backendFunction = new BackendFunction();
     //    string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-    //    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "建立补单,旧单号:" + fromBody.PaymentSerial, IP);
+    //    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "建立补单,旧单号:" + fromBody.PaymentSerial, IP, fingerprint);
     //    string XForwardIP = CodingControl.GetXForwardedFor();
     //    CodingControl.WriteXFowardForIP(AdminOP);
     //    DBreturn = backendDB.CreatePatchPayment(fromBody.PaymentSerial, fromBody.Amount, fromBody.PatchDescription);
@@ -3649,8 +3672,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -3699,7 +3721,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "提现单成功转失败,单号:" + fromBody.PaymentSerial, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "提现单成功转失败,单号:" + fromBody.PaymentSerial, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBreturn = backendDB.ChangeWithdrawalProcessStatus(fromBody.PaymentSerial, AdminData.AdminID);
@@ -3728,8 +3750,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -3782,7 +3803,7 @@ public class BackendController : ApiController
         if (DBreturn == "审核完成")
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "进行中转成功(提现),单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "进行中转成功(提现),单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -3807,8 +3828,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -3861,7 +3881,7 @@ public class BackendController : ApiController
         if (DBreturn == "审核完成")
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "进行中转失败(提现),单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "进行中转失败(提现),单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -3885,8 +3905,7 @@ public class BackendController : ApiController
         int DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -3939,7 +3958,7 @@ public class BackendController : ApiController
         if (DBreturn == 0)
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "取消上游审核,单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "取消上游审核,单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -3976,8 +3995,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -4024,7 +4042,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "提现单失败转成功,单号:" + fromBody.PaymentSerial, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "提现单失败转成功,单号:" + fromBody.PaymentSerial, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBreturn = backendDB.ChangeWithdrawalProcessStatusFailToSuccess(fromBody.PaymentSerial, AdminData.AdminID);
@@ -4053,9 +4071,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-
-
-
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -4102,7 +4118,7 @@ public class BackendController : ApiController
         BackendFunction backendFunction = new BackendFunction();
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "未处理转成功,单号:" + fromBody.PaymentSerial, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "未处理转成功,单号:" + fromBody.PaymentSerial, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBreturn = backendDB.ChangePaymentProcessStatus(fromBody.PaymentSerial, AdminData.AdminID, fromBody.RealAmount);
@@ -4131,6 +4147,7 @@ public class BackendController : ApiController
         string DBreturn;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -4177,7 +4194,7 @@ public class BackendController : ApiController
         }
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "成功转失败,单号:" + fromBody.PaymentSerial, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "成功转失败,单号:" + fromBody.PaymentSerial, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         DBreturn = backendDB.ChangePaymentProcessStatusSuccessToFail(fromBody.PaymentSerial, AdminData.AdminID);
@@ -4204,6 +4221,7 @@ public class BackendController : ApiController
         UpdatePatmentResultByPatmentSerialResult result = new UpdatePatmentResultByPatmentSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -4248,7 +4266,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工充值审核,单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工充值审核,单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -4268,6 +4286,7 @@ public class BackendController : ApiController
         UpdatePatmentResultByPatmentSerialResult result = new UpdatePatmentResultByPatmentSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBViewModel.AdminWithKey AdminModel = new DBViewModel.AdminWithKey();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             result.ResultCode = APIResult.enumResult.SessionError;
@@ -4315,7 +4334,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "上游供应商审核,单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "上游供应商审核,单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -4547,6 +4566,7 @@ public class BackendController : ApiController
     {
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         APIResult Result = new APIResult();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(BID))
         {
@@ -4559,7 +4579,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         Result.Message = backendDB.SetAgentClose(AdminData.forCompanyID, Pay.CurrencyType).ToString();
@@ -4607,6 +4627,7 @@ public class BackendController : ApiController
     {
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         APIResult Result = new APIResult();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -4624,7 +4645,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         BackendFunction backendFunction = new BackendFunction();
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算(系统商操作)", IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算(系统商操作)", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         Result.Message = backendDB.SetAgentClose(fromBody.CompanyID, fromBody.CurrencyType).ToString();
@@ -4743,6 +4764,7 @@ public class BackendController : ApiController
         List<string> ProviderCodes = new List<string>();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -4779,7 +4801,7 @@ public class BackendController : ApiController
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("新增商户支付方式,名称:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5}",
             ServiceTypeName, fromBody.CurrencyType, fromBody.CollectRate, fromBody.MaxDaliyAmount, fromBody.MinOnceAmount, fromBody.MaxOnceAmount
-            ), IP);
+            ), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             #endregion
@@ -4796,6 +4818,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         string ServiceTypeName = "";
+        string fingerprint = GetFingerprint();
 
         List<string> ProviderCodes = new List<string>();
         BackendFunction backendFunction = new BackendFunction();
@@ -4837,7 +4860,7 @@ public class BackendController : ApiController
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户支付方式,名称:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5}",
             ServiceTypeName, fromBody.CurrencyType, fromBody.CollectRate, fromBody.MaxDaliyAmount, fromBody.MinOnceAmount, fromBody.MaxOnceAmount
-            ), IP);
+            ), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             #endregion
@@ -5018,6 +5041,7 @@ public class BackendController : ApiController
         List<string> ProviderCodes = new List<string>();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -5059,7 +5083,7 @@ public class BackendController : ApiController
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("新增商户支付方式,名称:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5},对应供应商:{6},商户:{7}",
             ServiceTypeName, fromBody.CurrencyType, fromBody.CollectRate, fromBody.MaxDaliyAmount, fromBody.MinOnceAmount, fromBody.MaxOnceAmount, ProviderName, CompanyName
-            ), IP);
+            ), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             #endregion
@@ -5080,6 +5104,7 @@ public class BackendController : ApiController
         List<string> ProviderCodes = new List<string>();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -5134,7 +5159,7 @@ public class BackendController : ApiController
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户支付方式,名称:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5},对应供应商:{6},状态:{7},商户:{8}",
             ServiceTypeName, fromBody.CurrencyType, fromBody.CollectRate, fromBody.MaxDaliyAmount, fromBody.MinOnceAmount, fromBody.MaxOnceAmount, ProviderName, strState, CompanyName
-            ), IP);
+            ), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             #endregion
@@ -5153,6 +5178,7 @@ public class BackendController : ApiController
         string ServiceTypeName = "";
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -5183,7 +5209,7 @@ public class BackendController : ApiController
             string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "(停用/启用)商户支付方式:" + ServiceTypeName + ",更改为:" + StrBeforeState + ",商户:" + CompanyName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "(停用/启用)商户支付方式:" + ServiceTypeName + ",更改为:" + StrBeforeState + ",商户:" + CompanyName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5260,6 +5286,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         var currencyModel = new DBModel.Currency() { CurrencyType = fromBody.Currency };
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -5277,7 +5304,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增币别:" + fromBody.Currency, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增币别:" + fromBody.Currency, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5307,6 +5334,7 @@ public class BackendController : ApiController
         string ProviderName = "";
         string ServiceTypeName = "";
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -5331,7 +5359,7 @@ public class BackendController : ApiController
             ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除供应商支付类型,供应商名称:" + ProviderName + ",支付类型:" + ServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除供应商支付类型,供应商名称:" + ProviderName + ",支付类型:" + ServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5483,6 +5511,7 @@ public class BackendController : ApiController
 
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -5506,7 +5535,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增支付类型:" + fromBody.ServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增支付类型:" + fromBody.ServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5526,6 +5555,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -5548,7 +5578,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改支付类型:" + fromBody.ServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改支付类型:" + fromBody.ServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5754,7 +5784,7 @@ public class BackendController : ApiController
     //            BackendFunction backendFunction = new BackendFunction();
     //            string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
     //            string GroupName = backendDB.GetProxyProviderGroupNameByGroupID(fromBody.GroupID);
-    //            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "专属供应商修改订单群组("+ OrderGroupName + "):" + fromBody.OrderSerial + ",更换至:" + GroupName, IP);
+    //            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "专属供应商修改订单群组("+ OrderGroupName + "):" + fromBody.OrderSerial + ",更换至:" + GroupName, IP, fingerprint);
     //            string XForwardIP = CodingControl.GetXForwardedFor();
     //            CodingControl.WriteXFowardForIP(AdminOP);
     //            result.ResultCode = APIResult.enumResult.OK;
@@ -5813,6 +5843,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
         string OrderGroupName = "";
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -5861,7 +5892,7 @@ public class BackendController : ApiController
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 string GroupName = backendDB.GetProxyProviderGroupNameByGroupID(fromBody.GroupID);
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组(" + OrderGroupName + "):" + fromBody.OrderSerial + ",更换至:" + GroupName, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组(" + OrderGroupName + "):" + fromBody.OrderSerial + ",更换至:" + GroupName, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 var WithdrawSerialModel = backendDB.GetWithdrawalByWithdrawSerialByAdmin(fromBody.OrderSerial);
@@ -5922,6 +5953,7 @@ public class BackendController : ApiController
         string OrderGroupName = "";
         string IP = "";
         int AdminOP = 0;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -5973,7 +6005,7 @@ public class BackendController : ApiController
 
                         IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                         string GroupName = backendDB.GetProxyProviderGroupNameByGroupID(fromBody.GroupID);
-                        AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组(" + OrderGroupName + "):" + fromBody.Withdrawals[i] + ",更换至:" + GroupName, IP);
+                        AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组(" + OrderGroupName + "):" + fromBody.Withdrawals[i] + ",更换至:" + GroupName, IP, fingerprint);
 
                         CodingControl.WriteXFowardForIP(AdminOP);
                         result.SuccessCount++;
@@ -5999,7 +6031,7 @@ public class BackendController : ApiController
 
             strWithdrawals = strWithdrawals.Substring(0, strWithdrawals.Length - 1);
 
-            AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组:" + strWithdrawals, IP);
+            AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "系統商修改订单群组:" + strWithdrawals, IP, fingerprint);
             CodingControl.WriteXFowardForIP(AdminOP);
 
             result.ResultCode = APIResult.enumResult.OK;
@@ -6021,6 +6053,7 @@ public class BackendController : ApiController
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -6065,7 +6098,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "調整供应商銀行卡:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "調整供应商銀行卡:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -6086,6 +6119,7 @@ public class BackendController : ApiController
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -6130,7 +6164,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "刪除供应商銀行卡:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "刪除供应商銀行卡:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -6150,6 +6184,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -6189,7 +6224,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商銀行卡:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商銀行卡:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -6210,6 +6245,7 @@ public class BackendController : ApiController
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -6255,7 +6291,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "专属供应商余额调整,金额:" + fromBody.Amount + ",群组id:" + fromBody.GroupID, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "专属供应商余额调整,金额:" + fromBody.Amount + ",群组id:" + fromBody.GroupID, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -6414,6 +6450,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderModel.BID))
         {
@@ -6467,7 +6504,7 @@ public class BackendController : ApiController
                     isPrePaid = "否";
                 }
 
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商:" + ProviderModel.ProviderName + ",是否为预付:" + isPrePaid, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商:" + ProviderModel.ProviderName + ",是否为预付:" + isPrePaid, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -6490,6 +6527,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderModel.BID))
         {
@@ -6503,7 +6541,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "设定专属供应商:" + ProviderModel.forProviderCode, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "设定专属供应商:" + ProviderModel.forProviderCode, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -6522,6 +6560,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderModel.BID))
         {
@@ -6621,7 +6660,7 @@ public class BackendController : ApiController
 
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商:" + ProviderModel.ProviderName + ",状态" + StrBeforeProviderState + ",提供功能:" + strProviderAPIType+ ",是否为预付:"+ isPrePaid, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商:" + ProviderModel.ProviderName + ",状态" + StrBeforeProviderState + ",提供功能:" + strProviderAPIType+ ",是否为预付:"+ isPrePaid, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -6646,6 +6685,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderModel.BID))
         {
@@ -6699,7 +6739,7 @@ public class BackendController : ApiController
             var ProviderName = backendDB.GetProviderNameByProviderCode(ProviderModel.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商:" + ProviderName + ",更改为:" + StrBeforeProviderState, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商:" + ProviderName + ",更改为:" + StrBeforeProviderState, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -6719,6 +6759,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderAPIModel.BID))
         {
@@ -6792,7 +6833,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商功能,供应商名称" + ProviderName + ",类型:" + APITypeName + ",更改为:" + APITypeState, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商功能,供应商名称" + ProviderName + ",类型:" + APITypeName + ",更改为:" + APITypeState, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -6814,6 +6855,7 @@ public class BackendController : ApiController
     {
         ProviderServiceResult retValue = new ProviderServiceResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -6850,6 +6892,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -6879,7 +6922,7 @@ public class BackendController : ApiController
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("新增供应商支付方式,支付类型:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5},供应商:{6}",
                 ServiceTypeName, ProviderServiceModel.CurrencyType, ProviderServiceModel.CostRate, ProviderServiceModel.MaxDaliyAmount, ProviderServiceModel.MinOnceAmount, ProviderServiceModel.MaxOnceAmount, ProviderName
-                ), IP);
+                ), IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -6902,6 +6945,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         RedisCache.BIDContext.BIDInfo AdminData;
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderServiceModel.BID))
@@ -6942,7 +6986,7 @@ public class BackendController : ApiController
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("修改供应商支付方式,支付类型:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5},供应商:{6},状态:{7}",
                 ServiceTypeName, ProviderServiceModel.CurrencyType, ProviderServiceModel.CostRate, ProviderServiceModel.MaxDaliyAmount, ProviderServiceModel.MinOnceAmount, ProviderServiceModel.MaxOnceAmount, ProviderName
-                , StrBeforeProviderState), IP);
+                , StrBeforeProviderState), IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -6968,6 +7012,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderServiceModel.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -7014,7 +7059,7 @@ public class BackendController : ApiController
             var ProviderName = backendDB.GetProviderNameByProviderCode(ProviderServiceModel.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商:" + ProviderName + ",更改为:" + StrBeforeProviderState, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "(停用/启用)供应商:" + ProviderName + ",更改为:" + StrBeforeProviderState, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7034,6 +7079,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderServiceModel.BID))
         {
@@ -7067,7 +7113,7 @@ public class BackendController : ApiController
             var ProviderName = backendDB.GetProviderNameByProviderCode(ProviderServiceModel.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("(停用/启用)供应商支付类型,供应商:{0},支付类型:{1},更改为:{2}", ProviderName, ServiceTypeName, StrBeforeProviderState), IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("(停用/启用)供应商支付类型,供应商:{0},支付类型:{1},更改为:{2}", ProviderName, ServiceTypeName, StrBeforeProviderState), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7087,6 +7133,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(Model.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -7109,7 +7156,7 @@ public class BackendController : ApiController
             var ProviderName = backendDB.GetProviderNameByProviderCode(Model.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("调整预付额度,供应商:{0},金額:{1}", ProviderName, Model.Amount), IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("调整预付额度,供应商:{0},金額:{1}", ProviderName, Model.Amount), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7129,6 +7176,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(ProviderServiceModel.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -7162,7 +7210,7 @@ public class BackendController : ApiController
             var ProviderName = backendDB.GetProviderNameByProviderCode(ProviderServiceModel.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("(停用/启用)供应商支付类型,供应商:{0},支付类型:{1},更改为:{2}", ProviderName, ServiceTypeName, StrBeforeProviderState), IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, string.Format("(停用/启用)供应商支付类型,供应商:{0},支付类型:{1},更改为:{2}", ProviderName, ServiceTypeName, StrBeforeProviderState), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7182,6 +7230,7 @@ public class BackendController : ApiController
     {
         ProviderServiceResult retValue = new ProviderServiceResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -7283,6 +7332,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(PermissionCategoryModel.BID))
         {
@@ -7294,7 +7344,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增功能群组:" + PermissionCategoryModel.Description, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增功能群组:" + PermissionCategoryModel.Description, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7312,6 +7362,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(PermissionCategoryModel.BID))
         {
@@ -7326,7 +7377,7 @@ public class BackendController : ApiController
             {
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改功能群组:" + PermissionCategoryModel.Description, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改功能群组:" + PermissionCategoryModel.Description, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -7350,6 +7401,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(PermissionCategoryModel.BID))
         {
@@ -7364,7 +7416,7 @@ public class BackendController : ApiController
             {
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "删除功能群组", IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "删除功能群组", IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -7878,6 +7930,7 @@ public class BackendController : ApiController
         CompanyPointResult _CompanyPointResult = new CompanyPointResult();
         int companyResult = 0;
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(CompanyPointData.BID))
         {
@@ -7896,7 +7949,7 @@ public class BackendController : ApiController
                 companyResult = backendDB.InsertCompanyPoint(CompanyPointData.forCompanyID, currencytype);
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户钱包,商户:" + CompanyName + ",币别:" + currencytype, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户钱包,商户:" + CompanyName + ",币别:" + currencytype, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
             }
@@ -7933,7 +7986,7 @@ public class BackendController : ApiController
     //        var CompanyName = backendDB.GetCompanyByID(CompanyPointData.forCompanyID).CompanyName;
     //        BackendFunction backendFunction = new BackendFunction();
     //        string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户钱包,商户:" + CompanyName + ",币别:" + CompanyPointData.CurrencyType, IP);
+    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户钱包,商户:" + CompanyName + ",币别:" + CompanyPointData.CurrencyType, IP, fingerprint);
     //    }
     //    return _CompanyPointResult;
     //}
@@ -8117,6 +8170,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8145,7 +8199,7 @@ public class BackendController : ApiController
             }
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户自动代付设定,商户名称:" + CompanyName + ",币别:" + fromBody.CurrencyType + ",最小值:" + fromBody.MinLimit + ",最大值:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",对应供应商:" + ProviderName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户自动代付设定,商户名称:" + CompanyName + ",币别:" + fromBody.CurrencyType + ",最小值:" + fromBody.MinLimit + ",最大值:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",对应供应商:" + ProviderName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -8162,6 +8216,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8189,7 +8244,7 @@ public class BackendController : ApiController
             }
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户自动代付设定,商户名称:" + CompanyName + ",币别:" + fromBody.CurrencyType + ",最小值:" + fromBody.MinLimit + ",最大值:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",对应供应商:" + ProviderName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户自动代付设定,商户名称:" + CompanyName + ",币别:" + fromBody.CurrencyType + ",最小值:" + fromBody.MinLimit + ",最大值:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",对应供应商:" + ProviderName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -8748,6 +8803,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8769,7 +8825,7 @@ public class BackendController : ApiController
             retValue.ResultCode = APIResult.enumResult.OK;
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增银行:" + fromBody.BankName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "新增银行:" + fromBody.BankName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -8786,6 +8842,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8808,7 +8865,7 @@ public class BackendController : ApiController
         {
             retValue.ResultCode = APIResult.enumResult.OK;
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改银行:" + fromBody.BankCode, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "修改银行:" + fromBody.BankCode, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -8825,6 +8882,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8842,7 +8900,7 @@ public class BackendController : ApiController
         if (DBretValue >= 1)
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "停用银行:" + fromBody.BankCode, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 4, "停用银行:" + fromBody.BankCode, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -8893,6 +8951,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
 
         int DBretValue = -1;
 
@@ -8915,7 +8974,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增银行卡:" + fromBody.BankCard, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增银行卡:" + fromBody.BankCard, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -8933,6 +8992,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8946,7 +9006,7 @@ public class BackendController : ApiController
         DBretValue = backendDB.UpdateBankCard(fromBody);
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改银行卡:" + fromBody.BankCard, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改银行卡:" + fromBody.BankCard, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         retValue.ResultCode = APIResult.enumResult.OK;
@@ -8964,6 +9024,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -8980,7 +9041,7 @@ public class BackendController : ApiController
         if (DBretValue >= 1)
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除银行卡:" + fromBody.BankCard, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除银行卡:" + fromBody.BankCard, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -9046,6 +9107,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
 
         int DBretValue = -1;
 
@@ -9074,7 +9136,7 @@ public class BackendController : ApiController
         else
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增区块链地址:" + fromBody.BlockChainAddress, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增区块链地址:" + fromBody.BlockChainAddress, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -9092,6 +9154,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -9111,7 +9174,7 @@ public class BackendController : ApiController
         DBretValue = backendDB.UpdateBlockChainAddress(fromBody, AdminData.forCompanyID);
 
         string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改区块链地址:" + fromBody.BlockChainAddress, IP);
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改区块链地址:" + fromBody.BlockChainAddress, IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
         retValue.ResultCode = APIResult.enumResult.OK;
@@ -9129,6 +9192,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -9149,7 +9213,7 @@ public class BackendController : ApiController
         if (DBretValue >= 1)
         {
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除区块链地址:" + fromBody.BlockChainAddress, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除区块链地址:" + fromBody.BlockChainAddress, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -9223,6 +9287,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -9243,7 +9308,7 @@ public class BackendController : ApiController
             //更新DB公司資料
             backendDB.UpdateAdminGoogleKey(fromBody.GoogleKey, fromBody.LoginAccount);
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "绑定谷歌验证,账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "绑定谷歌验证,账号:" + fromBody.LoginAccount, IP, fingerprint);
             backendDB.InsertBotSendLog(AdminData.CompanyCode, "绑定谷歌验证,账号:" + fromBody.LoginAccount);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -9264,6 +9329,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBModel.AdminWithGoogleKey _AdminData = null;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -9286,7 +9352,7 @@ public class BackendController : ApiController
             backendDB.UpdateAdminGoogleKey("", fromBody.LoginAccount);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除谷歌验证,账号:" + fromBody.LoginAccount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除谷歌验证,账号:" + fromBody.LoginAccount, IP, fingerprint);
             backendDB.InsertBotSendLog(AdminData.CompanyCode, "解除谷歌验证,账号:" + fromBody.LoginAccount);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -9387,7 +9453,7 @@ public class BackendController : ApiController
     //    {
 
     //        string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "解除谷歌验证,商户:" + CompanyName, IP);
+    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "解除谷歌验证,商户:" + CompanyName, IP, fingerprint);
     //        retValue.ResultCode = APIResult.enumResult.OK;
     //    }
     //    else
@@ -9444,6 +9510,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -9464,7 +9531,7 @@ public class BackendController : ApiController
             //更新DB公司資料
             backendDB.UpdateCompanyGoogleKey(fromBody.GoogleKey, AdminData.forCompanyID);
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "绑定谷歌验证", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "绑定谷歌验证", IP, fingerprint);
             backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + "绑定谷歌验证");
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -9485,6 +9552,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBModel.CompanyWithGooleKey CompanyData = null;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -9507,7 +9575,7 @@ public class BackendController : ApiController
             backendDB.UpdateCompanyGoogleKey("", AdminData.forCompanyID);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除谷歌验证", IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除谷歌验证", IP, fingerprint);
             backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + "解除谷歌验证");
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -9811,6 +9879,7 @@ public class BackendController : ApiController
         decimal WithdrawalRate = 0;
         string OldServiceType = "";
         string WithdrawOption = "";
+        string fingerprint = GetFingerprint();
 
 
 
@@ -10141,7 +10210,7 @@ public class BackendController : ApiController
             strWithdrawSerials = strWithdrawSerials.Substring(0, strWithdrawSerials.Length - 1);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "申请提现单:" + strWithdrawSerials, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "申请提现单:" + strWithdrawSerials, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -10195,6 +10264,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -10219,7 +10289,7 @@ public class BackendController : ApiController
             strWithdrawSerials = strWithdrawSerials.Substring(0, strWithdrawSerials.Length - 1);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "申请占存提现单:" + strWithdrawSerials, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "申请占存提现单:" + strWithdrawSerials, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -10241,6 +10311,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -10259,7 +10330,7 @@ public class BackendController : ApiController
             retValue.ResultCode = APIResult.enumResult.OK;
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改占存提现单:" + dbReturn.WithdrawSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "修改占存提现单:" + dbReturn.WithdrawSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -10281,6 +10352,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -10299,7 +10371,7 @@ public class BackendController : ApiController
             retValue.ResultCode = APIResult.enumResult.OK;
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "重审提现单:" + dbReturn.WithdrawSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "重审提现单:" + dbReturn.WithdrawSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -10431,6 +10503,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBModel.Admin AdminModel;
         int GroupID = 0;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             _WithdrawalTableResult.ResultCode = APIResult.enumResult.SessionError;
@@ -10519,7 +10592,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "订单出款,单号:" + TableResult.WithdrawSerial + ",出款人:" + TableResult.RealName1, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "订单出款,单号:" + TableResult.WithdrawSerial + ",出款人:" + TableResult.RealName1, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -10585,6 +10658,7 @@ public class BackendController : ApiController
 
         WithdrawalResultByWithdrawSerialResult _WithdrawalTableResult = new WithdrawalResultByWithdrawSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -10612,7 +10686,7 @@ public class BackendController : ApiController
             DBModel.Withdrawal TableResult = backendDB.GetProviderWithdrawalByWithdrawSerial(fromBody.WithdrawSerial);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "取消订单出款,单号:" + TableResult.WithdrawSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "取消订单出款,单号:" + TableResult.WithdrawSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -10655,7 +10729,7 @@ public class BackendController : ApiController
     //        result.ResultCode = APIResult.enumResult.OK;
     //        BackendFunction backendFunction = new BackendFunction();
     //        string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除占存提现单", IP);
+    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除占存提现单", IP, fingerprint);
     //        string XForwardIP = CodingControl.GetXForwardedFor();
     //        CodingControl.WriteXFowardForIP(AdminOP);
     //    }
@@ -10692,7 +10766,7 @@ public class BackendController : ApiController
     //        result.ResultCode = APIResult.enumResult.OK;
     //        BackendFunction backendFunction = new BackendFunction();
     //        string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除占存提现单", IP);
+    //        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "删除占存提现单", IP, fingerprint);
     //        string XForwardIP = CodingControl.GetXForwardedFor();
     //        CodingControl.WriteXFowardForIP(AdminOP);
     //    }
@@ -10709,6 +10783,7 @@ public class BackendController : ApiController
     {
         UpdateWithdrawalResultByWithdrawSerialResult result = new UpdateWithdrawalResultByWithdrawSerialResult();
                                                 RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -10755,7 +10830,7 @@ public class BackendController : ApiController
             strProviderName = backendDB.GetProviderNameByProviderCode(fromBody.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "审核提现单,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus + ",供应商:" + strProviderName + ",付款方式:" + strWithdrawType + ",支付通道:" + strServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "审核提现单,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus + ",供应商:" + strProviderName + ",付款方式:" + strWithdrawType + ",支付通道:" + strServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -10775,6 +10850,7 @@ public class BackendController : ApiController
         UpdateWithdrawalResultByWithdrawSerialResult result = new UpdateWithdrawalResultByWithdrawSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -10835,7 +10911,7 @@ public class BackendController : ApiController
             }
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "人工审核确认,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "人工审核确认,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -10855,6 +10931,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         DBViewModel.AdminWithKey AdminModel;
         int GroupID = 0;
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -10941,7 +11018,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "人工审核确认,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "人工审核确认,单号:" + fromBody.WithdrawSerial + ",审核状态:" + strStatus, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -10959,6 +11036,7 @@ public class BackendController : ApiController
     {
         UpdateWithdrawalResultByWithdrawSerialResult result = new UpdateWithdrawalResultByWithdrawSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -10983,7 +11061,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "查询代付单状态:" + fromBody.WithdrawSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "查询代付单状态:" + fromBody.WithdrawSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -11001,6 +11079,7 @@ public class BackendController : ApiController
     {
         UpdateWithdrawalResultByWithdrawSerialResult result = new UpdateWithdrawalResultByWithdrawSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -11024,7 +11103,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "查询代付单状态:" + fromBody.WithdrawSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 5, "查询代付单状态:" + fromBody.WithdrawSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -11953,6 +12032,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -12005,7 +12085,7 @@ public class BackendController : ApiController
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商代付白名单 IP: " + data.WithdrawalIP
-                , IP);
+                , IP, fingerprint);
 
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
@@ -12032,6 +12112,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
 
 
@@ -12077,7 +12158,7 @@ public class BackendController : ApiController
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除供应商代付白名单 IP: " + data.WithdrawalIP
-            , IP);
+            , IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -12200,6 +12281,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -12234,7 +12316,7 @@ public class BackendController : ApiController
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增后台白名单 IP: " + data.WithdrawalIP
-                , IP);
+                , IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -12259,6 +12341,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -12294,7 +12377,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除后台白名单 IP: " + data.WithdrawalIP, IP
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除后台白名单 IP: " + data.WithdrawalIP, IP, fingerprint
             );
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -12380,6 +12463,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -12405,7 +12489,7 @@ public class BackendController : ApiController
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
                 int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增后台下发白名单 IP: " + data.WithdrawalIP
-                , IP);
+                , IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -12430,6 +12514,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -12452,7 +12537,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除后台下发白名单 IP: " + data.WithdrawalIP, IP
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "删除后台下发白名单 IP: " + data.WithdrawalIP, IP, fingerprint
             );
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
@@ -12665,6 +12750,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -12698,7 +12784,7 @@ public class BackendController : ApiController
             strProviderName = backendDB.GetProviderNameByProviderCode(fromBody.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商区块链代付限额,供应商名称:" + strProviderName + ",渠道代碼:" + fromBody.ServiceType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",浮动马数:" + fromBody.BlockChainRate, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商区块链代付限额,供应商名称:" + strProviderName + ",渠道代碼:" + fromBody.ServiceType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",浮动马数:" + fromBody.BlockChainRate, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -12717,6 +12803,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -12744,7 +12831,7 @@ public class BackendController : ApiController
             strProviderName = backendDB.GetProviderNameByProviderCode(fromBody.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商区块链代付限额,供应商名称:" + strProviderName + ",渠道代碼:" + fromBody.ServiceType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",区块链费率:" + fromBody.BlockChainRate, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商区块链代付限额,供应商名称:" + strProviderName + ",渠道代碼:" + fromBody.ServiceType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",区块链费率:" + fromBody.BlockChainRate, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -12762,6 +12849,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -12803,7 +12891,7 @@ public class BackendController : ApiController
             strProviderName = backendDB.GetProviderNameByProviderCode(fromBody.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商代付限额,供应商名称:" + strProviderName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商代付限额,供应商名称:" + strProviderName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -12822,6 +12910,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -12856,7 +12945,7 @@ public class BackendController : ApiController
             strProviderName = backendDB.GetProviderNameByProviderCode(fromBody.ProviderCode);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商代付限额,供应商名称:" + strProviderName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商代付限额,供应商名称:" + strProviderName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -12874,6 +12963,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -12919,7 +13009,7 @@ public class BackendController : ApiController
             strServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户出款限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费(%):" + fromBody.Rate + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增商户出款限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType + ",币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费(%):" + fromBody.Rate + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -12938,6 +13028,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -12982,7 +13073,7 @@ public class BackendController : ApiController
             strServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户提现限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType  + ", 币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户提现限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType  + ", 币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13252,6 +13343,7 @@ public class BackendController : ApiController
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         RedisCache.BIDContext.BIDInfo AdminData;
+        string fingerprint = GetFingerprint();
 
         //驗證權限
 
@@ -13307,7 +13399,7 @@ public class BackendController : ApiController
             }
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-渠道金额修改,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-渠道金额修改,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13359,6 +13451,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -13418,7 +13511,7 @@ public class BackendController : ApiController
 
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-毛利调整,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount, IP);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-毛利调整,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -13446,7 +13539,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-毛利,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-毛利,供应商名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13465,6 +13558,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
 
         //驗證權限
@@ -13523,7 +13617,7 @@ public class BackendController : ApiController
             strServiceTypeName = backendDB.GetServiceTypeNameByServiceType(Model.ServiceType, Model.CurrencyType);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-商户金额修改,商户名称:" + strCompanyName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-商户金额修改,商户名称:" + strCompanyName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -13568,6 +13662,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
 
         //驗證權限
@@ -13627,7 +13722,7 @@ public class BackendController : ApiController
             strServiceTypeName = backendDB.GetServiceTypeNameByServiceType(Model.ServiceType, Model.CurrencyType);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-金额修改,商户名称:" + strCompanyName + ",渠道名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工提存-金额修改,商户名称:" + strCompanyName + ",渠道名称:" + strProviderName + ",类型:" + strType + ",币别:" + Model.CurrencyType + ",额度:" + Model.Amount + ",对应单号:" + Model.TransactionSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -13726,7 +13821,8 @@ public class BackendController : ApiController
         int GroupID = 0;
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
- 
+        string fingerprint = GetFingerprint();
+
         if (!RedisCache.BIDContext.CheckBIDExist(Model.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -13773,7 +13869,7 @@ public class BackendController : ApiController
             strCompanyName = backendDB.GetCompanyNameByCompanyID(Model.forCompanyID);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "冻结订单,单号:" + Model.forPaymentSerial + ",供应商:" + strProviderName + ",商户:" + strCompanyName + ",渠道凍結金額:" + Model.ProviderFrozenAmount + ",商户冻结金额:" + Model.CompanyFrozenAmount, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "冻结订单,单号:" + Model.forPaymentSerial + ",供应商:" + strProviderName + ",商户:" + strCompanyName + ",渠道凍結金額:" + Model.ProviderFrozenAmount + ",商户冻结金额:" + Model.CompanyFrozenAmount, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13792,6 +13888,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -13837,7 +13934,7 @@ public class BackendController : ApiController
         {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "订单解冻,单号:" + fromBody.FrozenID, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "订单解冻,单号:" + fromBody.FrozenID, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -14013,6 +14110,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -14037,7 +14135,7 @@ public class BackendController : ApiController
             retValue.ResultCode = APIResult.enumResult.OK;
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增黑名单,卡号" + Model.BankCard + ",持卡人:" + Model.BankCardName + ",IP:" + Model.UserIP, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增黑名单,卡号" + Model.BankCard + ",持卡人:" + Model.BankCardName + ",IP:" + Model.UserIP, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -14090,6 +14188,7 @@ public class BackendController : ApiController
     {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
@@ -14115,7 +14214,7 @@ public class BackendController : ApiController
             retValue.ResultCode = APIResult.enumResult.OK;
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除黑名单,卡号" + Model.BankCard + ",持卡人:" + Model.BankCardName + ",IP:" + Model.UserIP, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "解除黑名单,卡号" + Model.BankCard + ",持卡人:" + Model.BankCardName + ",IP:" + Model.UserIP, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }
@@ -14213,6 +14312,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14236,7 +14336,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改供應商專卡,白名單id :" + fromBody.WhiteListID + "卡片序號:" + fromBody.BankCardGUID + "描述:" + fromBody.Description + "用戶資訊:" + fromBody.UserIdentity, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改供應商專卡,白名單id :" + fromBody.WhiteListID + "卡片序號:" + fromBody.BankCardGUID + "描述:" + fromBody.Description + "用戶資訊:" + fromBody.UserIdentity, IP, fingerprint);
             retValue.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -14256,6 +14356,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14273,7 +14374,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增供應商專卡,白名單id :" + fromBody.WhiteListID + "卡片序號:" + fromBody.BankCardGUID + "描述:" + fromBody.Description + "用戶資訊:" + fromBody.UserIdentity, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增供應商專卡,白名單id :" + fromBody.WhiteListID + "卡片序號:" + fromBody.BankCardGUID + "描述:" + fromBody.Description + "用戶資訊:" + fromBody.UserIdentity, IP, fingerprint);
             retValue.ResultCode = APIResult.enumResult.OK;
         }
         else if (DBretValue == -1)
@@ -14300,6 +14401,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14317,7 +14419,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "刪除供應商專卡,白名單id :" + fromBody.WhiteListID, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "刪除供應商專卡,白名單id :" + fromBody.WhiteListID, IP, fingerprint);
             retValue.ResultCode = APIResult.enumResult.OK;
         }
         else if (DBretValue == -1)
@@ -14405,6 +14507,7 @@ public class BackendController : ApiController
     public APIResult InsertProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody) {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14440,7 +14543,7 @@ public class BackendController : ApiController
         if (!string.IsNullOrEmpty(ret)) {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商支付寶:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -14459,6 +14562,7 @@ public class BackendController : ApiController
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
             result.ResultCode = APIResult.enumResult.SessionError;
@@ -14493,7 +14597,7 @@ public class BackendController : ApiController
         if (returnDB == 1) {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "調整供应商支付寶:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "調整供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -14512,6 +14616,7 @@ public class BackendController : ApiController
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
             result.ResultCode = APIResult.enumResult.SessionError;
@@ -14546,7 +14651,7 @@ public class BackendController : ApiController
         if (returnDB == 1) {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "刪除供应商支付寶:" + fromBody.BankNumber, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "刪除供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
@@ -14786,6 +14891,7 @@ public class BackendController : ApiController
         UpdatePatmentResultByPatmentSerialResult result = new UpdatePatmentResultByPatmentSerialResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -14830,7 +14936,7 @@ public class BackendController : ApiController
 
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工充值审核,单号:" + fromBody.PaymentSerial, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "人工充值审核,单号:" + fromBody.PaymentSerial, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
 
@@ -14855,6 +14961,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14905,7 +15012,7 @@ public class BackendController : ApiController
         {
       
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate+ "币别:" + fromBody.Currency, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate+ "币别:" + fromBody.Currency, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -14927,6 +15034,7 @@ public class BackendController : ApiController
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -14977,7 +15085,7 @@ public class BackendController : ApiController
         {
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate + "币别:" + fromBody.Currency, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "新增区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate + "币别:" + fromBody.Currency, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -15001,6 +15109,7 @@ public class BackendController : ApiController
     {
         BlockChainRateResult _BlockChainRateResult = new BlockChainRateResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
@@ -15077,6 +15186,7 @@ public class BackendController : ApiController
         string WithdrawOption = "";
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -15107,7 +15217,7 @@ public class BackendController : ApiController
             }
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "设定代付总开关:" + WithdrawOption, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "设定代付总开关:" + WithdrawOption, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -15130,6 +15240,7 @@ public class BackendController : ApiController
         string WithdrawOption = "";
         BackendFunction backendFunction = new BackendFunction();
         int DBretValue = -1;
+        string fingerprint = GetFingerprint();
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
@@ -15160,7 +15271,7 @@ public class BackendController : ApiController
             }
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "设定網站开关:" + WithdrawOption, IP);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "设定網站开关:" + WithdrawOption, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -15873,4 +15984,13 @@ public class BackendController : ApiController
     }
     #endregion
 
+    public static string GetFingerprint() {
+        HttpCookie cookie = HttpContext.Current.Request.Cookies["Fingerprint"];
+
+        if (cookie != null) {
+            return cookie.Value;
+        }
+
+        return "";
+    }
 }

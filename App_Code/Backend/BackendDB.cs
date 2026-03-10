@@ -1546,6 +1546,7 @@ public class BackendDB
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
+        string fingerprint = GetFingerprint();
 
         SS = "INSERT INTO ProxyProviderOrder (forOrderSerial,Type,PaymentRate,WithdrawalCharge,GroupID,DeductionProfit) " +
          "                          VALUES (@forOrderSerial,@Type,@PaymentRate,@WithdrawalCharge,@GroupID,@DeductionProfit)";
@@ -1565,7 +1566,7 @@ public class BackendDB
         {
             var BackendDB = new BackendDB();
             string GroupName = BackendDB.GetProxyProviderGroupNameByGroupID(GroupID);
-            new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组(扣除利润):" + OrderSerial + ",群组名:" + GroupName, "");
+            new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组(扣除利润):" + OrderSerial + ",群组名:" + GroupName, "", fingerprint);
         }
 
         return RetValue;
@@ -1576,6 +1577,7 @@ public class BackendDB
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
+        string fingerprint = GetFingerprint();
 
         SS = "INSERT INTO ProxyProviderOrder (forOrderSerial,Type,PaymentRate,WithdrawalCharge,GroupID) " +
          "                          VALUES (@forOrderSerial,@Type,@PaymentRate,@WithdrawalCharge,@GroupID)";
@@ -1594,7 +1596,7 @@ public class BackendDB
         {
             var BackendDB = new BackendDB();
             string GroupName = BackendDB.GetProxyProviderGroupNameByGroupID(GroupID);
-            new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组:" + OrderSerial + ",群组名:" + GroupName, "");
+            new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组:" + OrderSerial + ",群组名:" + GroupName, "", fingerprint);
         }
 
         return RetValue;
@@ -10316,6 +10318,7 @@ public class BackendDB
         int DBreturn = -6;//其他錯誤
         DBModel.Withdrawal WithdrawData = GetWithdrawalByWithdrawSerial2(WithdrawSerial);
         DBModel.ProxyProvider ProxyProviderModel;
+        string fingerprint = GetFingerprint();
         try
         {
             if (WithdrawData.Status == 1)
@@ -10379,7 +10382,7 @@ public class BackendDB
                     else
                     {
                         returnValue.Status = -6;
-                        InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + DBreturn, "");
+                        InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + DBreturn, "", fingerprint);
                         returnValue.Message = "系统忙碌中,请稍后再试, " + DBreturn;
                     }
                 }
@@ -10436,7 +10439,7 @@ public class BackendDB
         {
             returnValue.Status = -6;
             returnValue.Message = "审核失败,资讯:" + ex.Message;
-            InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + ex.Message, "");
+            InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + ex.Message, "", fingerprint);
             throw;
         }
 
@@ -16740,14 +16743,14 @@ public class BackendDB
     #endregion
 
     #region 操作Log
-    public int InsertAdminOPLog(int CompanyID, int AdminID, int Type, string Description, string IP)
+    public int InsertAdminOPLog(int CompanyID, int AdminID, int Type, string Description, string IP, string Fingerprint)
     {
         string SS;
         int AdminOPID;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "INSERT INTO AdminOPLog (forCompanyID,forAdminID,Type,Description,IP) " +
-         "                    VALUES (@forCompanyID,@forAdminID,@Type,@Description,@IP) SELECT @@IDENTITY;";
+        SS = "INSERT INTO AdminOPLog (forCompanyID,forAdminID,Type,Description,IP,Fingerprint) " +
+         "                    VALUES (@forCompanyID,@forAdminID,@Type,@Description,@IP,@Fingerprint) SELECT @@IDENTITY;";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -16757,6 +16760,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@forAdminID", SqlDbType.NVarChar).Value = AdminID;
         DBCmd.Parameters.Add("@Type", SqlDbType.NVarChar).Value = Type;
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = Description;
+        DBCmd.Parameters.Add("@Fingerprint", SqlDbType.VarChar).Value = Fingerprint;
         //DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
         AdminOPID = int.Parse(DBAccess.GetDBValue(Pay.DBConnStr, DBCmd).ToString());
         return AdminOPID;
@@ -18645,6 +18649,16 @@ public class BackendDB
         DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
         return DT;
+    }
+
+    public static string GetFingerprint() {
+        HttpCookie cookie = HttpContext.Current.Request.Cookies["Fingerprint"];
+
+        if (cookie != null) {
+            return cookie.Value;
+        }
+
+        return "";
     }
 
     public class APIResult

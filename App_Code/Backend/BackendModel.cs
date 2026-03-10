@@ -1397,6 +1397,7 @@ public class FromBody {
         public string Password { get; set; }
         public string CompanyCode { get; set; }
         public string UserKey { get; set; }
+        public string Fingerprint { get; set; }
     }
 
     public class SummaryProviderByDate {

@@ -388,7 +388,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.userLoginByGoogle = function (loginAccount, password, userKey, cb) {
+    this.userLoginByGoogle = function (loginAccount, password, userKey, fingerprint, cb) {
         var url = APIUrl + "/LoginByGoogle";
         var postData;
 
@@ -396,7 +396,8 @@ var BackendAPI = function (BID, APIUrl) {
             BID: BID,
             LoginAccount: loginAccount,
             Password: password,
-            UserKey: userKey
+            UserKey: userKey,
+            Fingerprint: fingerprint
         };
 
         callServiceByPost(url, postData, function (success, text) {

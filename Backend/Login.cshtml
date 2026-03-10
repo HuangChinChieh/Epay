@@ -32,6 +32,7 @@
     <!-- sweetalert Plugin Js -->
     <script src="~/Backend/assets/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="~/Backend/assets/js/hashes.min.js"></script>
+    <script src="~/Backend/assets/js/BackendJS/fingerprint2.min.js"></script>
     <script>
 
         var apiURL = "/api/Backend";
@@ -40,10 +41,15 @@
         var MD5 = new Hashes.MD5
         // new SHA256 instance
         var SHA256 = new Hashes.SHA256
-
+        var Fingerprint;
 
         function init() {
             api = new BackendAPI("", apiURL);
+
+            generateFingerprint(function (fp) {
+                Fingerprint = fp;
+                console.log("Fingerprint:", fp);
+            });
         }
 
         function userLogin() {
@@ -86,7 +92,7 @@
             //}
 
 
-            api.userLoginByGoogle(loginAccount, password, userKey, function (success, obj) {
+            api.userLoginByGoogle(loginAccount, password, userKey, Fingerprint, function (success, obj) {
                 if (obj.ResultCode == 0) {
                     location.href = "Index.cshtml";
                     //setCookie("BID", obj.BID);
@@ -127,6 +133,25 @@
             }
         }
 
+        function generateFingerprint(callback) {
+            if (!window.Fingerprint2) {
+                console.error("Fingerprint2 library not loaded");
+                callback("");
+                return;
+            }
+
+            // 官方舊版常見建議：延後一點執行，避免某些瀏覽器元件還沒準備好
+            setTimeout(function () {
+                Fingerprint2.get(function (components) {
+                    var values = components.map(function (component) {
+                        return component.value;
+                    });
+
+                    var fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
+                    callback(fingerprint);
+                });
+            }, 500);
+        }
 
         window.onload = init;
     </script>
