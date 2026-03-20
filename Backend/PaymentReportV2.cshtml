@@ -1989,8 +1989,8 @@ if ('@CheckLoginPermission' == 'false') {
 
 
                         if (obj.ResultCode == 0) {
-                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '收款資訊', '会员实名', '支付方式', '状态', '申请金额', '费率(%)', '手续率', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP', '上游手续费(%)', '净利']];
-
+                           
+                            var exceldata = [['商户订单号', '收款資訊', '商户名称', '申请金额', '费率(%)', '支付方式', '提交时间', '完成时间', '状态', '会员实名', '商户提供IP', '渠道名称', '實收金額', '实际金额(-手續費)', '手续率', '提交方式', '上游手续费(%)', '净利', '平台订单号']];
                             for (var i = 0; i < obj.PaymentTableResults.length; i++) {
                                 var data = obj.PaymentTableResults[i];
                                 var partialOrderAmount = 0
@@ -2057,7 +2057,28 @@ if ('@CheckLoginPermission' == 'false') {
                                     partialOrderAmount = (data.PartialOrderAmount * data.CollectRate * 0.01) + data.CollectCharge;
                                 }
 
-                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.BankCardName, data.UserName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP, data.CostRate, netincome);
+                                //var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.BankCardName, data.UserName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP, data.CostRate, netincome);
+                                var tmpArray = new Array(
+                                    data.OrderID,              // 商户订单号
+                                    data.BankCardName,         // 收款資訊
+                                    data.CompanyName,          // 商户名称
+                                    data.OrderAmount,          // 申请金额
+                                    data.CollectRate,          // 费率(%)
+                                    data.ServiceTypeName,      // 支付方式
+                                    CreateDate,                // 提交时间
+                                    FinishDate,                // 完成时间
+                                    ProcessStatus,             // 状态
+                                    data.UserName,             // 会员实名
+                                    data.ClientIP,             // 商户提供IP
+                                    data.ProviderName,         // 渠道名称
+                                    data.PartialOrderAmount,   // 實收金額
+                                    data.PaymentAmount,        // 实际金额(-手續費)
+                                    partialOrderAmount,        // 手续率
+                                    SubmitType,                // 提交方式
+                                    data.CostRate,             // 上游手续费(%)
+                                    netincome,                 // 净利
+                                    PaymentSerial              // 平台订单号
+                                );
                                 exceldata.push(tmpArray);
                             }
 
