@@ -1989,7 +1989,7 @@ if ('@CheckLoginPermission' == 'false') {
 
 
                         if (obj.ResultCode == 0) {
-                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '收款資訊', '支付方式', '状态', '申请金额', '费率(%)', '手续率', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP', '上游手续费(%)', '净利']];
+                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '收款資訊', '会员实名', '支付方式', '状态', '申请金额', '费率(%)', '手续率', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP', '上游手续费(%)', '净利']];
 
                             for (var i = 0; i < obj.PaymentTableResults.length; i++) {
                                 var data = obj.PaymentTableResults[i];
@@ -2057,7 +2057,7 @@ if ('@CheckLoginPermission' == 'false') {
                                     partialOrderAmount = (data.PartialOrderAmount * data.CollectRate * 0.01) + data.CollectCharge;
                                 }
 
-                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.BankCardName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP, data.CostRate, netincome);
+                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.BankCardName, data.UserName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP, data.CostRate, netincome);
                                 exceldata.push(tmpArray);
                             }
 
