@@ -1102,6 +1102,8 @@
     var boolTimeStop = false;
     var IsAutoLoad = false;  
     var PageInfoStart = 0;  //起始查询为第X笔资料
+    var seleCurrency = parent.API_GetSelectCurrency();
+
     $(document).ready(function () {
         
 if ('@CheckLoginPermission' == 'false') {
@@ -1442,6 +1444,7 @@ if ('@CheckLoginPermission' == 'false') {
                              d.StartDate = dateinputval[0];
                              d.EndDate = dateinputval[1] + ":59.999";
                              d.IsAutoLoad = IsAutoLoad;
+                             d.CurrencyType = seleCurrency;
                             
                              d.OrderID = $('#input_OrderID').val().trim();
                              d.SubmitType = $('#select_submitType').val();
@@ -1450,6 +1453,8 @@ if ('@CheckLoginPermission' == 'false') {
                              d.EndAmount = $('#endAmount').val().trim();
                              d.ProcessStatus = $('#select_processStatus').val().split(",");
                              d.ProviderCode = $('#select_providercode').val();
+
+                             console.log("d", d);
                 }
             },
             deferLoading: 0,
