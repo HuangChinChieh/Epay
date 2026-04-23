@@ -999,6 +999,7 @@
     var isCreatedTable = false;
     var isFirstSearch = false;
     var isCreatedTable = false;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         if ('@CheckPermission' == 'false') {
@@ -1197,7 +1198,7 @@
 
         $('#select_currency').html("");
         let strCompanyPointDetail = "";
-        api.getCompanyPointTableResult(selCompanyid, function (s, o) {
+        api.getCompanyPointTableResult(selCompanyid, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     $.each(o.CompanyPoints, function (i, item) {

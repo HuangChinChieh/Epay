@@ -33,6 +33,7 @@
     <script src="~/Backend/assets/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="~/Backend/assets/js/hashes.min.js"></script>
     <script src="~/Backend/assets/js/BackendJS/fingerprint2.min.js"></script>
+
     <script>
 
         var apiURL = "/api/Backend";
@@ -90,7 +91,6 @@
             //    });
             //    return false;
             //}
-
 
             api.userLoginByGoogle(loginAccount, password, userKey, Fingerprint, function (success, obj) {
                 if (obj.ResultCode == 0) {
@@ -158,7 +158,7 @@
 </head>
 
 @*<body class="theme-violet bg_login" onkeydown="enterlogin()">*@
-<body class="theme-violet bg_login" onkeydown="enterlogin()"> 
+<body class="theme-violet bg_login" onkeydown="enterlogin()">
     <div class="authentication sidebar-collapse">
         <div class="page-header">
             <div class="container" style="background-color: #36404B">
@@ -166,8 +166,8 @@
                     <div class="card-plain" style="background-color: #36404B">
                         <form class="form">
                             <div class="header">
-                            <div class="logo"> <img src=""></div>   
-                            <h5 class="title" style="color: #ffbf36">@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"] 后台登入</h5>
+                                <div class="logo"> <img src=""></div>
+                                <h5 class="title" style="color: #ffbf36">@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"] 后台登入</h5>
                             </div>
                             <div class="content">
                                 <div class="input-group">

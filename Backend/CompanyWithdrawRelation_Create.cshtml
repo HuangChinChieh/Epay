@@ -922,6 +922,7 @@
     var tmpdata;
     var ParentCompanyID;
     var tmpParentWithdrawLimits;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     var EditData = parent.CheckTempDataType("CompanyWithdrawRelationCreate");
 
@@ -1093,7 +1094,7 @@
     }
 
     function getCurrencyType() {
-        api.getCompanyPointTableResult(CompanyID, function (s, o) {
+        api.getCompanyPointTableResult(CompanyID, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     var data = o.CompanyPoints;

@@ -987,6 +987,7 @@
     var Table;
     var isCreatedTable = false;
     var CompanyID;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         pageLoad();
@@ -1099,7 +1100,7 @@
     function getCompanyTotalPointTableResult() {
         var companyID = $('#select_Company').val();
         parent.wrapperFadeIn();
-        api.getCompanyPointTableResult(companyID, function (success, obj) {
+        api.getCompanyPointTableResult(companyID, seleCurrency, function (success, obj) {
             if (success) {
                 parent.wrapperFadeOut();
                 if (obj.ResultCode == 0) {

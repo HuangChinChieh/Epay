@@ -1031,6 +1031,7 @@
     var tempCompanyPoint;
     var tmpReceiveData = {};
     var tmpCloseData = {};
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
             
@@ -1464,7 +1465,7 @@
         $("#divCompanyPointDetail").empty();
         let strCompanyPointDetail = "";
 
-        api.getCompanyPointTableResult(compantid, function (s, o) {
+        api.getCompanyPointTableResult(compantid, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     tempCompanyPoint = o.CompanyPoints;
@@ -1510,7 +1511,7 @@
             $("#divCompanyPoint").show();
         });
 
-        api.GetAgentPointResult(compantid, function (s, o) {
+        api.GetAgentPointResult(compantid, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     $("#UnCloseAmount").text(toCurrency(o.AgentReceiveResults.UnCloseAmount));

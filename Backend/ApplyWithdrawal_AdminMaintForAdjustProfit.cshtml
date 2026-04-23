@@ -1112,6 +1112,8 @@
     var w;
     var proxyProviderGroupData;
     var proxyProviderGroupDataWithProfitAmount;
+    var seleCurrency = parent.API_GetSelectCurrency();
+
     $(document).ready(function () {
         pageLoad();
     });
@@ -3138,7 +3140,7 @@
 
         parent.wrapperFadeIn();
 
-        api.updateProxyProviderGroupWeight(array, function (success, obj) {
+        api.updateProxyProviderGroupWeight(seleCurrency ,array, function (success, obj) {
             if (success) {
                 parent.wrapperFadeOut();
 
@@ -3472,7 +3474,7 @@
 
     function getAllCompanyServicePoint() {
      
-        api.getAllCompanyServicePoint(function (success, obj) {
+        api.getAllCompanyServicePoint(seleCurrency ,function (success, obj) {
             if (success) {
                 if (obj.ResultCode == 0) {
                   

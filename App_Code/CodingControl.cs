@@ -773,9 +773,7 @@ public class CodingControl
         {
             if (!Pay.IsTestSite)
             {
-                if (!string.IsNullOrEmpty(Pay.ProxyServerUrl)) {
-                    handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
-                }
+                handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
             }
 
             using (HttpClient client = new HttpClient(handler))
@@ -840,9 +838,7 @@ public class CodingControl
         {
             if (!Pay.IsTestSite)
             {
-                if (!string.IsNullOrEmpty(Pay.ProxyServerUrl)) {
-                    handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
-                }
+                handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
             }
 
             using (HttpClient client = new HttpClient(handler))
@@ -910,9 +906,7 @@ public class CodingControl
         {
             if (!Pay.IsTestSite)
             {
-                if (!string.IsNullOrEmpty(Pay.ProxyServerUrl)) {
-                    handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
-                }
+                handler.Proxy = new WebProxy(Pay.ProxyServerUrl);
             }
             using (HttpClient client = new HttpClient(handler))
             {

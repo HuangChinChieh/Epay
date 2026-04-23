@@ -1061,6 +1061,7 @@
     var bankCardData;
     var modifyType;
     var companyServicePointResult;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         pageLoad();
@@ -1283,7 +1284,7 @@
 
     function getCanUseCompanyPoint(cb) {
 
-        api.getCompanyPointTableResult(AdminObject.forCompanyID, function (success, obj) {
+        api.getCompanyPointTableResult(AdminObject.forCompanyID, seleCurrency, function (success, obj) {
 
             if (obj.ResultCode == 0) {
                 cb(obj.CompanyPoints);
@@ -1574,7 +1575,7 @@
     }
 
     function getCurrencyTypeSelect() {
-        api.getCompanyPointTableResult(AdminObject.forCompanyID, function (success, obj) {
+        api.getCompanyPointTableResult(AdminObject.forCompanyID, seleCurrency, function (success, obj) {
 
             if (obj.ResultCode == 0) {
                 $("#select_CurrencyType").children().remove();
@@ -1995,7 +1996,7 @@
         $("#divCompanyPointDetail").empty();
         var strCompanyPointDetail = "";
 
-        api.getCompanyPointTableResult(AdminObject.forCompanyID, function (s, o) {
+        api.getCompanyPointTableResult(AdminObject.forCompanyID, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     companyPointData = o.CompanyPoints;
@@ -2044,7 +2045,7 @@
 
     function ShowCompanyPoint2() {
 
-        api.getCompanyPointTableResult(AdminObject.forCompanyID, function (s, o) {
+        api.getCompanyPointTableResult(AdminObject.forCompanyID, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     $.each(o.CompanyPoints, function (i, item) {

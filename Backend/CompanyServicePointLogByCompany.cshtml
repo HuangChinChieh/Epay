@@ -1331,7 +1331,8 @@ if ('@CheckLoginPermission' == 'false') {
             CompanyID: $('#companyLabel').attr("data-id"),
             StartDate: startDate,
             EndDate: endDate,
-            OperatorType: operatorType
+            OperatorType: operatorType,
+            CurrencyType: parent.API_GetSelectCurrency()
         }
         getSummaryCompanyByDateLogResult(data);
     })

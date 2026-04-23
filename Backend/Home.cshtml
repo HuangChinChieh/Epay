@@ -1078,6 +1078,7 @@
     var boolCreatedWithdrawLimitTable = false;
     var isCreatedTable = false;
     var isCreatedWithdrawLimitTable = false;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         pageLoad();
@@ -1169,7 +1170,7 @@
         $("#divCompanyPointDetail").empty();
         let strCompanyPointDetail = "";
 
-        api.getCompanyPointTableResult(seleCompanyid, function (s, o) {
+        api.getCompanyPointTableResult(seleCompanyid, seleCurrency,function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
 

@@ -235,7 +235,7 @@ public class BackendController : ApiController
 
                     BackendFunction backendFunction = new BackendFunction();
                     string IP = backendFunction.CheckIPInTW(UserIP);
-                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "登入IP有误:" + UserIP+ ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
+                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "登入IP有误:" + UserIP + ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
                     backendDB.InsertBotSendLog(AdminData.CompanyCode, "登入帳號:" + AdminData.AdminAccount + ",登入IP有误:" + UserIP);
                     string XForwardIP = CodingControl.GetXForwardedFor();
                     CodingControl.WriteXFowardForIP2(AdminOP);
@@ -254,9 +254,9 @@ public class BackendController : ApiController
                 {
                     BackendFunction backendFunction = new BackendFunction();
                     string IP = backendFunction.CheckIPInTW(UserIP);
-                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0,"登入 IP 有误:" + UserIP + ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
+                    int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "登入 IP 有误:" + UserIP + ",X-Forwarded:" + HttpContext.Current.Request.Headers["X-Forwarded-For"], IP, fingerprint);
                     backendDB.InsertBotSendLog(AdminData.CompanyCode, "登入帳號:" + AdminData.AdminAccount + ",登入IP有误:" + UserIP);
-            
+
                     CodingControl.WriteXFowardForIP2(AdminOP);
 
                     RedisCache.BIDContext.ClearBID(BID);
@@ -349,7 +349,7 @@ public class BackendController : ApiController
             );
             }
         }
- 
+
         return _LayoutLeftSideBarResult;
     }
 
@@ -554,7 +554,7 @@ public class BackendController : ApiController
     [ActionName("GetBankData")]
     public BankDatas GetBankData([FromBody] FromBody.GetBankDataSet data)
     {
-        BankDatas retValue = new BankDatas() { BankDataList=new List<BankData>() };
+        BankDatas retValue = new BankDatas() { BankDataList = new List<BankData>() };
         BackendDB backendDB = new BackendDB();
         if (!RedisCache.BIDContext.CheckBIDExist(data.BID))
         {
@@ -582,11 +582,12 @@ public class BackendController : ApiController
                 retValue.BankDataList.Add(BankData);
             }
         }
-        else {
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.NoData;
             return retValue;
         }
-      
+
         return retValue;
     }
 
@@ -609,10 +610,13 @@ public class BackendController : ApiController
         if (AdminData.CompanyType == 0)
         {
             companyID = fromBody.CompanyID;
-        } else if (AdminData.CompanyType == 4) {
+        }
+        else if (AdminData.CompanyType == 4)
+        {
             companyID = AdminData.forCompanyID;
         }
-        else {
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
@@ -706,7 +710,7 @@ public class BackendController : ApiController
         }
 
         //取得一般權限模組
-        if (CompanyData.CompanyType==2)
+        if (CompanyData.CompanyType == 2)
         {
             LstPermissions = backendDB.GetPermissionByRoleName("AgentClass", 1);
         }
@@ -1111,7 +1115,7 @@ public class BackendController : ApiController
     {
         LoginResult loginResult = new LoginResult();
         BackendDB backendDB = new BackendDB();
- 
+
         BackendFunction backendFunction = new BackendFunction();
         if (!Pay.IsTestSite)
         {
@@ -1159,13 +1163,14 @@ public class BackendController : ApiController
                             loginResult.CheckGoogleKeySuccess = true;
                         }
                         else
-                        {                     
+                        {
                             loginResult.ResultCode = APIResult.enumResult.GoogleKeyError;
                             return loginResult;
                         }
                     }
                 }
-                else {
+                else
+                {
                     loginResult.ResultCode = APIResult.enumResult.OK;
                     loginResult.CheckGoogleKeySuccess = true;
                 }
@@ -1195,19 +1200,20 @@ public class BackendController : ApiController
                             return loginResult;
                         }
                     }
-                    else {
+                    else
+                    {
                         loginResult.ResultCode = APIResult.enumResult.OK;
                         loginResult.CheckGoogleKeySuccess = true;
                     }
-                  
+
                 }
 
 
             }
-       
+
             if (loginResult.ResultCode == APIResult.enumResult.OK)
             {
-               
+
                 HttpContext.Current.Response.Cookies.Add(new HttpCookie("BID", RedisCache.BIDContext.CreateBID(admin.CompanyCode, admin.LoginAccount, admin.RealName, admin.forAdminRoleID, CodingControl.GetUserIP(), loginResult.CheckGoogleKeySuccess)));
                 HttpContext.Current.Response.Cookies.Add(new HttpCookie("Fingerprint", fromBody.Fingerprint));
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
@@ -2135,7 +2141,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        var ProviderDatas = backendDB.GetProviderServiceResult(fromBody.GroupData.First().forProviderCode, "OOB02", Pay.CurrencyType);
+        var ProviderDatas = backendDB.GetProviderServiceResult(fromBody.GroupData.First().forProviderCode, "OOB02", fromBody.CurrencyType);
 
         if (ProviderDatas == null)
         {
@@ -3305,13 +3311,14 @@ public class BackendController : ApiController
 
         if (AdminData.CompanyType == 0)
         {
-         
+
         }
         else if (AdminData.CompanyType == 4)
         {
             fromBody.CompanyID = AdminData.forCompanyID;
         }
-        else {
+        else
+        {
             _PaymentTableResult.ResultCode = (int)APIResult.enumResult.VerificationError;
             return _PaymentTableResult;
         }
@@ -3588,7 +3595,7 @@ public class BackendController : ApiController
         }
 
         BackendDB backendDB = new BackendDB();
-        DBreturn = backendDB.CreatePayment(CompanyID, fromBody.Amount, fromBody.Description);
+        DBreturn = backendDB.CreatePayment(CompanyID, fromBody.Amount, fromBody.Description, fromBody.CurrencyType);
 
 
         if (DBreturn != null && DBreturn.PatchPaymentState == 0)
@@ -3969,7 +3976,9 @@ public class BackendController : ApiController
             if (DBreturn == -1)
             {
                 retValue.Message = "订单不存在";
-            } else if (DBreturn == -2) {
+            }
+            else if (DBreturn == -2)
+            {
                 retValue.Message = "订单状态有误";
             }
             else if (DBreturn == -3)
@@ -4562,19 +4571,19 @@ public class BackendController : ApiController
 
     [HttpPost]
     [ActionName("SetAgentClose")]
-    public APIResult SetAgentClose([FromBody] string BID)
+    public APIResult SetAgentClose([FromBody] FromBody.GetBankDataSet fromBody)
     {
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         APIResult Result = new APIResult();
         string fingerprint = GetFingerprint();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(BID))
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             Result.ResultCode = APIResult.enumResult.SessionError;
             return Result;
         }
 
-        AdminData = RedisCache.BIDContext.GetBIDInfo(BID);
+        AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
 
         BackendDB backendDB = new BackendDB();
         BackendFunction backendFunction = new BackendFunction();
@@ -4582,7 +4591,7 @@ public class BackendController : ApiController
         int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "代理返佣结算", IP, fingerprint);
         string XForwardIP = CodingControl.GetXForwardedFor();
         CodingControl.WriteXFowardForIP(AdminOP);
-        Result.Message = backendDB.SetAgentClose(AdminData.forCompanyID, Pay.CurrencyType).ToString();
+        Result.Message = backendDB.SetAgentClose(AdminData.forCompanyID, fromBody.CurrencyType).ToString();
         //--0 = success
         //--1 = 處理筆數為0
         //--2 = 鎖定失敗
@@ -5013,7 +5022,7 @@ public class BackendController : ApiController
         }
 
         BackendDB backendDB = new BackendDB();
-        List<DBViewModel.CompanyServiceRelation> companyServiceTableResult = backendDB.GetCompanyServiceRelationByEditView(fromBody.ServiceType, fromBody.ProviderCode);
+        List<DBViewModel.CompanyServiceRelation> companyServiceTableResult = backendDB.GetCompanyServiceRelationByEditView(fromBody.ServiceType, fromBody.ProviderCode, fromBody.CurrencyType);
         if (companyServiceTableResult != null)
         {
 
@@ -5077,7 +5086,7 @@ public class BackendController : ApiController
                 ProviderName = backendDB.GetProviderNameByListProviderCode(ProviderCodes);
             }
 
-            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType,fromBody.CurrencyType);
+            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
@@ -5154,7 +5163,7 @@ public class BackendController : ApiController
                 strState = "停用";
             }
 
-            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType,fromBody.CurrencyType);
+            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户支付方式,名称:{0},币别:{1},费率:{2},每日用量:{3},最小值:{4},最大值:{5},对应供应商:{6},状态:{7},商户:{8}",
@@ -5205,7 +5214,7 @@ public class BackendController : ApiController
 
         if (DBretValue >= 1)
         {
-            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType,fromBody.CurrencyType);
+            ServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
 
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
@@ -5614,7 +5623,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        retValue.ProviderTypes = backendDB.GetProviderByServiceType(fromBody.ServiceType, Pay.CurrencyType);
+        retValue.ProviderTypes = backendDB.GetProviderByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
         if (retValue.ProviderTypes != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5645,11 +5654,12 @@ public class BackendController : ApiController
         {
             retValue.ProviderTypes = backendDB.GetProviderCodeResultByCompanyID(AdminData.forCompanyID, AdminData.CompanyType, "");
         }
-        else {
+        else
+        {
             retValue.ProviderTypes = backendDB.GetProviderCodeResult();
         }
-  
-    
+
+
         if (retValue.ProviderTypes != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -5691,7 +5701,7 @@ public class BackendController : ApiController
             retValue.ProviderTypes = backendDB.GetProviderCodeResultByShowType();
         }
 
-     
+
         if (retValue.ProviderTypes != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -6582,14 +6592,16 @@ public class BackendController : ApiController
         }
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (AdminData.CompanyType==0)
+        if (AdminData.CompanyType == 0)
         {
 
         }
         else if (AdminData.CompanyType == 4)
         {
             ProviderModel.forCompanyID = AdminData.forCompanyID;
-        } else{
+        }
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
@@ -6660,7 +6672,7 @@ public class BackendController : ApiController
 
                 BackendFunction backendFunction = new BackendFunction();
                 string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商:" + ProviderModel.ProviderName + ",状态" + StrBeforeProviderState + ",提供功能:" + strProviderAPIType+ ",是否为预付:"+ isPrePaid, IP, fingerprint);
+                int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "修改供应商:" + ProviderModel.ProviderName + ",状态" + StrBeforeProviderState + ",提供功能:" + strProviderAPIType + ",是否为预付:" + isPrePaid, IP, fingerprint);
                 string XForwardIP = CodingControl.GetXForwardedFor();
                 CodingControl.WriteXFowardForIP(AdminOP);
                 retValue.ResultCode = APIResult.enumResult.OK;
@@ -6957,7 +6969,7 @@ public class BackendController : ApiController
         AdminData = RedisCache.BIDContext.GetBIDInfo(ProviderServiceModel.BID);
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (!(AdminData.CompanyType == 0|| AdminData.CompanyType == 4))
+        if (!(AdminData.CompanyType == 0 || AdminData.CompanyType == 4))
         {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
@@ -7090,7 +7102,7 @@ public class BackendController : ApiController
         AdminData = RedisCache.BIDContext.GetBIDInfo(ProviderServiceModel.BID);
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (!(AdminData.CompanyType == 0|| AdminData.CompanyType == 4))
+        if (!(AdminData.CompanyType == 0 || AdminData.CompanyType == 4))
         {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
@@ -7150,7 +7162,7 @@ public class BackendController : ApiController
         }
 
         int DBret = backendDB.UpdatePrePaidPoint(Model.ProviderCode, Model.CurrencyType, Model.Amount);
-    
+
         if (DBret == 0)
         {
             var ProviderName = backendDB.GetProviderNameByProviderCode(Model.ProviderCode);
@@ -7281,7 +7293,8 @@ public class BackendController : ApiController
         {
             CompanyID = fromBody.forCompanyID;
         }
-        else {
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
@@ -7521,7 +7534,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-    
+
         if (retValue.ProviderPointResults != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -7624,7 +7637,7 @@ public class BackendController : ApiController
         List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetCompanyServicePointDetail(AdminData.forCompanyID);
         if (companys != null)
         {
-            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == Pay.CurrencyType).ToList();
+            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == fromBody.CurrencyType).ToList();
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -7702,26 +7715,26 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("GetCompanyServicePointDetail")]
-    public CompanyServicePoint GetCompanyServicePointDetail([FromBody] string BID)
+    public CompanyServicePoint GetCompanyServicePointDetail([FromBody] FromBody.CompanyServiceSet fromBody)
     {
         CompanyServicePoint _CompanyServicePointResult = new CompanyServicePoint();
         RedisCache.BIDContext.BIDInfo AdminData;
         BackendDB backendDB = new BackendDB();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(BID))
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.SessionError;
             return _CompanyServicePointResult;
         }
         else
         {
-            AdminData = RedisCache.BIDContext.GetBIDInfo(BID);
+            AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
         List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetCompanyServicePointDetail(AdminData.forCompanyID);
         if (companys != null)
         {
-            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == Pay.CurrencyType).ToList();
+            _CompanyServicePointResult.CompanyServicePoints = companys.Where(w => w.CurrencyType == fromBody.CurrencyType).ToList();
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.OK;
         }
         else
@@ -7734,20 +7747,20 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("GetAllCompanyServicePoint")]
-    public CompanyServicePoint GetAllCompanyServicePoint([FromBody] string BID)
+    public CompanyServicePoint GetAllCompanyServicePoint([FromBody] FromBody.CompanyServiceSet fromBody)
     {
         CompanyServicePoint _CompanyServicePointResult = new CompanyServicePoint();
         RedisCache.BIDContext.BIDInfo AdminData;
         BackendDB backendDB = new BackendDB();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(BID))
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
         {
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.SessionError;
             return _CompanyServicePointResult;
         }
         else
         {
-            AdminData = RedisCache.BIDContext.GetBIDInfo(BID);
+            AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
         if (AdminData.CompanyType != 0)
@@ -7756,7 +7769,7 @@ public class BackendController : ApiController
             return _CompanyServicePointResult;
         }
 
-        List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetAllCompanyServicePoint();
+        List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetAllCompanyServicePoint(fromBody.CurrencyType);
         if (companys != null)
         {
             _CompanyServicePointResult.CompanyServicePoints = companys;
@@ -7796,13 +7809,14 @@ public class BackendController : ApiController
         {
             CompanyID = AdminData.forCompanyID;
         }
-        else {
+        else
+        {
             _CompanyServicePointResult.ResultCode = APIResult.enumResult.VerificationError;
             return _CompanyServicePointResult;
         }
 
-        var CompanyModel=  RedisCache.Company.GetCompanyByID(CompanyID);
-       
+        var CompanyModel = RedisCache.Company.GetCompanyByID(CompanyID);
+
         List<DBViewModel.CompanyServicePointVM> companys = backendDB.GetCompanyServicePointDetail2(CompanyID, (string)CompanyModel.Rows[0]["CurrencyType"]);
         if (companys != null)
         {
@@ -7837,7 +7851,7 @@ public class BackendController : ApiController
         if (fromBody.CompanyID != 0)
             companys = backendDB.GetCompanyPointTableResult(fromBody.CompanyID);
         else
-            companys = backendDB.GetAllCompanyPointTableResult();
+            companys = backendDB.GetAllCompanyPointTableResult(fromBody.CurrencyType);
         if (companys != null)
         {
             _CompanyTableResult.CompanyPoints = companys;
@@ -8144,12 +8158,13 @@ public class BackendController : ApiController
         {
             retValue.ApiWithdrawLimitResults = backendDB.GetApiWithdrawLimitByProviderCompanyID(data.CompanyID, AdminData.forCompanyID);
         }
-        else {
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
 
-        
+
         if (retValue.ApiWithdrawLimitResults != null)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -8536,7 +8551,7 @@ public class BackendController : ApiController
             foreach (var data in retValue.SummaryBlockChainByDates)
             {
                 retValue.TotalAmount += data.SummaryProviderAmount;
-                retValue.TotalNetAmount += data.UpSummaryBlockChainAmount-data.DownSummaryBlockChainAmount;
+                retValue.TotalNetAmount += data.UpSummaryBlockChainAmount - data.DownSummaryBlockChainAmount;
             }
         }
 
@@ -8634,7 +8649,7 @@ public class BackendController : ApiController
         {
             AdminData = RedisCache.BIDContext.GetBIDInfo(SearchData.BID);
         }
-        SearchData.CurrencyType = Pay.CurrencyType;
+
         retValue.SummaryCompanyByDates = backendDB.GetSummaryCompanyByAgent2(SearchData, AdminData.forCompanyID);
 
         if (retValue.SummaryCompanyByDates != null)
@@ -9080,7 +9095,8 @@ public class BackendController : ApiController
         {
             CompanyID = AdminData.forCompanyID;
         }
-        else {
+        else
+        {
             CompanyID = fromBody.forCompanyID;
         }
 
@@ -9121,7 +9137,7 @@ public class BackendController : ApiController
             AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
-        if (AdminData.CompanyType==0)
+        if (AdminData.CompanyType == 0)
         {
             retValue.ResultCode = APIResult.enumResult.SessionError;
             return retValue;
@@ -9874,7 +9890,7 @@ public class BackendController : ApiController
         DBModel.CompanyWithGooleKey CompanyModel = new DBModel.CompanyWithGooleKey();
         List<DBModel.ConfigSetting> ConfigSetting = new List<DBModel.ConfigSetting>();
         string OldCurrencyType = "";
-        int DBretValue=0;
+        int DBretValue = 0;
         decimal Charge = 0;
         decimal WithdrawalRate = 0;
         string OldServiceType = "";
@@ -10175,10 +10191,10 @@ public class BackendController : ApiController
         #endregion
         for (int i = 0; i < fromBody.WithdrawalData.Count; i++)
         {
-         
+
             if (withdrawLimitResult != null)
             {
-                 tmpWithdrawLimitResult = withdrawLimitResult.Where(w => w.CurrencyType == fromBody.WithdrawalData[i].CurrencyType && w.ServiceType == fromBody.WithdrawalData[i].ServiceType).ToList();
+                tmpWithdrawLimitResult = withdrawLimitResult.Where(w => w.CurrencyType == fromBody.WithdrawalData[i].CurrencyType && w.ServiceType == fromBody.WithdrawalData[i].ServiceType).ToList();
                 if (tmpWithdrawLimitResult.Count > 0)
                 {
                     Charge = tmpWithdrawLimitResult.First().Charge;
@@ -10192,13 +10208,14 @@ public class BackendController : ApiController
 
             }
 
-            var spAddWithdrawalByBackendDownDataRet= backendDB.spAddWithdrawalByBackendDownData(0, AdminData.forCompanyID, "", fromBody.WithdrawalData[i].CurrencyType, fromBody.WithdrawalData[i].ServiceType, fromBody.WithdrawalData[i].Amount, Charge, WithdrawalRate, 0,0, fromBody.WithdrawalData[i].BankCard, fromBody.WithdrawalData[i].BankCardName, fromBody.WithdrawalData[i].BankName, fromBody.WithdrawalData[i].BankBranchName, fromBody.WithdrawalData[i].OwnProvince, fromBody.WithdrawalData[i].OwnCity,0,0);
+            var spAddWithdrawalByBackendDownDataRet = backendDB.spAddWithdrawalByBackendDownData(0, AdminData.forCompanyID, "", fromBody.WithdrawalData[i].CurrencyType, fromBody.WithdrawalData[i].ServiceType, fromBody.WithdrawalData[i].Amount, Charge, WithdrawalRate, 0, 0, fromBody.WithdrawalData[i].BankCard, fromBody.WithdrawalData[i].BankCardName, fromBody.WithdrawalData[i].BankName, fromBody.WithdrawalData[i].BankBranchName, fromBody.WithdrawalData[i].OwnProvince, fromBody.WithdrawalData[i].OwnCity, 0, 0);
 
-            if (spAddWithdrawalByBackendDownDataRet != 0) {
+            if (spAddWithdrawalByBackendDownDataRet != 0)
+            {
                 DBretValue++;
             }
         }
-     
+
 
         if (DBretValue > 0)
         {
@@ -10782,7 +10799,7 @@ public class BackendController : ApiController
     public APIResult UpdateWithdrawalResultByWithdrawSerial([FromBody] FromBody.WithdrawalSet fromBody)
     {
         UpdateWithdrawalResultByWithdrawSerialResult result = new UpdateWithdrawalResultByWithdrawSerialResult();
-                                                RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
+        RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         string fingerprint = GetFingerprint();
 
         if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
@@ -10795,7 +10812,7 @@ public class BackendController : ApiController
             AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
-        if (!(AdminData.CompanyType == 0|| AdminData.CompanyType == 4))
+        if (!(AdminData.CompanyType == 0 || AdminData.CompanyType == 4))
         {
             result.ResultCode = APIResult.enumResult.VerificationError;
             return result;
@@ -10876,7 +10893,7 @@ public class BackendController : ApiController
         }
 
         if (AdminData.CompanyType != 0)
-        {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        {
             result.ResultCode = APIResult.enumResult.VerificationError;
             return result;
         }
@@ -11399,17 +11416,18 @@ public class BackendController : ApiController
             _PaymentTableResult.IsAutoLoad = fromBody.IsAutoLoad;
             _PaymentTableResult.data = _Table;//分頁後的資料 
 
-            var getWithdrawalBySearchFilter= backendDB.GetWithdrawalBySearchFilter(fromBody,true);
+            var getWithdrawalBySearchFilter = backendDB.GetWithdrawalBySearchFilter(fromBody, true);
             if (getWithdrawalBySearchFilter != null)
             {
                 _PaymentTableResult.TotalAmount = getWithdrawalBySearchFilter.TotalAmount;
                 _PaymentTableResult.TotalHandlingFee = getWithdrawalBySearchFilter.TotalHandlingFee;
             }
-            else {
+            else
+            {
                 _PaymentTableResult.TotalAmount = 0;
                 _PaymentTableResult.TotalHandlingFee = 0;
             }
-           
+
             //DBModel.StatisticsPaymentAmount DbReturn = backendDB.GetPaymentPointBySearchFilter(fromBody);
             //if (DbReturn != null)
             //{
@@ -11473,7 +11491,7 @@ public class BackendController : ApiController
             _PaymentTableResult.IsAutoLoad = fromBody.IsAutoLoad;
             _PaymentTableResult.data = _Table;//分頁後的資料 
 
-            var getWithdrawalBySearchFilter = backendDB.GetWithdrawalBySearchFilter(fromBody,false);
+            var getWithdrawalBySearchFilter = backendDB.GetWithdrawalBySearchFilter(fromBody, false);
             if (getWithdrawalBySearchFilter != null)
             {
                 _PaymentTableResult.TotalAmount = getWithdrawalBySearchFilter.TotalAmount;
@@ -12644,7 +12662,7 @@ public class BackendController : ApiController
         }
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (!(AdminData.CompanyType == 0|| AdminData.CompanyType == 4) && fromBody.WithdrawLimitType == 0)
+        if (!(AdminData.CompanyType == 0 || AdminData.CompanyType == 4) && fromBody.WithdrawLimitType == 0)
         {
             _WithdrawLimitResult.ResultCode = APIResult.enumResult.VerificationError;
             return _WithdrawLimitResult;
@@ -12883,7 +12901,7 @@ public class BackendController : ApiController
             {
                 strWithdrawLimitType = "後台下發";
             }
-            else if(fromBody.WithdrawLimitType == 3)
+            else if (fromBody.WithdrawLimitType == 3)
             {
                 strWithdrawLimitType = "API 代付";
             }
@@ -12977,7 +12995,8 @@ public class BackendController : ApiController
         if (AdminData.CompanyType == 0)
         {
         }
-        else {
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
@@ -13073,7 +13092,7 @@ public class BackendController : ApiController
             strServiceTypeName = backendDB.GetServiceTypeNameByServiceType(fromBody.ServiceType, fromBody.CurrencyType);
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户提现限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType  + ", 币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP, fingerprint);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改商户提现限额,商户名称:" + strCompanyName + ",類型:" + strWithdrawLimitType + ", 币别:" + fromBody.CurrencyType + ",最低:" + fromBody.MinLimit + ",最高:" + fromBody.MaxLimit + ",手续费:" + fromBody.Charge + ",支付通道:" + strServiceTypeName, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13702,7 +13721,7 @@ public class BackendController : ApiController
             retValue.Message = "";
             return retValue;
         }
-        var DBreturn= backendDB.InsertManualHistory(Model, AdminData.AdminID);
+        var DBreturn = backendDB.InsertManualHistory(Model, AdminData.AdminID);
         if (DBreturn == 0)
         {
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -13730,7 +13749,8 @@ public class BackendController : ApiController
         {
             retValue.ResultCode = APIResult.enumResult.Error;
             switch (DBreturn)
-            { case -1:
+            {
+                case -1:
                     retValue.Message = "後台操作人員不存在";
                     break;
                 case -2:
@@ -14367,7 +14387,7 @@ public class BackendController : ApiController
             AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
-   
+
         DBretValue = backendDB.InsertCompanyWhiteListProviderBankCard(fromBody);
 
         if (DBretValue >= 1)
@@ -14442,13 +14462,15 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("GetQrCodeContent")]
-    public APIResult GetQrCodeContent([FromBody] FromBody.GetWithdrawalIPTableResult data) {
+    public APIResult GetQrCodeContent([FromBody] FromBody.GetWithdrawalIPTableResult data)
+    {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-        if (!RedisCache.BIDContext.CheckBIDExist(data.BID)) {
+        if (!RedisCache.BIDContext.CheckBIDExist(data.BID))
+        {
             retValue.ResultCode = APIResult.enumResult.SessionError;
             return retValue;
         }
@@ -14457,10 +14479,13 @@ public class BackendController : ApiController
 
         string qrContent = DecodeQrCode(data.ImageData);
 
-        if (!string.IsNullOrEmpty(qrContent)) {
+        if (!string.IsNullOrEmpty(qrContent))
+        {
             retValue.Message = qrContent;
             retValue.ResultCode = APIResult.enumResult.OK;
-        } else {
+        }
+        else
+        {
             retValue.Message = "沒有偵測到 QRCode";
             retValue.ResultCode = APIResult.enumResult.Error;
         }
@@ -14470,13 +14495,15 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("UpdateAlipayImage")]
-    public APIResult UpdateAlipayImage([FromBody] FromBody.GetWithdrawalIPTableResult data) {
+    public APIResult UpdateAlipayImage([FromBody] FromBody.GetWithdrawalIPTableResult data)
+    {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
 
         //驗證權限
         RedisCache.BIDContext.BIDInfo AdminData;
-        if (!RedisCache.BIDContext.CheckBIDExist(data.BID)) {
+        if (!RedisCache.BIDContext.CheckBIDExist(data.BID))
+        {
             retValue.ResultCode = APIResult.enumResult.SessionError;
             return retValue;
         }
@@ -14484,17 +14511,21 @@ public class BackendController : ApiController
         AdminData = RedisCache.BIDContext.GetBIDInfo(data.BID);
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (AdminData.CompanyType != 0) {
+        if (AdminData.CompanyType != 0)
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
 
         var returnDB = backendDB.UpdateAlipayImage(data.CompanyID, data.ImageData, data.ImageName, data.Type, data.ImageID, 3);
-        if (returnDB != "") {
+        if (returnDB != "")
+        {
             string ImageName = returnDB;
             retValue.Message = ImageName;
             retValue.ResultCode = APIResult.enumResult.OK;
-        } else {
+        }
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.Error;
         }
 
@@ -14504,19 +14535,23 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("InsertProviderAlipay")]
-    public APIResult InsertProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody) {
+    public APIResult InsertProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody)
+    {
         APIResult retValue = new APIResult();
         BackendDB backendDB = new BackendDB();
         string fingerprint = GetFingerprint();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
+        {
             retValue.ResultCode = APIResult.enumResult.SessionError;
             return retValue;
         }
 
         var AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
-        if (!Pay.IsTestSite) {
-            if (!CodingControl.CheckXForwardedFor()) {
+        if (!Pay.IsTestSite)
+        {
+            if (!CodingControl.CheckXForwardedFor())
+            {
                 backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + ",偵測到非反代IP活動：" + CodingControl.GetXForwardedFor());
                 RedisCache.BIDContext.ClearBID(fromBody.BID);
                 retValue.ResultCode = APIResult.enumResult.VerificationError;
@@ -14526,12 +14561,14 @@ public class BackendController : ApiController
         }
 
         //0 = 系統商/ 1 = 一般營運商 / 2 =代理營運商
-        if (AdminData.CompanyType != 0) {
+        if (AdminData.CompanyType != 0)
+        {
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             return retValue;
         }
 
-        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode)) {
+        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode))
+        {
             RedisCache.BIDContext.ClearBID(fromBody.BID);
             retValue.ResultCode = APIResult.enumResult.VerificationError;
             retValue.Message = "";
@@ -14540,7 +14577,8 @@ public class BackendController : ApiController
 
         var ret = backendDB.InsertProviderAlipay(fromBody);
 
-        if (!string.IsNullOrEmpty(ret)) {
+        if (!string.IsNullOrEmpty(ret))
+        {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "新增供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
@@ -14548,7 +14586,9 @@ public class BackendController : ApiController
             CodingControl.WriteXFowardForIP(AdminOP);
 
             retValue.ResultCode = APIResult.enumResult.OK;
-        } else {
+        }
+        else
+        {
             retValue.ResultCode = APIResult.enumResult.Error;
         }
 
@@ -14558,21 +14598,27 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("UpdateProviderAlipay")]
-    public APIResult UpdateProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody) {
+    public APIResult UpdateProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody)
+    {
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
         string fingerprint = GetFingerprint();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
+        {
             result.ResultCode = APIResult.enumResult.SessionError;
             return result;
-        } else {
+        }
+        else
+        {
             AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
-        if (!Pay.IsTestSite) {
-            if (!CodingControl.CheckXForwardedFor()) {
+        if (!Pay.IsTestSite)
+        {
+            if (!CodingControl.CheckXForwardedFor())
+            {
                 backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + ",偵測到非反代IP活動：" + CodingControl.GetXForwardedFor());
                 RedisCache.BIDContext.ClearBID(fromBody.BID);
                 result.ResultCode = APIResult.enumResult.VerificationError;
@@ -14581,12 +14627,14 @@ public class BackendController : ApiController
             }
         }
 
-        if (AdminData.CompanyType != 0) {
+        if (AdminData.CompanyType != 0)
+        {
             result.ResultCode = APIResult.enumResult.VerificationError;
             return result;
         }
 
-        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode)) {
+        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode))
+        {
             RedisCache.BIDContext.ClearBID(fromBody.BID);
             result.ResultCode = APIResult.enumResult.VerificationError;
             result.Message = "";
@@ -14594,14 +14642,17 @@ public class BackendController : ApiController
         }
 
         var returnDB = backendDB.UpdateProviderAlipay(fromBody);
-        if (returnDB == 1) {
+        if (returnDB == 1)
+        {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "調整供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
-        } else {
+        }
+        else
+        {
             result.ResultCode = APIResult.enumResult.Error;
             result.Message = "其他错误";
         }
@@ -14612,21 +14663,27 @@ public class BackendController : ApiController
     [HttpGet]
     [HttpPost]
     [ActionName("DeleteProviderAlipay")]
-    public APIResult DeleteProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody) {
+    public APIResult DeleteProviderAlipay([FromBody] FromBody.ProviderBankCardData fromBody)
+    {
         APIResult result = new APIResult();
         RedisCache.BIDContext.BIDInfo AdminData = new RedisCache.BIDContext.BIDInfo();
         BackendDB backendDB = new BackendDB();
         string fingerprint = GetFingerprint();
 
-        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID))
+        {
             result.ResultCode = APIResult.enumResult.SessionError;
             return result;
-        } else {
+        }
+        else
+        {
             AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
         }
 
-        if (!Pay.IsTestSite) {
-            if (!CodingControl.CheckXForwardedFor()) {
+        if (!Pay.IsTestSite)
+        {
+            if (!CodingControl.CheckXForwardedFor())
+            {
                 backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + ",偵測到非反代IP活動：" + CodingControl.GetXForwardedFor());
                 RedisCache.BIDContext.ClearBID(fromBody.BID);
                 result.ResultCode = APIResult.enumResult.VerificationError;
@@ -14635,12 +14692,14 @@ public class BackendController : ApiController
             }
         }
 
-        if (AdminData.CompanyType != 0) {
+        if (AdminData.CompanyType != 0)
+        {
             result.ResultCode = APIResult.enumResult.VerificationError;
             return result;
         }
 
-        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode)) {
+        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode))
+        {
             RedisCache.BIDContext.ClearBID(fromBody.BID);
             result.ResultCode = APIResult.enumResult.VerificationError;
             result.Message = "";
@@ -14648,14 +14707,17 @@ public class BackendController : ApiController
         }
 
         var returnDB = backendDB.DeleteProviderBankCard(fromBody);
-        if (returnDB == 1) {
+        if (returnDB == 1)
+        {
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 2, "刪除供应商支付寶:" + fromBody.BankNumber, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             result.ResultCode = APIResult.enumResult.OK;
-        } else {
+        }
+        else
+        {
             result.ResultCode = APIResult.enumResult.Error;
             result.Message = "其他错误";
         }
@@ -14663,23 +14725,32 @@ public class BackendController : ApiController
         return result;
     }
 
-    public static string DecodeQrCode(byte[] imageData) {
-        try {
+    public static string DecodeQrCode(byte[] imageData)
+    {
+        try
+        {
             using (var ms = new MemoryStream(imageData))
-            using (var bitmap = new Bitmap(ms)) {
-                var reader = new BarcodeReader {
+            using (var bitmap = new Bitmap(ms))
+            {
+                var reader = new BarcodeReader
+                {
                     AutoRotate = true,
                     TryInverted = true // 有些 QRCode 是反色的
                 };
 
                 var result = reader.Decode(bitmap);
-                if (result != null) {
+                if (result != null)
+                {
                     return result.Text; // QRCode 的內容
-                } else {
+                }
+                else
+                {
                     return null; // 沒有辨識到 QRCode
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             // Log 錯誤
             return null;
         }
@@ -14701,7 +14772,7 @@ public class BackendController : ApiController
             return _AgentPointResult;
         }
 
-        _AgentPointResult.AgentReceiveResults = backendDB.GetCompanyAgentPointResult(fromBody.CompanyID);
+        _AgentPointResult.AgentReceiveResults = backendDB.GetCompanyAgentPointResult(fromBody.CompanyID, fromBody.CurrencyType);
 
 
         if (_AgentPointResult.AgentReceiveResults != null)
@@ -14757,7 +14828,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         var CompanyModel = backendDB.GetCompanyWithKeyByCode("VPayTest");
         var CompanyCode = "VPayTest";
-        var CurrencyType = Pay.CurrencyType;
+        var CurrencyType = "CNY";
         var ClientIP = "";
         var OrderID = Guid.NewGuid().ToString("N");
         var OrderDate = DateTime.Now;
@@ -14838,7 +14909,7 @@ public class BackendController : ApiController
         BackendDB backendDB = new BackendDB();
         var CompanyModel = backendDB.GetCompanyWithKeyByCode("test01");
         var CompanyCode = "test01";
-        var CurrencyType = Pay.CurrencyType;
+        var CurrencyType = "CNY";
         var ClientIP = "";
         var OrderID = Guid.NewGuid().ToString("N");
         var OrderDate = DateTime.Now;
@@ -14978,7 +15049,7 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        if (fromBody.Rate<0)
+        if (fromBody.Rate < 0)
         {
             retValue.ResultCode = APIResult.enumResult.Error;
             retValue.Message = "区块链汇率必须 >= 0";
@@ -14999,20 +15070,20 @@ public class BackendController : ApiController
             return retValue;
         }
 
-        if (fromBody.UpFloatRate> fromBody.DownFloatRate)
+        if (fromBody.UpFloatRate > fromBody.DownFloatRate)
         {
             retValue.ResultCode = APIResult.enumResult.Error;
             retValue.Message = "下浮费率必须 > 上浮费率";
             return retValue;
         }
 
-        DBretValue = backendDB.UpdateBlockChainRate(fromBody.Currency,fromBody.Rate,fromBody.DownFloatRate,fromBody.UpFloatRate);
+        DBretValue = backendDB.UpdateBlockChainRate(fromBody.Currency, fromBody.Rate, fromBody.DownFloatRate, fromBody.UpFloatRate);
 
         if (DBretValue >= 1)
         {
-      
+
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
-            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate+ "币别:" + fromBody.Currency, IP, fingerprint);
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "修改区块链汇率:" + fromBody.Rate + "下浮费率:" + fromBody.DownFloatRate + "上浮费率:" + fromBody.UpFloatRate + "币别:" + fromBody.Currency, IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
@@ -15090,7 +15161,8 @@ public class BackendController : ApiController
             CodingControl.WriteXFowardForIP(AdminOP);
             retValue.ResultCode = APIResult.enumResult.OK;
         }
-        else if (DBretValue == -1) {
+        else if (DBretValue == -1)
+        {
             retValue.ResultCode = APIResult.enumResult.Error;
             retValue.Message = "此币别资料已存在";
             return retValue;
@@ -15125,8 +15197,8 @@ public class BackendController : ApiController
 
         BackendDB backendDB = new BackendDB();
         var DT = RedisCache.BlockChainRate.GetBlockChainRate(fromBody.Currency);
-  
-        if (DT!=null)
+
+        if (DT != null)
         {
             _BlockChainRateResult.BlockChainRateResults = DataTableExtensions.ToList<DBModel.BlockChainRate>(DT).ToList();
             _BlockChainRateResult.ResultCode = APIResult.enumResult.OK;
@@ -15520,7 +15592,7 @@ public class BackendController : ApiController
         public int SuccessCount;
         public int FailCount;
     }
-    
+
     public class UpdateWithdrawalResultsByAdminCheckModel : APIResult
     {
         public DBModel.UpdateWithdrawalResultsByAdminCheck WithdrawalResult;
@@ -15556,7 +15628,7 @@ public class BackendController : ApiController
         public List<DBModel.CompanyBlockChainAddress> CompanyBlockChainAddressResults;
     }
 
-    
+
 
     public class CompanyTableResult : APIResult
     {
@@ -15884,7 +15956,7 @@ public class BackendController : ApiController
     {
         public List<DBModel.CompanyWhiteList> Results;
     }
-    
+
     public class FrozenPointHistoryResult : APIResult
     {
         public List<DBModel.FrozenPointHistory> Results;
@@ -15979,15 +16051,18 @@ public class BackendController : ApiController
         public string Message;
     }
 
-    public class UploadQrcodeResult : APIResult {
+    public class UploadQrcodeResult : APIResult
+    {
         public string QrcodeContent;
     }
     #endregion
 
-    public static string GetFingerprint() {
+    public static string GetFingerprint()
+    {
         HttpCookie cookie = HttpContext.Current.Request.Cookies["Fingerprint"];
 
-        if (cookie != null) {
+        if (cookie != null)
+        {
             return cookie.Value;
         }
 

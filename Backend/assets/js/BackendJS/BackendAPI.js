@@ -1,8 +1,8 @@
 
 var BackendAPI = function (BID, APIUrl) {
 
-    this.updateBID = function  (cb) {
-        var url = APIUrl + "/UpdateBID";        
+    this.updateBID = function (cb) {
+        var url = APIUrl + "/UpdateBID";
 
         callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
@@ -15,12 +15,12 @@ var BackendAPI = function (BID, APIUrl) {
                     cb(false, text);
             }
         });
-    };    
-    
+    };
+
     this.updateAllCompanyKey = function (cb) {
         var url = APIUrl + "/UpdateAllCompanyKey";
         var postData = {
-            BID:BID
+            BID: BID
         }
         callServiceByPost(url, postData, function (success, text) {
             if (success == true) {
@@ -40,7 +40,7 @@ var BackendAPI = function (BID, APIUrl) {
         var postData;
 
         postData = {
-            BID:BID,
+            BID: BID,
             WithdrawSerial: withdrawSerial,
             OrderID: orderID,
             Startdate: startDate,
@@ -134,7 +134,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getCompanyAllServiceDetailData = function (companyid,cb) {
+    this.getCompanyAllServiceDetailData = function (companyid, cb) {
         var url = APIUrl + "/GetCompanyAllServiceDetailData";
         var postData = {
             BID: BID,
@@ -159,7 +159,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.getAllProviderTotalResult = function (cb) {
         var url = APIUrl + "/GetAllProviderTotalResult";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -177,7 +177,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.getProviderListResult = function (cb) {
         var url = APIUrl + "/GetProviderListResult";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -195,7 +195,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.getProviderListResult = function (cb) {
         var url = APIUrl + "/GetProviderListResult";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -292,7 +292,7 @@ var BackendAPI = function (BID, APIUrl) {
         var postData;
 
         postData = {
-            BID:BID,
+            BID: BID,
             ProviderCode: ProviderCode,
             ServiceType: ServiceType,
             CurrencyType: CurrencyType
@@ -344,7 +344,7 @@ var BackendAPI = function (BID, APIUrl) {
         var postData;
 
         postData = {
-            BID:BID,
+            BID: BID,
             ProviderCode: ProviderCode
         };
 
@@ -416,7 +416,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.userLogout = function (cb) {
         var url = APIUrl + "/Logout";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             cb(true);
         });
     };
@@ -424,7 +424,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.searchIPCounty = function (ip, cb) {
         var url = APIUrl + "/SearchIPCounty";
         var postData = {
-            BID:BID,
+            BID: BID,
             IP: ip
         }
         callServiceByPost(url, postData, function (success, text) {
@@ -467,7 +467,7 @@ var BackendAPI = function (BID, APIUrl) {
         var postData;
 
         postData = {
-            BID:BID
+            BID: BID
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -488,7 +488,7 @@ var BackendAPI = function (BID, APIUrl) {
         var postData;
 
         postData = {
-            BID:BID,
+            BID: BID,
             BankCode: bankCode,
             BankName: bankName,
             ETHContractNumber: ETHContractNumber,
@@ -1206,7 +1206,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.WithdrawalCreate = function (data,userKey, cb) {
+    this.WithdrawalCreate = function (data, userKey, cb) {
         var url = APIUrl + "/WithdrawalCreate";
         var postData;
 
@@ -1274,7 +1274,7 @@ var BackendAPI = function (BID, APIUrl) {
 
         var url = APIUrl + "/GetProxyProviderData";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -1313,7 +1313,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getWithdrawalReport = function (startDate, endDate, withdrawSerial, orderID, status, bankCardName,  cb) {
+    this.getWithdrawalReport = function (startDate, endDate, withdrawSerial, orderID, status, bankCardName, cb) {
         var url = APIUrl + "/GetWithdrawalReport";
         var postData;
 
@@ -1481,7 +1481,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.confirmManualProviderPayment = function (paymentSerial, status, bankDescription,userKey, cb) {
+    this.confirmManualProviderPayment = function (paymentSerial, status, bankDescription, userKey, cb) {
         var url = APIUrl + "/ConfirmManualProviderPayment";
         var postData;
 
@@ -1581,7 +1581,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.confirmManualWithdrawalForProxyProivder = function (withdrawSerial, status, bankDescription,userKey, cb) {
+    this.confirmManualWithdrawalForProxyProivder = function (withdrawSerial, status, bankDescription, userKey, cb) {
         var url = APIUrl + "/ConfirmManualWithdrawalForProxyProivder";
         var postData;
 
@@ -1995,7 +1995,7 @@ var BackendAPI = function (BID, APIUrl) {
     };
 
 
-    this.onlySearchWithdrawalForProvider = function (withdrawSerial, startdate, enddate, minAmount, maxAmount, bankDescription, groupID,cb) {
+    this.onlySearchWithdrawalForProvider = function (withdrawSerial, startdate, enddate, minAmount, maxAmount, bankDescription, groupID, cb) {
         var url = APIUrl + "/OnlySearchWithdrawalForProvider";
         var postData;
 
@@ -2045,7 +2045,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyWhiteListProviderBankCard = function (WhiteListID, forCompanyID, UserIdentity,Description,cb) {
+    this.updateCompanyWhiteListProviderBankCard = function (WhiteListID, forCompanyID, UserIdentity, Description, cb) {
         var url = APIUrl + "/UpdateCompanyWhiteListProviderBankCard";
         var postData;
 
@@ -2299,7 +2299,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.getCurrency = function (cb) {
         var url = APIUrl + "/GetCurrency";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -2315,7 +2315,7 @@ var BackendAPI = function (BID, APIUrl) {
     this.getCurrencyByCompanyID = function (cb) {
         var url = APIUrl + "/GetCurrencyByCompanyID";
 
-        callServiceByPost(url,BID, function (success, text) {
+        callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -2337,7 +2337,7 @@ var BackendAPI = function (BID, APIUrl) {
             BID: BID,
             Currency: currency
         }
-        callServiceByPost(url,postData, function (success, text) {
+        callServiceByPost(url, postData, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -2915,7 +2915,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateBackendIPimg = function (imageData, imageName, ip, companyID, type, imageID,cb) {
+    this.updateBackendIPimg = function (imageData, imageName, ip, companyID, type, imageID, cb) {
         var url = APIUrl + "/UpdateBackendIPimg";
         var postData;
 
@@ -3577,7 +3577,7 @@ var BackendAPI = function (BID, APIUrl) {
         var url = APIUrl + "/GetPatchPaymentTableResult";
         var postData;
 
-     
+
 
         callServiceByPost(url, BID, function (success, text) {
             if (success == true) {
@@ -3854,7 +3854,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.createPayment = function (amount, companyid, description, cb) {
+    this.createPayment = function (amount, companyid, description, CurrencyType, cb) {
         var url = APIUrl + "/CreatePayment";
         var postData;
 
@@ -3863,6 +3863,7 @@ var BackendAPI = function (BID, APIUrl) {
             Amount: amount,
             CompanyID: companyid,
             Description: description,
+            CurrencyType: CurrencyType
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -4169,7 +4170,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyServiceByEditView = function (companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType,cb) {
+    this.updateCompanyServiceByEditView = function (companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType, cb) {
         var url = APIUrl + "/UpdateCompanyServiceByEditView";
         var postData;
 
@@ -4199,7 +4200,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyServiceWeightByEditView = function (companyID, ServiceType, currencyType, lstProviderCode,  cb) {
+    this.updateCompanyServiceWeightByEditView = function (companyID, ServiceType, currencyType, lstProviderCode, cb) {
         var url = APIUrl + "/UpdateCompanyServiceWeightByEditView";
         var postData;
 
@@ -4224,14 +4225,15 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getCompanyServiceRelationByEditView = function (ServiceType, providerCode,cb) {
+    this.getCompanyServiceRelationByEditView = function (ServiceType, providerCode, CurrencyType, cb) {
         var url = APIUrl + "/GetCompanyServiceRelationByEditView";
         var postData;
 
         postData = {
             BID: BID,
             ServiceType: ServiceType,
-            ProviderCode: providerCode
+            ProviderCode: providerCode,
+            CurrencyType: CurrencyType
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -4247,7 +4249,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.setCompanyServiceRelationByEditView = function (companyID, ServiceType, currencyType, providerCode, isAddRelation,  cb) {
+    this.setCompanyServiceRelationByEditView = function (companyID, ServiceType, currencyType, providerCode, isAddRelation, cb) {
         var url = APIUrl + "/SetCompanyServiceRelationByEditView";
         var postData;
 
@@ -4300,7 +4302,7 @@ var BackendAPI = function (BID, APIUrl) {
             }
         });
     };
-    
+
     this.getCompanyServiceTableResult = function (companyID, cb) {
         var url = APIUrl + "/GetCompanyServiceTableResult";
         var postData;
@@ -4509,7 +4511,7 @@ var BackendAPI = function (BID, APIUrl) {
     //#endregion
 
     //#region Company
-    this.getBankData = function (CurrencyType,cb) {
+    this.getBankData = function (CurrencyType, cb) {
 
         var url;
         url = APIUrl + "/GetBankData";
@@ -4726,7 +4728,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType,timezone,cb) {
+    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, timezone, cb) {
         var url = APIUrl + "/UpdateCompanyTableResult";
         var postData;
 
@@ -4806,7 +4808,7 @@ var BackendAPI = function (BID, APIUrl) {
 
     this.disableCompanyByID = function (CompanyID, cb) {
 
-        var url;
+        var url = APIUrl + "/DisableCompanyByID";
         //url = APIUrl + "/DisableCompanyByID?seleCompanyID=" + CompanyID + "&BID=" + BID;
 
         var postData = {
@@ -4831,13 +4833,14 @@ var BackendAPI = function (BID, APIUrl) {
     //#endregion
 
     //#region ProviderCode
-    this.getProviderByServiceType = function (ServiceType, cb) {
+    this.getProviderByServiceType = function (ServiceType, CurrencyType, cb) {
         var url = APIUrl + "/GetProviderByServiceType";
         var postData;
 
         postData = {
             BID: BID,
-            ServiceType: ServiceType
+            ServiceType: ServiceType,
+            CurrencyType: CurrencyType
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -4853,7 +4856,7 @@ var BackendAPI = function (BID, APIUrl) {
                 }
             }
         });
-    };    
+    };
 
     this.getProviderCodeResultByShowType = function (cb) {
         var url = APIUrl + "/GetProviderCodeResultByShowType";
@@ -4973,10 +4976,14 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getAllCompanyServicePoint = function (cb) {
+    this.getAllCompanyServicePoint = function (CurrencyType, cb) {
         var url = APIUrl + "/GetAllCompanyServicePoint";
+        var postData = {
+            BID: BID,
+            CurrencyType: CurrencyType
+        }
 
-        callServiceByPost(url, BID, function (success, text) {
+        callServiceByPost(url, postData, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -4991,14 +4998,14 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.changeProviderGroupByAdmin = function (groupID,withdrawSerial, cb) {
+    this.changeProviderGroupByAdmin = function (groupID, withdrawSerial, cb) {
         var url = APIUrl + "/ChangeProviderGroupByAdmin";
         var postData;
 
         postData = {
             BID: BID,
             OrderSerial: withdrawSerial,
-            GroupID:groupID
+            GroupID: groupID
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -5252,7 +5259,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.InsertProviderBankCard = function (ProviderCode,CurrencyType, BankCardState, Type, CardType, BankCardName, BankCode, BankName, BranchName
+    this.InsertProviderBankCard = function (ProviderCode, CurrencyType, BankCardState, Type, CardType, BankCardName, BankCode, BankName, BranchName
         , BankNumber
         , AccountName
         , BankProvince
@@ -5306,7 +5313,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.UpdateProviderBankCard = function (ProviderCode,BankCardGUID, BankCardState, CurrencyType, CardType, BankCardName, BankCode, BankName, BranchName
+    this.UpdateProviderBankCard = function (ProviderCode, BankCardGUID, BankCardState, CurrencyType, CardType, BankCardName, BankCode, BankName, BranchName
         , BankNumber
         , AccountName
         , BankProvince
@@ -5765,12 +5772,17 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.setAgentClose = function (cb) {
+    this.setAgentClose = function (CurrencyType, cb) {
 
         var url = APIUrl + "/SetAgentClose";
         var postData = null;
 
-        callServiceByPost(url, BID, function (success, text) {
+        postData = {
+            BID: BID,
+            CurrencyType: CurrencyType
+        };
+
+        callServiceByPost(url, postData, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -5791,7 +5803,7 @@ var BackendAPI = function (BID, APIUrl) {
 
         var postData = {
             BID: BID,
-            CompanyID: companyID, 
+            CompanyID: companyID,
             CurrencyType: CurrencyType
         }
 
@@ -5855,11 +5867,15 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getCompanyServicePointDetail = function (cb) {
+    this.getCompanyServicePointDetail = function (CurrencyType, cb) {
 
         var url = APIUrl + "/GetCompanyServicePointDetail";
+        var postData = {
+            BID: BID,
+            CurrencyType: CurrencyType
+        }
 
-        callServiceByPost(url, BID, function (success, text) {
+        callServiceByPost(url, postData, function (success, text) {
             if (success == true) {
                 var obj = getJSON(text);
 
@@ -5898,13 +5914,14 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getCompanyServicePointByServiceType = function (ServiceType, cb) {
+    this.getCompanyServicePointByServiceType = function (ServiceType, CurrencyType, cb) {
 
         var url = APIUrl + "/GetCompanyServicePointByServiceType";
 
         var postData = {
             BID: BID,
-            ServiceType: ServiceType
+            ServiceType: ServiceType,
+            CurrencyType: CurrencyType
         }
 
         callServiceByPost(url, postData, function (success, text) {
@@ -5923,13 +5940,14 @@ var BackendAPI = function (BID, APIUrl) {
     };
 
 
-    this.getCompanyPointTableResult = function (seleCompanyID, cb) {
+    this.getCompanyPointTableResult = function (seleCompanyID, CurrencyType, cb) {
 
         var url = APIUrl + "/GetCompanyPointTableResult";
 
         var postData = {
             BID: BID,
-            CompanyID: seleCompanyID
+            CompanyID: seleCompanyID,
+            CurrencyType: CurrencyType
         }
 
         callServiceByPost(url, postData, function (success, text) {
@@ -5967,13 +5985,14 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.GetAgentPointResult = function (seleCompanyID, cb) {
+    this.GetAgentPointResult = function (seleCompanyID, CurrencyType, cb) {
 
         var url = APIUrl + "/GetAgentPointResult";
 
         var postData = {
             BID: BID,
-            CompanyID: seleCompanyID
+            CompanyID: seleCompanyID,
+            CurrencyType: CurrencyType
         }
 
         callServiceByPost(url, postData, function (success, text) {
@@ -6046,7 +6065,7 @@ var BackendAPI = function (BID, APIUrl) {
     //#endregion
 
     //#region  GPayRelation
-    
+
     this.getGPayRelationByCompany = function (forCompanyID, ServiceType, currencyType, cb) {
 
         var url = APIUrl + "/GetGPayRelationByCompany";
@@ -6288,7 +6307,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getSummaryCompanyByAgent2 = function (postdata,cb) {
+    this.getSummaryCompanyByAgent2 = function (postdata, cb) {
 
         var url = APIUrl + "/GetSummaryCompanyByAgent2";
         postdata["BID"] = BID;
@@ -6646,7 +6665,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.insertGPayWithdrawRelation = function (companyID, charge, minLimit, maxLimit, lstProviderCode, Rate,CurrencyType, cb) {
+    this.insertGPayWithdrawRelation = function (companyID, charge, minLimit, maxLimit, lstProviderCode, Rate, CurrencyType, cb) {
 
         var postdata = {
             BID: BID,
@@ -6676,7 +6695,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateGPayWithdrawRelation = function (companyID, charge, minLimit, maxLimit, lstProviderCode, currencyType,Rate, cb) {
+    this.updateGPayWithdrawRelation = function (companyID, charge, minLimit, maxLimit, lstProviderCode, currencyType, Rate, cb) {
 
         var postdata = {
             BID: BID,
@@ -6903,7 +6922,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    
+
 
     this.getOrderByCompanyManualHistoryByFrozenPoint = function (transactionSerial, cb) {
         var url = APIUrl + "/GetOrderByCompanyManualHistoryByFrozenPoint";
@@ -7073,7 +7092,7 @@ var BackendAPI = function (BID, APIUrl) {
     //#endregion
 
     //#region 案件冻结
-    this.InsertFrozenPoint = function (PaymentSerial, CompanyID, ProviderCode, CompanyAmount, ProviderAmount, Description, CurrencyType, PaymentID, ServiceType, BankCard, BankCardName, BankName,CheckboxActualProviderFrozenAmount,cb) {
+    this.InsertFrozenPoint = function (PaymentSerial, CompanyID, ProviderCode, CompanyAmount, ProviderAmount, Description, CurrencyType, PaymentID, ServiceType, BankCard, BankCardName, BankName, CheckboxActualProviderFrozenAmount, cb) {
         var url = APIUrl + "/InsertFrozenPoint";
         var postData;
 
@@ -7131,7 +7150,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getSumFrozenPoint = function (providerCode,cb) {
+    this.getSumFrozenPoint = function (providerCode, cb) {
         var url = APIUrl + "/GetSumFrozenPoint";
         var postData;
 
@@ -7180,7 +7199,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getFrozenPointHistory = function (startDate, endDate, PaymentSerial, CompanyID, providercode, Status, groupID,  cb) {
+    this.getFrozenPointHistory = function (startDate, endDate, PaymentSerial, CompanyID, providercode, Status, groupID, cb) {
         var url = APIUrl + "/getFrozenPointHistory";
         var postData;
 
@@ -7396,7 +7415,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getAllProxyProviderGroupTableResultByAdmin = function ( cb) {
+    this.getAllProxyProviderGroupTableResultByAdmin = function (cb) {
         var url = APIUrl + "/GetAllProxyProviderGroupTableResultByAdmin";
         var postData;
 
@@ -7502,12 +7521,13 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateProxyProviderGroupWeight = function (data,cb) {
+    this.updateProxyProviderGroupWeight = function (CurrencyType, data, cb) {
         var url = APIUrl + "/UpdateProxyProviderGroupWeight";
         var postData;
 
         postData = {
             BID: BID,
+            CurrencyType: CurrencyType,
             GroupData: data
         };
 
@@ -7788,7 +7808,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getOnlineList = function (forCompanyID,cb) {
+    this.getOnlineList = function (forCompanyID, cb) {
         var url = APIUrl + "/GetOnlineList";
 
         //處理GetData
@@ -7902,7 +7922,7 @@ var BackendAPI = function (BID, APIUrl) {
                 //    retry = 1;
                 //}
                 else {
-                    cb(false, "status:"+this.status+","+ contentText);
+                    cb(false, "status:" + this.status + "," + contentText);
                 }
             }
         };

@@ -1067,6 +1067,8 @@
     var companyServiceModel;
     var CompanyServiceType;
     var checkServiceTypeData;
+    var seleCurrency = parent.API_GetSelectCurrency();
+
     $(document).ready(function () {
         if ('@CheckLoginPermission' == 'false') {
                 location.href = "Login.cshtml";
@@ -1789,7 +1791,7 @@
         $("#pre-selected-options").children().remove();
         $('#pre-selected-options').multiSelect('refresh');
         if ($(this).val() != "0") {
-            api.getProviderByServiceType($(this).val(), function (success, obj) {
+            api.getProviderByServiceType($(this).val(), seleCurrency, function (success, obj) {
                 if (obj.ResultCode == 0) {
                     if (obj.ProviderTypes.length > 0) {
                         $("#select_Provider").children().remove();
@@ -2129,7 +2131,7 @@
 
     function getCompanyServiceRelationByEditView(providerCode, ServiceType) {
      
-        api.getCompanyServiceRelationByEditView(ServiceType, providerCode, function (success, obj) {
+        api.getCompanyServiceRelationByEditView(ServiceType, providerCode, seleCurrency, function (success, obj) {
             parent.wrapperFadeIn();
             if (success) {
                 $("#pre-selected-options").children().remove();

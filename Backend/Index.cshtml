@@ -394,6 +394,41 @@
             //    setTimeout(arguments.callee, 30000);
             //}, 30000);
 
+            api.getCurrencyByCompanyID(function (success, obj) {
+                if (success) {
+                    $("#selectCurrencyType").empty();
+                    if (obj.ResultCode == 0) {
+                        var datas = obj.Currencies;
+                        $.each(datas, function (i, v) {
+                            if (i == 0) {
+                                $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                            } else {
+                                $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                            }
+                        })
+                    } else {
+                        switch (obj.ResultCode) {
+                            case 4:
+                                parent.errorAlertCallback("权限不足", function () {
+                                    parent.ChangePage("Home");
+                                    parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                                });
+                                break;
+                            case 5:
+                                parent.warningAlert("没有资料");
+                                break;
+                            case 7:
+                                parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                break;
+                            default:
+                                parent.warningAlert("其他错误");
+                                break;
+                        }
+                    }
+                    $('#selectCurrencyType').selectpicker('refresh');
+                }
+            });
+
         });
 
         function openProviderOrderMusic() {
@@ -458,6 +493,7 @@
         function protectTimeOut() {
             document.getElementById('refresh').contentDocument.location.reload(true);
         }
+
         //#region 取得可選擇供應商列表
         //isProxy:是否只顯示身分為代理的商户
         //showAllCompanyBtn:是否有所有商户的選項
@@ -595,8 +631,6 @@
         }
         //#endregion
 
-
-
         //#region 建立供應商列表後綁定按鈕事件
         function BindingBtn() {
             $('.dd-handle').on('click', function () {
@@ -673,8 +707,6 @@
         //}
 
         //#endregion
-
-
 
         function showNotify(title, message) {
             $.notify({
@@ -1316,6 +1348,11 @@
             }
         }
         //#endregion
+
+        function API_GetSelectCurrency() {
+            //console.log($("#selectCurrencyType option:selected").attr("data-value"));
+            return $("#selectCurrencyType option:selected").attr("data-value");
+        }
     </script>
 </head>
 <body class="theme-violet">
@@ -1333,99 +1370,106 @@
     <nav class="navbar">
         <ul class="nav navbar-nav navbar-left flex">
             <div class="navLeft">
-                <li>
-                    <div class="navbar-header">
-                        <a href="javascript:void(0);" class="bars" style="display: none;"></a>
-                        <!-- <a class="navbar-brand"><img src="~/Backend/assets/images/logo_Backend.svg" alt="Backend"><span class="m-l-10"></span></a> -->
-                        <a class="navbar-brand" href="javascript:void(0);"><span onclick="ChangePage('Home')">
+            <li>
+                <div class="navbar-header">
+                    <a href="javascript:void(0);" class="bars" style="display: none;"></a>
+                    <!-- <a class="navbar-brand"><img src="~/Backend/assets/images/logo_Backend.svg" alt="Backend"><span class="m-l-10"></span></a> -->
+                    <a class="navbar-brand" href="javascript:void(0);">
+                        <span onclick="ChangePage('Home')">
                             @System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]
-                              </span><span class="m-l-10"></span></a>
-                    </div>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" class="menu-sm" data-close="true" onclick="TableAdjust()">
-                        <i class="fas fa-bars"></i>
-                        <!-- <i class="zmdi zmdi-arrow-left"></i>
-                        <i class="zmdi zmdi-arrow-right"></i> -->
+                        </span><span class="m-l-10"></span>
                     </a>
-                </li>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:void(0);" class="menu-sm" data-close="true" onclick="TableAdjust()">
+                    <i class="fas fa-bars"></i>
+                    <!-- <i class="zmdi zmdi-arrow-left"></i>
+            <i class="zmdi zmdi-arrow-right"></i> -->
+                </a>
+            </li>
             </div>
 
             <div class="navRight">
-                <li class="divided" style="display:none;" id="soundIcon3">
-                    <img id="closeProviderOrderMusic" onclick="closeProviderOrderMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
-                    <img id="openProviderOrderMusic" onclick="openProviderOrderMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
-                </li>
-                <li class="divided" style="display:none;">
-                    <div id="diBackendmentProviderConfirmCount" style="margin-right: 5px;margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('PaymentProviderReportReview.cshtml')">
-                        <span id="spanPaymentProviderConfirmCount" style="color:#ffc107">0</span>
-                    </div>
-                </li>
-                <li class="divided" style="display:none;">
-                    <div id="divWithdrawProviderConfirmCount" style="margin-right: 5px;margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintForProvider.cshtml')">
-                        <span id="spanWithdrawProviderConfirmCount" style="color:aqua">0</span>
-                    </div>
-                </li>
-                <li class="divided" style="display:none;" id="soundIcon4">
-                    <img id="closeWithdrawRiskControlMusic" onclick="closeWithdrawRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
-                    <img id="openWithdrawRiskControlMusic" onclick="openWithdrawRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
-                </li>
-                <li class="divided" style="display:none;">
-                    <div id="divRiskControlByWithdrawCount" style="margin-left: 10px;margin-top: 5px; margin-right: 10px;" onclick="showWithdrawRiskControlDetail()">
-                        <span id="spanRiskControlByWithdrawCount" style="color:#ff4b22e3">代付异常</span>
-                    </div>
-                </li>
+            <li class="divided" style="display:none;" id="soundIcon3">
+                <img id="closeProviderOrderMusic" onclick="closeProviderOrderMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
+                <img id="openProviderOrderMusic" onclick="openProviderOrderMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
+            </li>
+            <li class="divided" style="display:none;">
+                <div id="diBackendmentProviderConfirmCount" style="margin-right: 5px;margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('PaymentProviderReportReview.cshtml')">
+                    <span id="spanPaymentProviderConfirmCount" style="color:#ffc107">0</span>
+                </div>
+            </li>
+            <li class="divided" style="display:none;">
+                <div id="divWithdrawProviderConfirmCount" style="margin-right: 5px;margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintForProvider.cshtml')">
+                    <span id="spanWithdrawProviderConfirmCount" style="color:aqua">0</span>
+                </div>
+            </li>
+            <li class="divided" style="display:none;" id="soundIcon4">
+                <img id="closeWithdrawRiskControlMusic" onclick="closeWithdrawRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
+                <img id="openWithdrawRiskControlMusic" onclick="openWithdrawRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
+            </li>
+            <li class="divided" style="display:none;">
+                <div id="divRiskControlByWithdrawCount" style="margin-left: 10px;margin-top: 5px; margin-right: 10px;" onclick="showWithdrawRiskControlDetail()">
+                    <span id="spanRiskControlByWithdrawCount" style="color:#ff4b22e3">代付异常</span>
+                </div>
+            </li>
 
-                <li class="divided" style="display:none;" id="soundIcon2">
-                    <img id="closeRiskControlMusic" onclick="closeRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
-                    <img id="openRiskControlMusic" onclick="openRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
-                </li>
-                <li class="divided" style="display:none;">
-                    <div id="divRiskControlByPaymentSuccessCount" style="margin-left: 10px;margin-top: 5px; margin-right: 10px;" onclick="showRiskControlDetail()">
-                        <span id="spanRiskControlByPaymentSuccessCount" style="color:#ff4b22e3">充值异常</span>
-                    </div>
-                </li>
-                <!-- SoundSetting -->
-                <li class="divided SoundSetting" style="display:none;" id="soundIcon">
-                    <div style="float:left">
-                        <span id="spanIsMaintain" style="color:red;margin-right:5px;"></span>
-                    </div>
-                    <img id="closeMusic" onclick="closeMusic()" style="display:none;" src="~/Backend/assets/images/closeMusic-violet.png" />
-                    <img id="openMusic" onclick="openMusic()" style="display:none;" src="~/Backend/assets/images/openMusic-violet.png" />
-                    <div id="diBackendmentConfirmCount" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintV2.cshtml')">
-                        <span id="spanPaymentConfirmCount" class="paymentConfirmCount">0</span>
-                    </div>
+            <li class="divided" style="display:none;" id="soundIcon2">
+                <img id="closeRiskControlMusic" onclick="closeRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/closeMusic.png" />
+                <img id="openRiskControlMusic" onclick="openRiskControlMusic()" style="margin-left: 5px;margin-right: 5px;width: 30px;display:none;" src="~/Backend/assets/images/openMusic.png" />
+            </li>
+            <li class="divided" style="display:none;">
+                <div id="divRiskControlByPaymentSuccessCount" style="margin-left: 10px;margin-top: 5px; margin-right: 10px;" onclick="showRiskControlDetail()">
+                    <span id="spanRiskControlByPaymentSuccessCount" style="color:#ff4b22e3">充值异常</span>
+                </div>
+            </li>
+            <!-- SoundSetting -->
+            <li class="divided SoundSetting" style="display:none;" id="soundIcon">
+                <div style="float:left">
+                    <span id="spanIsMaintain" style="color:red;margin-right:5px;"></span>
+                </div>
+                <img id="closeMusic" onclick="closeMusic()" style="display:none;" src="~/Backend/assets/images/closeMusic-violet.png" />
+                <img id="openMusic" onclick="openMusic()" style="display:none;" src="~/Backend/assets/images/openMusic-violet.png" />
+                <div id="diBackendmentConfirmCount" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintV2.cshtml')">
+                    <span id="spanPaymentConfirmCount" class="paymentConfirmCount">0</span>
+                </div>
 
 
-                </li>
-                <!-- <li class="divided" style="display:none;">
-                    <div id="diBackendmentConfirmCount" style="margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintV3.cshtml')">
-                        <span id="spanPaymentConfirmCount" class="paymentConfirmCount">0</span>
-                    </div>
-                </li> -->
+            </li>
+            <!-- <li class="divided" style="display:none;">
+        <div id="diBackendmentConfirmCount" style="margin-left: 5px;margin-bottom: 5px;" onclick="GoPageByUrl('ApplyWithdrawal_AdminMaintV3.cshtml')">
+            <span id="spanPaymentConfirmCount" class="paymentConfirmCount">0</span>
+        </div>
+    </li> -->
 
-                <li class="divided timeZoneWrapper">
-                    <a class="displayTimeZone" onclick="displayTimeZone()">
-                        <p id="timeShowBox" class="timeShowBox"></p>
-                        <i class="fa fa-caret-down" style="padding-left: 8px; font-size: 12px;"></i>
-                    </a>
-                    <div id="timeZoneSelect" class="timeZoneSelect">
-                        <div class="btn-timeZone" onclick="timeDate2Click()">北京时间</div>
-                        <div class="btn-timeZone" onclick="timeDateClick()">美东时间</div>
-                    </div>
-                </li>
-                <!-- refresh -->
-                <li class="divided">
-                    <a class="page-refresh"><i class="zmdi zmdi-home" onclick="ChangePage('Home')"></i></a>
-                </li>
-                <!-- home -->
-                <li class="divided">
-                    <a href="javascript:void(0);"><i class="zmdi zmdi-refresh" onclick="RefreshActiveIframe()"></i></a>
-                </li>
-                <!-- logout -->
-                <li class="divided">
-                    <a id="btnLogout" class="mega-menu" style="height: 30px;"><i class="zmdi zmdi-power"></i></a>
-                </li>
+            <li class="divided timeZoneWrapper">
+                <a class="displayTimeZone" onclick="displayTimeZone()">
+                    <p id="timeShowBox" class="timeShowBox"></p>
+                    <i class="fa fa-caret-down" style="padding-left: 8px; font-size: 12px;"></i>
+                </a>
+                <div id="timeZoneSelect" class="timeZoneSelect">
+                    <div class="btn-timeZone" onclick="timeDate2Click()">北京时间</div>
+                    <div class="btn-timeZone" onclick="timeDateClick()">美东时间</div>
+                </div>
+            </li>
+            <li>
+                <select id="selectCurrencyType" class="form-select form-select-sm">
+                
+                </select>
+            </li>
+            <!-- refresh -->
+            <li class="divided">
+                <a class="page-refresh"><i class="zmdi zmdi-home" onclick="ChangePage('Home')"></i></a>
+            </li>
+            <!-- home -->
+            <li class="divided">
+                <a href="javascript:void(0);"><i class="zmdi zmdi-refresh" onclick="RefreshActiveIframe()"></i></a>
+            </li>
+            <!-- logout -->
+            <li class="divided">
+                <a id="btnLogout" class="mega-menu" style="height: 30px;"><i class="zmdi zmdi-power"></i></a>
+            </li>
             </div>
         </ul>
     </nav>

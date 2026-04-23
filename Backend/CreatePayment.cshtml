@@ -916,6 +916,7 @@
     </style>
 </head>
 <script>
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         if ('@CheckLoginPermission' == 'false') {
@@ -969,7 +970,7 @@
             }
 
             parent.wrapperFadeIn();
-            api.createPayment(amount, companyid, description, function (success, obj) {
+            api.createPayment(amount, companyid, description, seleCurrency, function (success, obj) {
                 if (success) {
                     $('#btnPaymentSave').attr('disabled', false);
                     parent.wrapperFadeOut();

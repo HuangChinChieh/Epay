@@ -982,6 +982,7 @@
 <script>
     var EditData = parent.CheckTempDataType("ProviderManualHistory");
     var selCompanyid;
+    var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
         pageLoad();
@@ -1075,7 +1076,7 @@
 
         $('#select_currency').html("");
         let strCompanyPointDetail = "";
-        api.getCompanyPointTableResult(selCompanyid, function (s, o) {
+        api.getCompanyPointTableResult(selCompanyid, seleCurrency, function (s, o) {
             if (s) {
                 if (o.ResultCode == 0) {
                     $.each(o.CompanyPoints, function (i, item) {

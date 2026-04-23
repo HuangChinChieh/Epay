@@ -6,7 +6,8 @@ using System.Web;
 
 #region DBModel
 
-public class DBModel {
+public class DBModel
+{
     public class ProviderBankCard
     {
         public string BankCardGUID { get; set; }
@@ -61,7 +62,8 @@ public class DBModel {
         public decimal DownFloatRate { get; set; }
     }
 
-    public class ASPStateTempSessions {
+    public class ASPStateTempSessions
+    {
         public string SessionId { get; set; }
         public DateTime Created { get; set; }
         public DateTime Expires { get; set; }
@@ -74,7 +76,8 @@ public class DBModel {
         public int Flags { get; set; }
     }
 
-    public class PaymentTransferLog {
+    public class PaymentTransferLog
+    {
         public string forPaymentSerial { get; set; }
         public int Type { get; set; }
         public string Message { get; set; }
@@ -85,7 +88,8 @@ public class DBModel {
 
     }
 
-    public class API_WithdrawResult {
+    public class API_WithdrawResult
+    {
         // 0=即時/1=非即時
         public int SendType;
         public string WithdrawSerial;
@@ -98,7 +102,8 @@ public class DBModel {
         public string Message;
     }
 
-    public class ProxyProviderGroup {
+    public class ProxyProviderGroup
+    {
         public string forProviderCode { get; set; }
         public decimal ProxyProviderPoint { get; set; }
         public decimal CanUsePoint { get; set; }
@@ -119,11 +124,13 @@ public class DBModel {
 
     }
 
-    public class ProxyProviderGroupWithdrawingCount : ProxyProviderGroup {
+    public class ProxyProviderGroupWithdrawingCount : ProxyProviderGroup
+    {
         public int WithdrawingCount { get; set; }
     }
 
-    public class DownOrderTransferLog {
+    public class DownOrderTransferLog
+    {
         public string OrderID { get; set; }
         public string DownOrderID { get; set; }
         public int Type { get; set; }
@@ -133,13 +140,15 @@ public class DBModel {
         public string CompanyName { get; set; }
     }
 
-    public class DownOrderTransferLogV2 : DownOrderTransferLog {
+    public class DownOrderTransferLogV2 : DownOrderTransferLog
+    {
         public int TotalCount { get; set; }
     }
 
 
 
-    public class PaymentTable {
+    public class PaymentTable
+    {
         public int PaymentID { get; set; }
         public int forCompanyID { get; set; }
         public string PaymentSerial { get; set; }
@@ -179,17 +188,20 @@ public class DBModel {
         public int SubmitType { get; set; }
     }
 
-    public class CreatePatchPayment {
+    public class CreatePatchPayment
+    {
         public int PatchPaymentState { get; set; }
         public string PaymentSerial { get; set; }
     }
 
-    public class RequireWithdrawalSet {
+    public class RequireWithdrawalSet
+    {
         public string WithdrawSerial { get; set; }
         public string Sign { get; set; }
     }
 
-    public class CompanyWithGooleKey {
+    public class CompanyWithGooleKey
+    {
         public int CompanyID { get; set; }
         public int CompanyType { get; set; }
         public int CompanyState { get; set; }
@@ -220,7 +232,8 @@ public class DBModel {
         public string GoogleKey { get; set; }
     }
 
-    public class Company {
+    public class Company
+    {
         public int CompanyID { get; set; }
         public int CompanyType { get; set; }
         public int CompanyState { get; set; }
@@ -255,7 +268,8 @@ public class DBModel {
         public decimal Timezone { get; set; }
     }
 
-    public class CompanyWithKey {
+    public class CompanyWithKey
+    {
         public int CompanyID { get; set; }
         public int CompanyType { get; set; }
         public int CompanyState { get; set; }
@@ -282,11 +296,13 @@ public class DBModel {
 
     }
 
-    public class FastCreateCompany {
+    public class FastCreateCompany
+    {
         public string CompanyCode { get; set; }
     }
 
-    public class Admin {
+    public class Admin
+    {
         public int AdminID { get; set; }
         public int AdminState { get; set; }
         public int forCompanyID { get; set; }
@@ -309,7 +325,8 @@ public class DBModel {
         public int GroupID { get; set; }
     }
 
-    public class AdminWithLoginPassword {
+    public class AdminWithLoginPassword
+    {
         public int AdminID { get; set; }
         public int AdminState { get; set; }
         public int forCompanyID { get; set; }
@@ -333,7 +350,8 @@ public class DBModel {
     }
 
 
-    public class AdminWithGoogleKey {
+    public class AdminWithGoogleKey
+    {
         public int AdminID { get; set; }
         public int AdminState { get; set; }
         public int forCompanyID { get; set; }
@@ -356,14 +374,16 @@ public class DBModel {
         public int GroupID { get; set; }
     }
 
-    public class AdminRole {
+    public class AdminRole
+    {
         public int forCompanyID { get; set; }
         public int AdminRoleID { get; set; }
         public string RoleName { get; set; }
         public string CompanyName { get; set; }
     }
 
-    public class ImageTable {
+    public class ImageTable
+    {
         public int ImageID { get; set; }
         public int Type { get; set; }
         public string ImageName { get; set; }
@@ -372,7 +392,8 @@ public class DBModel {
         public DateTime CreateDate { get; set; }
     }
 
-    public class WithdrawalIP {
+    public class WithdrawalIP
+    {
         public int forCompanyID { get; set; }
         public string CompanyName { get; set; }
         public string CompanyCode { get; set; }
@@ -383,8 +404,10 @@ public class DBModel {
         public string RealName { get; set; }
     }
 
-    public class UpdateWithdrawalResultsByAdminCheck {
-        public UpdateWithdrawalResultsByAdminCheck() {
+    public class UpdateWithdrawalResultsByAdminCheck
+    {
+        public UpdateWithdrawalResultsByAdminCheck()
+        {
             ErrorWithdrawal = new List<string>();
         }
         public List<Withdrawal> WithdrawalModel { get; set; }
@@ -393,19 +416,22 @@ public class DBModel {
         public List<string> ErrorWithdrawal { get; set; }
     }
 
-    public class ProviderBalanceSet {
+    public class ProviderBalanceSet
+    {
         public List<string> ArrayProviderCode { get; set; }
         public string CurrencyType { get; set; }
         public string Sign { get; set; }
     }
 
 
-    public class ReSendPaymentSet {
+    public class ReSendPaymentSet
+    {
         public string PaymentSerial { get; set; }
         public string Sign { get; set; }
     }
 
-    public class ReSendWithdrawSet {
+    public class ReSendWithdrawSet
+    {
         public string WithdrawSerial { get; set; }
         public string Sign { get; set; }
         public bool isReSendWithdraw { get; set; }
@@ -413,7 +439,8 @@ public class DBModel {
 
 
 
-    public class ProviderBalance {
+    public class ProviderBalance
+    {
         public string ProviderName { get; set; }
         public string ProviderCode { get; set; }
         public string CurrencyType { get; set; }
@@ -422,14 +449,16 @@ public class DBModel {
         public bool IsProviderSupport { get; set; }
     }
 
-    public class AdminRolePermission {
+    public class AdminRolePermission
+    {
 
         public int forAdminRoleID { get; set; }
         public int forCompanyID { get; set; }
         public string forPermissionName { get; set; }
     }
 
-    public class SummaryProviderByDate {
+    public class SummaryProviderByDate
+    {
         public string SummaryDate2 { get; set; }
         public string ProviderCode { get; set; }
         public string CurrencyType { get; set; }
@@ -442,7 +471,8 @@ public class DBModel {
         public decimal SummaryWithdrawalChargeAmount { get; set; }
     }
 
-    public class ProxySummaryProviderByDate {
+    public class ProxySummaryProviderByDate
+    {
         public string SummaryDate2 { get; set; }
         public string ProviderCode { get; set; }
         public string CurrencyType { get; set; }
@@ -456,7 +486,8 @@ public class DBModel {
 
     }
 
-    public class returnPaymentReportV2 {
+    public class returnPaymentReportV2
+    {
         public List<PaymentReportV2> data { get; set; }
         public int draw { get; set; }
         public int recordsTotal { get; set; }
@@ -467,11 +498,13 @@ public class DBModel {
 
     }
 
-    public class PaymentReportV2 : PaymentReport {
+    public class PaymentReportV2 : PaymentReport
+    {
         public int TotalCount { get; set; }
     }
 
-    public class PaymentReport {
+    public class PaymentReport
+    {
         public string CreateDate2 { get; set; }
         public string OrderDate2 { get; set; }
         public int PaymentID { get; set; }
@@ -518,11 +551,12 @@ public class DBModel {
         public string BankNumber { get; set; }
         public string AccountName { get; set; }
         public string BankCardName { get; set; }
-        
+
     }
 
 
-    public class PointBySearchFilter {
+    public class PointBySearchFilter
+    {
         public int ProcessStatus { get; set; }
         public decimal SumOrderAmount { get; set; }
         public decimal SumSuccessOrderAmount { get; set; }
@@ -533,7 +567,8 @@ public class DBModel {
 
     }
 
-    public class StatisticsPaymentAmount {
+    public class StatisticsPaymentAmount
+    {
         public int ProcessStatus { get; set; }
         public decimal SumSuccessAmount { get; set; }
         public decimal SumOrderAmount { get; set; }
@@ -545,7 +580,8 @@ public class DBModel {
 
     }
 
-    public class AgentReceive {
+    public class AgentReceive
+    {
         public int AgentReceiveID { get; set; }
         public string Currency { get; set; }
         public string ServiceType { get; set; }
@@ -568,7 +604,8 @@ public class DBModel {
 
     }
 
-    public class AgentClose {
+    public class AgentClose
+    {
         public int AgentCloseID { get; set; }
         public string Currency { get; set; }
         public DateTime StartDate { get; set; }
@@ -582,11 +619,13 @@ public class DBModel {
         public string CreateDate2 { get; set; }
     }
 
-    public class Currency {
+    public class Currency
+    {
         public string CurrencyType { get; set; }
     }
 
-    public class Permission {
+    public class Permission
+    {
         public string PermissionName { get; set; }
         public string Description { get; set; }
         public string LinkURL { get; set; }
@@ -597,7 +636,8 @@ public class DBModel {
 
     }
 
-    public class ServiceTypeModel {
+    public class ServiceTypeModel
+    {
         public string ServiceTypeName { get; set; }
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
@@ -608,7 +648,8 @@ public class DBModel {
 
     }
 
-    public class Provider {
+    public class Provider
+    {
         public string ProviderCode { get; set; }
         public string ProviderName { get; set; }
         public string Introducer { get; set; }
@@ -627,7 +668,8 @@ public class DBModel {
         public int WalletTimeoutSecond { get; set; }
     }
 
-    public class WithdrawLimit {
+    public class WithdrawLimit
+    {
         public string CurrencyType { get; set; }
         //0=Provider/1=Company/2=代付
         public string ServiceType { get; set; }
@@ -642,7 +684,8 @@ public class DBModel {
         public decimal Rate { get; set; }
     }
 
-    public class ProviderService {
+    public class ProviderService
+    {
         public string ProviderCode { get; set; }
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
@@ -659,7 +702,8 @@ public class DBModel {
 
 
 
-    public class ProxyProvider {
+    public class ProxyProvider
+    {
         public string forProviderCode { get; set; }
         public string ProviderCode { get; set; }
         public decimal Charge { get; set; }
@@ -671,7 +715,8 @@ public class DBModel {
 
     }
 
-    public class ProxyProviderOrder {
+    public class ProxyProviderOrder
+    {
         public int OrderID { get; set; }
         public string forOrderSerial { get; set; }
         public int Type { get; set; }
@@ -679,7 +724,8 @@ public class DBModel {
         public decimal WithdrawalCharge { get; set; }
     }
 
-    public class PermissionCategory {
+    public class PermissionCategory
+    {
         public int PermissionCategoryID { get; set; }
         public string PermissionCategoryName { get; set; }
         public int PageType { get; set; }
@@ -687,7 +733,8 @@ public class DBModel {
         public string Description { get; set; }
     }
 
-    public class GPayRelation {
+    public class GPayRelation
+    {
         public int forCompanyID { get; set; }
         public string ProviderCode { get; set; }
         public string ServiceType { get; set; }
@@ -696,7 +743,8 @@ public class DBModel {
         public int Weight { get; set; }
     }
 
-    public class CompanyService {
+    public class CompanyService
+    {
         public int CheckoutType { get; set; }
         public int forCompanyID { get; set; }
         public string ServiceType { get; set; }
@@ -711,7 +759,8 @@ public class DBModel {
         public decimal MaxDaliyAmountByUse { get; set; }
     }
 
-    public class CompanyPoint {
+    public class CompanyPoint
+    {
 
         public int forCompanyID { get; set; }
         public string CurrencyType { get; set; }
@@ -721,14 +770,16 @@ public class DBModel {
         public decimal InWithdrawProcessPoint { get; set; }
     }
 
-    public class CompanyServicePoint {
+    public class CompanyServicePoint
+    {
         public int CompanyID { get; set; }
         public string CurrencyType { get; set; }
         public string ServiceType { get; set; }
         public decimal SystemPointValue { get; set; }
     }
 
-    public class ProviderPoint {
+    public class ProviderPoint
+    {
         public string ProviderCode { get; set; }
         public string CurrencyType { get; set; }
         public string exMessage { get; set; }
@@ -738,7 +789,8 @@ public class DBModel {
         public decimal TotalProfitPointValue { get; set; }
     }
 
-    public class BankCodeTable {
+    public class BankCodeTable
+    {
         public string BankCode { get; set; }
         public string BankName { get; set; }
         public string ETHContractNumber { get; set; }
@@ -747,7 +799,8 @@ public class DBModel {
         public string CurrencyType { get; set; }
     }
 
-    public class BackendNotifyTable {
+    public class BackendNotifyTable
+    {
         public int BackendNotifyID { get; set; }
         public int forCompanyID { get; set; }
         public string CompanyName { get; set; }
@@ -757,7 +810,8 @@ public class DBModel {
         public int OpenByAdminID { get; set; }
     }
 
-    public class WithdrawalTotalAmountsByDate {
+    public class WithdrawalTotalAmountsByDate
+    {
         public int TotalCount { get; set; }
         public decimal Amount { get; set; }
         public string BankCard { get; set; }
@@ -766,13 +820,15 @@ public class DBModel {
     }
 
 
-    public class GetProviderWithdrawalByGroupAmount {
+    public class GetProviderWithdrawalByGroupAmount
+    {
         public int TotalCount { get; set; }
         public decimal TotalAmount { get; set; }
 
     }
 
-    public class returnWithdrawalV2 {
+    public class returnWithdrawalV2
+    {
         public List<WithdrawalV2> data { get; set; }
         public int draw { get; set; }
         public int recordsTotal { get; set; }
@@ -784,7 +840,8 @@ public class DBModel {
         public decimal TotalHandlingFee { get; set; }
     }
 
-    public class WithdrawalV2 : Withdrawal {
+    public class WithdrawalV2 : Withdrawal
+    {
         public int TotalCount { get; set; }
     }
 
@@ -794,7 +851,8 @@ public class DBModel {
         public decimal TotalHandlingFee { get; set; }
     }
 
-    public enum WithdrawResultStatus {
+    public enum WithdrawResultStatus
+    {
         Successs = 0,
         Failure = 1,
         WithdrawProgress = 2,
@@ -805,11 +863,13 @@ public class DBModel {
         //SystemFailure = 99
     }
 
-    public class GPayReturnByWithdraw {
+    public class GPayReturnByWithdraw
+    {
         public GPayRetunDataByWithdraw GPayRetunData { get; set; }
         public string RetunUrl { get; set; }
 
-        public void SetByWithdraw(Withdrawal withdrawal, WithdrawResultStatus withdrawalStatus) {
+        public void SetByWithdraw(Withdrawal withdrawal, WithdrawResultStatus withdrawalStatus)
+        {
             BackendDB backendDB = new BackendDB();
             CompanyWithKey companyModel = backendDB.GetCompanyWithKeyByCompanyID(withdrawal.forCompanyID);
 
@@ -828,7 +888,8 @@ public class DBModel {
 
         }
 
-        private string GetGPayWithdrawSign(string OrderID, decimal OrderAmount, DateTime OrderDateTime, string CurrencyType, string CompanyCode, string CompanyKey) {
+        private string GetGPayWithdrawSign(string OrderID, decimal OrderAmount, DateTime OrderDateTime, string CurrencyType, string CompanyCode, string CompanyKey)
+        {
             string sign;
             string signStr = "CompanyCode=" + CompanyCode;
             signStr += "&CurrencyType=" + CurrencyType;
@@ -842,7 +903,8 @@ public class DBModel {
         }
     }
 
-    public class GPayRetunDataByWithdraw {
+    public class GPayRetunDataByWithdraw
+    {
         public string WithdrawSerial { get; set; }
         public int WithdrawStatus { get; set; }
         public decimal OrderAmount { get; set; }
@@ -856,7 +918,8 @@ public class DBModel {
         public string Sign { get; set; }
     }
 
-    public class Withdrawal {
+    public class Withdrawal
+    {
         public int WithdrawID { get; set; }
         public int WithdrawType { get; set; }
         public string WithdrawSerial { get; set; }
@@ -918,7 +981,8 @@ public class DBModel {
         public decimal DownRate { get; set; }
     }
 
-    public class RiskControlWithdrawalTable {
+    public class RiskControlWithdrawalTable
+    {
         public int RiskControlWithdrawalID { get; set; }
         public string forCompanyCode { get; set; }
         public string CompanyName { get; set; }
@@ -929,7 +993,8 @@ public class DBModel {
         public string CreateDate2 { get; set; }
     }
 
-    public class WithdrawalTable {
+    public class WithdrawalTable
+    {
         public int forCompanyID { get; set; }
         public int WithdrawID { get; set; }
         public string CurrencyType { get; set; }
@@ -946,7 +1011,8 @@ public class DBModel {
 
     }
 
-        public class SummaryCompanyByDate {
+    public class SummaryCompanyByDate
+    {
         public string SummaryDate2 { get; set; }
         public int forCompanyID { get; set; }
         public string CurrencyType { get; set; }
@@ -1006,7 +1072,7 @@ public class DBModel {
         public decimal ChargeProfit { get; set; }
         public decimal CanUseValue { get; set; }
         public string CompanyName { get; set; }
-        
+
     }
 
 
@@ -1017,7 +1083,8 @@ public class DBModel {
         public int forCompanyID { get; set; }
     }
 
-    public class CompanyServicePointHistory {
+    public class CompanyServicePointHistory
+    {
         public string CreateDate2 { get; set; }
         public string ServiceTypeName { get; set; }
         public string ServiceType { get; set; }
@@ -1027,7 +1094,8 @@ public class DBModel {
         public string TransactionOrder { get; set; }
     }
 
-    public class CompanyServicePointLog {
+    public class CompanyServicePointLog
+    {
         public DateTime CreateDate { get; set; }
         public string CompanyName { get; set; }
         public string ServiceTypeName { get; set; }
@@ -1043,7 +1111,8 @@ public class DBModel {
     }
 
 
-    public class CompanyServiceAndProviderPointLog {
+    public class CompanyServiceAndProviderPointLog
+    {
         public DateTime CreateDate2 { get; set; }
         public string CompanyName2 { get; set; }
         public int CompanyID2 { get; set; }
@@ -1064,7 +1133,8 @@ public class DBModel {
         public decimal ProviderBeforeValue { get; set; }
     }
 
-    public class ProviderPointHistory {
+    public class ProviderPointHistory
+    {
         public string CreateDate2 { get; set; }
         public string ProviderName { get; set; }
         public decimal Value { get; set; }
@@ -1074,14 +1144,16 @@ public class DBModel {
     }
 
 
-    public class SummaryCompanyByDateChartData {
+    public class SummaryCompanyByDateChartData
+    {
         public decimal SummaryNetAmounts { get; set; }
         public int SummaryNetAmountPercent { get; set; }
         public string ServiceTypeName { get; set; }
         public string ServiceType { get; set; }
     }
 
-    public class CompanyPointHistory {
+    public class CompanyPointHistory
+    {
         public string CompanyPointHistoryID { get; set; }
         public int forCompanyID { get; set; }
         public string CurrencyType { get; set; }
@@ -1097,14 +1169,16 @@ public class DBModel {
         public string ServiceTypeName { get; set; }
     }
 
-    public class GoogleQrCode {
+    public class GoogleQrCode
+    {
         public string ImageUrl { get; set; }
         public string ManualEntryKey { get; set; }
         public string GoogleKey { get; set; }
         public bool IsCreated { get; set; }
     }
 
-    public class AdminOPLog {
+    public class AdminOPLog
+    {
         public string OperatingID { get; set; }
         public int forCompanyID { get; set; }
         public int forAdminID { get; set; }
@@ -1114,7 +1188,8 @@ public class DBModel {
         public DateTime CreateDate { get; set; }
     }
 
-    public class ProviderManualHistory {
+    public class ProviderManualHistory
+    {
         public int ProviderManualID { get; set; }
         public string ProviderCode { get; set; }
         public string ProviderName { get; set; }
@@ -1139,7 +1214,8 @@ public class DBModel {
         public string CompanyName { get; set; }
     }
 
-    public class CompanyManualHistory {
+    public class CompanyManualHistory
+    {
         public int CompanyManualID { get; set; }
         public string ServiceType { get; set; }
         public int forCompanyID { get; set; }
@@ -1157,7 +1233,8 @@ public class DBModel {
         public string ProviderCode { get; set; }
     }
 
-    public class FrozenPoint {
+    public class FrozenPoint
+    {
         public int FrozenID { get; set; }
         public int forPaymentID { get; set; }
         public string forPaymentSerial { get; set; }
@@ -1177,12 +1254,14 @@ public class DBModel {
         public decimal ActualProviderFrozenAmount { get; set; }
     }
 
-    public class ProxyProviderGroupFrozenPointHistory {
+    public class ProxyProviderGroupFrozenPointHistory
+    {
         public decimal FrozenAmount { get; set; }
         public string GroupName { get; set; }
     }
 
-    public class FrozenPointHistory {
+    public class FrozenPointHistory
+    {
         public int FrozenID { get; set; }
         public string forPaymentSerial { get; set; }
         public int forCompanyID { get; set; }
@@ -1202,12 +1281,13 @@ public class DBModel {
         public string ImageName { get; set; }
         public string BankCard { get; set; }
         public string BankCardName { get; set; }
-        public string BankName { get; set; }  
+        public string BankName { get; set; }
         public decimal ActualProviderFrozenAmount { get; set; }
 
     }
 
-    public class BlackList {
+    public class BlackList
+    {
         public int BlackListID { get; set; }
         public int forCompanyID { get; set; }
         public string BankCard { get; set; }
@@ -1218,7 +1298,8 @@ public class DBModel {
 
     }
 
-    public class RiskControlByPaymentSuccessCount {
+    public class RiskControlByPaymentSuccessCount
+    {
         public string UserIP { get; set; }
         public int Count { get; set; }
         public string StartDate { get; set; }
@@ -1226,7 +1307,8 @@ public class DBModel {
 
     }
 
-    public class ProviderOrderCount {
+    public class ProviderOrderCount
+    {
         public int PaymentCount { get; set; }
         public int WithdrawCount { get; set; }
         public int WithdrawCountByTimeEnd { get; set; }
@@ -1238,14 +1320,16 @@ public class DBModel {
 
 #region APIFromBody
 
-public class FromBody {
+public class FromBody
+{
 
     public class ProviderBankCardData : DBModel.ProviderBankCard
     {
         public string BID { get; set; }
     }
 
-    public class InsertServiceType {
+    public class InsertServiceType
+    {
         public string BID { get; set; }
         public string ServiceTypeName { get; set; }
         public string ServiceType { get; set; }
@@ -1255,7 +1339,8 @@ public class FromBody {
         public int ServiceSupplyType { get; set; }
         public int ServicePaymentType { get; set; }
     }
-    public class WithdrawalPostSet {
+    public class WithdrawalPostSet
+    {
         public string BID { get; set; }
         public int WithdrawID { get; set; }
         public string WithdrawSerial { get; set; }
@@ -1263,12 +1348,14 @@ public class FromBody {
         public bool isReSendWithdraw { get; set; }
     }
 
-    public class TransactionPostSet {
+    public class TransactionPostSet
+    {
         public string BID { get; set; }
         public string TransactionSerial { get; set; }
     }
 
-    public class CurrencyPostSet {
+    public class CurrencyPostSet
+    {
         public string BID { get; set; }
         public string Currency { get; set; }
     }
@@ -1282,17 +1369,20 @@ public class FromBody {
         public decimal DownFloatRate { get; set; }
     }
 
-    public class ProviderPostSet {
+    public class ProviderPostSet
+    {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
     }
 
-    public class SearchIPC {
+    public class SearchIPC
+    {
         public string BID { get; set; }
         public string IP { get; set; }
     }
 
-    public class Company : DBModel.Company {
+    public class Company : DBModel.Company
+    {
         public string BID { get; set; }
     }
 
@@ -1302,20 +1392,21 @@ public class FromBody {
         public string CurrencyType { get; set; }
     }
 
-    public class GetAllProviderPointBC 
+    public class GetAllProviderPointBC
     {
         public string BID { get; set; }
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
         public int CompanyID { get; set; }
     }
-    
 
-    public class ProviderService : DBModel.ProviderService {
+
+    public class ProviderService : DBModel.ProviderService
+    {
         public string BID { get; set; }
     }
 
-    public class SetPrePaidPoint 
+    public class SetPrePaidPoint
     {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
@@ -1323,57 +1414,70 @@ public class FromBody {
         public decimal Amount { get; set; }
     }
 
-    public class Provider : DBModel.Provider {
+    public class Provider : DBModel.Provider
+    {
         public string BID { get; set; }
     }
 
-    public class ProxyProvider : DBModel.ProxyProvider {
+    public class ProxyProvider : DBModel.ProxyProvider
+    {
         public string BID { get; set; }
     }
 
-    public class PermissionCategory : DBModel.PermissionCategory {
+    public class PermissionCategory : DBModel.PermissionCategory
+    {
         public string BID { get; set; }
     }
 
-    public class CompanyPoint : DBModel.CompanyPoint {
+    public class CompanyPoint : DBModel.CompanyPoint
+    {
         public string BID { get; set; }
     }
 
-    public class CompanyService : DBModel.CompanyService {
+    public class CompanyService : DBModel.CompanyService
+    {
         public string BID { get; set; }
     }
 
-    public class GPayRelation : DBModel.GPayRelation {
+    public class GPayRelation : DBModel.GPayRelation
+    {
         public string BID { get; set; }
     }
 
-    public class WithdrawLimit : DBModel.WithdrawLimit {
+    public class WithdrawLimit : DBModel.WithdrawLimit
+    {
         public string BID { get; set; }
     }
 
-    public class ProviderManualHistory : DBModel.ProviderManualHistory {
+    public class ProviderManualHistory : DBModel.ProviderManualHistory
+    {
         public string BID { get; set; }
     }
 
-    public class CompanyManualHistory : DBModel.CompanyManualHistory {
+    public class CompanyManualHistory : DBModel.CompanyManualHistory
+    {
         public string BID { get; set; }
     }
 
-    public class FrozenPoint : DBModel.FrozenPoint {
+    public class FrozenPoint : DBModel.FrozenPoint
+    {
         public string BID { get; set; }
         public bool BoolActualProviderFrozenAmount { get; set; }
     }
 
-    public class BlackList : DBModel.BlackList {
+    public class BlackList : DBModel.BlackList
+    {
         public string BID { get; set; }
     }
 
-    public class ThawPoint {
+    public class ThawPoint
+    {
         public string BID { get; set; }
         public int FrozenID { get; set; }
     }
 
-    public class GPayRelationSet {
+    public class GPayRelationSet
+    {
         public string BID { get; set; }
         public int forCompanyID { get; set; }
         public string ProviderCode { get; set; }
@@ -1384,7 +1488,8 @@ public class FromBody {
         public bool isAddRelation { get; set; }
     }
 
-    public class GetOffLineResultSet {
+    public class GetOffLineResultSet
+    {
         public string BID { get; set; }
         public DateTime Startdate { get; set; }
         public DateTime Enddate { get; set; }
@@ -1392,7 +1497,8 @@ public class FromBody {
         public string CompanyState { get; set; }
     }
 
-    public class Login {
+    public class Login
+    {
         public string LoginAccount { get; set; }
         public string Password { get; set; }
         public string CompanyCode { get; set; }
@@ -1400,7 +1506,8 @@ public class FromBody {
         public string Fingerprint { get; set; }
     }
 
-    public class SummaryProviderByDate {
+    public class SummaryProviderByDate
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1410,7 +1517,8 @@ public class FromBody {
         public int GroupID { get; set; }
     }
 
-    public class PaymentTable {
+    public class PaymentTable
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1424,7 +1532,8 @@ public class FromBody {
         public int OperatorType { get; set; }
     }
 
-    public class PaymentTransferLogSet {
+    public class PaymentTransferLogSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1434,7 +1543,8 @@ public class FromBody {
 
     }
 
-    public class DownOrderTransferLogSet {
+    public class DownOrderTransferLogSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1446,7 +1556,8 @@ public class FromBody {
     }
 
 
-    public class DownOrderTransferLogSetV2 : DownOrderTransferLogSet {
+    public class DownOrderTransferLogSetV2 : DownOrderTransferLogSet
+    {
         public int draw { get; set; }
         public int start { get; set; }
         public int length { get; set; }
@@ -1455,7 +1566,8 @@ public class FromBody {
         public JQueryDataTableSearch search { get; set; }
     }
 
-    public class GetPaymentForAdminV2 : GetPaymentForAdmin {
+    public class GetPaymentForAdminV2 : GetPaymentForAdmin
+    {
         public int draw { get; set; }
         public int start { get; set; }
         public int length { get; set; }
@@ -1465,17 +1577,20 @@ public class FromBody {
         public bool IsAutoLoad { get; set; }
     }
 
-    public class JQueryDataTableSearch {
+    public class JQueryDataTableSearch
+    {
         public string value { get; set; }
         public string regex { get; set; }
     }
 
-    public class JQueryDataTableOrder {
+    public class JQueryDataTableOrder
+    {
         public int column { get; set; }
         public string dir { get; set; }
     }
 
-    public class JQueryDataTableColumns {
+    public class JQueryDataTableColumns
+    {
         public string data { get; set; }
         public string name { get; set; }
         public string orderable { get; set; }
@@ -1483,7 +1598,8 @@ public class FromBody {
 
     }
 
-    public class GetPaymentForAdmin {
+    public class GetPaymentForAdmin
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1506,7 +1622,8 @@ public class FromBody {
         public List<int> PaymentIDs { get; set; }
     }
 
-    public class GetAbnormalPaymentSet {
+    public class GetAbnormalPaymentSet
+    {
         public string BID { get; set; }
         public string ProviderOrderID { get; set; }
         public string OrderID { get; set; }
@@ -1517,7 +1634,8 @@ public class FromBody {
         public string IP { get; set; }
     }
 
-    public class GetPayment {
+    public class GetPayment
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1527,13 +1645,15 @@ public class FromBody {
         public string OrderID { get; set; }
     }
 
-    public class RemoveGoogleQrCode {
+    public class RemoveGoogleQrCode
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
         public string Password { get; set; }
     }
 
-    public class PaymentSet {
+    public class PaymentSet
+    {
         public string BID { get; set; }
         public string PaymentSerial { get; set; }
         public decimal Amount { get; set; }
@@ -1548,10 +1668,12 @@ public class FromBody {
         public int GroupID { get; set; }
         public string Description { get; set; }
         public string UserKey { get; set; }
+        public string CurrencyType { get; set; }
         public decimal RealAmount { get; set; }
     }
 
-    public class AgentReceiveSet {
+    public class AgentReceiveSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1559,7 +1681,8 @@ public class FromBody {
         public string CurrencyType { get; set; }
     }
 
-    public class AgentReceiveCloseSet {
+    public class AgentReceiveCloseSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1570,17 +1693,20 @@ public class FromBody {
 
     }
 
-    public class GetAdminTableResult {
+    public class GetAdminTableResult
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
     }
 
-    public class GetAdminRoleTableResult {
+    public class GetAdminRoleTableResult
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
     }
 
-    public class GetWithdrawalIPTableResult {
+    public class GetWithdrawalIPTableResult
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
         public string WithdrawalIP { get; set; }
@@ -1590,7 +1716,8 @@ public class FromBody {
         public int ImageID { get; set; }
     }
 
-    public class SetFrozenPointImageResult {
+    public class SetFrozenPointImageResult
+    {
         public string BID { get; set; }
         public int FrozenID { get; set; }
         public string ImageName { get; set; }
@@ -1599,12 +1726,14 @@ public class FromBody {
         public int ImageID { get; set; }
     }
 
-    public class GetPermissionByAdminRoleID {
+    public class GetPermissionByAdminRoleID
+    {
         public string BID { get; set; }
         public int AdminRoleID { get; set; }
     }
 
-    public class InsertAdmin {
+    public class InsertAdmin
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
         public int AdminroleID { get; set; }
@@ -1618,7 +1747,8 @@ public class FromBody {
         public int GroupID { get; set; }
     }
 
-    public class ProxyProviderGroupSet {
+    public class ProxyProviderGroupSet
+    {
         public string BID { get; set; }
         public int GroupID { get; set; }
         public int State { get; set; }
@@ -1631,24 +1761,29 @@ public class FromBody {
 
     }
 
-    public class ChangeProviderGroupOrdersByAdmin {
+    public class ChangeProviderGroupOrdersByAdmin
+    {
         public string BID { get; set; }
         public List<string> Withdrawals { get; set; }
         public int GroupID { get; set; }
     }
 
-    public class ProxyProviderGroupWeightSet {
+    public class ProxyProviderGroupWeightSet
+    {
         public string BID { get; set; }
+        public string CurrencyType { get; set; }
         public List<DBModel.ProxyProviderGroup> GroupData { get; set; }
     }
 
-    public class UpdateLoginPassword {
+    public class UpdateLoginPassword
+    {
         public string BID { get; set; }
         public string Newpassword { get; set; }
         public string Password { get; set; }
     }
 
-    public class GetAdminOPLogResult {
+    public class GetAdminOPLogResult
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1656,7 +1791,8 @@ public class FromBody {
         public int Type { get; set; }
     }
 
-    public class GetProviderManualHistory {
+    public class GetProviderManualHistory
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1674,7 +1810,8 @@ public class FromBody {
         public string WhiteListID { get; set; }
     }
 
-    public class GetFrozenPointHistory {
+    public class GetFrozenPointHistory
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1685,7 +1822,8 @@ public class FromBody {
         public int GroupID { get; set; }
     }
 
-    public class GetBlackList {
+    public class GetBlackList
+    {
         public string BID { get; set; }
         public int BlackListID { get; set; }
         public string UserIP { get; set; }
@@ -1694,7 +1832,8 @@ public class FromBody {
         public string BankCardName { get; set; }
     }
 
-    public class GetCompanyManualHistory {
+    public class GetCompanyManualHistory
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1702,7 +1841,8 @@ public class FromBody {
         public string ServiceType { get; set; }
     }
 
-    public class SummaryCompanyByDateResultByCurrencyTypeSet {
+    public class SummaryCompanyByDateResultByCurrencyTypeSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1712,7 +1852,8 @@ public class FromBody {
 
     }
 
-    public class PermissionSet {
+    public class PermissionSet
+    {
         public string BID { get; set; }
         public string PermissionName { get; set; }
         public int AdminPermission { get; set; } //0:一般權限/1:管理者權限
@@ -1723,13 +1864,15 @@ public class FromBody {
         public List<string> PermissionRoles { get; set; }
     }
 
-    public class GoogleKeySet {
+    public class GoogleKeySet
+    {
         public string BID { get; set; }
         public string UserKey { get; set; }
         public string GoogleKey { get; set; }
     }
 
-    public class GoogleKeySetByAdmin {
+    public class GoogleKeySetByAdmin
+    {
         public string BID { get; set; }
         public string UserKey { get; set; }
         public string GoogleKey { get; set; }
@@ -1743,7 +1886,8 @@ public class FromBody {
         public string SettingValue { get; set; }
     }
 
-    public class CompanyServiceSet {
+    public class CompanyServiceSet
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
         public string ServiceType { get; set; }
@@ -1760,20 +1904,23 @@ public class FromBody {
         public List<ProviderCodeAndWeight> ProviderCodeAndWeight { get; set; }
     }
 
-    public class ProviderCodeAndWeight {
+    public class ProviderCodeAndWeight
+    {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
         public int Weight { get; set; }
     }
 
-    public class DeleteProviderService {
+    public class DeleteProviderService
+    {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
     }
 
-    public class GPayWithdrawRelationSet {
+    public class GPayWithdrawRelationSet
+    {
         public string BID { get; set; }
         public int CompanyID { get; set; }
         public decimal Charge { get; set; }
@@ -1784,7 +1931,8 @@ public class FromBody {
         public List<ProviderCodeAndWeight> ProviderCodeAndWeight { get; set; }
     }
 
-    public class GetProviderPointHistorySet {
+    public class GetProviderPointHistorySet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1794,7 +1942,8 @@ public class FromBody {
     }
 
 
-    public class BankCodeSet {
+    public class BankCodeSet
+    {
         public string BID { get; set; }
         public string BankCode { get; set; }
         public string BankName { get; set; }
@@ -1804,7 +1953,8 @@ public class FromBody {
         public string CurrencyType { get; set; }
     }
 
-    public class WithdrawalSetV2 : WithdrawalSet {
+    public class WithdrawalSetV2 : WithdrawalSet
+    {
         public int draw { get; set; }
         public int start { get; set; }
         public int length { get; set; }
@@ -1815,7 +1965,8 @@ public class FromBody {
         public bool IsSearchWaitReview { get; set; }
     }
 
-    public class WithdrawalSet {
+    public class WithdrawalSet
+    {
         public string BID { get; set; }
         //流程狀態，0=建立/1=進行中/2=成功/3=失敗/99=全部資料
         public int Status { get; set; }
@@ -1837,7 +1988,8 @@ public class FromBody {
         public string TimeType { get; set; }
     }
 
-    public class WithdrawalReportSet {
+    public class WithdrawalReportSet
+    {
         public string BID { get; set; }
         public List<int> Status { get; set; }
         public DateTime StartDate { get; set; }
@@ -1849,13 +2001,15 @@ public class FromBody {
 
     }
 
-    public class RemoveAllWithdrawal {
+    public class RemoveAllWithdrawal
+    {
         public string BID { get; set; }
         //流程狀態，0=建立/1=進行中/2=成功/3=失敗/99=全部資料
         public List<int> WithdrawIDs { get; set; }
     }
 
-    public class SummaryCompanyByDateSet {
+    public class SummaryCompanyByDateSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1863,7 +2017,8 @@ public class FromBody {
         public string CurrencyType { get; set; }
     }
 
-    public class CompanyPointHistoryeSet {
+    public class CompanyPointHistoryeSet
+    {
         public string BID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -1873,7 +2028,8 @@ public class FromBody {
     }
 
 
-    public class BankCardSet {
+    public class BankCardSet
+    {
         public string BID { get; set; }
         public string BankCode { get; set; }
         public int forCompanyID { get; set; }
@@ -1892,7 +2048,8 @@ public class FromBody {
         public int forCompanyID { get; set; }
     }
 
-    public class InsertAdminRole {
+    public class InsertAdminRole
+    {
         public string BID { get; set; }
         public string RoleName { get; set; }
         public List<string> AdminPermission { get; set; }
@@ -1900,7 +2057,8 @@ public class FromBody {
         public int CompanyID { get; set; }
     }
 
-    public class UpdateAdminRole {
+    public class UpdateAdminRole
+    {
         public string BID { get; set; }
         public string RoleName { get; set; }
         public List<string> AdminPermission { get; set; }
@@ -1909,25 +2067,29 @@ public class FromBody {
         public int AdminRoleID { get; set; }
     }
 
-    public class WithdrawalCreate {
+    public class WithdrawalCreate
+    {
         public string BID { get; set; }
         public List<DBModel.Withdrawal> WithdrawalData { get; set; }
         public string UserKey { get; set; }
     }
 
-    public class AdjustProviderPointSet {
+    public class AdjustProviderPointSet
+    {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
         public decimal Amount { get; set; }
         public string WithdrawSerial { get; set; }
     }
 
-    public class WithdrawalUpdate {
+    public class WithdrawalUpdate
+    {
         public string BID { get; set; }
         public DBModel.Withdrawal WithdrawalData { get; set; }
     }
 
-    public class UpdateProviderAPIType {
+    public class UpdateProviderAPIType
+    {
         public string BID { get; set; }
         public string ProviderCode { get; set; }
         public int setAPIType { get; set; }
@@ -1940,45 +2102,53 @@ public class FromBody {
 
 #region DBViewModel
 
-public class DBViewModel {
+public class DBViewModel
+{
 
 
-    public class ProviderWithdrawalOrderCount {
+    public class ProviderWithdrawalOrderCount
+    {
         public int TotalCount { get; set; }
         public int TotalCountTimeEnd { get; set; }
     }
 
-    public class LayoutLeftSideBarResult : DBModel.Permission {
+    public class LayoutLeftSideBarResult : DBModel.Permission
+    {
         public string CategoryDescription { get; set; }
         public string PermissionCategoryName { get; set; }
 
     }
 
-    public class InsertCompanyReturn {
+    public class InsertCompanyReturn
+    {
         public int CompanyID { get; set; }
         public string CompanyKey { get; set; }
     }
 
-    public class CompanyServiceRelation {
+    public class CompanyServiceRelation
+    {
         public string CompanyName { get; set; }
         public int CompanyID { get; set; }
         public int isSelected { get; set; } // 0=未选取/1=已选取
     }
 
-    public class IPCounty {
+    public class IPCounty
+    {
         public string IP { get; set; }
         public string Country { get; set; }
         public string Region { get; set; }
         public string City { get; set; }
     }
 
-    public class PaymentRow_NunberID {
+    public class PaymentRow_NunberID
+    {
         public int ROWID { get; set; }
         public DateTime CreateDate { get; set; }
 
     }
 
-    public class OffLineCompany {
+    public class OffLineCompany
+    {
         public int CompanyID { get; set; }
         public int CompanyState { get; set; }
         public string ParentCompanyCode { get; set; }
@@ -1988,24 +2158,28 @@ public class DBViewModel {
         public string MerchantCode { get; set; }
     }
 
-    public class AdminRolePermission : DBModel.Permission {
+    public class AdminRolePermission : DBModel.Permission
+    {
         public Boolean selectedPermission { get; set; }
     }
 
-    public class ApiWithdrawLimit : DBModel.WithdrawLimit {
+    public class ApiWithdrawLimit : DBModel.WithdrawLimit
+    {
         public bool selectedWithdrawLimit { get; set; }
         public string ProviderName { get; set; }
         public int Weight { get; set; }
         public int WithdrawType { get; set; }
     }
 
-    public class AdminTableResult : DBModel.Admin {
+    public class AdminTableResult : DBModel.Admin
+    {
         public string RoleName { get; set; }
         public string CreateDate2 { get; set; }
         public string GroupName { get; set; }
     }
 
-    public class CompanyServiceTableResult : DBModel.CompanyService {
+    public class CompanyServiceTableResult : DBModel.CompanyService
+    {
         public string RoleName { get; set; }
         public string CreateDate2 { get; set; }
         public string ServiceTypeName { get; set; }
@@ -2015,7 +2189,8 @@ public class DBViewModel {
     }
 
 
-    public class TestPageCompanyService {
+    public class TestPageCompanyService
+    {
         public string ServiceTypeName { get; set; }
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
@@ -2029,11 +2204,13 @@ public class DBViewModel {
     }
 
 
-    public class AdminRolePermissionResult : DBModel.AdminRole {
+    public class AdminRolePermissionResult : DBModel.AdminRole
+    {
         public bool selectedAdminRole { get; set; }
     }
 
-    public class CompanyPointVM : DBModel.CompanyPoint {
+    public class CompanyPointVM : DBModel.CompanyPoint
+    {
         public string CompanyName { get; set; }
         public decimal LockPointValue { get; set; }
         public decimal AutoWithdrawAmount { get; set; }
@@ -2043,14 +2220,16 @@ public class DBViewModel {
         public int CompanyCount { get; set; }
     }
 
-    public class AgentReceiveVM : DBModel.Permission {
+    public class AgentReceiveVM : DBModel.Permission
+    {
         public decimal UnCloseAmount { get; set; }
         public decimal CloseAmount { get; set; }
         public decimal AgentAmount { get; set; }
         public decimal OrderAmount { get; set; }
     }
 
-    public class ProviderPointVM : DBModel.ProviderPoint {
+    public class ProviderPointVM : DBModel.ProviderPoint
+    {
         public string ProviderName { get; set; }
         public int ProviderAPIType { get; set; }
         public decimal ProviderFrozenAmount { get; set; }
@@ -2061,7 +2240,8 @@ public class DBViewModel {
         public decimal PrePaidPoint { get; set; }
     }
 
-    public class CompanyServicePointVM : DBModel.CompanyServicePoint {
+    public class CompanyServicePointVM : DBModel.CompanyServicePoint
+    {
         public string CompanyName { get; set; }
         public string ServiceTypeName { get; set; }
         public decimal MaxLimit { get; set; }
@@ -2076,32 +2256,37 @@ public class DBViewModel {
         public decimal Rate { get; set; }
     }
 
-    public class SummaryCompanyByDateVM : DBModel.SummaryCompanyByDate {
+    public class SummaryCompanyByDateVM : DBModel.SummaryCompanyByDate
+    {
         public int CheckoutType { get; set; }
 
     }
 
-    public class GPayRelationResult : DBModel.GPayRelation {
+    public class GPayRelationResult : DBModel.GPayRelation
+    {
 
         public string ServiceTypeName { get; set; }
         public string CompanyName { get; set; }
     }
 
-    public class GPayWithdrawRelation : DBModel.WithdrawLimit {
+    public class GPayWithdrawRelation : DBModel.WithdrawLimit
+    {
         public string ProviderName { get; set; }
         public int Weight { get; set; }
         public int WithdrawType { get; set; }
 
     }
 
-    public class ProviderServiceVM : DBModel.ProviderService {
+    public class ProviderServiceVM : DBModel.ProviderService
+    {
         public string ServiceTypeName { get; set; }
         public bool selectedProviderService { get; set; }
         public string ProviderName { get; set; }
         public int Weight { get; set; }
     }
 
-    public class ServiceTypeVM : DBModel.ServiceTypeModel {
+    public class ServiceTypeVM : DBModel.ServiceTypeModel
+    {
         public int isUpLine { get; set; } // 是否為最上線 0 :否 1: 是
         public decimal CollectRate { get; set; }
         public decimal CollectCharge { get; set; }
@@ -2111,7 +2296,8 @@ public class DBViewModel {
 
     }
 
-    public class ProviderServiceTypeVM : DBModel.ServiceTypeModel {
+    public class ProviderServiceTypeVM : DBModel.ServiceTypeModel
+    {
         public int isUpLine { get; set; } // 是否為最上線 0 :否 1: 是
         public decimal CollectRate { get; set; }
         public decimal CollectCharge { get; set; }
@@ -2122,11 +2308,13 @@ public class DBViewModel {
     }
 
 
-    public class BankCardVM : FromBody.BankCardSet {
+    public class BankCardVM : FromBody.BankCardSet
+    {
         public string BankName { get; set; }
     }
 
-    public class WithdrawalVM : DBModel.WithdrawalTable {
+    public class WithdrawalVM : DBModel.WithdrawalTable
+    {
         public string CompanyName { get; set; }
         public string BankName { get; set; }
         public string WithdrawDate2 { get; set; }
@@ -2139,7 +2327,8 @@ public class DBViewModel {
 
     }
 
-    public class UpdateWithdrawalResult {
+    public class UpdateWithdrawalResult
+    {
         public int Status { get; set; }
         public string Message { get; set; }
         public decimal PaymentAmount { get; set; }
@@ -2147,14 +2336,16 @@ public class DBViewModel {
 
     }
 
-    public class UpdatePatmentResult {
+    public class UpdatePatmentResult
+    {
         public int Status { get; set; }
         public string Message { get; set; }
         public DBModel.PaymentReport PaymentData { get; set; }
 
     }
 
-    public class ProviderPointHistory {
+    public class ProviderPointHistory
+    {
         public string CreateDate2 { get; set; }
         public decimal Value { get; set; }
         public decimal BeforeValue { get; set; }
@@ -2165,7 +2356,8 @@ public class DBViewModel {
     }
 
 
-    public class ProxyProviderPointHistory {
+    public class ProxyProviderPointHistory
+    {
         public string CreateDate2 { get; set; }
         public decimal Value { get; set; }
         public decimal BeforeValue { get; set; }
@@ -2177,7 +2369,8 @@ public class DBViewModel {
         public string GroupName { get; set; }
     }
 
-    public class ProviderListResult {
+    public class ProviderListResult
+    {
         public string ProviderCode { get; set; }
         public string ProviderName { get; set; }
         public int ProviderAPIType { get; set; }
@@ -2191,7 +2384,8 @@ public class DBViewModel {
         public List<ProviderListPoint> ProviderListFrozenPoints { get; set; }
     }
 
-    public class ServiceData {
+    public class ServiceData
+    {
         public string ServiceTypeName { get; set; }
         public decimal MaxDaliyAmount { get; set; }
         public decimal MaxOnceAmount { get; set; }
@@ -2205,24 +2399,28 @@ public class DBViewModel {
         public int State { get; set; }
     }
 
-    public class ProviderListPoint {
+    public class ProviderListPoint
+    {
         public string CurrencyType { get; set; }
         public decimal SystemPointValue { get; set; }
     }
 
-    public class AllProviderTotal {
+    public class AllProviderTotal
+    {
         public int Count { get; set; }
         public decimal Total { get; set; }
         public decimal FrozenTotal { get; set; }
 
     }
 
-    public class AdminOPLogVM : DBModel.AdminOPLog {
+    public class AdminOPLogVM : DBModel.AdminOPLog
+    {
         public string LoginAccount { get; set; }
         public string CreateDate2 { get; set; }
     }
 
-    public class AdminWithKey : DBModel.Admin {
+    public class AdminWithKey : DBModel.Admin
+    {
         public string GoogleKey { get; set; }
     }
 

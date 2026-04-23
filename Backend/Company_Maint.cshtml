@@ -2,7 +2,6 @@
     var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
     var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
-    string CompanyCurrency = Pay.CurrencyType;
 
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
@@ -1238,7 +1237,7 @@
         var selectCurrencyType;
         var tempCompanyPoint = null;
     var CompanyServicePointTable;
-    var CompanyCurrency = "@CompanyCurrency";
+    var seleCurrency = parent.API_GetSelectCurrency();
 
         $(document).ready(function () {
             if ('@CheckPermission' == 'false') {
@@ -1268,12 +1267,12 @@
                 $('#btnCompanyCreate').hide();
                 $('#btnCompanyServiceAdd').hide();
                 $('#btnCompanyServiceDisable').hide();
-                
+
                 $('.hideDiv2').hide();
             } else {
-                $('#btnCompanyEditWithdrawal').hide(); 
+                $('#btnCompanyEditWithdrawal').hide();
             }
-           
+
             createCompanyServicePointTable();
             createCompanyTree();
             //ShowAllCompanyPoint();
@@ -1320,7 +1319,7 @@
             });
             //停用
             $("#btnCompanyDisable").on("click", function () {
-    
+
                 if ($('#select_company').val() == 0) {
                     swal({
                         title: "请选择一间商户",
@@ -1441,8 +1440,8 @@
 
                 var targetData = CompanyServiceTable.row(".selected").data();
 
-                
-                if (CompanyServiceTable.row(".selected").data() != undefined) {  
+
+                if (CompanyServiceTable.row(".selected").data() != undefined) {
                     var companyServiceData = CompanyServiceTable.row(".selected").data();
                     api.getGPayRelationResult(companyServiceData.forCompanyID, companyServiceData.ServiceType, companyServiceData.CurrencyType, function (s, obj) {
                         if (obj.ResultCode == 0) {
@@ -1462,7 +1461,7 @@
                                 html: true,
                                 confirmButtonText: "确认"
                             });
-                          
+
                         } else {
                             var message = ""
                             switch (obj.ResultCode) {
@@ -1593,7 +1592,7 @@
                     parent.CreateSessionStorage("CompanyWithdrawRelationUpdate", CompanyWithdrawRelationTable.row(".selected").data(), `商户自动代付修改(${CSeleData[0].CompanyName})`, "CompanyWithdrawRelation_Update.cshtml", backID, "CompanyWithdrawRelation_Update_" + CompanyWithdrawRelationTable.row(".selected").data().CompanyName + "_" + CompanyWithdrawRelationTable.row(".selected").data().CompanyID);
                 }
             })
- 
+
     }
 
         function btnUpdateAllCompany() {
@@ -1649,9 +1648,9 @@
         //#region 建立左邊商戶tree
         function createCompanyTree() {
             api.getCompanyTableResult2(function (success, obj) {
-                if (obj.ResultCode == 0) {          
+                if (obj.ResultCode == 0) {
                     CData = obj.CompanyResults;
-                 
+
                     //一般代理商與其他權限顯示的東西不同
                     if (AdminObject.CompanyType == 1) {
 
@@ -1693,11 +1692,11 @@
                 }
             });
     }
-   
+
         function CreateCtable(sortData, showName, dataId, parentId) {
-  
+
             sortData = sortData.sort(function (a, b) {
- 
+
                 if (a.SortKey > b.SortKey) {
                     return 1;
                 } else if (a.SortKey < b.SortKey) {
@@ -1769,9 +1768,9 @@
                 $('#select_company').selectpicker('refresh');
             }
 
-        
+
             parent.wrapperFadeOut();
-         
+
             //確認是否從新增或修改頁面完成後進入,如果是的話找出剛剛修改後的供應商資料
             if (window.sessionStorage["TempData"]) {
                 var tempData = JSON.parse(window.sessionStorage["TempData"]);
@@ -1788,27 +1787,27 @@
                     $('#select_company').selectpicker('refresh');
                     ShowCompanyService();
                 }
-            } 
-      
+            }
+
             //for (var i = 0; i < sortData.length; i++) {
             //    var setData = sortData[i];
             //    var parentli = $('#dd-item_' + setData.ParentCompanyID);
             //    var icon;
             //    var childcount;
-                
+
             //    if (setData.CompanyType == 2) {
             //        icon = '<i class="material-icons" style="vertical-align:middle;font-size: 20px;">person</i>';
             //    } else {
             //        //icon = '<i class="material-icons" style="vertical-align:middle;font-size: 20px;">people</i>';
             //        icon = '';
             //    }
-               
+
             //    if (setData.ChildCompanyCount != 0) {
             //        childcount = ' ' + '(' + setData.ChildCompanyCount + ")";
             //    } else {
             //        childcount = '';
             //    }
-              
+
             //    if (parentli.length > 0) {
             //        if (parentli.children('.dd-list').length == 0) {
             //            parentli.append('<ol class="dd-list"><li class="dd-item" id="dd-item_' + setData.CompanyID+'" data-id="' + setData.CompanyID + '" ><div class="dd-handle" style="line-height:20px">' + icon + "<span>" + setData.CompanyName + '</span><span>' + childcount + '</span></div></li></ol>');
@@ -1822,9 +1821,9 @@
             //            $('.CompanyTree2 > .dd-list').append('<li class="dd-item" id="dd-item_' + setData.CompanyID +'" data-id="' + setData.CompanyID + '" ><div class="dd-handle" style="line-height:20px">' + icon + "<span>" + setData.CompanyName + '</span><span>' + childcount + '</span></div></li>')
             //        }
 
-            //    }  
+            //    }
             //}
-  
+
             //$('.divCompanyTree').nestable({ updateTree: true, allowDrag: false });
             //parent.wrapperFadeOut();
             //console.timeEnd("divCompanyTree");
@@ -1836,14 +1835,14 @@
             //        seleCompanyid = tempData.data;
             //        $('#divtree').find('li[data-id="' + seleCompanyid + '"]>div').addClass('selectedItem');
             //        ShowCompanyService();
-             
+
             //    } else {
             //        seleCompanyid = sortData[0][dataId];
             //        $('#divtree').find('li[data-id="' + seleCompanyid + '"]>div').addClass('selectedItem');
-            //        ShowCompanyService();            
+            //        ShowCompanyService();
             //    }
             //} else {
-              
+
             //}
 
             //$('.divCompanyTree .dd-handle').on('click', function () {
@@ -1860,7 +1859,7 @@
 
             //        event.stopPropagation();
             //        ShowCompanyService();
-                 
+
             //    }
 
             //});
@@ -1873,9 +1872,9 @@
             //    $('.divCompanyTree').nestable('collapseAll');
             //});
     }
-   
+
         //#endregion
-        
+
     $('#select_company').change(function () {
         if ($(this).val() == 0) {
             parent.warningAlert("尚未选择商户");
@@ -1885,13 +1884,13 @@
             event.stopPropagation();
             ShowCompanyService();
         }
-       
+
     })
 
         //#region 商戶餘額資料
 
     function ShowAllCompanyPoint() {
-            api.getCompanyPointTableResult(0, function (s, o) {
+        api.getCompanyPointTableResult(0, seleCurrency,function (s, o) {
                 if (s) {
                     if (o.ResultCode == 0) {
                         let canUsePoint = o.CompanyPoints[0].PointValue - o.CompanyPoints[0].LockPointValue - o.CompanyPoints[0].FrozenPoint;
@@ -1961,7 +1960,7 @@
             $('#btnSaveUnlockCompanyKey').hide();
             $('#btnUnlockCompanyKey').show();
             $('#btnUnlockCompanyKey').val('');
-            $('#pCompanyKey').text(''); 
+            $('#pCompanyKey').text('');
 
             $('#b_WithdrawAPITypeStr').text(checkedWithdrawAPIType(CSeleData[0].WithdrawAPIType));
             if (CSeleData[0].BackendLoginIPType == 0) {
@@ -1980,7 +1979,7 @@
                 $('#pBackendWithdrawIPType').css('color', 'red');
             }
 
-            
+
 
             if (CSeleData[0].BackendWithdrawType == 0) {
                 $('#pBackendWithdrawType').text('是');
@@ -2026,7 +2025,7 @@
             if ((numProviderAPIType & 2) == 2) {
                 b_ProviderAPITypeStr += "API代付,"
             }
-     
+
             if (b_ProviderAPITypeStr.length > 0) {
                 b_ProviderAPITypeStr = b_ProviderAPITypeStr.substring(0, b_ProviderAPITypeStr.length - 1);
             }
@@ -2041,14 +2040,14 @@
             $("#divCompanyPointDetail").empty();
             let strCompanyPointDetail = "";
 
-            api.getCompanyPointTableResult(seleCompanyid, function (s, o) {
+            api.getCompanyPointTableResult(seleCompanyid, seleCurrency,function (s, o) {
                 if (s) {
                     if (o.ResultCode == 0) {
                         tempCompanyPoint = o.CompanyPoints;
 
                         $.each(o.CompanyPoints, function (i, item) {
 
-                            if (o.CompanyPoints[i].CurrencyType == CompanyCurrency) {
+                            if (o.CompanyPoints[i].CurrencyType == seleCurrency) {
                                 var canUsePoint = o.CompanyPoints[i].PointValue - o.CompanyPoints[i].LockPointValue - o.CompanyPoints[i].FrozenPoint;
 
                                 strCompanyPointDetail += '<strong style="font-size:18px" class="text-muted">帐户金额： ' + toCurrency(o.CompanyPoints[i].PointValue) + ', 可用金额 : ' + toCurrency(canUsePoint) + ', 不可用金额 : ' + toCurrency(o.CompanyPoints[i].LockPointValue) + ', </br>冻结金额 : ' + toCurrency(o.CompanyPoints[i].FrozenPoint) + '代付余额 : ' + toCurrency(o.CompanyPoints[i].AutoWithdrawAmount) + '</strong > ';
@@ -2115,7 +2114,7 @@
         //#region 商戶渠道
     function ShowCompanyService() {
         api.getCompanyAllServiceDetailData(seleCompanyid, function (success, obj) {
-            if (success) {         
+            if (success) {
                 parent.wrapperFadeOut();
                 if (obj.ResultCode == 0) {
                     //自动代付設定
@@ -2136,7 +2135,7 @@
                         CompanyServiceTable.clear().draw();
                     }
 
-                    if (obj.CompanyServiceResults != null) {                     
+                    if (obj.CompanyServiceResults != null) {
                         if (!isCreatedTable) {
                             isCreatedTable = true;
                             createCompanyServiceTable(obj.CompanyServiceResults);
@@ -2144,7 +2143,7 @@
                             CompanyServiceTable.rows.add(obj.CompanyServiceResults).draw();
                         }
                     }
-                    
+
                     //下发限额
                     if (isCreatedWithdrawLimitTable) {
                         WithdrawLimitTable.clear().draw();
@@ -2157,7 +2156,7 @@
 
                         } else {
                             WithdrawLimitTable.rows.add(obj.WithdrawLimits).draw();
-                        }       
+                        }
                     }
                 }
                 else {
@@ -2441,12 +2440,12 @@
     //        }
     //    });
     //});
-    
+
     //$('#btnUnlockCompanyKey').click(function () {
     //    $('#inputUnlockCompanyKey').show();
     //    $('#btnSaveUnlockCompanyKey').show();
     //    $('#btnUnlockCompanyKey').hide();
-        
+
     //});
 
     //$('#btnSaveUnlockCompanyKey').click(function () {
@@ -2458,7 +2457,7 @@
 
     //    api.getCompanyKey(seleCompanyid, password, function (success, obj) {
     //        if (obj.ResultCode == 0) {
-    //            $('#pCompanyKey').text(obj.Message); 
+    //            $('#pCompanyKey').text(obj.Message);
     //            $('#inputUnlockCompanyKey').val('');
     //            $('#inputUnlockCompanyKey').hide();
     //            $('#btnSaveUnlockCompanyKey').hide();
