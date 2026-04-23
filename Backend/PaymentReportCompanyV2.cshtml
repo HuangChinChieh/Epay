@@ -967,6 +967,12 @@
                             <span style="z-index:500;">
                                 <select class="show-tick" id="select_providercode" data-live-search="true"></select>
                             </span>
+
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 幣別 : </h6>
+                            <div class="row" style="margin-bottom: 10px;width: 100px;">
+                                <select id="selectCurrencyType" class="form-select form-select-sm">
+                                </select>
+                            </div>
                         </div>
                         <label style="color:red;margin-left:10px;margin-top: 5px;"> ( 订单号多笔查询请用 "," 分隔 ex:PT001,PT002 ) </label>
                         <div id="searchfield" class="row">
@@ -1192,6 +1198,42 @@ if ('@CheckLoginPermission' == 'false') {
                             </div>
                             </div>`;
         $('body').append(paymentRecordTable);
+
+        api.getCurrency(function (success, obj) {
+            if (success) {
+                $("#selectCurrencyType").empty();
+                if (obj.ResultCode == 0) {
+                    var datas = obj.Currencies;
+                    $.each(datas, function (i, v) {
+                        if (i == 0) {
+                            $("#selectCurrencyType").append('<option data-value="All">全部</option>');
+                            $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        } else {
+                            $("#selectCurrencyType").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        }
+                    })
+                } else {
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            parent.warningAlert("没有资料");
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+                $('#selectCurrencyType').selectpicker('refresh');
+            }
+        });
 
         parent.wrapperFadeOut();
     };
@@ -1444,7 +1486,7 @@ if ('@CheckLoginPermission' == 'false') {
                              d.StartDate = dateinputval[0];
                              d.EndDate = dateinputval[1] + ":59.999";
                              d.IsAutoLoad = IsAutoLoad;
-                             d.CurrencyType = seleCurrency;
+                             d.CurrencyType = $("#selectCurrencyType option:selected").attr("data-value");
                             
                              d.OrderID = $('#input_OrderID').val().trim();
                              d.SubmitType = $('#select_submitType').val();

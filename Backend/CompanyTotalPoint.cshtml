@@ -1059,6 +1059,7 @@
             data: data,
             columns: [
                 { "title": "商户", "data": "CompanyName" },
+                { "title": "幣別", "data": "CurrencyType" },
                 {
                     "title": "帐户金额", "data": "PointValue",
                     "render": function (data, display, rowdata) {
@@ -1100,7 +1101,7 @@
     function getCompanyTotalPointTableResult() {
         var companyID = $('#select_Company').val();
         parent.wrapperFadeIn();
-        api.getCompanyPointTableResult(companyID, seleCurrency, function (success, obj) {
+        api.getCompanyPointTableResult(companyID, parent.API_GetSelectCurrency(), function (success, obj) {
             if (success) {
                 parent.wrapperFadeOut();
                 if (obj.ResultCode == 0) {
