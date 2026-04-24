@@ -1,10 +1,10 @@
 ﻿@{
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
 
     string CheckPermission = "success";
 
     string PermissionName = Request.Path.Split('/').Last().Split('.').First();
-    var result = bc.CheckPermission(BID,PermissionName);
+    var result = bc.CheckPermission(BID, PermissionName);
 
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
@@ -26,7 +26,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -959,6 +959,11 @@
                             <span style="z-index:500;">
                                 <select class="show-tick" id="select_Company" data-live-search="true"></select>
                             </span>
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 幣別 : </h6>
+                            <div class="row" style="margin-bottom: 10px;width: 100px;">
+                                <select id="selectCurrencyType1" class="form-select form-select-sm">
+                                </select>
+                            </div>
                             <button style="margin-left:5px;" class="btn btn-raised btn-primary btn-round waves-effect" type="button" id="btnSearch">搜寻</button>
                         </div>
                         <div class="row" style="background-color:#66FFFF;line-height: 30px;">
@@ -967,8 +972,8 @@
                             <span style="font-weight:900;color:#0000AA;font-size:15px;margin-left:5px"> 总商户不可用金额 : </span><span style="font-size:15px;margin-left:5px" id="count3"></span>
                             <span style="font-weight:900;color:#0000AA;font-size:15px;margin-left:5px"> 总商户冻结金额 : </span><span style="font-size:15px;margin-left:5px" id="count4"></span>
                             @*<button id="btnProviderRefresh" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right">*@
-                            <i onclick="getCompanyTotalPointTableResult()" style="margin-top:6px;margin-left:8px;"  class="zmdi zmdi-refresh"></i>
-                   
+                            <i onclick="getCompanyTotalPointTableResult()" style="margin-top:6px;margin-left:8px;" class="zmdi zmdi-refresh"></i>
+
                         </div>
                         <div id="div_table_CompanyTotalPointTable">
                             <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap" id="table_CompanyTotalPointTable"></table>
@@ -1010,8 +1015,42 @@
         api = parent.api;
         CompanyID = AdminObject.forCompanyID;
 
+        api.getCurrency(function (success, obj) {
+            if (success) {
+                $("#selectCurrencyType1").empty();
+                if (obj.ResultCode == 0) {
+                    var datas = obj.Currencies;
+                    $.each(datas, function (i, v) {
+                        if (i == 0) {
+                            $("#selectCurrencyType1").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        } else {
+                            $("#selectCurrencyType1").append('<option data-value="' + v.CurrencyType + '">' + v.CurrencyType + '</option>');
+                        }
+                    })
 
-        createCompanySelect();
+                    createCompanySelect();
+                } else {
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            parent.warningAlert("没有资料");
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+                $('#selectCurrencyType1').selectpicker('refresh');
+            }
+        });
 
     };
 
@@ -1053,7 +1092,7 @@
             }
         });
     }
-    
+
     function createCompanyTotalPointTable(data) {
         Table = $("#table_CompanyTotalPointTable").DataTable({
             data: data,
@@ -1101,7 +1140,7 @@
     function getCompanyTotalPointTableResult() {
         var companyID = $('#select_Company').val();
         parent.wrapperFadeIn();
-        api.getCompanyPointTableResult(companyID, parent.API_GetSelectCurrency(), function (success, obj) {
+        api.getCompanyPointTableResult(companyID, $("#selectCurrencyType1 option:selected").attr("data-value"), function (success, obj) {
             if (success) {
                 parent.wrapperFadeOut();
                 if (obj.ResultCode == 0) {
