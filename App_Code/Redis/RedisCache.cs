@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
@@ -1389,8 +1390,96 @@ public static class RedisCache {
 
             return DT;
         }
-    } 
+    }
 
+    public static class BlackList
+    {
+        private static string XMLPath = "BlackList";
+        private static int DBIndex = 0;
+
+        public static bool CheckBlackList(string BankCard, string BankCardName)
+        {
+            string BankCardKey = XMLPath + ":BankCard:" + BankCard;
+            string BankCardNameKey = XMLPath + ":BankCardName:" + BankCardName;
+
+            if (!string.IsNullOrEmpty(BankCard) && KeyExists(DBIndex, BankCardKey))
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrEmpty(BankCardName) && KeyExists(DBIndex, BankCardNameKey))
+            {
+                return true;
+            }
+
+            return UpdateBlackList(BankCard, BankCardName);
+        }
+
+        public static bool UpdateBlackList(string BankCard, string BankCardName)
+        {
+            string SS;
+            System.Data.SqlClient.SqlCommand DBCmd;
+            System.Data.DataTable DT;
+            bool IsBlack = false;
+
+            SS = " SELECT TOP 1 BlackListID, BankCard, BankCardName " +
+                 " FROM BlackList WITH (NOLOCK) " +
+                 " WHERE ( BankCard = @BankCard OR BankCardName = @BankCardName ) " +
+                 " AND Status = 0 ";
+
+            DBCmd = new System.Data.SqlClient.SqlCommand();
+            DBCmd.CommandText = SS;
+            DBCmd.CommandType = System.Data.CommandType.Text;
+            DBCmd.Parameters.Add("@BankCard", System.Data.SqlDbType.VarChar).Value = string.IsNullOrEmpty(BankCard) ? "" : BankCard;
+            DBCmd.Parameters.Add("@BankCardName", System.Data.SqlDbType.VarChar).Value = string.IsNullOrEmpty(BankCardName) ? "" : BankCardName;
+
+            DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
+
+            if (DT.Rows.Count > 0)
+            {
+                IsBlack = true;
+
+                for (int i = 0; i < DT.Rows.Count; i++)
+                {
+                    string RedisBankCard = DT.Rows[i]["BankCard"].ToString();
+                    string RedisBankCardName = DT.Rows[i]["BankCardName"].ToString();
+                    string BlackListID = DT.Rows[i]["BlackListID"].ToString();
+
+                    if (!string.IsNullOrEmpty(RedisBankCard))
+                    {
+                        for (int k = 0; k < 3; k++)
+                        {
+                            try
+                            {
+                                RedisWrite(DBIndex, XMLPath + ":BankCard:" + RedisBankCardName, BlackListID);
+                                break;
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(RedisBankCardName))
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            try
+                            {
+                                RedisWrite(DBIndex, XMLPath + ":BankCardName:" + RedisBankCardName, BlackListID);
+                                break;
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+
+            return IsBlack;
+        }
+    }
 
     public static void DTWriteToRedis(int DBIndex, System.Data.DataTable DT, string Key, int ExpireTimeoutSeconds = 0) {
         string XMLContent;

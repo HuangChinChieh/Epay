@@ -1086,6 +1086,12 @@
                                         <span id="pBackendWithdrawType"></span>
                                     </div>
                                     <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <span> 每日自動提款次數限制：</span>
+                                        <span id="b_DailyWithdrawalLimit"></span>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin:0">
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
                                         <span> 备注：</span>
                                         <span id="b_Description"></span>
                                     </div>
@@ -1954,6 +1960,7 @@
             $("#pCreateDate").text(CSeleData[0]["CreateDate"].replace("T", " "));
             $("#pContacterName").text(CSeleData[0]["ContacterName"]);
             $("#pContacterMobile").text(CSeleData[0]["ContacterMobile"]);
+            $("#b_DailyWithdrawalLimit").text(CSeleData[0]["DailyWithdrawalLimit"]);
             $("#b_Description").text(CSeleData[0]["Description"]);
             //CompanyKey栏位处理
             $('#inputUnlockCompanyKey').hide();

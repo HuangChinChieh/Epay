@@ -522,6 +522,7 @@ public class BackendDB
                      "               ContacterEmail," +
                      "               BackendWithdrawIPType," +
                      "               Timezone," +
+                     "               DailyWithdrawalLimit," +
                      "               CurrencyType)" +
                      "   VALUES" +
                      "              (@CompanyType," +
@@ -547,6 +548,7 @@ public class BackendDB
                      "               @ContacterEmail," +
                      "               @BackendWithdrawIPType," +
                      "               @Timezone," +
+                     "               @DailyWithdrawalLimit," +
                      "               @CurrencyType)" +
                      "                      SELECT @@IDENTITY;";
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -572,7 +574,8 @@ public class BackendDB
             DBCmd.Parameters.Add("@BackendLoginIPType", SqlDbType.Int).Value = company.BackendLoginIPType;
             DBCmd.Parameters.Add("@ProviderGroupID", SqlDbType.Int).Value = company.ProviderGroupID;
             DBCmd.Parameters.Add("@BackendWithdrawType", SqlDbType.Int).Value = company.BackendWithdrawType;
-            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = company.CurrencyType;
+            DBCmd.Parameters.Add("@DailyWithdrawalLimit", SqlDbType.Int).Value = company.DailyWithdrawalLimit;
+            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = company.CurrencyType; 
             DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
             DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
 
@@ -594,7 +597,7 @@ public class BackendDB
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone " +
+        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone,DailyWithdrawalLimit=@DailyWithdrawalLimit " +
              " WHERE CompanyID=@CompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -618,7 +621,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@BackendLoginIPType", SqlDbType.Int).Value = company.BackendLoginIPType;
         DBCmd.Parameters.Add("@WithdrawAPIType", SqlDbType.Int).Value = company.WithdrawAPIType;
         DBCmd.Parameters.Add("@BackendWithdrawType", SqlDbType.Int).Value = company.BackendWithdrawType;
-        DBCmd.Parameters.Add("@ProviderGroups", SqlDbType.VarChar).Value = company.ProviderGroups;
+        DBCmd.Parameters.Add("@DailyWithdrawalLimit", SqlDbType.Int).Value = company.DailyWithdrawalLimit;
+        DBCmd.Parameters.Add("@ProviderGroups", SqlDbType.VarChar).Value = company.ProviderGroups; 
         DBCmd.Parameters.Add("@CheckCompanyWithdrawType", SqlDbType.Int).Value = company.CheckCompanyWithdrawType;
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = company.Description;
         DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;

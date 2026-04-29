@@ -1,6 +1,6 @@
 ﻿@{
     //Layout = "~/Backend/_Layout.cshtml";
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var result = bc.CheckLoginPermission(BID);
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
@@ -21,7 +21,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -962,28 +962,28 @@
                                 <input type="text" id="ContacterName" class="form-control" style="width:50%">
                             </div>
                             @*<label for="ContacterMobile">商戶聯繫人電話 : </label>
-        <div class="form-group">
-            <input type="text" id="ContacterMobile" class="form-control">
-        </div>*@
+                                <div class="form-group">
+                                    <input type="text" id="ContacterMobile" class="form-control">
+                                </div>*@
                             @*<label>商戶聯繫人聯繫方式 : </label>
-        <div class="form-group">
-            <div class="radio inlineblock">
-                <input type="radio" name="ContacterMethod" id="ContacterMethod0" class="with-gap" value="0" checked="checked">
-                <label for="ContacterMethod0">QQ</label>
-            </div>
-            <div class="radio inlineblock">
-                <input type="radio" name="ContacterMethod" id="ContacterMethod1" class="with-gap" value="1">
-                <label for="ContacterMethod1">WeChat</label>
-            </div>
-            <div class="radio inlineblock">
-                <input type="radio" name="ContacterMethod" id="ContacterMethod2" class="with-gap" value="2">
-                <label for="ContacterMethod2">Skype</label>
-            </div>
-            <div class="radio inlineblock">
-                <input type="radio" name="ContacterMethod" id="ContacterMethod3" class="with-gap" value="3">
-                <label for="ContacterMethod3">Line</label>
-            </div>
-        </div>*@
+                                <div class="form-group">
+                                    <div class="radio inlineblock">
+                                        <input type="radio" name="ContacterMethod" id="ContacterMethod0" class="with-gap" value="0" checked="checked">
+                                        <label for="ContacterMethod0">QQ</label>
+                                    </div>
+                                    <div class="radio inlineblock">
+                                        <input type="radio" name="ContacterMethod" id="ContacterMethod1" class="with-gap" value="1">
+                                        <label for="ContacterMethod1">WeChat</label>
+                                    </div>
+                                    <div class="radio inlineblock">
+                                        <input type="radio" name="ContacterMethod" id="ContacterMethod2" class="with-gap" value="2">
+                                        <label for="ContacterMethod2">Skype</label>
+                                    </div>
+                                    <div class="radio inlineblock">
+                                        <input type="radio" name="ContacterMethod" id="ContacterMethod3" class="with-gap" value="3">
+                                        <label for="ContacterMethod3">Line</label>
+                                    </div>
+                                </div>*@
 
                             <label for="ContacterMethodAccount">通讯方式 : </label>
                             <div class="form-group">
@@ -991,9 +991,9 @@
                             </div>
 
                             @*<label for="ContacterEmail">商戶聯繫人E-mail : </label>
-        <div class="form-group">
-            <input type="text" id="ContacterEmail" class="form-control">
-        </div>*@
+                                <div class="form-group">
+                                    <input type="text" id="ContacterEmail" class="form-control">
+                                </div>*@
                             <label for="URL">回调通知 URL : </label>
                             <div class="form-group">
                                 <input type="text" id="URL" class="form-control" style="width:50%">
@@ -1092,10 +1092,17 @@
                                             <label for="WithdrawType1">自动代付</label>
                                         </div>
                                     </div>
-                                    <div style="display:block;">
+                                    <div style="display: block; margin-bottom: 10px">
                                         <label for="select_ServiceType" style="font-weight: bold;">API 代付渠道 : </label>
 
                                         <select class="form-control show-tick" id="select_ServiceType"></select>
+                                    </div>
+                                    <div style="display:block;">
+                                        <label style="font-weight: bold;">每日自動提款次數限制 : </label>
+
+                                        <div class="inlineblock">
+                                            <input type="number" id="DailyWithdrawalLimit" class="form-control" style="width:50%" value="0">
+                                        </div>
                                     </div>
 
                                 </div>
@@ -1220,13 +1227,14 @@
             var companyCode = $("#CompanyCode").val().trim();
             var URL = $('#URL').val().trim();
             var timezone = $('#Timezone').val().trim();
-     
+
             var companyType = $('input[name=CompanyType]:checked').val();
             var currencyType = $("#selectCurrencyType").val();
             var withdrawType = $('input[name=WithdrawType]:checked').val();
             var backendLoginIPType = $('input[name=BackendLoginIPType]:checked').val();
             var backendWithdrawIPType = $('input[name=BackendWithdrawIPType]:checked').val();
-            
+            var DailyWithdrawalLimit = $('#DailyWithdrawalLimit').val();
+
             if (withdrawType == "1") {
                 if ($("#select_ServiceType").val() == 0) {
                     parent.warningAlert("API代付支付方式不得为空");
@@ -1257,7 +1265,7 @@
             var backendWithdrawType = $('input[name=BackendWithdrawType]:checked').val();
             var providerGroupID ="0";
 
-            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, function (success, obj) {
+            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {
@@ -1265,7 +1273,7 @@
                             "data": obj.CompanyResult.CompanyID
                         }
                         sessionStorage.setItem("TempData", JSON.stringify(TempData));
-                        var showMessage = "<span style='color:blue'>商户密钥</span></br>" + obj.CompanyResult.CompanyKey + "</br><span style='color:red'>密钥只会显示这一次,请先存取至文档内</span>" 
+                        var showMessage = "<span style='color:blue'>商户密钥</span></br>" + obj.CompanyResult.CompanyKey + "</br><span style='color:red'>密钥只会显示这一次,请先存取至文档内</span>"
                         parent.successAlert4(showMessage,function () {
                             parent.refreshPage(EditData.data.backID);
                             parent.CloseActivePage(window.frameElement.name);

@@ -1096,10 +1096,17 @@
                                             <label for="WithdrawType1">自动代付</label>
                                         </div>
                                     </div>
-                                    <div style="display:block;">
+                                    <div style="display: block; margin-bottom: 10px">
                                         <label for="select_ServiceType" style="font-weight: bold;">API 代付渠道 : </label>
 
                                         <select class="form-control show-tick" id="select_ServiceType"></select>
+                                    </div>
+                                    <div style="display:block;">
+                                        <label style="font-weight: bold;">每日自動提款次數限制 : </label>
+
+                                        <div class="inlineblock">
+                                            <input type="number" id="DailyWithdrawalLimit" class="form-control" style="width:50%" value="0">
+                                        </div>
                                     </div>
 
                                 </div>
@@ -1202,6 +1209,7 @@
         $("#URL").val(EditData.data.URL);
         $("#Timezone").val(EditData.data.Timezone);
         $("#Description").val(EditData.data.Description);
+        $("#DailyWithdrawalLimit").val(EditData.data.DailyWithdrawalLimit);
         
         $("input[name*='CompanyType'][value='" + EditData.data.CompanyType + "']").prop("checked", true);
         $("input[name*='CompanyState'][value='" + EditData.data.CompanyState + "']").prop("checked", true);
@@ -1251,6 +1259,7 @@
             var providerGroupID = $("#select_proxyProviderGroup").val();
             var providerGroupsData = $('input:checkbox:checked[name="proxyProviderGroup"]');
             var description = $("#Description").val();
+            var DailyWithdrawalLimit = $("#DailyWithdrawalLimit").val();
 
             var providerGroups = "";
             if (providerGroupsData.length > 0) {
@@ -1286,7 +1295,7 @@
                 withdrawAPIType += parseInt($("#WithdrawAPIType2:checked").val());
             }
 
-            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType,Timezone,function (success, obj) {
+            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, Timezone, DailyWithdrawalLimit,function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {

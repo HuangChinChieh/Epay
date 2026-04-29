@@ -14156,6 +14156,7 @@ public class BackendController : ApiController
             BackendFunction backendFunction = new BackendFunction();
             string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 0, "新增黑名单,卡号" + Model.BankCard + ",持卡人:" + Model.BankCardName + ",IP:" + Model.UserIP, IP, fingerprint);
+            RedisCache.BlackList.UpdateBlackList(Model.BankCard, Model.BankCardName);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
         }

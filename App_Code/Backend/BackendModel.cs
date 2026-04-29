@@ -27,6 +27,7 @@ public class DBModel
         public string AccountName { get; set; }
         public string BankProvince { get; set; }
         public string BankCity { get; set; }
+        public int DailyWithdrawalLimit { get; set; }
         public string Description { get; set; }
         public decimal AmountMax { get; set; }
         public decimal AmountMin { get; set; }
@@ -255,6 +256,7 @@ public class DBModel
         public string MerchantCode { get; set; }
         public int WithdrawType { get; set; }
         public string AutoWithdrawalServiceType { get; set; }
+        public int DailyWithdrawalLimit { get; set; }
         public string CheckCompanyWithdrawUrl { get; set; }
         public int BackendLoginIPType { get; set; }
         public int WithdrawAPIType { get; set; }
