@@ -7274,7 +7274,7 @@ public class BackendDB
              " AND FrozenPoint.CurrencyType = CSP.CurrencyType " +
              " AND FrozenPoint.ServiceType = CSP.ServiceType " +
              " AND FrozenPoint.Status = 0),0) AS FrozenPoint," +
-             " ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge,WithdrawLimit.Rate, " +
+             " ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge,WithdrawLimit.Rate,ServiceType.ServiceSupplyType, " +
              " CSP.*" +
              " FROM CompanyServicePoint AS CSP" +
              " LEFT JOIN ServiceType ON CSP.ServiceType=ServiceType.ServiceType And CSP.CurrencyType=ServiceType.CurrencyType " +
@@ -9163,11 +9163,12 @@ public class BackendDB
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT ProviderName,Withdrawal.*,convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,BankName,BankCardName,OwnProvince,OwnCity,BankBranchName,CompanyName,RealName as RealName1 FROM Withdrawal WITH (NOLOCK) " +
+        SS = " SELECT ProviderName,Withdrawal.*,convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,BankName,BankCardName,OwnProvince,OwnCity,BankBranchName,CompanyName,RealName as RealName1,ST.ServiceSupplyType FROM Withdrawal WITH (NOLOCK) " +
              " LEFT JOIN AdminTable WITH (NOLOCK) ON AdminTable.AdminID=Withdrawal.HandleByAdminID" +
              " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
              " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
-             " WHERE WithdrawSerial=@WithdrawSerial ";
+             " LEFT JOIN ServiceType ST WITH (NOLOCK) ON ST.ServiceType = Withdrawal.ServiceType" +
+        " WHERE WithdrawSerial=@WithdrawSerial ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;

@@ -571,6 +571,8 @@
     <Content Include="App_Data\ProviderSetting\withdrawBank.json" />
     <Content Include="Backend\ProviderAlipay_Add.cshtml" />
     <Content Include="Backend\ProviderAlipay_Update.cshtml" />
+    <Content Include="App_Data\ProviderSetting\withdrawBankTHB.json" />
+    <Content Include="App_Data\ProviderSetting\withdrawBankINR.json" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />

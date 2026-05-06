@@ -1,0 +1,154 @@
+﻿  {
+    "BankCodeSettings": [
+      {
+        "BankName": "Siam Commercial Bank",
+        "ShortCode": "SCB",
+        "NumericCode": "0014",
+        "Aliases": [ "SIAM COMMERCIAL BANK PUBLIC COMPANY LTD." ]
+      },
+      {
+        "BankName": "Bank of Ayudhya",
+        "ShortCode": "BAY",
+        "NumericCode": "0025",
+        "Aliases": [ "BANK OF AYUDHYA PUBLIC COMPANY LTD." ]
+      },
+      {
+        "BankName": "Krung Thai Bank",
+        "ShortCode": "KTB",
+        "NumericCode": "0006",
+        "Aliases": [ "KRUNG THAI BANK PUBLIC COMPANY LTD." ]
+      },
+      {
+        "BankName": "Bangkok Bank",
+        "ShortCode": "BBL",
+        "NumericCode": "0002",
+        "Aliases": [ "BANGKOK BANK PUBLIC COMPANY LTD." ]
+      },
+      {
+        "BankName": "Government Savings Bank",
+        "ShortCode": "GSB",
+        "NumericCode": "0030",
+        "Aliases": [ "GOVERNMENT SAVINGS BANK" ]
+      },
+      {
+        "BankName": "TMBThanachart Bank",
+        "ShortCode": "TTB",
+        "NumericCode": "0011",
+        "Aliases": [ "TMBTHANACHART BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Bank for Agriculture and Agricultural Cooperatives",
+        "ShortCode": "BAAC",
+        "NumericCode": "0034",
+        "Aliases": [ "Bank for Agriculture and Agricultural", "BANK FOR AGRICULTURE AND AGRICULTURAL COOPERATIVES" ]
+      },
+      {
+        "BankName": "KIATNAKIN PHATRA BANK",
+        "ShortCode": "KKP",
+        "NumericCode": "0069",
+        "Aliases": [ "KIATNAKIN PHATRA BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Kasikornbank",
+        "ShortCode": "KBANK",
+        "NumericCode": "0004",
+        "Aliases": [ "KASIKORNBANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Australia and New Zealand Banking Group Limited",
+        "ShortCode": "ANZ",
+        "NumericCode": "0671",
+        "Aliases": [ "AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED" ]
+      },
+      {
+        "BankName": "Bank of China",
+        "ShortCode": "BOC",
+        "NumericCode": "0052",
+        "Aliases": [ "BANK OF CHINA (THAI) PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "CIMB Thai Bank",
+        "ShortCode": "CIMBTB",
+        "NumericCode": "0022",
+        "Aliases": [ "CIMB THAI BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Citibank Thailand",
+        "ShortCode": "CITIB",
+        "NumericCode": "0017",
+        "Aliases": [ "CITIBANK, N.A." ]
+      },
+      {
+        "BankName": "Export-Import Bank of Thailand",
+        "ShortCode": "EXIM",
+        "NumericCode": "0035",
+        "Aliases": [ "EXPORT-IMPORT BANK OF THAILAND" ]
+      },
+      {
+        "BankName": "Government Housing Bank",
+        "ShortCode": "GHB",
+        "NumericCode": "0033",
+        "Aliases": [ "THE GOVERNMENT HOUSING BANK" ]
+      },
+      {
+        "BankName": "ICBC Bank",
+        "ShortCode": "ICBCB",
+        "NumericCode": "0070",
+        "Aliases": [ "INDUSTRIAL AND COMMERCIAL BANK OF CHINA (THAI) PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Islamic Bank of Thailand",
+        "ShortCode": "IBT",
+        "NumericCode": "0066",
+        "Aliases": [ "ISLAMIC BANK OF THAILAND" ]
+      },
+      {
+        "BankName": "LH Bank",
+        "ShortCode": "LHB",
+        "NumericCode": "0073",
+        "Aliases": [ "LAND AND HOUSES BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "SME Development Bank",
+        "ShortCode": "SMEDB",
+        "NumericCode": "0098",
+        "Aliases": [ "SMALL AND MEDIUM ENTERPRISE DEVELOPMENT BANK OF THAILAND" ]
+      },
+      {
+        "BankName": "Standard Chartered",
+        "ShortCode": "SCTB",
+        "NumericCode": "0020",
+        "Aliases": [ "STANDARD CHARTERED BANK (THAI) PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Sumitomo Mitsui Trust Bank",
+        "ShortCode": "SMTB",
+        "NumericCode": "0080",
+        "Aliases": [ "SUMITOMO MITSUI TRUST BANK (THAI) PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "Thai Credit Retail Bank",
+        "ShortCode": "TCRB",
+        "NumericCode": "0071",
+        "Aliases": [ "THE THAI CREDIT BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "TISCO Bank",
+        "ShortCode": "TISCO",
+        "NumericCode": "0067",
+        "Aliases": [ "TISCO BANK PUBLIC COMPANY LIMITED" ]
+      },
+      {
+        "BankName": "TRUEMONEY",
+        "ShortCode": "TRUEMONEY",
+        "NumericCode": "",
+        "Aliases": [ "TRUEMONEY" ]
+      },
+      {
+        "BankName": "United Overseas Bank",
+        "ShortCode": "UOB",
+        "NumericCode": "0024",
+        "Aliases": [ "UNITED OVERSEAS BANK (THAI) PUBLIC COMPANY LIMITED" ]
+      }
+    ]
+  }

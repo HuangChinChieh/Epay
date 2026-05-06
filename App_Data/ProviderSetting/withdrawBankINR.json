@@ -1,0 +1,570 @@
+﻿{
+  "BankCodeSettings": [
+    {
+      "BankCode": "ABHY",
+      "ProviderBankCode": "ABHY",
+      "BankName": "Abhyudaya Co-operative Bank"
+    },
+    {
+      "BankCode": "ADCB",
+      "ProviderBankCode": "ADCB",
+      "BankName": "Ahmedabad District Cooperative Bank"
+    },
+    {
+      "BankCode": "APGB",
+      "ProviderBankCode": "APGB",
+      "BankName": "Andhra Pragathi Grameena Bank"
+    },
+    {
+      "BankCode": "ASBL",
+      "ProviderBankCode": "ASBL",
+      "BankName": "APNA Sahakari Bank ltd"
+    },
+    {
+      "BankCode": "APGV",
+      "ProviderBankCode": "APGV",
+      "BankName": "Andhra Pradesh Grameena Vikas Bank - IMPS"
+    },
+    {
+      "BankCode": "AIRP",
+      "ProviderBankCode": "AIRP",
+      "BankName": "AIRTEL PAYMENTS BANK LIMITED"
+    },
+    {
+      "BankCode": "ARYB",
+      "ProviderBankCode": "ARYB",
+      "BankName": "Aryavart Bank"
+    },
+    {
+      "BankCode": "AUBL",
+      "ProviderBankCode": "AUBL",
+      "BankName": "AU SMALL FINANCE BANK"
+    },
+    {
+      "BankCode": "UTIB",
+      "ProviderBankCode": "UTIB",
+      "BankName": "Axis Bank",
+      "Aliases": [ "AXIS", "AXIS BANK LIMITED" ]
+    },
+    {
+      "BankCode": "BDBL",
+      "ProviderBankCode": "BDBL",
+      "BankName": "Bandhan Bank limited"
+    },
+    {
+      "BankCode": "BGGB",
+      "ProviderBankCode": "BGGB",
+      "BankName": "Baroda Gujarat Gramin Bank"
+    },
+    {
+      "BankCode": "BCBM",
+      "ProviderBankCode": "BCBM",
+      "BankName": "THE BHARAT CO OPERATIVE BANK MUMBAI LTD"
+    },
+    {
+      "BankCode": "BDCB",
+      "ProviderBankCode": "BDCB",
+      "BankName": "The Banaskantha District Central Co-Op. Bank Ltd."
+    },
+    {
+      "BankCode": "BRKB",
+      "ProviderBankCode": "BRKB",
+      "BankName": "Baroda Rajasthan Kshetriya Gramin Bank"
+    },
+    {
+      "BankCode": "BNSB",
+      "ProviderBankCode": "BNSB",
+      "BankName": "Bhagini Nivedita Sahakari Bank Ltd,Pune"
+    },
+    {
+      "BankCode": "BARB",
+      "ProviderBankCode": "BARB",
+      "BankName": "Bank of Baroda",
+      "Aliases": [ "BOB", "BANK OF BARODA" ]
+    },
+    {
+      "BankCode": "BKID",
+      "ProviderBankCode": "BKID",
+      "BankName": "Bank Of India"
+    },
+    {
+      "BankCode": "MAHB",
+      "ProviderBankCode": "MAHB",
+      "BankName": "Bank of Maharashtra"
+    },
+    {
+      "BankCode": "BUPB",
+      "ProviderBankCode": "BUPB",
+      "BankName": "Baroda U.P. Bank (Erstwhile Baroda Uttar Pradesh Gramin Bank)"
+    },
+    {
+      "BankCode": "BUCB",
+      "ProviderBankCode": "BUCB",
+      "BankName": "The Burdwan Central Co op Bank Ltd"
+    },
+    {
+      "BankCode": "CBIN",
+      "ProviderBankCode": "CBIN",
+      "BankName": "Central Bank of India"
+    },
+    {
+      "BankCode": "ANDB",
+      "ProviderBankCode": "ANDB",
+      "BankName": "CHAITANYA GODAVARI GRAMEENA BANK"
+    },
+    {
+      "BankCode": "CRGB",
+      "ProviderBankCode": "CRGB",
+      "BankName": "CHHATTISGARH RAJYA GRAMIN BANK"
+    },
+    {
+      "BankCode": "CNRB",
+      "ProviderBankCode": "CNRB",
+      "BankName": "Canara Bank",
+      "Aliases": [ "CANARA", "CANARA BANK" ]
+    },
+    {
+      "BankCode": "COSB",
+      "ProviderBankCode": "COSB",
+      "BankName": "The Cosmos Co-Operative Bank Ltd"
+    },
+    {
+      "BankCode": "CITI",
+      "ProviderBankCode": "CITI",
+      "BankName": "Axis Bank-Citi"
+    },
+    {
+      "BankCode": "CIUB",
+      "ProviderBankCode": "CIUB",
+      "BankName": "City Union Bank"
+    },
+    {
+      "BankCode": "DBSS",
+      "ProviderBankCode": "DBSS",
+      "BankName": "DBS Bank India Limited"
+    },
+    {
+      "BankCode": "DCBL",
+      "ProviderBankCode": "DCBL",
+      "BankName": "DCB Bank Ltd"
+    },
+    {
+      "BankCode": "DHCB",
+      "ProviderBankCode": "DHCB",
+      "BankName": "Dharmapuri District Central Co-operative Bank Ltd"
+    },
+    {
+      "BankCode": "DDCB",
+      "ProviderBankCode": "DDCB",
+      "BankName": "DINDIGUL DISTRICT CENTRAL COOPERATIVE BANK"
+    },
+    {
+      "BankCode": "DLXB",
+      "ProviderBankCode": "DLXB",
+      "BankName": "Dhanalakshmi Bank"
+    },
+    {
+      "BankCode": "ESMF",
+      "ProviderBankCode": "ESMF",
+      "BankName": "ESAF SMALL FINANCE BANK LTD"
+    },
+    {
+      "BankCode": "EDCB",
+      "ProviderBankCode": "EDCB",
+      "BankName": "The Erode District Central Cooperative Bank Ltd"
+    },
+    {
+      "BankCode": "ESFB",
+      "ProviderBankCode": "ESFB",
+      "BankName": "EQUITAS SMALL FINANCE BANK"
+    },
+    {
+      "BankCode": "FDRL",
+      "ProviderBankCode": "FDRL",
+      "BankName": "Federal Bank",
+      "Aliases": [ "FEDERAL", "FEDERAL BANK LIMITED" ]
+    },
+    {
+      "BankCode": "FINO",
+      "ProviderBankCode": "FINO",
+      "BankName": "Fino Payments Bank Limited FIP"
+    },
+    {
+      "BankCode": "FSFB",
+      "ProviderBankCode": "FSFB",
+      "BankName": "FINCARE SMALL FINANCE BANK LIMITED"
+    },
+    {
+      "BankCode": "PJSB",
+      "ProviderBankCode": "PJSB",
+      "BankName": "G P Parsik Sahakari Bank Ltd"
+    },
+    {
+      "BankCode": "HDFC",
+      "ProviderBankCode": "HDFC",
+      "BankName": "HDFC Bank",
+      "Aliases": [ "HDFC BANK LIMITED", "HDFCBANK" ]
+    },
+    {
+      "BankCode": "HPGB",
+      "ProviderBankCode": "HPGB",
+      "BankName": "HIMACHAL PRADESH GRAMIN BANK"
+    },
+    {
+      "BankCode": "HSBC",
+      "ProviderBankCode": "HSBC",
+      "BankName": "HSBC Bank"
+    },
+    {
+      "BankCode": "HCBL",
+      "ProviderBankCode": "HCBL",
+      "BankName": "The Hasti Co-op. Bank Ltd."
+    },
+    {
+      "BankCode": "INDM",
+      "ProviderBankCode": "INDM",
+      "BankName": "Indusind Bank M2P"
+    },
+    {
+      "BankCode": "ICIC",
+      "ProviderBankCode": "ICIC",
+      "BankName": "ICICI Bank",
+      "Aliases": [ "ICICI", "ICICI BANK LIMITED", "ICICIBANK" ]
+    },
+    {
+      "BankCode": "IBKL",
+      "ProviderBankCode": "IBKL",
+      "BankName": "IDBI Bank",
+      "Aliases": [ "IDBI", "IDBI BANK LIMITED" ]
+    },
+    {
+      "BankCode": "IDFB",
+      "ProviderBankCode": "IDFB",
+      "BankName": "IDFC First Bank Ltd"
+    },
+    {
+      "BankCode": "INDB",
+      "ProviderBankCode": "INDB",
+      "BankName": "Indusind Bank",
+      "Aliases": [ "INDUSIND", "INDUSIND BANK LIMITED" ]
+    },
+    {
+      "BankCode": "IDIB",
+      "ProviderBankCode": "IDIB",
+      "BankName": "Indian Bank",
+      "Aliases": [ "INDIAN", "INDIAN BANK" ]
+    },
+    {
+      "BankCode": "IOBA",
+      "ProviderBankCode": "IOBA",
+      "BankName": "Indian Overseas Bank",
+      "Aliases": [ "IOB", "INDIAN OVERSEAS BANK" ]
+    },
+    {
+      "BankCode": "IPOS",
+      "ProviderBankCode": "IPOS",
+      "BankName": "INDIA POST PAYMENTS BANK LIMITED"
+    },
+    {
+      "BankCode": "JCCB",
+      "ProviderBankCode": "JCCB",
+      "BankName": "Jogindra Central Cooperative Bank Ltd"
+    },
+    {
+      "BankCode": "JJSB",
+      "ProviderBankCode": "JJSB",
+      "BankName": "JALGAON JANATA SAHAKARI BANK LTD JALGAON"
+    },
+    {
+      "BankCode": "JAKA",
+      "ProviderBankCode": "JAKA",
+      "BankName": "The Jammu & Kashmir Bank Limited"
+    },
+    {
+      "BankCode": "JKGB",
+      "ProviderBankCode": "JKGB",
+      "BankName": "JAMMU AND KASHMIR GRAMEEN BANK"
+    },
+    {
+      "BankCode": "JSBP",
+      "ProviderBankCode": "JSBP",
+      "BankName": "Janata Sahakari Bank"
+    },
+    {
+      "BankCode": "JSKB",
+      "ProviderBankCode": "JSKB",
+      "BankName": "Jila sahakari Kendriya Bank Mydt Durg"
+    },
+    {
+      "BankCode": "JSFB",
+      "ProviderBankCode": "JSFB",
+      "BankName": "JANA SMALL FINANCE BANK LTD"
+    },
+    {
+      "BankCode": "KDCB",
+      "ProviderBankCode": "KDCB",
+      "BankName": "The Kaira District Central Co-Op. Bank Ltd."
+    },
+    {
+      "BankCode": "KOCB",
+      "ProviderBankCode": "KOCB",
+      "BankName": "Kolhapur Dist. Central Co-Op. Bank Ltd."
+    },
+    {
+      "BankCode": "KJSB",
+      "ProviderBankCode": "KJSB",
+      "BankName": "Kalyan Janata Sahakari Bank"
+    },
+    {
+      "BankCode": "KCCB",
+      "ProviderBankCode": "KCCB",
+      "BankName": "The Kalupur Commercial Co-Op Bank Ltd"
+    },
+    {
+      "BankCode": "KLGB",
+      "ProviderBankCode": "KLGB",
+      "BankName": "KERALA GRAMIN BANK"
+    },
+    {
+      "BankCode": "KKBK",
+      "ProviderBankCode": "KKBK",
+      "BankName": "Kotak Mahindra Bank",
+      "Aliases": [ "KOTAK", "KOTAK MAHINDRA BANK LIMITED" ]
+    },
+    {
+      "BankCode": "KACE",
+      "ProviderBankCode": "KACE",
+      "BankName": "THE KANGRA CENTRAL CO-OPERATIVE BANK LTD"
+    },
+    {
+      "BankCode": "KARB",
+      "ProviderBankCode": "KARB",
+      "BankName": "Karnataka Bank"
+    },
+    {
+      "BankCode": "KVBL",
+      "ProviderBankCode": "KVBL",
+      "BankName": "Karur Vysya Bank"
+    },
+    {
+      "BankCode": "KVGB",
+      "ProviderBankCode": "KVGB",
+      "BankName": "Karnataka Vikas Grameena Bank"
+    },
+    {
+      "BankCode": "MAHG",
+      "ProviderBankCode": "MAHG",
+      "BankName": "Maharashtra Gramin Bank"
+    },
+    {
+      "BankCode": "MSBL",
+      "ProviderBankCode": "MSBL",
+      "BankName": "Mahesh Sahakari Bank Ltd"
+    },
+    {
+      "BankCode": "MCBL",
+      "ProviderBankCode": "MCBL",
+      "BankName": "Mahanagar Co-operative Bank"
+    },
+    {
+      "BankCode": "MGRB",
+      "ProviderBankCode": "MGRB",
+      "BankName": "MEGHALAYA RURAL BANK"
+    },
+    {
+      "BankCode": "MZRB",
+      "ProviderBankCode": "MZRB",
+      "BankName": "MIZORAM RURAL BANK"
+    },
+    {
+      "BankCode": "NSPB",
+      "ProviderBankCode": "NSPB",
+      "BankName": "NSDL Payments Bank Limited"
+    },
+    {
+      "BankCode": "NTBL",
+      "ProviderBankCode": "NTBL",
+      "BankName": "The Nainital Bank Ltd"
+    },
+    {
+      "BankCode": "PBGB",
+      "ProviderBankCode": "PBGB",
+      "BankName": "PASCHIM BANGA GRAMIN BANK"
+    },
+    {
+      "BankCode": "PDCB",
+      "ProviderBankCode": "PDCB",
+      "BankName": "The Panchmahal District Co Operative Bank Ltd"
+    },
+    {
+      "BankCode": "PKGB",
+      "ProviderBankCode": "PKGB",
+      "BankName": "Karnataka Gramin Bank (Erstwhile Pragathi Krishna Gramin Bank)"
+    },
+    {
+      "BankCode": "PMCB",
+      "ProviderBankCode": "PMCB",
+      "BankName": "The Pimpalgaon Merchants Co operative Bank Ltd"
+    },
+    {
+      "BankCode": "PUNB",
+      "ProviderBankCode": "PUNB",
+      "BankName": "Punjab national Bank",
+      "Aliases": [ "PNB", "PUNJAB NATIONAL BANK" ]
+    },
+    {
+      "BankCode": "PSIB",
+      "ProviderBankCode": "PSIB",
+      "BankName": "Punjab and Sind Bank"
+    },
+    {
+      "BankCode": "PYTM",
+      "ProviderBankCode": "PYTM",
+      "BankName": "Paytm Payments Bank Limited (PTI)"
+    },
+    {
+      "BankCode": "RNSB",
+      "ProviderBankCode": "RNSB",
+      "BankName": "RAJKOT NAGARIK SAHAKARI BANK LTD"
+    },
+    {
+      "BankCode": "RMGB",
+      "ProviderBankCode": "RMGB",
+      "BankName": "Rajasthan Marudhara Gramin Bank"
+    },
+    {
+      "BankCode": "RATN",
+      "ProviderBankCode": "RATN",
+      "BankName": "RBL Bank Limited",
+      "Aliases": [ "RBL", "RBL BANK", "RBL BANK LIMITED" ]
+    },
+    {
+      "BankCode": "SAGB",
+      "ProviderBankCode": "SAGB",
+      "BankName": "Saurashtra Gramin Bank-IMPS"
+    },
+    {
+      "BankCode": "SHGB",
+      "ProviderBankCode": "SHGB",
+      "BankName": "SARVA HARYANA GRAMIN BANK"
+    },
+    {
+      "BankCode": "SBIN",
+      "ProviderBankCode": "SBIN",
+      "BankName": "State Bank of India",
+      "Aliases": [ "SBI", "STATE BANK OF INDIA" ]
+    },
+    {
+      "BankCode": "STCB",
+      "ProviderBankCode": "STCB",
+      "BankName": "SBM Bank India Ltd."
+    },
+    {
+      "BankCode": "SCBL",
+      "ProviderBankCode": "SCBL",
+      "BankName": "Standard Chartered Bank"
+    },
+    {
+      "BankCode": "SMCB",
+      "ProviderBankCode": "SMCB",
+      "BankName": "Shivalik Small Finance Bank Limited"
+    },
+    {
+      "BankCode": "SIBL",
+      "ProviderBankCode": "SIBL",
+      "BankName": "The South Indian Bank Limited"
+    },
+    {
+      "BankCode": "SIDC",
+      "ProviderBankCode": "SIDC",
+      "BankName": "Sindhudurg District Central Co. Op. Bank Ltd.,Sindhudurg"
+    },
+    {
+      "BankCode": "SUCB",
+      "ProviderBankCode": "SUCB",
+      "BankName": "Sterling Urban Co-Operative Bank Ltd."
+    },
+    {
+      "BankCode": "SRCB",
+      "ProviderBankCode": "SRCB",
+      "BankName": "Saraswat Co-operative Bank"
+    },
+    {
+      "BankCode": "SURY",
+      "ProviderBankCode": "SURY",
+      "BankName": "SURYODAY SMALL FINANCE BANK LIMITED"
+    },
+    {
+      "BankCode": "SVSH",
+      "ProviderBankCode": "SVSH",
+      "BankName": "Shri Veershaiv Co-operative Bank Ltd"
+    },
+    {
+      "BankCode": "TGGB",
+      "ProviderBankCode": "TGGB",
+      "BankName": "TELANGANA GRAMEENA BANK"
+    },
+    {
+      "BankCode": "TNSC",
+      "ProviderBankCode": "TNSC",
+      "BankName": "The Tiruvannamalai District central Cooperative Bank Ltd"
+    },
+    {
+      "BankCode": "TRGB",
+      "ProviderBankCode": "TRGB",
+      "BankName": "TRIPURA GRAMIN BANK"
+    },
+    {
+      "BankCode": "TMBL",
+      "ProviderBankCode": "TMBL",
+      "BankName": "Tamilnad Mercantile Bank Limited"
+    },
+    {
+      "BankCode": "TJSB",
+      "ProviderBankCode": "TJSB",
+      "BankName": "Thane Janata Sahakari Bank"
+    },
+    {
+      "BankCode": "UCBA",
+      "ProviderBankCode": "UCBA",
+      "BankName": "UCO Bank"
+    },
+    {
+      "BankCode": "UJVN",
+      "ProviderBankCode": "UJVN",
+      "BankName": "UJJIVAN SMALL FINANCE BANK LIMITED"
+    },
+    {
+      "BankCode": "UHGB",
+      "ProviderBankCode": "UHGB",
+      "BankName": "Uttarakhand Gramin Bank - IMPS"
+    },
+    {
+      "BankCode": "UBIN",
+      "ProviderBankCode": "UBIN",
+      "BankName": "Union Bank Of India",
+      "Aliases": [ "UNION", "UNION BANK OF INDIA" ]
+    },
+    {
+      "BankCode": "JRGB",
+      "ProviderBankCode": "JRGB",
+      "BankName": "Jharkhand Rajya Gramin Bank (Erstwhile Vananchal Gramin Bank)"
+    },
+    {
+      "BankCode": "VSBL",
+      "ProviderBankCode": "VSBL",
+      "BankName": "The Vishweshwar Sahakari Bank Ltd., Pune"
+    },
+    {
+      "BankCode": "VVSB",
+      "ProviderBankCode": "VVSB",
+      "BankName": "VASAI VIKAS SAHAKARI BANK LTD"
+    },
+    {
+      "BankCode": "YESB",
+      "ProviderBankCode": "YESB",
+      "BankName": "YES BANK LIMITED YBS",
+      "Aliases": [ "YES", "YES BANK LIMITED" ]
+    }
+  ]
+}

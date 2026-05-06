@@ -981,6 +981,8 @@ public class DBModel
         public decimal OKEXRate { get; set; }
         public decimal UpRate { get; set; }
         public decimal DownRate { get; set; }
+
+        public int ServiceSupplyType { get; set; }
     }
 
     public class RiskControlWithdrawalTable
@@ -2256,6 +2258,8 @@ public class DBViewModel
         public int State { get; set; }
         public decimal FrozenServicePoint { get; set; }
         public decimal Rate { get; set; }
+
+        public int ServiceSupplyType { get; set; }
     }
 
     public class SummaryCompanyByDateVM : DBModel.SummaryCompanyByDate

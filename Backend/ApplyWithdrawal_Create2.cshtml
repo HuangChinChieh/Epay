@@ -25,7 +25,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -1021,18 +1021,42 @@
 
                 </div>
                 <div class="modal-body">
-                    <div style="display:none">
-                        <label>选择币别</label><label id="showPointValue" style="color:red;margin-left:5px"></label>
-                        <select class="form-control show-tick" id="select_CurrencyType"></select>
-                    </div>
                     <label style="margin-top:5px">通道名称 : <span id="WithdrawalCreateModal_ServiceTypeName"></span></label><br />
                     <label>通道可用额度 : <span style="color:red" id="WithdrawalCreateModal_ServiceTypePoint"></span> 限额: <span style="color:red" id="WithdrawalCreateModal_MaxLimit"></span></label><br />
                     <label>手续费: <span style="color:red" id="WithdrawalCreateModal_Charge"></span>手续费(%): <span style="color:red" id="WithdrawalCreateModal_Rate"></span></label><br />
                     <label style="margin-top:5px">幣別 : <span id="WithdrawalCreateModal_CurrencyType"></span></label><br />
                     <input style="display:none" type="text" id="WithdrawalCreateModal_ServiceType" class="form-control">
                     <input style="display:none" type="text" id="WithdrawalCreateModal_WithdrawID" class="form-control">
-                    
-                    <label for="WithdrawalCreateModal_BankCard">地址 : </label>
+
+                    <label for="WithdrawalCreateModal_BankName" id="WithdrawalCreateModal_BankNameLabel">
+                        银行名称 :
+                    </label>
+                    <!-- 銀行模式 -->
+                    <div id="WithdrawalCreateModal_BankNameSelectBox">
+                        <select class="form-control show-tick" id="WithdrawalCreateModal_BankName" data-live-search="true"></select>
+                    </div>
+                    <!-- 支付寶模式 -->
+                    <div class="form-group" id="WithdrawalCreateModal_BankNameInputBox" style="display:none">
+                        <input type="text" id="WithdrawalCreateModal_BankNameInput" class="form-control">
+                    </div>
+
+                    <label for="WithdrawalCreateModal_BankBranchName" id="WithdrawalCreateModal_BankBranchNameLabel">支行名称 : </label>
+                    <div class="form-group" id="WithdrawalCreateModal_BankBranchNameBox">
+                        <input type="text" id="WithdrawalCreateModal_BankBranchName" class="form-control">
+                    </div>
+                    <label for="WithdrawalCreateModal_BankCardName" id="WithdrawalCreateModal_BankCardNameLabel">持卡人姓名 : </label>
+                    <div class="form-group">
+                        <input type="text" id="WithdrawalCreateModal_BankCardName" class="form-control">
+                    </div>
+                    <label for="WithdrawalCreateModal_OwnProvince" style="display:none">省份 : </label>
+                    <div class="form-group" style="display:none">
+                        <input type="text" id="WithdrawalCreateModal_OwnProvince" class="form-control">
+                    </div>
+                    <label for="WithdrawalCreateModal_OwnCity" style="display:none">城市 : </label>
+                    <div class="form-group" style="display:none">
+                        <input type="text" id="WithdrawalCreateModal_OwnCity" class="form-control">
+                    </div>
+                    <label for="WithdrawalCreateModal_BankCard" id="WithdrawalCreateModal_BankCardLabel">卡号 : </label>
                     <div class="form-group">
                         <input type="text" id="WithdrawalCreateModal_BankCard" class="form-control">
                     </div>
@@ -1062,6 +1086,7 @@
     var modifyType;
     var companyServicePointResult;
     var seleCurrency = parent.API_GetSelectCurrency();
+    var serviceSupplyYype;//0=銀行卡/1=支付寶
 
     $(document).ready(function () {
         pageLoad();
@@ -1081,8 +1106,6 @@
 
         AdminObject = parent.AdminObject;
         api = parent.api;
-     
-        getCurrencyTypeSelect();
 
         new AutoNumeric.multiple('.thousand-symbols', 'floatPos', { allowDecimalPadding: false, decimalPlaces: 4, modifyValueOnWheel: false });
         ShowCompanyPoint();
@@ -1095,7 +1118,7 @@
     function getCompanyServicePointResult() {
 
         api.getCanUseCompanyServicePoint(function (success, obj) {
-        
+
             if (obj.ResultCode == 0) {
                 companyServicePointResult = obj.CompanyServicePoints;
 
@@ -1223,7 +1246,7 @@
                     "title": "操作", "data": "ServiceType",
                     "render": function (data, display, rowdata) {
                         //withdrawalCreate(ServiceType, ServiceTypeName, amount)
-                        return '<button data-ServiceType="' + data + '" data-ServiceType="' + rowdata.ServiceType + '"  data-currencytype="' + rowdata.CurrencyType + '" onclick="withdrawalCreate(this)">申请提现</button>';
+                        return '<button data-ServiceType="' + data + '" data-ServiceType="' + rowdata.ServiceType + '"  data-currencytype="' + rowdata.CurrencyType + '"  data-servicesupplytype="' + rowdata.ServiceSupplyType + '" onclick="withdrawalCreate(this)">申请提现</button>';
                     }
                 }
             ],
@@ -1247,7 +1270,10 @@
     function withdrawalCreate(btnobj) {
         var ServiceType = $(btnobj).data('servicetype');
         var currencyType = $(btnobj).data('currencytype');
+        var servicesupplytype = $(btnobj).data('servicesupplytype'); //0=銀行卡 / 1=支付寶
+
         getCanUseCompanyServicePointByService(ServiceType, currencyType, function (data) {
+            serviceSupplyYype = servicesupplytype;
             withdrawalCreateModalAdd(data);
         });
     }
@@ -1434,20 +1460,63 @@
         var currencytype = companyServicePointData.CurrencyType;
         modifyType = "add";
         //清空欄位
-      
+        CreateBankSelect(currencytype);
+
         $("#select_CurrencyType").val("0");
         $('#WithdrawalCreateModal_ServiceTypeName').text(ServiceTypeName);
         $('#WithdrawalCreateModal_ServiceTypePoint').text(systempointvalue);
         $('#WithdrawalCreateModal_CurrencyType').text(currencytype);
-        
+
         $('#WithdrawalCreateModal_ServiceType').val(ServiceType);
         $('#WithdrawalCreateModal_MaxLimit').text(`${minlimit}~${maxlimit}`);
         $('#WithdrawalCreateModal_Charge').text(charge);
         $('#WithdrawalCreateModal_Rate').text(Rate);
 
-        $('#select_CurrencyType').selectpicker('refresh');
+        // 0=銀行卡 / 1=支付寶
+        if (serviceSupplyYype == 1 || serviceSupplyYype == "1") {
+
+            // 支付寶模式
+
+            $("#WithdrawalCreateModal_BankNameLabel").text("支付宝姓名 : ");
+            $("#WithdrawalCreateModal_BankCardLabel").text("支付宝账号 : ");
+
+            // 顯示 input
+            $("#WithdrawalCreateModal_BankNameSelectBox").hide();
+            $("#WithdrawalCreateModal_BankNameInputBox").show();
+
+            // 不需要支行
+            $("#WithdrawalCreateModal_BankBranchNameLabel").hide();
+            $("#WithdrawalCreateModal_BankBranchName").closest(".form-group").hide();
+
+            $("#WithdrawalCreateModal_BankCardNameLabel").hide();
+            $("#WithdrawalCreateModal_BankCardName").closest(".form-group").hide();
+        } else {
+            $('#select_CurrencyType').selectpicker('refresh');
+
+            // 銀行卡模式
+            $("#WithdrawalCreateModal_BankNameLabel").text("银行名称 : ");
+            $("#WithdrawalCreateModal_BankCardLabel").text("卡号 : ");
+
+            // 顯示 select
+            $("#WithdrawalCreateModal_BankNameSelectBox").show();
+            $("#WithdrawalCreateModal_BankNameInputBox").hide();
+
+            $("#WithdrawalCreateModal_BankCardNameLabel").show();
+            $("#WithdrawalCreateModal_BankCardName").closest(".form-group").show();
+
+            $("#WithdrawalCreateModal_BankBranchNameLabel").show();
+            $("#WithdrawalCreateModal_BankBranchName").closest(".form-group").show();
+        }
+
+        $('#WithdrawalCreateModal_BankName').val("0");
+        $('#WithdrawalCreateModal_BankNameInput').val('');
+        $('#WithdrawalCreateModal_BankBranchName').val('');
+        $('#WithdrawalCreateModal_BankCardName').val('');
+        $('#WithdrawalCreateModal_OwnProvince').val('');
+        $('#WithdrawalCreateModal_OwnCity').val('');
         $('#WithdrawalCreateModal_BankCard').val('');
         $('#WithdrawalCreateModal_Amount').val('');
+
         //彈出視窗
         $('#WithdrawalCreateModal').css('display', 'block');
         $('#WithdrawalCreateModal').css('overflow-x', 'hidden');
@@ -1463,6 +1532,12 @@
         $("#select_CurrencyType").val("0");
 
         $('#select_CurrencyType').selectpicker('refresh');
+        $('#WithdrawalCreateModal_BankNameInput').val('');
+        $('#WithdrawalCreateModal_BankName').val('0');
+        $('#WithdrawalCreateModal_BankBranchName').val('');
+        $('#WithdrawalCreateModal_BankCardName').val('');
+        $('#WithdrawalCreateModal_OwnProvince').val('');
+        $('#WithdrawalCreateModal_OwnCity').val('');
         $('#WithdrawalCreateModal_BankCard').val('');
         $('#WithdrawalCreateModal_Amount').val('');
         //彈出視窗
@@ -1574,58 +1649,6 @@
 
     }
 
-    function getCurrencyTypeSelect() {
-        api.getCompanyPointTableResult(AdminObject.forCompanyID, seleCurrency, function (success, obj) {
-
-            if (obj.ResultCode == 0) {
-                $("#select_CurrencyType").children().remove();
-                //$("#select_CurrencyType").append('<option value="0"> -- 請選擇提領幣別 -- </option>');
-                $.each(obj.CompanyPoints, function (i, item) {
-                        var canUsePoint = obj.CompanyPoints[i].PointValue - obj.CompanyPoints[i].LockPointValue - obj.CompanyPoints[i].FrozenPoint;
-                        $("#select_CurrencyType").append('<option data-point=' + canUsePoint + ' value="' + obj.CompanyPoints[i].CurrencyType + '">' + obj.CompanyPoints[i].CurrencyType + '</option>');
-                        $('#showPointValue').text("    (可提领金额 : " + toCurrency(canUsePoint) + ")");
-                 
-                })
-             
-                $('#select_CurrencyType').selectpicker('refresh');
-
-                //綁定 change 事件
-                $('#select_CurrencyType').change(function () {
-                    if ($(this).val() == 0) {
-                        $('#showPointValue').text("");
-                    } else {
-                        var options = $('#select_CurrencyType option:selected');
-                        var pointvalue = options.attr('data-point');
-                        $('#showPointValue').text("    (可提领金额 : " + toCurrency(pointvalue) + ")");
-                    }
-                })
-            }
-            else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 5:
-                        parent.errorAlertCallback("尚未拥有可提领钱包,请联系客服", function () {
-                            parent.ChangePage("Home");
-                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
-                        });
-                        break;
-
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                    default:
-                        message = "其他错误";
-                        parent.warningAlert(message);
-                        break;
-                }
-
-                parent.wrapperFadeOut();
-            }
-        });
-
-
-    }
-
     function WithdrawalCreateModal_Cancel() {
         closeWithdrawalCreateModal();
     }
@@ -1640,11 +1663,51 @@
     }
 
     function WithdrawalCreateModal_Confirm() {
-        if ($("#select_CurrencyType").val() == 0) {
-            parent.warningAlert("尚未选择币别");
-            return;
-        }
+        //if ($("#select_CurrencyType").val() == 0) {
+        //    parent.warningAlert("尚未选择币别");
+        //    return;
+        //}
 
+        //if ($('#WithdrawalCreateModal_BankName').val() == "0") {
+        //    parent.warningAlert("银行名称为必填");
+        //    return;
+        //}
+
+        //if (simplifiedchineseCheck($('#WithdrawalCreateModal_BankName').val().trim()) == 1) {
+        //    parent.warningAlert("银行名称只能有中文");
+        //    return;
+        //}
+
+        //if ($('#WithdrawalCreateModal_BankCardName').val().trim() == "") {
+        //    parent.warningAlert("持卡人姓名为必填");
+        //    return;
+        //}
+
+        //if (simplifiedchineseCheck($('#WithdrawalCreateModal_BankCardName').val().trim()) == 1) {
+        //    parent.warningAlert("持卡人姓名只能有中文");
+        //    return;
+        //}
+
+        //if ($('#WithdrawalCreateModal_BankBranchName').val().trim() != "") {
+        //    if (simplifiedchineseCheck($('#WithdrawalCreateModal_BankBranchName').val().trim()) == 1) {
+        //        parent.warningAlert("支行名称只能有中文");
+        //        return;
+        //    }
+        //}
+
+        //if ($('#WithdrawalCreateModal_OwnProvince').val().trim() != "") {
+        //    if (simplifiedchineseCheck($('#WithdrawalCreateModal_OwnProvince').val().trim()) == 1) {
+        //        parent.warningAlert("省份只能有中文");
+        //        return;
+        //    }
+        //}
+
+        //if ($('#WithdrawalCreateModal_OwnCity').val().trim() != "") {
+        //    if (simplifiedchineseCheck($('#WithdrawalCreateModal_OwnCity').val().trim()) == 1) {
+        //        parent.warningAlert("城市只能有中文");
+        //        return;
+        //    }
+        //}
         if ($('#WithdrawalCreateModal_BankCard').val().trim() == "") {
             parent.warningAlert("卡号为必填");
             return;
@@ -1716,9 +1779,15 @@
                     }
                     var array_data = [];
                     var obj = new Object();
-                    obj.BankName = "";
-                    obj.BankBranchName = "";
-                    obj.BankCardName = "";
+                    
+                    if (serviceSupplyYype == 1 || serviceSupplyYype == "1") {
+                        obj.BankName = $('#WithdrawalCreateModal_BankNameInput').val();
+                    } else {
+                        obj.BankName = $('#WithdrawalCreateModal_BankName').val();
+                    }
+
+                    obj.BankBranchName = $('#WithdrawalCreateModal_BankBranchName').val().trim();
+                    obj.BankCardName = $('#WithdrawalCreateModal_BankCardName').val().trim();
                     obj.OwnProvince = "";
                     obj.OwnCity = "";
                     obj.BankCard = $('#WithdrawalCreateModal_BankCard').val().trim();
@@ -1756,7 +1825,7 @@
             }
         });
 
-       
+
 
     }
 
@@ -1788,7 +1857,31 @@
         });
     }
 
-    function editrow(doc, withdrawID) {
+    function CreateBankSelect(CurrencyType) {
+        api.getBankData(CurrencyType,function (success, obj) {
+            if (obj.ResultCode == 0) {
+                if (obj.BankDataList.length > 0) {
+                    $("#WithdrawalCreateModal_BankName").children().remove();
+                    $("#WithdrawalCreateModal_BankName").append('<option value="0">全部</option>');
+                    $.each(obj.BankDataList, function (i, item) {
+                        $("#WithdrawalCreateModal_BankName").append('<option value="' + obj.BankDataList[i].BankName + '">' + obj.BankDataList[i].BankName + '</option>');
+                    })
+
+                    $('#WithdrawalCreateModal_BankName').selectpicker('refresh');
+                }
+                parent.wrapperFadeOut();
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+        function editrow(doc, withdrawID) {
 
         var row = Table.row(function (idx, data, node) {
             if (data.WithdrawID == withdrawID) {

@@ -1543,7 +1543,7 @@
                 data: function (d) {
                     $('#btnsearch').attr('disabled', true);
                     $('#btnsearch2').attr('disabled', true);
-
+                    
                     var dateinputval = $('#dateinput').val().split('-');
                     d.BID = AdminObject.BID;
                     d.WithdrawSerial = $('#input_WithdrawSerial').val();
@@ -1579,7 +1579,7 @@
                     second = setsecond;
                     WithdrawalTimeOut = setTimeout(reciprocal, 1000);
                 }
-
+                //console.log(d);
                 $('#count1').text(toCurrency(d.recordsTotal));
                 $('#count2').text(toCurrency(d.TotalAmount));
                 $('#count3').text(toCurrency(d.TotalHandlingFee));
@@ -2182,9 +2182,10 @@
 
     function WithdrawalReview(objbtn) {
         var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-
+   
         api.getWithdrawalResultByWithdrawSerial(withdrawSerial, function (success, obj) {
             if (obj.ResultCode == 0) {
+                console.log("asdasd", obj.WithdrawalResult);
                 if (obj.WithdrawalResult.Status == 0) {
                     WithdrawalReviewConfirm(obj.WithdrawalResult);
                 } else {
@@ -2260,18 +2261,44 @@
 
         $('#modal_IsBlockChainOrder').text(data.IsBlockChainOrder);
         if (data.IsBlockChainOrder == 0) {
-            $('#modal_BankName_Label').show();
-            $('#modal_BankBranchName_Label').show();
-            $('#modal_BankCard_Label').show();
-            $('#modal_BankCardName_Label').show();
-            $('#modal_OwnCity_Label').show();
-            $('#modal_OwnProvince_Label').show();
-            $('#modal_BCAddress_Label').hide(); 
-            $('#modal_DownBlockChainRate_Label').hide(); 
-            $('#modal_OKEXRate_Label').hide(); 
-            $('#modal_UpBlockChainRate_Label').hide();
-            $('#modal_UpBlockChainAmount_Label').hide();
-            $('#modal_DownBlockChainAmount_Label').hide(); 
+
+            if (data.ServiceSupplyType == 1) {
+                $('#modal_BankName_Label').show();
+                $('#modal_BankCard_Label').show();
+
+                $('#modal_BankBranchName_Label').hide();
+                $('#modal_BankCardName_Label').hide();
+                $('#modal_OwnCity_Label').hide();
+                $('#modal_OwnProvince_Label').hide();
+                $('#modal_BCAddress_Label').hide();
+                $('#modal_DownBlockChainRate_Label').hide();
+                $('#modal_OKEXRate_Label').hide();
+                $('#modal_UpBlockChainRate_Label').hide();
+                $('#modal_UpBlockChainAmount_Label').hide();
+                $('#modal_DownBlockChainAmount_Label').hide();
+
+                $('#modal_BankName_Label').contents().first()[0].textContent = '支付宝姓名:';
+
+                $('#modal_BankCard_Label').contents().first()[0].textContent = '支付宝账号:';
+            } else {
+                $('#modal_BankName_Label').show();
+                $('#modal_BankBranchName_Label').show();
+                $('#modal_BankCard_Label').show();
+                $('#modal_BankCardName_Label').show();
+                $('#modal_OwnCity_Label').show();
+                $('#modal_OwnProvince_Label').show();
+                $('#modal_BCAddress_Label').hide();
+                $('#modal_DownBlockChainRate_Label').hide();
+                $('#modal_OKEXRate_Label').hide();
+                $('#modal_UpBlockChainRate_Label').hide();
+                $('#modal_UpBlockChainAmount_Label').hide();
+                $('#modal_DownBlockChainAmount_Label').hide();
+
+                $('#modal_BankName_Label').contents().first()[0].textContent = '银行名称:';
+
+                $('#modal_BankCard_Label').contents().first()[0].textContent = '卡号:';
+            }
+
             getProviderCodeResult2(data.forCompanyID, data.ServiceType, data.CurrencyType, data.IsBlockChainOrder, data.Amount);
         } else {
             $('#modal_BankName_Label').hide();

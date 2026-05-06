@@ -50,7 +50,8 @@
                                 <li><a href="#支付申请" title="支付申请" smoothhashscroll="">支付申請</a></li>
                                 <li><a href="#支付异步回传结果" title="支付异步回传结果" smoothhashscroll="">支付异步回传结果</a></li>
                                 <li><a href="#支付订单查询" title="支付订单查询" smoothhashscroll="">支付订单查询</a></li>
-                                <li><a href="#代付申请" title="代付申请" smoothhashscroll="">代付申请</a></li>
+                                <li><a href="#銀行卡代付申请" title="銀行卡代付申请" smoothhashscroll="">銀行卡代付申请</a></li>
+                                <li><a href="#支付寶代付申请" title="支付寶代付申请" smoothhashscroll="">支付寶代付申请</a></li>
                                 <li><a href="#代付异步回传结果" title="代付异步回传结果" smoothhashscroll="">代付异步回传结果</a></li>
                                 <li><a href="#代付订单查询" title="代付订单查询" smoothhashscroll="">代付订单查询</a></li>
                                 <li><a href="#代付订单查询(商户订单号)" title="代付订单查询(商户订单号)" smoothhashscroll="">代付订单查询(商户订单号)</a></li>
@@ -578,7 +579,7 @@
         </pre>
         <!--...-->
         <!--錢包(存款/扣款)-->
-        <h3 class="" id="代付申请"><a class="anchor hidden-xs" href="#代付申请" title="代付申请" smoothhashscroll=""><span class="octicon octicon-link"></span></a>代付申请</h3>
+        <h3 class="" id="銀行卡代付申请"><a class="anchor hidden-xs" href="#銀行卡代付申请" title="銀行卡代付申请" smoothhashscroll=""><span class="octicon octicon-link"></span></a>銀行卡代付申请</h3>
         <!--<p>URL: <code>/QueryPayment</code></p>-->
         <p>URL: <code>{APIURL}/RequireWithdraw</code></p>
         <p>Method: <code>POST</code></p>
@@ -767,6 +768,168 @@
             </code>
         </pre>
 
+        <!--...-->
+        <!--錢包(存款/扣款)-->
+        <h3 class="" id="支付寶代付申请"><a class="anchor hidden-xs" href="#支付寶代付申请" title="支付寶代付申请" smoothhashscroll=""><span class="octicon octicon-link"></span></a>支付寶代付申请</h3>
+        <!--<p>URL: <code>/QueryPayment</code></p>-->
+        <p>URL: <code>{APIURL}/RequireWithdrawAlipay</code></p>
+        <p>Method: <code>POST</code></p>
+        <p>Content-Type: <code>application/json</code></p>
+
+        <strong>PS : </strong>
+        <p><strong>Request</strong> :</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ManageCode</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>商户代码</td>
+                </tr>
+
+
+                <tr>
+                    <td>Currency</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td><a class="anchor hidden-xs" href="#币别" title="币别" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp; &nbsp;币别(详见对照表)</a></td>
+                </tr>
+
+                <tr>
+                    <td>OrderAmount</td>
+                    <td>Number</td>
+                    <td>是</td>
+                    <td>
+                        商户订单金额<br />
+                        <code>只支援整数</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>AlipayName</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>支付宝姓名</td>
+                </tr>
+                <tr>
+                    <td>AlipayAccount</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>支付宝账号</td>
+                </tr>
+                <tr>
+                    <td>OrderID</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        订单号<code>保证唯一值</code>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>OrderDate</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        订单日期<br />
+                        字串格式要求为 yyyy-MM-dd HH:mm:ss <code>ex:2020-01-01 01:01:01</code>
+                    </td>
+                <tr>
+                    <td>RevolveUrl</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>回调地址</td>
+                </tr>
+                <tr>
+                    <td>ClientIP</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>提单会员IP</td>
+                </tr>
+                <tr>
+                    <td>Sign</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        签章:<code>需再使用SHA256加密后转大写</code><br>
+                        <code>OrderAmount如有小数时请将尾数0去除,100.00请带入100 (ex:100.00->100) 后加入签名中</code><br />
+                        格式:ManageCode=商户代码&Currency=币别&OrderID=订单号&OrderAmount=商户订单金额&OrderDate=订单日期&CompanyKey=金钥<br />
+                        <code>只需依照格式内的参数加密，其余参数不加入签名。</code>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <pre>
+            <code class="json">
+                {
+                "ManageCode": "ManageCode",
+                "Currency": "CNY",
+                "OrderAmount": 100.00,
+                "AlipayName": "AlipayName",
+                "AlipayAccount": 123456789,
+                "OrderID": "OD001",
+                "OrderDate": "2020-01-01 01:01:01",
+                "RevolveUrl": "https://ReturnUrl",
+                "ClientIP":"111.1.1.11",
+                "Sign":详细内容请见说明
+                }
+            </code>
+        </pre>
+        <p><strong>Response</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>WithdrawSerial</td>
+                    <td>String</td>
+                    <td>系统订单号</td>
+                </tr>
+
+                <tr>
+                    <td>Status</td>
+                    <td>Number</td>
+                    <td>
+                        0=申请成功<br>
+                        1=申请失败<br>
+                        <code>实际支付结果需等待<a href="#代付异步回传结果" title="Title" smoothhashscroll="">代付异步回传结果</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Message</td>
+                    <td>String</td>
+                    <td>其他资讯</td>
+                </tr>
+                <tr>
+                    <td>OrderAmount</td>
+                    <td>Number</td>
+                    <td>金额</td>
+                </tr>
+            </tbody>
+        </table>
+        <pre>
+        <code class="json">
+                {
+                    "WithdrawSerial":"WT2019122212480000000575",
+                    "OrderAmount":100.0000,
+                    "Status":0,
+                    "Message":null
+                }
+            </code>
+        </pre>
 
         <h3 class="" id="代付异步回传结果"><a class="anchor hidden-xs" href="#代付异步回传结果" title="代付异步回传结果" smoothhashscroll=""><span class="octicon octicon-link"></span></a>代付异步回传结果</h3>
         <strong>PS : </strong>
