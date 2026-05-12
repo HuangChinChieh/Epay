@@ -1,4 +1,3 @@
-
 var BackendAPI = function (BID, APIUrl) {
 
     this.updateBID = function (cb) {
@@ -7753,6 +7752,70 @@ var BackendAPI = function (BID, APIUrl) {
             } else {
                 if (cb)
                     cb(false, text);
+            }
+        });
+    };
+    //#endregion
+
+    //#region ProviderServiceTier
+    this.getProviderServiceTierList = function (providerCode, serviceType, currencyType, cb) {
+        var url = APIUrl + "/GetProviderServiceTierList";
+        var postData = {
+            BID: BID,
+            ProviderCode: providerCode,
+            ServiceType: serviceType,
+            CurrencyType: currencyType
+        };
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb) cb(true, obj);
+            } else {
+                if (cb) cb(false, text);
+            }
+        });
+    };
+
+    this.insertProviderServiceTier = function (providerCode, serviceType, currencyType, providerChannelCode, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, description, cb) {
+        var url = APIUrl + "/InsertProviderServiceTier";
+        var postData = {
+            BID: BID,
+            ProviderCode: providerCode,
+            ServiceType: serviceType,
+            CurrencyType: currencyType,
+            ProviderChannelCode: providerChannelCode,
+            MinOnceAmount: minOnceAmount,
+            MaxOnceAmount: maxOnceAmount,
+            MaxDaliyAmount: maxDaliyAmount,
+            CostRate: costRate,
+            CostCharge: costCharge,
+            Description: description
+        };
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb) cb(true, obj);
+            } else {
+                if (cb) cb(false, text);
+            }
+        });
+    };
+
+    this.deleteProviderServiceTier = function (providerCode, serviceType, currencyType, providerChannelCode, cb) {
+        var url = APIUrl + "/DeleteProviderServiceTier";
+        var postData = {
+            BID: BID,
+            ProviderCode: providerCode,
+            ServiceType: serviceType,
+            CurrencyType: currencyType,
+            ProviderChannelCode: providerChannelCode
+        };
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb) cb(true, obj);
+            } else {
+                if (cb) cb(false, text);
             }
         });
     };

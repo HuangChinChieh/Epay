@@ -1,9 +1,8 @@
-﻿@{ 
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
     string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckLoginPermission = "false";
     }
 
@@ -16,7 +15,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -916,7 +915,7 @@
     });
 
     function pageLoad() {
-        
+
 if ('@CheckLoginPermission' == 'false') {
                 location.href = "Login.cshtml";
             }
@@ -1097,10 +1096,10 @@ if ('@CheckLoginPermission' == 'false') {
             var lstProviderCode = [];
             for (var i = 0; i < $("#divGPayRelationDetail input:checked").length; i++) {
                 var provider = new Object();
-                provider.ProviderCode = $("#divGPayRelationDetail input:checked").eq(i).attr("id");
+                provider.ProviderCode = $("#divGPayRelationDetail input:checked").eq(i).data("providercode");
+                provider.ProviderChannelCode = $("#divGPayRelationDetail input:checked").eq(i).data("providerchannelcode");
                 provider.Weight = $("#divGPayRelationDetail input:checked").eq(i).parent().parent().parent().find('.RelationModel_Weight').val();
                 lstProviderCode.push(provider);
-
             }
 
             var companyID = EditData.data.forCompanyID;
@@ -1242,13 +1241,33 @@ if ('@CheckLoginPermission' == 'false') {
                     break;
             }
 
+            // id 用 ProviderCode_ProviderChannelCode 組合，ProviderChannelCode="" 代表預設渠道
+            var checkboxId = data[i].ProviderChannelCode != ""
+                ? data[i].ProviderCode + "_" + data[i].ProviderChannelCode
+                : data[i].ProviderCode;
+
+            // 顯示名稱：有渠道代碼時加上讓管理員看清楚
+            var displayName = data[i].ProviderChannelCode != ""
+                ? data[i].ProviderName + " [" + data[i].ProviderChannelCode + "]"
+                : data[i].ProviderName;
+
             strGPayRelationDetail += '<div class="col-lg-2 col-md-6">' +
                 '<div class="card" >' +
                 '<div class="header" style="padding-bottom:0">';
             if (data[i].selectedProviderService) {
-                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + data[i].ProviderCode + '" type="checkbox" checked="true"><label for="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label></div>';
+                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all">' +
+                    '<input class="RelationModel_checkbox" id="' + checkboxId + '" ' +
+                    'data-providercode="' + data[i].ProviderCode + '" ' +
+                    'data-providerchannelcode="' + data[i].ProviderChannelCode + '" ' +
+                    'type="checkbox" checked="true">' +
+                    '<label for="' + checkboxId + '">' + displayName + '</label></div>';
             } else {
-                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + data[i].ProviderCode + '" type="checkbox"><label for="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label></div>';
+                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all">' +
+                    '<input class="RelationModel_checkbox" id="' + checkboxId + '" ' +
+                    'data-providercode="' + data[i].ProviderCode + '" ' +
+                    'data-providerchannelcode="' + data[i].ProviderChannelCode + '" ' +
+                    'type="checkbox">' +
+                    '<label for="' + checkboxId + '">' + displayName + '</label></div>';
             }
             strGPayRelationDetail += '</div > ' +
                 '<div class="body" style="padding-top:0"> ' +
@@ -1392,9 +1411,9 @@ if ('@CheckLoginPermission' == 'false') {
                                 <input data-rule="percent" class="form-control percent" id="input_CollectRate" type="text" placeholder="請輸入單筆交易費率(%)">
                             </div>
 
-                            <label  for="input_CollectCharge">单笔交易费(/次) : </label><label id="notifyCollectCharge" style="color:red;margin:5px;display:none"></label>
+                            <label for="input_CollectCharge">单笔交易费(/次) : </label><label id="notifyCollectCharge" style="color:red;margin:5px;display:none"></label>
                             <div class="form-group">
-                                <input  data-rule="currency" class="form-control thousand-symbols" id="input_CollectCharge" type="text" placeholder="請輸入單筆交易費(/次)">
+                                <input data-rule="currency" class="form-control thousand-symbols" id="input_CollectCharge" type="text" placeholder="請輸入單筆交易費(/次)">
                             </div>
 
                             <label for="input_MinOnceAmount">单笔交易最低金额 : </label><label id="notifyMinOnceAmount" style="color:red;margin:5px"></label>

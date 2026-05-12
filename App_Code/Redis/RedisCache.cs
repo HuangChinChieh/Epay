@@ -25,8 +25,7 @@ public static class RedisCache {
             KeyPoint = XMLPath + ":" + CompanyID.ToString();
             if (KeyExists(DBIndex, KeyPoint) == true) {
                 PointDT = DTReadFromRedis(DBIndex, KeyPoint);
-            }
-            else {
+            } else {
                 PointDT = UpdateCompanyPointByID(CompanyID);
             }
 
@@ -55,8 +54,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, PointDT, KeyPoint);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -76,8 +74,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + CompanyID.ToString();
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateCompanyByID(CompanyID);
             }
 
@@ -94,8 +91,7 @@ public static class RedisCache {
             if (KeyExists(DBIndex, Key2)) {
                 CompanyID = Convert.ToInt32(RedisRead(DBIndex, Key2));
                 DT = GetCompanyByID(CompanyID);
-            }
-            else {
+            } else {
                 DT = UpdateCompanyByCode(CompanyCode);
             }
 
@@ -109,8 +105,7 @@ public static class RedisCache {
             Key2 = XMLPath + ":CompanyCode:" + CompanyCode;
             if (KeyExists(DBIndex, Key2)) {
                 CompanyID = Convert.ToInt32(RedisRead(DBIndex, Key2));
-            }
-            else {
+            } else {
                 System.Data.DataTable DT;
 
                 DT = UpdateCompanyByCode(CompanyCode);
@@ -150,8 +145,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key1);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
 
@@ -159,8 +153,7 @@ public static class RedisCache {
                     try {
                         RedisWrite(DBIndex, Key2, CompanyID.ToString());
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -191,8 +184,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key1);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
 
@@ -200,8 +192,7 @@ public static class RedisCache {
                     try {
                         RedisWrite(DBIndex, Key2, CompanyID.ToString());
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -221,8 +212,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + CompanyID.ToString() + "." + ServiceType + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateCompanyService(CompanyID, ServiceType, CurrencyType);
             }
 
@@ -251,8 +241,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -272,8 +261,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + ProviderCode;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateProviderCode(ProviderCode);
             }
 
@@ -300,8 +288,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -321,8 +308,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + ProviderCode + "." + ServiceType + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateProviderService(ProviderCode, ServiceType, CurrencyType);
             }
 
@@ -351,8 +337,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -370,6 +355,65 @@ public static class RedisCache {
         }
     }
 
+    public static class ProviderServiceTier {
+        private static string XMLPath = "ProviderServiceTier";
+        private static int DBIndex = 0;
+
+        public static System.Data.DataTable GetProviderServiceTier(string ProviderCode, string ServiceType, string CurrencyType, string ProviderChannelCode) {
+            string Key1;
+            System.Data.DataTable DT;
+
+            Key1 = XMLPath + ":" + ProviderCode + "." + ServiceType + "." + CurrencyType + "." + ProviderChannelCode;
+            if (KeyExists(DBIndex, Key1)) {
+                DT = DTReadFromRedis(DBIndex, Key1);
+            } else {
+                DT = UpdateProviderServiceTier(ProviderCode, ServiceType, CurrencyType, ProviderChannelCode);
+            }
+
+            return DT;
+        }
+
+        public static System.Data.DataTable UpdateProviderServiceTier(string ProviderCode, string ServiceType, string CurrencyType, string ProviderChannelCode) {
+            string SS;
+            System.Data.SqlClient.SqlCommand DBCmd;
+            System.Data.DataTable DT;
+            string Key;
+
+            Key = XMLPath + ":" + ProviderCode + "." + ServiceType + "." + CurrencyType + "." + ProviderChannelCode;
+
+            SS = "SELECT * FROM ProviderServiceTier WITH (NOLOCK) WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType AND ProviderChannelCode=@ProviderChannelCode";
+            DBCmd = new System.Data.SqlClient.SqlCommand();
+            DBCmd.CommandText = SS;
+            DBCmd.CommandType = System.Data.CommandType.Text;
+            DBCmd.Parameters.Add("@ProviderCode", System.Data.SqlDbType.VarChar).Value = ProviderCode;
+            DBCmd.Parameters.Add("@ServiceType", System.Data.SqlDbType.VarChar).Value = ServiceType;
+            DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = CurrencyType;
+            DBCmd.Parameters.Add("@ProviderChannelCode", System.Data.SqlDbType.VarChar).Value = ProviderChannelCode;
+            DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
+
+            if (DT.Rows.Count > 0) {
+                for (int i = 0; i < 3; i++) {
+                    try {
+                        DTWriteToRedis(DBIndex, DT, Key);
+                        break;
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+
+            return DT;
+        }
+
+        public static void DeleteProviderServiceTier(string ProviderCode, string ServiceType, string CurrencyType, string ProviderChannelCode) {
+            string Key1;
+
+            Key1 = XMLPath + ":" + ProviderCode + "." + ServiceType + "." + CurrencyType + "." + ProviderChannelCode;
+            if (KeyExists(DBIndex, Key1)) {
+                KeyDelete(DBIndex, Key1);
+            }
+        }
+    }
+
     public static class GPayRelation {
         private static string XMLPath = "GPayRelation";
         private static int DBIndex = 0;
@@ -381,8 +425,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + CompanyID.ToString() + "." + ServiceType + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateGPayRelation(CompanyID, ServiceType, CurrencyType);
             }
 
@@ -411,8 +454,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -441,8 +483,7 @@ public static class RedisCache {
             Key1 = XMLPath;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateBankCode();
             }
 
@@ -468,8 +509,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -478,31 +518,25 @@ public static class RedisCache {
         }
     }
 
-    public static class BlockChainRate
-    {
+    public static class BlockChainRate {
         private static string XMLPath = "BlockChainRate";
         private static int DBIndex = 0;
 
-        public static System.Data.DataTable GetBlockChainRate(string CurrencyType)
-        {
+        public static System.Data.DataTable GetBlockChainRate(string CurrencyType) {
             string Key1;
             System.Data.DataTable DT;
 
-            Key1 = XMLPath+":"+ CurrencyType;
-            if (KeyExists(DBIndex, Key1))
-            {
+            Key1 = XMLPath + ":" + CurrencyType;
+            if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else
-            {
+            } else {
                 DT = UpdateBlockChainRate(CurrencyType);
             }
 
             return DT;
         }
 
-        public static System.Data.DataTable UpdateBlockChainRate(string CurrencyType)
-        {
+        public static System.Data.DataTable UpdateBlockChainRate(string CurrencyType) {
             string SS;
             System.Data.SqlClient.SqlCommand DBCmd;
             System.Data.DataTable DT;
@@ -517,17 +551,12 @@ public static class RedisCache {
             DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-            if (DT.Rows.Count > 0)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
+            if (DT.Rows.Count > 0) {
+                for (int i = 0; i < 3; i++) {
+                    try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -535,26 +564,21 @@ public static class RedisCache {
             return DT;
         }
 
-        public static System.Data.DataTable GetAllBlockChainRate()
-        {
+        public static System.Data.DataTable GetAllBlockChainRate() {
             string Key1;
             System.Data.DataTable DT;
 
             Key1 = XMLPath;
-            if (KeyExists(DBIndex, Key1))
-            {
+            if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else
-            {
+            } else {
                 DT = UpdateAllBlockChainRate();
             }
 
             return DT;
         }
 
-        public static System.Data.DataTable UpdateAllBlockChainRate()
-        {
+        public static System.Data.DataTable UpdateAllBlockChainRate() {
             string SS;
             System.Data.SqlClient.SqlCommand DBCmd;
             System.Data.DataTable DT;
@@ -568,17 +592,12 @@ public static class RedisCache {
             DBCmd.CommandType = System.Data.CommandType.Text;
             DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-            if (DT.Rows.Count > 0)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
+            if (DT.Rows.Count > 0) {
+                for (int i = 0; i < 3; i++) {
+                    try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -598,8 +617,7 @@ public static class RedisCache {
             Key1 = XMLPath + ":" + CompanyID.ToString() + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateGPayWithdrawRelation(CompanyID, CurrencyType);
             }
 
@@ -627,8 +645,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -658,8 +675,7 @@ public static class RedisCache {
             Key1 = XMLPath_Company_API + ":" + CompanyID.ToString() + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateCompanyAPIWithdrawLimit(CompanyID, CurrencyType);
             }
 
@@ -673,8 +689,7 @@ public static class RedisCache {
             Key1 = XMLPath_Company_Backend + ":" + CompanyID.ToString() + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateCompanyBackendWithdrawLimit(CompanyID, CurrencyType);
             }
 
@@ -705,8 +720,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -738,8 +752,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -778,8 +791,7 @@ public static class RedisCache {
             Key1 = XMLPath_ProviderCode_API + ":" + ProviderCode + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateProviderAPIWithdrawLimit(ProviderCode, CurrencyType);
             }
 
@@ -793,8 +805,7 @@ public static class RedisCache {
             Key1 = XMLPath_ProviderCode_Backend + ":" + ProviderCode + "." + CurrencyType;
             if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else {
+            } else {
                 DT = UpdateProviderBackendWithdrawLimit(ProviderCode, CurrencyType);
             }
 
@@ -807,7 +818,7 @@ public static class RedisCache {
             System.Data.DataTable DT;
             string Key;
 
-            Key = XMLPath_ProviderCode_Backend + ":" + ProviderCode + "." + CurrencyType+"."+3;
+            Key = XMLPath_ProviderCode_Backend + ":" + ProviderCode + "." + CurrencyType + "." + 3;
 
             SS = "SELECT * FROM WithdrawLimit WITH (NOLOCK) WHERE WithdrawLimitType=3 AND CurrencyType=@CurrencyType AND ProviderCode=@ProviderCode";
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -825,8 +836,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -834,26 +844,21 @@ public static class RedisCache {
             return DT;
         }
 
-        public static System.Data.DataTable GetProviderWithdrawLimitBlockChainRate(string ProviderCode, string CurrencyType)
-        {
+        public static System.Data.DataTable GetProviderWithdrawLimitBlockChainRate(string ProviderCode, string CurrencyType) {
             string Key1;
             System.Data.DataTable DT;
 
             Key1 = XMLPath_ProviderCode_API + ":" + ProviderCode + "." + CurrencyType + "." + 3;
-            if (KeyExists(DBIndex, Key1))
-            {
+            if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else
-            {
+            } else {
                 DT = UpdateProviderWithdrawLimitBlockChainRate(ProviderCode, CurrencyType);
             }
 
             return DT;
         }
 
-        public static System.Data.DataTable UpdateProviderAPIWithdrawLimit(string ProviderCode, string CurrencyType)
-        {
+        public static System.Data.DataTable UpdateProviderAPIWithdrawLimit(string ProviderCode, string CurrencyType) {
             string SS;
             System.Data.SqlClient.SqlCommand DBCmd;
             System.Data.DataTable DT;
@@ -871,18 +876,13 @@ public static class RedisCache {
 
             DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-            if (DT.Rows.Count > 0)
-            {
+            if (DT.Rows.Count > 0) {
 
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
+                for (int i = 0; i < 3; i++) {
+                    try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -914,8 +914,7 @@ public static class RedisCache {
                     try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -960,8 +959,7 @@ public static class RedisCache {
 
             try {
                 RedisRemoveFromList(DBIndex, Key, Value);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
             }
 
         }
@@ -974,8 +972,7 @@ public static class RedisCache {
             try {
                 if (!RedisCheckValueInList(DBIndex, Key, Value))
                     RedisPushToList(DBIndex, Key, Value);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
             }
 
         }
@@ -1098,8 +1095,7 @@ public static class RedisCache {
             if (KeyExists(DBIndex, Key1)) {
                 try {
                     KeyDelete(DBIndex, Key1);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                 }
             }
         }
@@ -1276,7 +1272,7 @@ public static class RedisCache {
 
                 T.Execute();
             }
-        }       
+        }
 
         private static void UpdateBID(BIDInfo BI) {
             string Key1;
@@ -1309,8 +1305,7 @@ public static class RedisCache {
                     T.Execute();
                     Client.KeyExpire(Key1.ToUpper(), new TimeSpan(0, 0, 300));
                     break;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                 }
             }
         }
@@ -1334,31 +1329,25 @@ public static class RedisCache {
         }
     }
 
-    public static class WebSetting
-    {
+    public static class WebSetting {
         private static string XMLPath = "WebSetting";
         private static int DBIndex = 0;
 
-        public static System.Data.DataTable GetWebSetting(string SettingKey)
-        {
+        public static System.Data.DataTable GetWebSetting(string SettingKey) {
             string Key1;
             System.Data.DataTable DT;
 
             Key1 = XMLPath + ":" + SettingKey;
-            if (KeyExists(DBIndex, Key1))
-            {
+            if (KeyExists(DBIndex, Key1)) {
                 DT = DTReadFromRedis(DBIndex, Key1);
-            }
-            else
-            {
+            } else {
                 DT = UpdateSettingKey(SettingKey);
             }
 
             return DT;
         }
 
-        public static System.Data.DataTable UpdateSettingKey(string SettingKey)
-        {
+        public static System.Data.DataTable UpdateSettingKey(string SettingKey) {
             string SS;
             System.Data.SqlClient.SqlCommand DBCmd;
             System.Data.DataTable DT;
@@ -1373,17 +1362,12 @@ public static class RedisCache {
             DBCmd.Parameters.Add("@SettingKey", System.Data.SqlDbType.VarChar).Value = SettingKey;
             DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-            if (DT.Rows.Count > 0)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
+            if (DT.Rows.Count > 0) {
+                for (int i = 0; i < 3; i++) {
+                    try {
                         DTWriteToRedis(DBIndex, DT, Key);
                         break;
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                     }
                 }
             }
@@ -1392,31 +1376,26 @@ public static class RedisCache {
         }
     }
 
-    public static class BlackList
-    {
+    public static class BlackList {
         private static string XMLPath = "BlackList";
         private static int DBIndex = 0;
 
-        public static bool CheckBlackList(string BankCard, string BankCardName)
-        {
+        public static bool CheckBlackList(string BankCard, string BankCardName) {
             string BankCardKey = XMLPath + ":BankCard:" + BankCard;
             string BankCardNameKey = XMLPath + ":BankCardName:" + BankCardName;
 
-            if (!string.IsNullOrEmpty(BankCard) && KeyExists(DBIndex, BankCardKey))
-            {
+            if (!string.IsNullOrEmpty(BankCard) && KeyExists(DBIndex, BankCardKey)) {
                 return true;
             }
 
-            if (!string.IsNullOrEmpty(BankCardName) && KeyExists(DBIndex, BankCardNameKey))
-            {
+            if (!string.IsNullOrEmpty(BankCardName) && KeyExists(DBIndex, BankCardNameKey)) {
                 return true;
             }
 
             return UpdateBlackList(BankCard, BankCardName);
         }
 
-        public static bool UpdateBlackList(string BankCard, string BankCardName)
-        {
+        public static bool UpdateBlackList(string BankCard, string BankCardName) {
             string SS;
             System.Data.SqlClient.SqlCommand DBCmd;
             System.Data.DataTable DT;
@@ -1435,42 +1414,30 @@ public static class RedisCache {
 
             DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-            if (DT.Rows.Count > 0)
-            {
+            if (DT.Rows.Count > 0) {
                 IsBlack = true;
 
-                for (int i = 0; i < DT.Rows.Count; i++)
-                {
+                for (int i = 0; i < DT.Rows.Count; i++) {
                     string RedisBankCard = DT.Rows[i]["BankCard"].ToString();
                     string RedisBankCardName = DT.Rows[i]["BankCardName"].ToString();
                     string BlackListID = DT.Rows[i]["BlackListID"].ToString();
 
-                    if (!string.IsNullOrEmpty(RedisBankCard))
-                    {
-                        for (int k = 0; k < 3; k++)
-                        {
-                            try
-                            {
+                    if (!string.IsNullOrEmpty(RedisBankCard)) {
+                        for (int k = 0; k < 3; k++) {
+                            try {
                                 RedisWrite(DBIndex, XMLPath + ":BankCard:" + RedisBankCardName, BlackListID);
                                 break;
-                            }
-                            catch
-                            {
+                            } catch {
                             }
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(RedisBankCardName))
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            try
-                            {
+                    if (!string.IsNullOrEmpty(RedisBankCardName)) {
+                        for (int j = 0; j < 3; j++) {
+                            try {
                                 RedisWrite(DBIndex, XMLPath + ":BankCardName:" + RedisBankCardName, BlackListID);
                                 break;
-                            }
-                            catch
-                            {
+                            } catch {
                             }
                         }
                     }
@@ -1558,8 +1525,7 @@ public static class RedisCache {
             DT.ReadXml(StringStream);
 
             return DT;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -1572,13 +1538,13 @@ public static class RedisCache {
             DS.ReadXml(StringStream);
 
             return DS;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public static void KeyDelete(int DBIndex, string Key) {        StackExchange.Redis.IDatabase Client = Pay.GetRedisClient(DBIndex);
+    public static void KeyDelete(int DBIndex, string Key) {
+        StackExchange.Redis.IDatabase Client = Pay.GetRedisClient(DBIndex);
 
         Client.KeyDelete(Key.ToUpper());
     }
@@ -1600,8 +1566,7 @@ public static class RedisCache {
 
         if (ExpireTimeoutSecond == 0) {
             Client.StringSet(Key.ToUpper(), Content);
-        }
-        else {
+        } else {
             StackExchange.Redis.ITransaction T = Client.CreateTransaction();
 
             T.StringSetAsync(Key.ToUpper(), Content);
@@ -1683,8 +1648,7 @@ public static class RedisCache {
 
         if (ExpireTimeoutSecond == 0) {
             Client.HashSet(Key.ToUpper(), HashName.ToUpper(), Content);
-        }
-        else {
+        } else {
             StackExchange.Redis.ITransaction T = Client.CreateTransaction();
 
             T.HashSetAsync(Key.ToUpper(), HashName.ToUpper(), Content);
@@ -1754,36 +1718,29 @@ public static class RedisCache {
         return RetValue;
     }
 
-    public static bool GetLocker(string Key, int WaitLockTimeoutSecond, Action Func)
-    {
+    public static bool GetLocker(string Key, int WaitLockTimeoutSecond, Action Func) {
         return GetLocker(0, Key, WaitLockTimeoutSecond, Func);
     }
 
-    public static bool GetLocker(int DBIndex, string Key, int WaitLockTimeoutSecond, Action Func)
-    {
+    public static bool GetLocker(int DBIndex, string Key, int WaitLockTimeoutSecond, Action Func) {
         string XMLPath = "Global:Transaction:" + Key;
         StackExchange.Redis.IDatabase Client = Pay.GetRedisClient(DBIndex);
         DateTime EntryDate = System.DateTime.Now;
         string LockValue = System.Guid.NewGuid().ToString();
         bool RetValue = false;
 
-        while (true)
-        {
+        while (true) {
             if (System.DateTime.Now.Subtract(EntryDate).Seconds >= WaitLockTimeoutSecond)
                 break;
 
-            if (Client.LockTake(Key.ToUpper(), LockValue, new TimeSpan(0, 0, WaitLockTimeoutSecond)))
-            {
+            if (Client.LockTake(Key.ToUpper(), LockValue, new TimeSpan(0, 0, WaitLockTimeoutSecond))) {
                 RetValue = true;
 
-                try
-                {
+                try {
                     Func.Invoke();
                     Client.LockRelease(Key.ToUpper(), LockValue);
                     break;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Client.LockRelease(Key.ToUpper(), LockValue);
                     throw ex;
                 }

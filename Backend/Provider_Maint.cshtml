@@ -1,24 +1,21 @@
 ﻿@{
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckPermission = "false";
     }
 
     string PermissionName = Request.Path.Split('/').Last().Split('.').First();
-    result = bc.CheckPermission(BID,PermissionName);
+    result = bc.CheckPermission(BID, PermissionName);
 
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckPermission = "false";
     }
 
     var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
     string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckLoginPermission = "false";
     }
 }
@@ -30,7 +27,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -1086,6 +1083,33 @@
             </div>
         </div>
 
+        <div class="row clearfix" id="divProviderServiceTier" style="display:none">
+            <div class="col-lg-12 divDetailData">
+                <div class="card">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <h2><strong>限額通道設定 (<span id="tierProviderServiceName"></span>)</strong></h2>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="新增" id="btnTierCreate" type="button"
+                                        class="btn btn-raised btn-primary btn-circle waves-effect float-right">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <table style="width:100%"
+                               class="table table-bordered table-striped table-hover dataTable tt-table nowrap"
+                               id="table_ProviderServiceTier">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row clearfix">
             <div class="col-lg-12 divDetailData">
                 <div class="card">
@@ -1216,6 +1240,56 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalTierCreate" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">新增限額通道</h5>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalTier_ProviderCode">
+                        <input type="hidden" id="modalTier_ServiceType">
+                        <input type="hidden" id="modalTier_CurrencyType">
+                        <div class="form-group">
+                            <label>上游通道代碼 *</label>
+                            <input type="text" class="form-control" id="modalTier_ProviderChannelCode"
+                                   placeholder="例：AL200">
+                        </div>
+                        <div class="form-group">
+                            <label>最低金額 *</label>
+                            <input type="text" class="form-control" id="modalTier_MinOnceAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>最高金額 *</label>
+                            <input type="text" class="form-control" id="modalTier_MaxOnceAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>每日交易量 *</label>
+                            <input type="text" class="form-control" id="modalTier_MaxDaliyAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>費率 (%)</label>
+                            <input type="text" class="form-control" id="modalTier_CostRate">
+                        </div>
+                        <div class="form-group">
+                            <label>手續費 (次)</label>
+                            <input type="text" class="form-control" id="modalTier_CostCharge">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                id="btnTierSave">
+                            儲存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -1235,6 +1309,9 @@
     var isCreatedProviderAlipayTable = false;
     var isCreatedGPayRelationTable = false;
     var providerCompanyID = 0;
+    var TierTable;
+    var isCreatedTierTable = false;
+
     $(document).ready(function () {
            if ('@CheckPermission' == 'false') {
             parent.errorAlertCallback("权限不足", function () {
@@ -1247,7 +1324,7 @@
     });
 
     function pageLoad() {
-        
+
 if ('@CheckLoginPermission' == 'false') {
                 location.href = "Login.cshtml";
             }
@@ -1263,6 +1340,11 @@ if ('@CheckLoginPermission' == 'false') {
             } else {
                 ProviderServiceTable.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
+
+                var rowData = ProviderServiceTable.row(this).data();
+                $('#tierProviderServiceName').text(rowData.ServiceTypeName + ' / ' + rowData.CurrencyType);
+                $('#divProviderServiceTier').show();
+                getTierTableResult(rowData.ProviderCode, rowData.ServiceType, rowData.CurrencyType);
             }
         });
 
@@ -1301,7 +1383,7 @@ if ('@CheckLoginPermission' == 'false') {
                 $(this).addClass('selected');
             }
         });
-        
+
         //新增供應商
         $("#btnProviderCreate").on("click", function () {
             var data = {
@@ -1333,7 +1415,7 @@ if ('@CheckLoginPermission' == 'false') {
             modifyProviderData.BankCardTimeoutSecond = $('#b_BankCardTimeoutSecond').text();
             modifyProviderData.WalletTimeoutSecond = $('#b_WalletTimeoutSecond').text();
             modifyProviderData.forCompanyID = providerCompanyID;
-            
+
             if ($('#b_CollectType').text() == "一般") {
                 modifyProviderData.CollectType = 0;
             } else {
@@ -1346,7 +1428,7 @@ if ('@CheckLoginPermission' == 'false') {
             } else {
                 modifyProviderData.isPrePaid = 1;
             }
-            
+
             var backID = window.frameElement.id.split('_')[1];
             parent.CreateSessionStorage("Provider_Maint", modifyProviderData, `供应商修改(${modifyProviderData.ProviderName})`, "Provider_Update.cshtml", backID, "Provider_Update_" + modifyProviderData.ProviderCode);
 
@@ -1387,7 +1469,6 @@ if ('@CheckLoginPermission' == 'false') {
 
     })
     //停用供应商
-
     $("#btnProviderDisable").on("click", function () {
 
         swal({
@@ -1475,10 +1556,10 @@ if ('@CheckLoginPermission' == 'false') {
             BankCardGUID: BankCardGuid,
             BankNumber: BankNumber
         };
-  
+
         parent.CreateSessionStorage("CompanyWhiteListProviderBankCard_Maint", data, `供應商專卡設定(${BankNumber})`, "CompanyWhiteListProviderBankCard_Maint.cshtml", backID, "CompanyWhiteListProviderBankCard_Maint_" + BankNumber);
     }
-    
+
 
     //新增供應商api代付限額
     $("#btnProviderWithdrawLimitCreateAPI").on("click", function () {
@@ -1676,7 +1757,6 @@ if ('@CheckLoginPermission' == 'false') {
         });
     }
 
-
     function disableProviderService(providerCode, ServiceType, currencyType) {
         api.disableProviderServiceResult(providerCode, ServiceType, currencyType, function (success, obj) {
             if (obj.ResultCode == 0) {
@@ -1822,7 +1902,7 @@ if ('@CheckLoginPermission' == 'false') {
                 $('#b_WithdrawRate').text(selectedproviderdata.WithdrawRate);
                 $('#b_BankCardTimeoutSecond').text(selectedproviderdata.BankCardTimeoutSecond);
                 $('#b_WalletTimeoutSecond').text(selectedproviderdata.WalletTimeoutSecond);
-          
+
                 $('#b_ProviderAPITypeStr').text(checkedProviderAPIType(selectedproviderdata.ProviderAPIType));
                 if (selectedproviderdata.ProviderState == 0) {
                     $('#b_ProviderState').text('启用');
@@ -1849,8 +1929,8 @@ if ('@CheckLoginPermission' == 'false') {
                     $('#b_isPrePaid').css('color', 'red');
                 }
 
-               
-                
+
+
 
                 $('#divProviderDetail').show();
                 getProviderServiceTableResult(selectedproviderdata.ProviderCode);
@@ -2380,10 +2460,51 @@ if ('@CheckLoginPermission' == 'false') {
         });
     }
 
+    function CreateTierTable(data) {
+        TierTable = $('#table_ProviderServiceTier').DataTable({
+            data: data,
+            columns: [
+                { "title": "上游通道代碼", "data": "ProviderChannelCode" },
+                {
+                    "title": "最低金額", "data": "MinOnceAmount",
+                    "render": function (data) { return toCurrency(data); }
+                },
+                {
+                    "title": "最高金額", "data": "MaxOnceAmount",
+                    "render": function (data) { return toCurrency(data); }
+                },
+                { "title": "費率", "data": "CostRate" },
+                { "title": "手續費(次)", "data": "CostCharge" },
+                {
+                    "title": "狀態", "data": "State",
+                    "render": function (data) {
+                        return data == 0
+                            ? '<span style="color:blue;">启用</span>'
+                            : '<span style="color:red;">停用</span>';
+                    }
+                },
+                { "title": "備註", "data": "Description" },
+                {
+                    "title": "功能", "data": "ProviderChannelCode",
+                    "render": function (data, type, row) {
+                        return '<button onclick="deleteTier(\'' + row.ProviderCode + '\',\'' + row.ServiceType + '\',\'' + row.CurrencyType + '\',\'' + data + '\')">删除</button>';
+                    }
+                }
+            ],
+            filter: false,
+            info: false,
+            ordering: false,
+            paging: false,
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
     function deleteProviderService(objbtn) {
 
         var providerCode = $('#select_providercode').val();
-        var ServiceType = $(objbtn).data("ServiceType");
+        var ServiceType = $(objbtn).data("servicetype");
         var currencyType = $(objbtn).data("currencytype");
         swal({
             title: "是否确定删除支付通道？",
@@ -2598,6 +2719,18 @@ if ('@CheckLoginPermission' == 'false') {
         });
     }
 
+    function getTierTableResult(providerCode, serviceType, currencyType) {
+        api.getProviderServiceTierList(providerCode, serviceType, currencyType, function (success, obj) {
+            var tiers = (obj.Tiers != null) ? obj.Tiers : [];
+            if (isCreatedTierTable) {
+                TierTable.clear().rows.add(tiers).draw();
+            } else {
+                isCreatedTierTable = true;
+                CreateTierTable(tiers);
+            }
+        });
+    }
+
     $('#select_providercode').change(function () {
         var providerCode = $(this).val();
         var selectedproviderdata = providerdata.find(function (d) { return d.ProviderCode == providerCode });
@@ -2619,7 +2752,7 @@ if ('@CheckLoginPermission' == 'false') {
 
             $('#b_BankCardTimeoutSecond').text(selectedproviderdata.BankCardTimeoutSecond);
             $('#b_WalletTimeoutSecond').text(selectedproviderdata.WalletTimeoutSecond);
-     
+
             providerCompanyID = selectedproviderdata.forCompanyID;
             if (selectedproviderdata.ProviderState == 0) {
                 $('#b_ProviderState').text('启用');
@@ -2696,5 +2829,63 @@ if ('@CheckLoginPermission' == 'false') {
         }
 
         return b_ProviderAPITypeStr;
+    }
+
+    $('#btnTierCreate').on('click', function () {
+        var rowData = ProviderServiceTable.row('.selected').data();
+        if (rowData == undefined) {
+            showMsg('請先選擇支付方式');
+            return;
+        }
+        // 帶入當前選中的 ProviderCode / ServiceType / CurrencyType
+        $('#modalTier_ProviderCode').val(rowData.ProviderCode);
+        $('#modalTier_ServiceType').val(rowData.ServiceType);
+        $('#modalTier_CurrencyType').val(rowData.CurrencyType);
+        $('#modalTier_ProviderChannelCode').val('');
+        $('#modalTier_MinOnceAmount').val('');
+        $('#modalTier_MaxOnceAmount').val('');
+        $('#modalTier_MaxDaliyAmount').val('');
+        $('#modalTier_CostRate').val('');
+        $('#modalTier_CostCharge').val('');
+        $('#modalTierCreate').modal('show');
+    });
+
+    $('#btnTierSave').on('click', function () {
+        var providerCode = $('#modalTier_ProviderCode').val();
+        var serviceType = $('#modalTier_ServiceType').val();
+        var currencyType = $('#modalTier_CurrencyType').val();
+        var channelCode = $('#modalTier_ProviderChannelCode').val().trim();
+        var minOnceAmount = $('#modalTier_MinOnceAmount').val().trim();
+        var maxOnceAmount = $('#modalTier_MaxOnceAmount').val().trim();
+        var maxDaliyAmount = $('#modalTier_MaxDaliyAmount').val().trim();
+        var costRate = $('#modalTier_CostRate').val().trim();
+        var costCharge = $('#modalTier_CostCharge').val().trim();
+
+        if (!channelCode || !minOnceAmount || !maxOnceAmount || !maxDaliyAmount) {
+            showMsg('請填入必填欄位');
+            return;
+        }
+
+        api.insertProviderServiceTier(providerCode, serviceType, currencyType, channelCode, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge,"",
+            function (success, obj) {
+                if (obj.ResultCode == 0) {
+                    $('#modalTierCreate').modal('hide');
+                    getTierTableResult(providerCode, serviceType, currencyType);
+                } else {
+                    showMsg(obj.Message);
+                }
+            }
+        );
+    });
+
+    function deleteTier(providerCode, serviceType, currencyType, providerChannelCode) {
+        var rowData = ProviderServiceTable.row('.selected').data();
+        api.deleteProviderServiceTier(providerCode, serviceType, currencyType, providerChannelCode, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                getTierTableResult(rowData.ProviderCode, rowData.ServiceType, rowData.CurrencyType);
+            } else {
+                showMsg(obj.Message);
+            }
+        });
     }
 </script>

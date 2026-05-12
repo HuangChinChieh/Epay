@@ -59,7 +59,7 @@ namespace SkyPay.Backend
                 OrderDate = OrderDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 OrderAmount = OrderAmount.ToString("#.##"),
                 RevolveURL = ReturnURL,
-                UserName = "testUser",
+                UserName = "vince",
                 Description= Description,
                 Sign = Sign
             };

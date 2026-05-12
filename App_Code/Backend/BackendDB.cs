@@ -9,15 +9,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 
-public class BackendDB
-{
+public class BackendDB {
     private string DBConnStr = Pay.DBConnStr;
     //private string SessionDBConnStr = Pay.SessionDBConnStr;
     //private string RiskControlDBConnStr = Pay.RiskControlDBConnStr;
 
     #region Company
-    public string GetCompanyNameByCompanyID(int CompanyID)
-    {
+    public string GetCompanyNameByCompanyID(int CompanyID) {
         string returnValue = "";
         string SS;
         SqlCommand DBCmd = null;
@@ -33,8 +31,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetCompanyCodeByCompanyID(int CompanyID)
-    {
+    public string GetCompanyCodeByCompanyID(int CompanyID) {
         string returnValue = "";
         string SS;
         SqlCommand DBCmd = null;
@@ -50,8 +47,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetCompanyDescriptionByCompanyID(int CompanyID)
-    {
+    public string GetCompanyDescriptionByCompanyID(int CompanyID) {
         string returnValue = "";
         string SS;
         SqlCommand DBCmd = null;
@@ -84,8 +80,7 @@ public class BackendDB
     //    return returnValue;
     //}
 
-    public List<DBModel.Company> GetCompany(int forCompanyID, int CompanyType)
-    {
+    public List<DBModel.Company> GetCompany(int forCompanyID, int CompanyType) {
         List<DBModel.Company> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -93,21 +88,16 @@ public class BackendDB
         string SortKey = "";
         DBModel.Company CompanyData;
         CompanyData = GetCompanyByID(forCompanyID);
-        if (CompanyData != null)
-        {
+        if (CompanyData != null) {
             SortKey = CompanyData.SortKey;
         }
 
 
         SS = "SELECT *,(select count(*) from CompanyTable WITH (NOLOCK) where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
-        if (CompanyType != 0)
-        {
-            if (CompanyType == 1)
-            {
+        if (CompanyType != 0) {
+            if (CompanyType == 1) {
                 SS += "  AND  c.CompanyID =@CompanyID";
-            }
-            else
-            {
+            } else {
                 SS += "  AND  c.SortKey LIKE @SortKey + '%'";
             }
         }
@@ -119,10 +109,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = forCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT) as List<DBModel.Company>;
             }
         }
@@ -130,8 +118,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Company> GetCompanyByCompanyID(int forCompanyID)
-    {
+    public List<DBModel.Company> GetCompanyByCompanyID(int forCompanyID) {
         List<DBModel.Company> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -139,8 +126,7 @@ public class BackendDB
         string SortKey = "";
         DBModel.Company CompanyData;
         CompanyData = GetCompanyByID(forCompanyID);
-        if (CompanyData != null)
-        {
+        if (CompanyData != null) {
             SortKey = CompanyData.SortKey;
         }
 
@@ -153,10 +139,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = forCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT) as List<DBModel.Company>;
             }
         }
@@ -164,8 +148,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.OffLineCompany> GetOffLineResult(FromBody.GetOffLineResultSet data, int CompanyID)
-    {
+    public List<DBViewModel.OffLineCompany> GetOffLineResult(FromBody.GetOffLineResultSet data, int CompanyID) {
         List<DBViewModel.OffLineCompany> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -173,8 +156,7 @@ public class BackendDB
         string SortKey = "";
         DBModel.Company CompanyData;
         CompanyData = GetCompanyByID(CompanyID);
-        if (CompanyData != null)
-        {
+        if (CompanyData != null) {
             SortKey = CompanyData.SortKey;
         }
 
@@ -191,10 +173,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.OffLineCompany>(DT).ToList();
             }
         }
@@ -202,8 +182,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Company> GetAgentCompany()
-    {
+    public List<DBModel.Company> GetAgentCompany() {
         List<DBModel.Company> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -218,10 +197,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT) as List<DBModel.Company>;
             }
         }
@@ -229,8 +206,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Company> GetCompanyByCompanyType()
-    {
+    public List<DBModel.Company> GetCompanyByCompanyType() {
         List<DBModel.Company> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -246,10 +222,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT) as List<DBModel.Company>;
             }
         }
@@ -257,8 +231,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Company> GetCompany2(int forCompanyID, int CompanyType)
-    {
+    public List<DBModel.Company> GetCompany2(int forCompanyID, int CompanyType) {
         List<DBModel.Company> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -267,21 +240,16 @@ public class BackendDB
         DBModel.Company CompanyData;
 
         CompanyData = GetCompanyByID(forCompanyID);
-        if (CompanyData != null)
-        {
+        if (CompanyData != null) {
             SortKey = CompanyData.SortKey;
         }
 
 
         SS = "SELECT *,(select count(*) from CompanyTable where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
-        if (CompanyType != 0)
-        {
-            if (CompanyType == 1)
-            {
+        if (CompanyType != 0) {
+            if (CompanyType == 1) {
                 SS += "  AND  c.CompanyID =@CompanyID";
-            }
-            else
-            {
+            } else {
                 SS += "  AND  c.SortKey LIKE @SortKey + '%' And  c.CompanyID <> @CompanyID";
             }
         }
@@ -296,10 +264,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = forCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT) as List<DBModel.Company>;
             }
         }
@@ -307,8 +273,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Company GetCompanyByID(int CompanyID)
-    {
+    public DBModel.Company GetCompanyByID(int CompanyID) {
         DBModel.Company returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -322,10 +287,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT).FirstOrDefault();
             }
         }
@@ -333,8 +296,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.CompanyWithGooleKey GetCompanyByIDWithGooleKey(int CompanyID)
-    {
+    public DBModel.CompanyWithGooleKey GetCompanyByIDWithGooleKey(int CompanyID) {
         DBModel.CompanyWithGooleKey returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -348,10 +310,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyWithGooleKey>(DT).FirstOrDefault();
             }
         }
@@ -359,8 +319,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public bool CheckCompanyBackendLoginIPTypeByCode(string CompanyCode)
-    {
+    public bool CheckCompanyBackendLoginIPTypeByCode(string CompanyCode) {
         bool returnValue = false;
         string SS;
         SqlCommand DBCmd = null;
@@ -372,20 +331,16 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@CompanyCode", System.Data.SqlDbType.VarChar).Value = CompanyCode;
 
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = true;
-        }
-        else
-        {
+        } else {
             returnValue = false;
         }
 
         return returnValue;
     }
 
-    public bool CheckCompanyBackendWithdrawIPTypeByCode(string CompanyCode)
-    {
+    public bool CheckCompanyBackendWithdrawIPTypeByCode(string CompanyCode) {
         bool returnValue = false;
         string SS;
         SqlCommand DBCmd = null;
@@ -397,20 +352,16 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@CompanyCode", System.Data.SqlDbType.VarChar).Value = CompanyCode;
 
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = true;
-        }
-        else
-        {
+        } else {
             returnValue = false;
         }
 
         return returnValue;
     }
 
-    public DBModel.Company GetCompanyByCode(string CompanyCode)
-    {
+    public DBModel.Company GetCompanyByCode(string CompanyCode) {
         DBModel.Company returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -423,10 +374,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyCode", System.Data.SqlDbType.VarChar).Value = CompanyCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Company>(DT).FirstOrDefault();
             }
         }
@@ -434,8 +383,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.CompanyWithKey GetCompanyWithKeyByCode(string CompanyCode)
-    {
+    public DBModel.CompanyWithKey GetCompanyWithKeyByCode(string CompanyCode) {
         DBModel.CompanyWithKey returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -448,10 +396,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyCode", System.Data.SqlDbType.VarChar).Value = CompanyCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyWithKey>(DT).FirstOrDefault();
             }
         }
@@ -459,8 +405,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.CompanyWithKey GetCompanyWithKeyByCompanyID(int CompanyID)
-    {
+    public DBModel.CompanyWithKey GetCompanyWithKeyByCompanyID(int CompanyID) {
         DBModel.CompanyWithKey returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -473,10 +418,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", System.Data.SqlDbType.Int).Value = CompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyWithKey>(DT).FirstOrDefault();
             }
         }
@@ -484,8 +427,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.InsertCompanyReturn InsertCompany(DBModel.Company company, int CreateAdminID)
-    {
+    public DBViewModel.InsertCompanyReturn InsertCompany(DBModel.Company company, int CreateAdminID) {
 
         string CompanyKey = Guid.NewGuid().ToString("N");
         string SS;
@@ -495,8 +437,7 @@ public class BackendDB
         DBViewModel.InsertCompanyReturn returnValue = new DBViewModel.InsertCompanyReturn();
 
         MerchantCode = GetCompanyMerchantCode();
-        DBAccess.ExecuteTransDB(Pay.DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(Pay.DBConnStr, T => {
 
             SS = "   INSERT INTO CompanyTable" +
                      "              (CompanyType," +
@@ -575,7 +516,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@ProviderGroupID", SqlDbType.Int).Value = company.ProviderGroupID;
             DBCmd.Parameters.Add("@BackendWithdrawType", SqlDbType.Int).Value = company.BackendWithdrawType;
             DBCmd.Parameters.Add("@DailyWithdrawalLimit", SqlDbType.Int).Value = company.DailyWithdrawalLimit;
-            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = company.CurrencyType; 
+            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = company.CurrencyType;
             DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
             DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
 
@@ -591,8 +532,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateCompany(DBModel.Company company)
-    {
+    public int UpdateCompany(DBModel.Company company) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -622,7 +562,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@WithdrawAPIType", SqlDbType.Int).Value = company.WithdrawAPIType;
         DBCmd.Parameters.Add("@BackendWithdrawType", SqlDbType.Int).Value = company.BackendWithdrawType;
         DBCmd.Parameters.Add("@DailyWithdrawalLimit", SqlDbType.Int).Value = company.DailyWithdrawalLimit;
-        DBCmd.Parameters.Add("@ProviderGroups", SqlDbType.VarChar).Value = company.ProviderGroups; 
+        DBCmd.Parameters.Add("@ProviderGroups", SqlDbType.VarChar).Value = company.ProviderGroups;
         DBCmd.Parameters.Add("@CheckCompanyWithdrawType", SqlDbType.Int).Value = company.CheckCompanyWithdrawType;
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = company.Description;
         DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
@@ -638,8 +578,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateCompanyWithdrawlType(DBModel.Company company)
-    {
+    public int UpdateCompanyWithdrawlType(DBModel.Company company) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -667,8 +606,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateCompanyGoogleKey(string GoogleKey, int CompanyID)
-    {
+    public int UpdateCompanyGoogleKey(string GoogleKey, int CompanyID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -692,8 +630,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetCompanyMerchantCode()
-    {
+    public string GetCompanyMerchantCode() {
         string returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -706,14 +643,10 @@ public class BackendDB
         DBCmd.Parameters.Add("@MerchantCode", System.Data.SqlDbType.VarChar).Value = DateTime.Now.ToString("yyyyMM") + "%";
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = (int.Parse(DT.Rows[0]["MerchantCode"].ToString()) + 1).ToString();
-            }
-            else
-            {
+            } else {
                 returnValue = DateTime.Now.ToString("yyyyMM") + "001";
             }
         }
@@ -721,8 +654,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DisableCompanyByID(int CompanyID)
-    {
+    public int DisableCompanyByID(int CompanyID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -742,8 +674,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateAllCompanyRedis()
-    {
+    public int UpdateAllCompanyRedis() {
         int CompanyCount = 0;
         string SS;
         SqlCommand DBCmd = null;
@@ -759,16 +690,12 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 var CompanyModel = DataTableExtensions.ToList<DBModel.Company>(DT);
-                for (int i = 0; i < CompanyModel.Count; i++)
-                {
+                for (int i = 0; i < CompanyModel.Count; i++) {
                     var CompanyDT = RedisCache.Company.UpdateCompanyByID(CompanyModel[i].CompanyID);
-                    if (CompanyDT != null)
-                    {
+                    if (CompanyDT != null) {
                         CompanyCount++;
                     }
                 }
@@ -783,8 +710,7 @@ public class BackendDB
     #endregion
 
     #region Currency
-    public List<DBModel.Currency> GetCurrency()
-    {
+    public List<DBModel.Currency> GetCurrency() {
         List<DBModel.Currency> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -796,10 +722,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Currency>(DT) as List<DBModel.Currency>;
             }
         }
@@ -807,19 +731,15 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Currency> GetCurrencyByCompanyID(int CompanyID)
-    {
+    public List<DBModel.Currency> GetCurrencyByCompanyID(int CompanyID) {
         List<DBModel.Currency> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CompanyID == 0)
-        {
+        if (CompanyID == 0) {
             SS = "SELECT * FROM CurrencyType WITH (NOLOCK)";
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM CompanyPoint WITH (NOLOCK) where forCompanyID=@CompanyID";
         }
 
@@ -829,10 +749,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Currency>(DT) as List<DBModel.Currency>;
             }
         }
@@ -840,8 +758,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertCurrency(DBModel.Currency Currency)
-    {
+    public int InsertCurrency(DBModel.Currency Currency) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -853,8 +770,7 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Currency.CurrencyType;
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -871,8 +787,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateCurrency(DBModel.Currency Currency)
-    {
+    public int UpdateCurrency(DBModel.Currency Currency) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -889,8 +804,7 @@ public class BackendDB
     #endregion
 
     #region ServiceType
-    public string GetServiceTypeNameByServiceType(string ServiceType)
-    {
+    public string GetServiceTypeNameByServiceType(string ServiceType) {
         string returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -905,8 +819,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetServiceTypeNameByServiceType(string ServiceType, string CurrencyType)
-    {
+    public string GetServiceTypeNameByServiceType(string ServiceType, string CurrencyType) {
         string returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -922,8 +835,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ServiceTypeVM> GetTestServiceType(int CompanyID, int InsideLevel)
-    {
+    public List<DBViewModel.ServiceTypeVM> GetTestServiceType(int CompanyID, int InsideLevel) {
         List<DBViewModel.ServiceTypeVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -932,18 +844,14 @@ public class BackendDB
         DBModel.Company CompanyData;
 
 
-        if (CompanyID == 0)
-        {
+        if (CompanyID == 0) {
             SS = " SELECT *,1 as isUpLine FROM ServiceType WITH (NOLOCK)" +
                  //" Join ProviderService WITH (NOLOCK) On ProviderService.ServiceType = ServiceType.ServiceType And ProviderService.CurrencyType = ServiceType.CurrencyType" +
                  " order by ServiceType.CurrencyType";
-        }
-        else
-        {
+        } else {
             //取得SortKey
             CompanyData = GetCompanyByID(CompanyID);
-            if (CompanyData != null)
-            {
+            if (CompanyData != null) {
                 SortKey = CompanyData.SortKey;
             }
 
@@ -968,10 +876,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@SortKey", SqlDbType.VarChar).Value = SortKey;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ServiceTypeVM>(DT) as List<DBViewModel.ServiceTypeVM>;
             }
         }
@@ -979,8 +885,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ServiceTypeVM> GetServiceType(int CompanyID, int InsideLevel)
-    {
+    public List<DBViewModel.ServiceTypeVM> GetServiceType(int CompanyID, int InsideLevel) {
         List<DBViewModel.ServiceTypeVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -989,18 +894,14 @@ public class BackendDB
         DBModel.Company CompanyData;
 
 
-        if (CompanyID == 0)
-        {
+        if (CompanyID == 0) {
             SS = " SELECT *,1 as isUpLine FROM ServiceType WITH (NOLOCK)" +
                  //" Join ProviderService WITH (NOLOCK) On ProviderService.ServiceType = ServiceType.ServiceType And ProviderService.CurrencyType = ServiceType.CurrencyType" +
                  " order by ServiceType.CurrencyType";
-        }
-        else
-        {
+        } else {
             //取得SortKey
             CompanyData = GetCompanyByID(CompanyID);
-            if (CompanyData != null)
-            {
+            if (CompanyData != null) {
                 SortKey = CompanyData.SortKey;
             }
 
@@ -1025,10 +926,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@SortKey", SqlDbType.VarChar).Value = SortKey;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ServiceTypeVM>(DT) as List<DBViewModel.ServiceTypeVM>;
             }
         }
@@ -1036,8 +935,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertServiceType(DBModel.ServiceTypeModel Model)
-    {
+    public int InsertServiceType(DBModel.ServiceTypeModel Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1059,8 +957,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateServiceType(DBModel.ServiceTypeModel Model)
-    {
+    public int UpdateServiceType(DBModel.ServiceTypeModel Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1084,8 +981,7 @@ public class BackendDB
     #endregion
 
     #region WithdrawLimit
-    public List<DBModel.WithdrawLimit> GetAllWithdrawLimitResultByCompanyID(DBModel.WithdrawLimit data)
-    {
+    public List<DBModel.WithdrawLimit> GetAllWithdrawLimitResultByCompanyID(DBModel.WithdrawLimit data) {
         List<DBModel.WithdrawLimit> returnValue = null;
         string SS = "";
         SqlCommand DBCmd = null;
@@ -1095,8 +991,7 @@ public class BackendDB
         SS = " SELECT WithdrawLimit.* FROM WithdrawLimit " +
              " WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType";
 
-        if (!String.IsNullOrEmpty(SS))
-        {
+        if (!String.IsNullOrEmpty(SS)) {
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -1105,10 +1000,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawLimit>(DT) as List<DBModel.WithdrawLimit>;
             }
         }
@@ -1116,27 +1009,22 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.WithdrawLimit> GetWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public List<DBModel.WithdrawLimit> GetWithdrawLimitResult(DBModel.WithdrawLimit data) {
         List<DBModel.WithdrawLimit> returnValue = null;
         string SS = "";
         SqlCommand DBCmd = null;
         DataTable DT = null;
         // 0=上游後台出款手續費，1=商戶後台出款手續費/2=商戶api 出款手續費/3=上游 api 手續費
-        if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3)
-        { //供應商資料
+        if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3) { //供應商資料
             SS = "SELECT * FROM WithdrawLimit WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType";
-        }
-        else if (data.WithdrawLimitType == 1 || data.WithdrawLimitType == 2)
-        {   //營運商資料
+        } else if (data.WithdrawLimitType == 1 || data.WithdrawLimitType == 2) {   //營運商資料
             SS = " SELECT WithdrawLimit.*,ServiceType.ServiceTypeName FROM WithdrawLimit " +
                  " LEFT JOIN ServiceType ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
                  " WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType";
         }
 
 
-        if (!String.IsNullOrEmpty(SS))
-        {
+        if (!String.IsNullOrEmpty(SS)) {
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -1147,10 +1035,8 @@ public class BackendDB
         }
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawLimit>(DT) as List<DBModel.WithdrawLimit>;
             }
         }
@@ -1159,8 +1045,7 @@ public class BackendDB
     }
 
 
-    public List<DBModel.WithdrawLimit> GetProviderWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public List<DBModel.WithdrawLimit> GetProviderWithdrawLimitResult(DBModel.WithdrawLimit data) {
         List<DBModel.WithdrawLimit> returnValue = null;
         string SS = "";
         SqlCommand DBCmd = null;
@@ -1171,8 +1056,7 @@ public class BackendDB
              " LEFT JOIN ServiceType ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
              "  WHERE ProviderCode =@ProviderCode And WithdrawLimitType IN (0, 3)";
 
-        if (!String.IsNullOrEmpty(SS))
-        {
+        if (!String.IsNullOrEmpty(SS)) {
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -1182,10 +1066,8 @@ public class BackendDB
         }
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawLimit>(DT) as List<DBModel.WithdrawLimit>;
             }
         }
@@ -1193,8 +1075,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProviderBankCard> GetProviderBankCard(DBModel.WithdrawLimit data)
-    {
+    public List<DBModel.ProviderBankCard> GetProviderBankCard(DBModel.WithdrawLimit data) {
         List<DBModel.ProviderBankCard> returnValue = null;
         string SS = "";
         SqlCommand DBCmd = null;
@@ -1214,8 +1095,7 @@ public class BackendDB
                   " 	FROM ProviderBankCard  " +
                   " WHERE forProviderCode =@ProviderCode AND (BankCardState=0 OR BankCardState=1) ";
 
-        if (!String.IsNullOrEmpty(SS))
-        {
+        if (!String.IsNullOrEmpty(SS)) {
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -1224,10 +1104,8 @@ public class BackendDB
         }
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProviderBankCard>(DT) as List<DBModel.ProviderBankCard>;
             }
         }
@@ -1235,24 +1113,19 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.WithdrawLimit GetWithdrawLimitResultByCurrencyType(string CurrencyType, int WithdrawLimitType, string ProviderCode, int CompanyID)
-    {
+    public DBModel.WithdrawLimit GetWithdrawLimitResultByCurrencyType(string CurrencyType, int WithdrawLimitType, string ProviderCode, int CompanyID) {
         DBModel.WithdrawLimit returnValue = null;
         string SS = "";
         SqlCommand DBCmd = null;
         DataTable DT = null;
-        if (WithdrawLimitType == 0 || WithdrawLimitType == 3)
-        { //供應商資料
+        if (WithdrawLimitType == 0 || WithdrawLimitType == 3) { //供應商資料
             SS = "SELECT * FROM WithdrawLimit WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
-        }
-        else if (WithdrawLimitType == 1 || WithdrawLimitType == 2)
-        {   //營運商資料
+        } else if (WithdrawLimitType == 1 || WithdrawLimitType == 2) {   //營運商資料
             SS = "SELECT * FROM WithdrawLimit WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
         }
 
 
-        if (!String.IsNullOrEmpty(SS))
-        {
+        if (!String.IsNullOrEmpty(SS)) {
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -1264,10 +1137,8 @@ public class BackendDB
         }
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawLimit>(DT).FirstOrDefault();
             }
         }
@@ -1276,20 +1147,16 @@ public class BackendDB
     }
 
 
-    public bool CheckWithdrawLimitData(DBModel.WithdrawLimit data)
-    {
+    public bool CheckWithdrawLimitData(DBModel.WithdrawLimit data) {
         bool returnValue = false;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
         SS = "Select Count(*) from  WithdrawLimit where CurrencyType=@CurrencyType And WithdrawLimitType=@WithdrawLimitType ";
-        if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3)
-        {
+        if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3) {
             //供應商資料
             SS += " And ProviderCode=@ProviderCode";
-        }
-        else
-        {
+        } else {
             //營運商資料
             SS += " And forCompanyID=@forCompanyID And ServiceType=@ServiceType ";
         }
@@ -1304,16 +1171,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = data.CompanyID;
         var dataCount = int.Parse(DBAccess.GetDBValue(Pay.DBConnStr, DBCmd).ToString());
 
-        if (dataCount == 0)
-        {
+        if (dataCount == 0) {
             returnValue = true;
         }
 
         return returnValue;
     }
 
-    public int InsertProviderWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public int InsertProviderWithdrawLimitResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1337,8 +1202,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProviderWithdrawLimitBlockChainRateResult(DBModel.WithdrawLimit data)
-    {
+    public int UpdateProviderWithdrawLimitBlockChainRateResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1363,8 +1227,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertProviderWithdrawLimitBlockChainRateResult(DBModel.WithdrawLimit data)
-    {
+    public int InsertProviderWithdrawLimitBlockChainRateResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1389,8 +1252,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProviderWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public int UpdateProviderWithdrawLimitResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1409,12 +1271,9 @@ public class BackendDB
         DBCmd.Parameters.Add("@Charge", SqlDbType.Decimal).Value = data.Charge;
         DBCmd.Parameters.Add("@Rate", SqlDbType.Decimal).Value = data.Rate;
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
-        if (data.WithdrawLimitType == 0)
-        {
+        if (data.WithdrawLimitType == 0) {
             RedisCache.ProviderWithdrawLimit.UpdateProviderBackendWithdrawLimit(data.ProviderCode, data.CurrencyType);
-        }
-        else if (data.WithdrawLimitType == 3)
-        {
+        } else if (data.WithdrawLimitType == 3) {
             RedisCache.ProviderWithdrawLimit.UpdateProviderAPIWithdrawLimit(data.ProviderCode, data.CurrencyType);
         }
 
@@ -1423,8 +1282,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertCompanyWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public int InsertCompanyWithdrawLimitResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1445,19 +1303,15 @@ public class BackendDB
         DBCmd.Parameters.Add("@Rate", SqlDbType.Decimal).Value = data.Rate;
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-        if (data.WithdrawLimitType == 1)
-        {
+        if (data.WithdrawLimitType == 1) {
             RedisCache.CompanyWithdrawLimit.UpdateCompanyBackendWithdrawLimit(data.CompanyID, data.CurrencyType);
-        }
-        else if (data.WithdrawLimitType == 2)
-        {
+        } else if (data.WithdrawLimitType == 2) {
             RedisCache.CompanyWithdrawLimit.UpdateCompanyAPIWithdrawLimit(data.CompanyID, data.CurrencyType);
         }
         return returnValue;
     }
 
-    public int UpdateCompanyWithdrawLimitResult(DBModel.WithdrawLimit data)
-    {
+    public int UpdateCompanyWithdrawLimitResult(DBModel.WithdrawLimit data) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -1478,12 +1332,9 @@ public class BackendDB
         DBCmd.Parameters.Add("@Rate", SqlDbType.Decimal).Value = data.Rate;
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-        if (data.WithdrawLimitType == 1)
-        {
+        if (data.WithdrawLimitType == 1) {
             RedisCache.CompanyWithdrawLimit.UpdateCompanyBackendWithdrawLimit(data.CompanyID, data.CurrencyType);
-        }
-        else if (data.WithdrawLimitType == 2)
-        {
+        } else if (data.WithdrawLimitType == 2) {
             RedisCache.CompanyWithdrawLimit.UpdateCompanyAPIWithdrawLimit(data.CompanyID, data.CurrencyType);
         }
         return returnValue;
@@ -1492,21 +1343,17 @@ public class BackendDB
 
     #region ProxyProvider 
 
-    public int SetProxyProviderData(DBModel.ProxyProvider Model)
-    {
+    public int SetProxyProviderData(DBModel.ProxyProvider Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
         var ProxyProviderModel = GetProxyProviderResult(Model.forProviderCode);
 
-        if (ProxyProviderModel == null)
-        {
+        if (ProxyProviderModel == null) {
             SS = "INSERT INTO ProxyProvider (forProviderCode,Charge,Rate,MaxWithdrawalAmount) " +
         "                          VALUES (@forProviderCode,@Charge,@Rate,@MaxWithdrawalAmount)";
-        }
-        else
-        {
+        } else {
             SS = "UPDATE ProxyProvider SET Charge=@Charge,Rate=@Rate,MaxWithdrawalAmount=@MaxWithdrawalAmount WHERE forProviderCode=@forProviderCode ";
         }
 
@@ -1521,8 +1368,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.ProxyProvider GetProxyProviderResult(string ProviderCode)
-    {
+    public DBModel.ProxyProvider GetProxyProviderResult(string ProviderCode) {
         DBModel.ProxyProvider returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -1536,10 +1382,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProvider>(DT).First();
             }
         }
@@ -1547,8 +1391,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public static int InsertProxyProviderOrderWithDeductionProfit(string OrderSerial, int Type, decimal Charge, decimal Rate, int GroupID)
-    {
+    public static int InsertProxyProviderOrderWithDeductionProfit(string OrderSerial, int Type, decimal Charge, decimal Rate, int GroupID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1568,8 +1411,7 @@ public class BackendDB
         RetValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
         //当是代付单时
-        if (Type == 1)
-        {
+        if (Type == 1) {
             var BackendDB = new BackendDB();
             string GroupName = BackendDB.GetProxyProviderGroupNameByGroupID(GroupID);
             new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组(扣除利润):" + OrderSerial + ",群组名:" + GroupName, "", fingerprint);
@@ -1578,8 +1420,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int InsertProxyProviderOrder(string OrderSerial, int Type, decimal Charge, decimal Rate, int GroupID)
-    {
+    public static int InsertProxyProviderOrder(string OrderSerial, int Type, decimal Charge, decimal Rate, int GroupID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1598,8 +1439,7 @@ public class BackendDB
         RetValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
         //当是代付单时
-        if (Type == 1)
-        {
+        if (Type == 1) {
             var BackendDB = new BackendDB();
             string GroupName = BackendDB.GetProxyProviderGroupNameByGroupID(GroupID);
             new BackendDB().InsertAdminOPLog(1, 5, 0, "设定订单群组:" + OrderSerial + ",群组名:" + GroupName, "", fingerprint);
@@ -1608,8 +1448,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int UpdateProxyProviderOrder(string OrderSerial, int Type, decimal Charge, decimal Rate)
-    {
+    public static int UpdateProxyProviderOrder(string OrderSerial, int Type, decimal Charge, decimal Rate) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1629,8 +1468,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public int UpdateProxyProviderOrderGroup(string OrderSerial, int ChangeGroupID, int AdminGroupID)
-    {
+    public int UpdateProxyProviderOrderGroup(string OrderSerial, int ChangeGroupID, int AdminGroupID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1656,8 +1494,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public int UpdateProxyProviderOrderGroupByAdmin(string OrderSerial, int GroupID)
-    {
+    public int UpdateProxyProviderOrderGroupByAdmin(string OrderSerial, int GroupID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1681,8 +1518,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public int spUpdateProxyProviderOrderGroupByAdmin(string OrderSerial, int GroupID)
-    {
+    public int spUpdateProxyProviderOrderGroupByAdmin(string OrderSerial, int GroupID) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -3;
@@ -1707,8 +1543,7 @@ public class BackendDB
 
     }
 
-    public DBModel.ProxyProviderOrder GetProxyProviderOrderByOrderSerial(string OrderSerial, int Type)
-    {
+    public DBModel.ProxyProviderOrder GetProxyProviderOrderByOrderSerial(string OrderSerial, int Type) {
         DBModel.ProxyProviderOrder returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -1723,10 +1558,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderOrder>(DT).First();
             }
         }
@@ -1734,8 +1567,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int GetProxyProviderPaymentGroupID(string PaymentSerial)
-    {
+    public int GetProxyProviderPaymentGroupID(string PaymentSerial) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         int returnValue = 0;
@@ -1750,16 +1582,14 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@PaymentSerial", System.Data.SqlDbType.VarChar).Value = PaymentSerial;
         DBReturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
-        if (DBReturn != null)
-        {
+        if (DBReturn != null) {
             returnValue = int.Parse(DBReturn.ToString());
         }
 
         return returnValue;
     }
 
-    public DBViewModel.UpdatePatmentResult ConfirmManualProviderPayment(string PaymentSerial, int modifyStatus, string PatchDescription, int ConfirmAdminID)
-    {
+    public DBViewModel.UpdatePatmentResult ConfirmManualProviderPayment(string PaymentSerial, int modifyStatus, string PatchDescription, int ConfirmAdminID) {
         DBViewModel.UpdatePatmentResult returnValue = new DBViewModel.UpdatePatmentResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -1767,14 +1597,12 @@ public class BackendDB
         DBModel.PaymentTable PaymentData = GetPaymentResultByPaymentSerial(PaymentSerial);
 
         returnValue.Status = -1;
-        if (PaymentData == null)
-        {
+        if (PaymentData == null) {
             returnValue.Message = "订单资讯错误";
             return returnValue;
         }
 
-        if (PaymentData.ProcessStatus == 8 && PaymentData.SubmitType == 1)
-        {
+        if (PaymentData.ProcessStatus == 8 && PaymentData.SubmitType == 1) {
 
             //人工充值
             SS = "spSetManualProviderPayment";
@@ -1787,8 +1615,7 @@ public class BackendDB
             DBAccess.ExecuteDB(DBConnStr, DBCmd);
             DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-            switch (DBreturn)
-            {
+            switch (DBreturn) {
                 case 0://成功
                     UpdatePaymentPatchDescriptionAndConfirmAdminID(PaymentSerial, PatchDescription, ConfirmAdminID);
                     returnValue.Message = "审核完成";
@@ -1820,9 +1647,7 @@ public class BackendDB
                     //UpdateWithdrawal(WithdrawSerial, "其他錯誤");
                     break;
             }
-        }
-        else
-        {
+        } else {
             returnValue.Message = "目前订单状态无法审核";
         }
 
@@ -1830,8 +1655,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public static int UpdatePaymentSerialByProxyProviderOrder(string PaymentSerial, int ProcessStatus, string ProviderCode, string ServiceType)
-    {
+    public static int UpdatePaymentSerialByProxyProviderOrder(string PaymentSerial, int ProcessStatus, string ProviderCode, string ServiceType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -1849,8 +1673,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResultForProvider(FromBody.WithdrawalSet fromBody, string ProviderCode, int GroupID)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResultForProvider(FromBody.WithdrawalSet fromBody, string ProviderCode, int GroupID) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -1863,40 +1686,33 @@ public class BackendDB
              " And (PPO.GroupID=0 or PPO.GroupID=@GroupID) ";
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And WithdrawSerial=@WithdrawSerial";
         }
 
         //卡号
-        if (fromBody.BankDescription != "")
-        {
+        if (fromBody.BankDescription != "") {
             SS += " And Withdrawal.BankDescription=@BankDescription";
         }
 
         //營運商過濾
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += " And Withdrawal.forCompanyID=@CompanyID";
         }
 
         //金额过滤
-        if (fromBody.MinAmount != 0)
-        {
+        if (fromBody.MinAmount != 0) {
             SS += " And Withdrawal.Amount >= @MinAmount";
 
-            if (fromBody.MaxAmount != 0)
-            {
+            if (fromBody.MaxAmount != 0) {
                 SS += " And Withdrawal.Amount <= @MaxAmount";
             }
         }
 
-        if (fromBody.MaxAmount != 0)
-        {
+        if (fromBody.MaxAmount != 0) {
             SS += " And Withdrawal.Amount <= @MaxAmount";
 
-            if (fromBody.MinAmount != 0)
-            {
+            if (fromBody.MinAmount != 0) {
                 SS += " And Withdrawal.Amount >= @MinAmount";
             }
         }
@@ -1917,10 +1733,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -1928,8 +1742,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Withdrawal> OnlySearchWithdrawalForProvider(FromBody.WithdrawalSet fromBody, string ProviderCode)
-    {
+    public List<DBModel.Withdrawal> OnlySearchWithdrawalForProvider(FromBody.WithdrawalSet fromBody, string ProviderCode) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -1942,46 +1755,38 @@ public class BackendDB
              " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate AND Status<>0 And Status<>8 AND Status <> 90 AND Status <> 91 And Withdrawal.ProviderCode=@ProviderCode";
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And WithdrawSerial=@WithdrawSerial";
         }
 
         //序號過濾
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += " And GroupID=@GroupID";
         }
 
         //卡号
-        if (fromBody.BankDescription != "")
-        {
+        if (fromBody.BankDescription != "") {
             SS += " And Withdrawal.BankDescription=@BankDescription";
         }
 
         //營運商過濾
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += " And Withdrawal.forCompanyID=@CompanyID";
         }
 
         //金额过滤
-        if (fromBody.MinAmount != 0)
-        {
+        if (fromBody.MinAmount != 0) {
             SS += " And Withdrawal.Amount >= @MinAmount";
 
-            if (fromBody.MaxAmount != 0)
-            {
+            if (fromBody.MaxAmount != 0) {
                 SS += " And Withdrawal.Amount <= @MaxAmount";
             }
         }
 
-        if (fromBody.MaxAmount != 0)
-        {
+        if (fromBody.MaxAmount != 0) {
             SS += " And Withdrawal.Amount <= @MaxAmount";
 
-            if (fromBody.MinAmount != 0)
-            {
+            if (fromBody.MinAmount != 0) {
                 SS += " And Withdrawal.Amount >= @MinAmount";
             }
         }
@@ -2002,10 +1807,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -2013,8 +1816,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Withdrawal> OnlySearchProviderWithdrawalTableResultByStatus(string ProviderCode)
-    {
+    public List<DBModel.Withdrawal> OnlySearchProviderWithdrawalTableResultByStatus(string ProviderCode) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -2034,10 +1836,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -2045,8 +1845,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Withdrawal> GetProviderWithdrawalTableResultByStatus(string ProviderCode, int GroupID)
-    {
+    public List<DBModel.Withdrawal> GetProviderWithdrawalTableResultByStatus(string ProviderCode, int GroupID) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -2065,10 +1864,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -2079,8 +1876,7 @@ public class BackendDB
 
     #region ProviderCode
 
-    public List<DBModel.Provider> GetProviderByServiceType(string ServiceType, string CurrencyType)
-    {
+    public List<DBModel.Provider> GetProviderByServiceType(string ServiceType, string CurrencyType) {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2094,10 +1890,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT).ToList();
             }
         }
@@ -2105,8 +1899,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetProviderNameByListProviderCode(List<string> ProviderCodes)
-    {
+    public string GetProviderNameByListProviderCode(List<string> ProviderCodes) {
         string returnValue = "";
         string SS;
         SqlCommand DBCmd = null;
@@ -2115,8 +1908,7 @@ public class BackendDB
         DataTable DT;
         SS = "SELECT ProviderName FROM ProviderCode WITH (NOLOCK) ";
 
-        for (int i = 0; i < ProviderCodes.Count; i++)
-        {
+        for (int i = 0; i < ProviderCodes.Count; i++) {
             parameters[i] = string.Format("@ProviderCode{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], ProviderCodes[i]);
 
@@ -2126,10 +1918,8 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null && DT.Rows.Count > 0)
-        {
-            for (int i = 0; i < DT.Rows.Count; i++)
-            {
+        if (DT != null && DT.Rows.Count > 0) {
+            for (int i = 0; i < DT.Rows.Count; i++) {
                 returnValue += DT.Rows[i]["ProviderName"] + ",";
             }
 
@@ -2139,8 +1929,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetProviderNameByProviderCode(string ProviderCode)
-    {
+    public string GetProviderNameByProviderCode(string ProviderCode) {
         string returnValue = "";
         string SS;
         SqlCommand DBCmd = null;
@@ -2151,22 +1940,19 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
         var DBreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
-        if (DBreturn != null)
-        {
+        if (DBreturn != null) {
             returnValue = DBreturn.ToString();
         }
 
         return returnValue;
     }
 
-    public List<DBModel.Provider> GetProviderCodeResult(string ProviderCode = "")
-    {
+    public List<DBModel.Provider> GetProviderCodeResult(string ProviderCode = "") {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
 
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode=@ProviderCode";
 
@@ -2175,9 +1961,7 @@ public class BackendDB
             DBCmd.CommandType = System.Data.CommandType.Text;
             DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK)";
 
             DBCmd = new SqlCommand();
@@ -2186,10 +1970,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT) as List<DBModel.Provider>;
             }
         }
@@ -2197,20 +1979,15 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Provider> GetProviderCodeResultByCompanyID(int CompanyID, int CompanyType, string ProviderCode = "")
-    {
+    public List<DBModel.Provider> GetProviderCodeResultByCompanyID(int CompanyID, int CompanyType, string ProviderCode = "") {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        if (ProviderCode != "")
-        {
-            if (CompanyType == 4)
-            {
+        if (ProviderCode != "") {
+            if (CompanyType == 4) {
                 SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode=@ProviderCode And forCompanyID=@forCompanyID";
-            }
-            else
-            {
+            } else {
                 SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode=@ProviderCode";
             }
 
@@ -2220,15 +1997,10 @@ public class BackendDB
             DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
             DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
-            if (CompanyType == 4)
-            {
+        } else {
+            if (CompanyType == 4) {
                 SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE forCompanyID=@forCompanyID";
-            }
-            else
-            {
+            } else {
                 SS = "SELECT * FROM ProviderCode WITH (NOLOCK)";
             }
 
@@ -2239,10 +2011,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT) as List<DBModel.Provider>;
             }
         }
@@ -2250,23 +2020,19 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Provider> GetProviderCodeResultByCompanyID(int CompanyID, string ProviderCode = "")
-    {
+    public List<DBModel.Provider> GetProviderCodeResultByCompanyID(int CompanyID, string ProviderCode = "") {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode =@ProviderCode AND ProviderState=0";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
             DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderState=0";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
@@ -2274,10 +2040,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT) as List<DBModel.Provider>;
             }
         }
@@ -2285,23 +2049,19 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Provider> GetProviderCodeResultByShowType(string ProviderCode = "")
-    {
+    public List<DBModel.Provider> GetProviderCodeResultByShowType(string ProviderCode = "") {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode =@ProviderCode AND ProviderState=0";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
             DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM ProviderCode WITH (NOLOCK) WHERE ProviderState=0";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
@@ -2309,10 +2069,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT) as List<DBModel.Provider>;
             }
         }
@@ -2320,8 +2078,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProvider> getProviderCodeResultByProxyProvider()
-    {
+    public List<DBModel.ProxyProvider> getProviderCodeResultByProxyProvider() {
         List<DBModel.ProxyProvider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2336,10 +2093,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProvider>(DT) as List<DBModel.ProxyProvider>;
             }
         }
@@ -2347,8 +2102,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.ProxyProvider GetProxyProviderByProviderCode(string ProviderCode)
-    {
+    public DBModel.ProxyProvider GetProxyProviderByProviderCode(string ProviderCode) {
         DBModel.ProxyProvider returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2363,10 +2117,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProvider>(DT).ToList().First();
             }
         }
@@ -2374,8 +2126,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Provider> GetProviderCodeResultByProviderAPIType(int ProviderAPIType)
-    {
+    public List<DBModel.Provider> GetProviderCodeResultByProviderAPIType(int ProviderAPIType) {
         List<DBModel.Provider> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2387,32 +2138,24 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 var tmpProviders = new List<DBModel.Provider>();
                 returnValue = DataTableExtensions.ToList<DBModel.Provider>(DT) as List<DBModel.Provider>;
 
                 //旗標，API支援度，0=無/1=代收/2=代付/4=查詢餘額/8=查詢單/16=補單
-                foreach (var data in returnValue)
-                {
-                    if (data.ProviderAPIType == 0)
-                    {
+                foreach (var data in returnValue) {
+                    if (data.ProviderAPIType == 0) {
                         continue;
                     }
 
-                    if ((data.ProviderAPIType & ProviderAPIType) == ProviderAPIType)
-                    {
+                    if ((data.ProviderAPIType & ProviderAPIType) == ProviderAPIType) {
                         tmpProviders.Add(data);
                     }
                 }
-                if (tmpProviders.Count > 0)
-                {
+                if (tmpProviders.Count > 0) {
                     returnValue = tmpProviders;
-                }
-                else
-                {
+                } else {
                     returnValue = null;
                 }
             }
@@ -2421,8 +2164,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertProviderCode(DBModel.Provider Model)
-    {
+    public int InsertProviderCode(DBModel.Provider Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2454,8 +2196,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProviderCode(DBModel.Provider Model)
-    {
+    public int UpdateProviderCode(DBModel.Provider Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2485,8 +2226,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertProviderBankCard(FromBody.ProviderBankCardData companyBankCard)
-    {
+    public int InsertProviderBankCard(FromBody.ProviderBankCardData companyBankCard) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2524,8 +2264,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProviderBankCard(FromBody.ProviderBankCardData companyBankCard)
-    {
+    public int UpdateProviderBankCard(FromBody.ProviderBankCardData companyBankCard) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2580,8 +2319,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteProviderBankCard(FromBody.ProviderBankCardData companyBankCard)
-    {
+    public int DeleteProviderBankCard(FromBody.ProviderBankCardData companyBankCard) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2601,8 +2339,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int GetProviderState(string ProviderCode)
-    {
+    public int GetProviderState(string ProviderCode) {
 
         int returnValue = -1;
         string SS;
@@ -2618,8 +2355,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProviderBalance> GetProviderPoint(string CurrencyType, List<string> ArrayProviderCode)
-    {
+    public List<DBModel.ProviderBalance> GetProviderPoint(string CurrencyType, List<string> ArrayProviderCode) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
         #region SignCheck
@@ -2641,25 +2377,21 @@ public class BackendDB
 
         var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "QueryProviderBalance", JsonConvert.SerializeObject(_ProviderBalance));
 
-        if (!string.IsNullOrEmpty(returnValue))
-        {
+        if (!string.IsNullOrEmpty(returnValue)) {
             var jobj = JObject.Parse(returnValue);
             var ArrayProviderBalance = jobj["ArrayProviderBalance"];
-            if (ArrayProviderBalance != null)
-            {
+            if (ArrayProviderBalance != null) {
                 objReturnValue = JsonConvert.DeserializeObject<List<DBModel.ProviderBalance>>(ArrayProviderBalance.ToString());
             }
 
-            if (objReturnValue.Count == 0)
-            {
+            if (objReturnValue.Count == 0) {
                 objReturnValue = null;
             }
         }
         return objReturnValue;
     }
 
-    public List<DBViewModel.ProviderListResult> GetProviderListResult()
-    {
+    public List<DBViewModel.ProviderListResult> GetProviderListResult() {
         List<DBViewModel.ProviderListResult> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2683,10 +2415,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderListResult>(DT) as List<DBViewModel.ProviderListResult>;
             }
         }
@@ -2694,8 +2424,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ServiceData> GetProviderListServiceData(string Currency = "")
-    {
+    public List<DBViewModel.ServiceData> GetProviderListServiceData(string Currency = "") {
         List<DBViewModel.ServiceData> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2716,8 +2445,7 @@ public class BackendDB
                  "        LEFT JOIN ServiceType ST" +
                  "               ON ST.ServiceType = PS.ServiceType " +
                  " WHERE  1=1 ";
-        if (!string.IsNullOrEmpty(Currency))
-        {
+        if (!string.IsNullOrEmpty(Currency)) {
             SS += "        AND PS.CurrencyType = @CurrencyType ";
         }
 
@@ -2726,16 +2454,13 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
 
-        if (!string.IsNullOrEmpty(Currency))
-        {
+        if (!string.IsNullOrEmpty(Currency)) {
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Currency;
         }
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ServiceData>(DT) as List<DBViewModel.ServiceData>;
             }
         }
@@ -2743,8 +2468,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderListPoint> GetProviderListPoint()
-    {
+    public List<DBViewModel.ProviderListPoint> GetProviderListPoint() {
         List<DBViewModel.ProviderListPoint> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2758,10 +2482,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderListPoint>(DT) as List<DBViewModel.ProviderListPoint>;
             }
         }
@@ -2769,8 +2491,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderListPoint> GetProviderListFrozenPoint(string ProviderCode)
-    {
+    public List<DBViewModel.ProviderListPoint> GetProviderListFrozenPoint(string ProviderCode) {
         List<DBViewModel.ProviderListPoint> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2785,10 +2506,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderListPoint>(DT) as List<DBViewModel.ProviderListPoint>;
             }
         }
@@ -2796,8 +2515,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.AllProviderTotal> GetAllProviderTotal()
-    {
+    public List<DBViewModel.AllProviderTotal> GetAllProviderTotal() {
         List<DBViewModel.AllProviderTotal> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -2816,10 +2534,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AllProviderTotal>(DT) as List<DBViewModel.AllProviderTotal>;
             }
         }
@@ -2827,8 +2543,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ChangeProviderCodeState(DBModel.Provider Model)
-    {
+    public int ChangeProviderCodeState(DBModel.Provider Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2845,8 +2560,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProxyProviderPoint(string ProviderCode, decimal Amount, int GroupID, string Description, string CurrencyType)
-    {
+    public int UpdateProxyProviderPoint(string ProviderCode, decimal Amount, int GroupID, string Description, string CurrencyType) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -3;
@@ -2869,8 +2583,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProxyProviderPoint2(string PaymentSerial)
-    {
+    public int UpdateProxyProviderPoint2(string PaymentSerial) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -3;
@@ -2889,8 +2602,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ChangeProviderAPIType(FromBody.UpdateProviderAPIType Model, int APIType)
-    {
+    public int ChangeProviderAPIType(FromBody.UpdateProviderAPIType Model, int APIType) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -2908,8 +2620,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public bool CheckProxyProviderState(string ProviderCode)
-    {
+    public bool CheckProxyProviderState(string ProviderCode) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
@@ -2925,8 +2636,7 @@ public class BackendDB
     #endregion
 
     #region Admin
-    public bool CheckLoginIP(string UserIP)
-    {
+    public bool CheckLoginIP(string UserIP) {
 
         bool returnValue = false;
         string SS;
@@ -2941,23 +2651,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@IP", SqlDbType.VarChar).Value = UserIP;
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT.Rows.Count > 0)
-        {
+        if (DT.Rows.Count > 0) {
             returnValue = true;
         }
         return returnValue;
     }
 
-    public bool CheckLoginIP(string UserIP, string CompanyCode)
-    {
+    public bool CheckLoginIP(string UserIP, string CompanyCode) {
 
         bool returnValue = false;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CheckCompanyBackendLoginIPTypeByCode(CompanyCode))
-        {
+        if (CheckCompanyBackendLoginIPTypeByCode(CompanyCode)) {
             SS = "SELECT IP FROM BackendLoginIP WITH (NOLOCK)" +
           " WHERE IP=@IP And CompanyCode=@CompanyCode ";
             DBCmd = new SqlCommand();
@@ -2966,28 +2673,23 @@ public class BackendDB
             DBCmd.Parameters.Add("@IP", SqlDbType.VarChar).Value = UserIP;
             DBCmd.Parameters.Add("@CompanyCode", SqlDbType.VarChar).Value = CompanyCode;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-            if (DT.Rows.Count > 0)
-            {
+            if (DT.Rows.Count > 0) {
                 returnValue = true;
             }
             return returnValue;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
-    public bool CheckBackendWithdrawalIP(string UserIP, string CompanyCode)
-    {
+    public bool CheckBackendWithdrawalIP(string UserIP, string CompanyCode) {
 
         bool returnValue = false;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CheckCompanyBackendWithdrawIPTypeByCode(CompanyCode))
-        {
+        if (CheckCompanyBackendWithdrawIPTypeByCode(CompanyCode)) {
             SS = "SELECT IP FROM BackendWithdrawalIP WITH (NOLOCK)" +
           " WHERE IP=@IP And CompanyCode=@CompanyCode ";
             DBCmd = new SqlCommand();
@@ -2996,20 +2698,16 @@ public class BackendDB
             DBCmd.Parameters.Add("@IP", SqlDbType.VarChar).Value = UserIP;
             DBCmd.Parameters.Add("@CompanyCode", SqlDbType.VarChar).Value = CompanyCode;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-            if (DT.Rows.Count > 0)
-            {
+            if (DT.Rows.Count > 0) {
                 returnValue = true;
             }
             return returnValue;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
-    public int UpdateAdminGoogleKey(string GoogleKey, string LoginAccount)
-    {
+    public int UpdateAdminGoogleKey(string GoogleKey, string LoginAccount) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -3029,8 +2727,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Admin GetAdminByLoginAccount(string LoginAccount)
-    {
+    public DBModel.Admin GetAdminByLoginAccount(string LoginAccount) {
         DBModel.Admin returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3046,10 +2743,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Admin>(DT).FirstOrDefault();
             }
         }
@@ -3057,8 +2752,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.AdminWithLoginPassword GetAdminByLoginAccountWithLoginPassword(string LoginAccount)
-    {
+    public DBModel.AdminWithLoginPassword GetAdminByLoginAccountWithLoginPassword(string LoginAccount) {
         DBModel.AdminWithLoginPassword returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3074,10 +2768,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AdminWithLoginPassword>(DT).FirstOrDefault();
             }
         }
@@ -3085,8 +2777,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.AdminWithGoogleKey GetAdminByLoginAccountWithGoogleKey(string LoginAccount)
-    {
+    public DBModel.AdminWithGoogleKey GetAdminByLoginAccountWithGoogleKey(string LoginAccount) {
         DBModel.AdminWithGoogleKey returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3101,10 +2792,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AdminWithGoogleKey>(DT).FirstOrDefault();
             }
         }
@@ -3112,8 +2801,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetGoogleKeyByLoginAccount(string LoginAccount)
-    {
+    public string GetGoogleKeyByLoginAccount(string LoginAccount) {
         string returnValue = "";
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3127,16 +2815,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@LoginAccount", SqlDbType.VarChar).Value = LoginAccount;
 
         DTreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
-        if (DTreturn != null)
-        {
+        if (DTreturn != null) {
             returnValue = DTreturn.ToString();
         }
 
         return returnValue;
     }
 
-    public DBModel.Admin GetAdminByLoginAdminID(int AdminID)
-    {
+    public DBModel.Admin GetAdminByLoginAdminID(int AdminID) {
         DBModel.Admin returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3151,10 +2837,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Admin>(DT).FirstOrDefault();
             }
         }
@@ -3162,8 +2846,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.AdminWithLoginPassword GetAdminByLoginAdminIDWithLoginPassword(int AdminID)
-    {
+    public DBModel.AdminWithLoginPassword GetAdminByLoginAdminIDWithLoginPassword(int AdminID) {
         DBModel.AdminWithLoginPassword returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3178,10 +2861,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AdminWithLoginPassword>(DT).FirstOrDefault();
             }
         }
@@ -3189,8 +2870,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.AdminWithKey GetAdminByLoginAdminIDWithKey(int AdminID)
-    {
+    public DBViewModel.AdminWithKey GetAdminByLoginAdminIDWithKey(int AdminID) {
         DBViewModel.AdminWithKey returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3205,10 +2885,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminWithKey>(DT).FirstOrDefault();
             }
         }
@@ -3216,8 +2894,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.AdminTableResult> GetAdminTableByCompanyID(int CompanyID)
-    {
+    public List<DBViewModel.AdminTableResult> GetAdminTableByCompanyID(int CompanyID) {
         List<DBViewModel.AdminTableResult> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3235,10 +2912,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminTableResult>(DT).ToList();
             }
         }
@@ -3246,8 +2921,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertAdmin(int CompanyID, int AdminroleID, string LoginAccount, string Password, string RealName, string Description, int AdminType)
-    {
+    public int InsertAdmin(int CompanyID, int AdminroleID, string LoginAccount, string Password, string RealName, string Description, int AdminType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3260,8 +2934,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@LoginAccount", SqlDbType.VarChar).Value = LoginAccount;
 
         //登入帳號重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -3288,16 +2961,14 @@ public class BackendDB
 
     }
 
-    public int UpdateAdmin(int AdminID, int CompanyID, int AdminroleID, string Password, string RealName, string Description, int AdminType, int AdminState)
-    {
+    public int UpdateAdmin(int AdminID, int CompanyID, int AdminroleID, string Password, string RealName, string Description, int AdminType, int AdminState) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
 
         SS = " UPDATE AdminTable";
         SS += " SET forAdminRoleID=@forAdminRoleID,";
-        if (!string.IsNullOrEmpty(Password))
-        {
+        if (!string.IsNullOrEmpty(Password)) {
             SS += "LoginPassword=@LoginPassword,";
         }
         SS += " AdminState=@AdminState,AdminType=@AdminType,RealName=@RealName,Description=@Description,UserIP=@UserIP";
@@ -3309,8 +2980,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
         DBCmd.Parameters.Add("@forAdminRoleID", SqlDbType.Int).Value = AdminroleID;
         DBCmd.Parameters.Add("@AdminType", SqlDbType.Int).Value = AdminType;
-        if (!string.IsNullOrEmpty(Password))
-        {
+        if (!string.IsNullOrEmpty(Password)) {
             DBCmd.Parameters.Add("@LoginPassword", SqlDbType.VarChar).Value = CodingControl.GetMD5(Password);
         }
         DBCmd.Parameters.Add("@RealName", SqlDbType.NVarChar).Value = RealName;
@@ -3325,8 +2995,7 @@ public class BackendDB
 
     }
 
-    public int DisableAdmin(int AdminID, int CompanyID)
-    {
+    public int DisableAdmin(int AdminID, int CompanyID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3347,8 +3016,7 @@ public class BackendDB
 
     }
 
-    public int UpdateLoginPassword(int AdminID, string Password, string Newpassword)
-    {
+    public int UpdateLoginPassword(int AdminID, string Password, string Newpassword) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3365,8 +3033,7 @@ public class BackendDB
         oldLoginPassword = DBAccess.GetDBValue(DBConnStr, DBCmd).ToString();
 
         MD5Input = CodingControl.GetMD5(Password);
-        if (MD5Input == oldLoginPassword)
-        {
+        if (MD5Input == oldLoginPassword) {
 
             SS = " UPDATE AdminTable";
             SS += " SET LoginPassword=@LoginPassword";
@@ -3379,9 +3046,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@AdminID", SqlDbType.Int).Value = AdminID;
 
             returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             returnValue = -1;
         }
 
@@ -3389,8 +3054,7 @@ public class BackendDB
 
     }
 
-    public int CheckAdminExistByLoginAccount(string LoginAccount)
-    {
+    public int CheckAdminExistByLoginAccount(string LoginAccount) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3409,8 +3073,7 @@ public class BackendDB
     #endregion
 
     #region ProxyProviderGroup
-    public decimal GetProxyProviderGroupFrozenPoint(string ProviderCode, int GroupID)
-    {
+    public decimal GetProxyProviderGroupFrozenPoint(string ProviderCode, int GroupID) {
         decimal returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3429,8 +3092,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroupFrozenPointHistory> GetProxyProviderGroupFrozenPoint(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroupFrozenPointHistory> GetProxyProviderGroupFrozenPoint(string ProviderCode) {
         List<DBModel.ProxyProviderGroupFrozenPointHistory> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3452,10 +3114,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroupFrozenPointHistory>(DT).ToList();
             }
         }
@@ -3463,8 +3123,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupOnWithdrawalAmountResultByAdmin(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupOnWithdrawalAmountResultByAdmin(string ProviderCode) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3488,10 +3147,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3499,8 +3156,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupTableResultByAdmin(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupTableResultByAdmin(string ProviderCode) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3519,10 +3175,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3530,8 +3184,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetAllProxyProviderGroupTableResultByAdmin()
-    {
+    public List<DBModel.ProxyProviderGroup> GetAllProxyProviderGroupTableResultByAdmin() {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3550,10 +3203,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3561,8 +3212,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupWeightByAdmin(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupWeightByAdmin(string ProviderCode) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3579,10 +3229,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3590,8 +3238,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupTableResult(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupTableResult(string ProviderCode) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3614,10 +3261,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3625,8 +3270,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupName(string ProviderCode)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupName(string ProviderCode) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3643,10 +3287,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3654,8 +3296,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.ProxyProviderGroup GetProxyProviderGroupByGroupID(string ProviderCode, int GroupID)
-    {
+    public DBModel.ProxyProviderGroup GetProxyProviderGroupByGroupID(string ProviderCode, int GroupID) {
         DBModel.ProxyProviderGroup returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3672,10 +3313,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = GroupID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).First();
             }
         }
@@ -3683,8 +3322,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetProxyProviderGroupNameByGroupID(int GroupID)
-    {
+    public string GetProxyProviderGroupNameByGroupID(int GroupID) {
         string returnValue = "";
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3700,16 +3338,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = GroupID;
         DBreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
 
-        if (DBreturn != null)
-        {
+        if (DBreturn != null) {
             returnValue = DBreturn.ToString();
         }
 
         return returnValue;
     }
 
-    public string GetProxyProviderGroupNameByOrderSerial(string OrderSerial, int Type)
-    {
+    public string GetProxyProviderGroupNameByOrderSerial(string OrderSerial, int Type) {
         string returnValue = "";
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3726,16 +3362,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@Type", SqlDbType.Int).Value = Type;
         DBreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
 
-        if (DBreturn != null)
-        {
+        if (DBreturn != null) {
             returnValue = DBreturn.ToString();
         }
 
         return returnValue;
     }
 
-    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupByState(string ProviderCode, int State)
-    {
+    public List<DBModel.ProxyProviderGroup> GetProxyProviderGroupByState(string ProviderCode, int State) {
         List<DBModel.ProxyProviderGroup> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3752,10 +3386,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@State", SqlDbType.Int).Value = State;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxyProviderGroup>(DT).ToList();
             }
         }
@@ -3763,8 +3395,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertProxyProviderGroup(string ProviderCode, string GroupName, decimal MinAmount, decimal MaxAmount)
-    {
+    public int InsertProxyProviderGroup(string ProviderCode, string GroupName, decimal MinAmount, decimal MaxAmount) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3778,8 +3409,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@GroupName", SqlDbType.NVarChar).Value = GroupName;
 
         //登入帳號重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -3801,8 +3431,7 @@ public class BackendDB
 
     }
 
-    public int UpdateProxyProviderGroup(string ProviderCode, string GroupName, int GroupID, int State, decimal MinAmount, decimal MaxAmount)
-    {
+    public int UpdateProxyProviderGroup(string ProviderCode, string GroupName, int GroupID, int State, decimal MinAmount, decimal MaxAmount) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3827,8 +3456,7 @@ public class BackendDB
 
     }
 
-    public int UpdateProxyProviderGroupWeight(List<DBModel.ProxyProviderGroup> data)
-    {
+    public int UpdateProxyProviderGroupWeight(List<DBModel.ProxyProviderGroup> data) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3838,8 +3466,7 @@ public class BackendDB
 
         SS += " WHERE GroupID=@GroupID ";
 
-        for (int i = 0; i < data.Count; i++)
-        {
+        for (int i = 0; i < data.Count; i++) {
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = CommandType.Text;
@@ -3857,8 +3484,7 @@ public class BackendDB
 
     }
 
-    public int DisableProxyProviderGroup(int GroupID, string ProviderCode)
-    {
+    public int DisableProxyProviderGroup(int GroupID, string ProviderCode) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3884,8 +3510,7 @@ public class BackendDB
 
     #region 专属供应商设定
 
-    public int InsertProxyProviderAcount(int CompanyID, int AdminroleID, string LoginAccount, string Password, string RealName, string Description, int AdminType, int GroupID)
-    {
+    public int InsertProxyProviderAcount(int CompanyID, int AdminroleID, string LoginAccount, string Password, string RealName, string Description, int AdminType, int GroupID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3898,8 +3523,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@LoginAccount", SqlDbType.VarChar).Value = LoginAccount;
 
         //登入帳號重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -3926,16 +3550,14 @@ public class BackendDB
 
     }
 
-    public int UpdateProxyProviderAcount(int AdminID, int CompanyID, int AdminroleID, string Password, string RealName, string Description, int AdminType, int AdminState, int GroupID)
-    {
+    public int UpdateProxyProviderAcount(int AdminID, int CompanyID, int AdminroleID, string Password, string RealName, string Description, int AdminType, int AdminState, int GroupID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
 
         SS = " UPDATE AdminTable";
         SS += " SET forAdminRoleID=@forAdminRoleID,";
-        if (!string.IsNullOrEmpty(Password))
-        {
+        if (!string.IsNullOrEmpty(Password)) {
             SS += "LoginPassword=@LoginPassword,";
         }
         SS += " AdminState=@AdminState,AdminType=@AdminType,RealName=@RealName,Description=@Description,UserIP=@UserIP,GroupID=@GroupID";
@@ -3947,8 +3569,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
         DBCmd.Parameters.Add("@forAdminRoleID", SqlDbType.Int).Value = AdminroleID;
         DBCmd.Parameters.Add("@AdminType", SqlDbType.Int).Value = AdminType;
-        if (!string.IsNullOrEmpty(Password))
-        {
+        if (!string.IsNullOrEmpty(Password)) {
             DBCmd.Parameters.Add("@LoginPassword", SqlDbType.VarChar).Value = CodingControl.GetMD5(Password);
         }
         DBCmd.Parameters.Add("@RealName", SqlDbType.NVarChar).Value = RealName;
@@ -3964,8 +3585,7 @@ public class BackendDB
 
     }
 
-    public int DisableProxyProviderAcount(int AdminID, int CompanyID)
-    {
+    public int DisableProxyProviderAcount(int AdminID, int CompanyID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -3986,8 +3606,7 @@ public class BackendDB
 
     }
 
-    public List<DBViewModel.AdminTableResult> GetProxyProviderAcountResult(int CompanyID)
-    {
+    public List<DBViewModel.AdminTableResult> GetProxyProviderAcountResult(int CompanyID) {
         List<DBViewModel.AdminTableResult> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4006,10 +3625,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminTableResult>(DT).ToList();
             }
         }
@@ -4019,8 +3636,7 @@ public class BackendDB
     #endregion
 
     #region WithdrawalIP
-    public List<DBModel.WithdrawalIP> GetWithdrawalIPresult(int CompanyID)
-    {
+    public List<DBModel.WithdrawalIP> GetWithdrawalIPresult(int CompanyID) {
         List<DBModel.WithdrawalIP> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4045,10 +3661,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList();
             }
         }
@@ -4056,14 +3670,12 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertWithdrawalIP(int CompanyID, string IP, int AdminID)
-    {
+    public int InsertWithdrawalIP(int CompanyID, string IP, int AdminID) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " INSERT INTO WithdrawalIP (WithdrawalIP,CompanyCode,forAdminID) " +
                  "   VALUES (@WithdrawalIP,@CompanyCode,@forAdminID) ";
 
@@ -4079,8 +3691,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string UpdateImage(int CompanyID, string IP, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type)
-    {
+    public string UpdateImage(int CompanyID, string IP, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type) {
         int dbReturnImageID = -1;
         string returnStr = "";
         string SS;
@@ -4089,8 +3700,7 @@ public class BackendDB
         string FileExtension = _ImageName;
         string ImageName = CompanyCode + "_" + IP + "." + FileExtension;
 
-        if (ModifyType == "create")
-        {
+        if (ModifyType == "create") {
             SS = " INSERT INTO ImageTable (TransactionID,CompanyCode,Type) " +
                  "   VALUES (@TransactionID,@CompanyCode,0) " +
                  " SELECT @@IDENTITY ";
@@ -4101,8 +3711,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@CompanyCode", SqlDbType.VarChar).Value = CompanyCode;
             DBCmd.Parameters.Add("@ImageName", SqlDbType.NVarChar).Value = ImageName;
             var DBReturn = DBAccess.GetDBValue(Pay.DBConnStr, DBCmd);
-            if (DBReturn != null)
-            {
+            if (DBReturn != null) {
                 dbReturnImageID = int.Parse(DBReturn.ToString());
                 ImageName = dbReturnImageID + "." + FileExtension;
 
@@ -4118,9 +3727,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = dbReturnImageID;
                 DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
             }
-        }
-        else if (ModifyType == "update")
-        {
+        } else if (ModifyType == "update") {
             ImageName = ImageID + "." + FileExtension;
 
             SS = " UPDATE ImageTable SET ImageName=@ImageName " +
@@ -4134,14 +3741,12 @@ public class BackendDB
             DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = ImageID;
             var DBReturn = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-            if (DBReturn > 0)
-            {
+            if (DBReturn > 0) {
                 dbReturnImageID = ImageID;
             }
         }
 
-        if (dbReturnImageID > 0)
-        {
+        if (dbReturnImageID > 0) {
             returnStr = ImageName;
             Pay.SaveFileWithForderName(ImageName, ImageData, "WithdrawalIP");
         }
@@ -4149,8 +3754,7 @@ public class BackendDB
         return returnStr;
     }
 
-    public string UpdateFrozenPointImg(int FrozenID, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type)
-    {
+    public string UpdateFrozenPointImg(int FrozenID, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type) {
         int dbReturnImageID = -1;
         string returnStr = "";
         string SS;
@@ -4158,8 +3762,7 @@ public class BackendDB
         string FileExtension = _ImageName;
         string ImageName = "";
 
-        if (ModifyType == "create")
-        {
+        if (ModifyType == "create") {
             SS = " INSERT INTO ImageTable (TransactionID,Type) " +
                  "   VALUES (@TransactionID,@Type) " +
                  " SELECT @@IDENTITY ";
@@ -4169,8 +3772,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@TransactionID", SqlDbType.VarChar).Value = FrozenID.ToString();
             DBCmd.Parameters.Add("@Type", SqlDbType.Int).Value = Type;
             var DBReturn = DBAccess.GetDBValue(Pay.DBConnStr, DBCmd);
-            if (DBReturn != null)
-            {
+            if (DBReturn != null) {
                 dbReturnImageID = int.Parse(DBReturn.ToString());
                 ImageName = dbReturnImageID + "." + FileExtension;
 
@@ -4187,9 +3789,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@Type", SqlDbType.Int).Value = Type;
                 DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
             }
-        }
-        else if (ModifyType == "update")
-        {
+        } else if (ModifyType == "update") {
             ImageName = ImageID + "." + FileExtension;
 
             SS = " UPDATE ImageTable SET ImageName=@ImageName " +
@@ -4203,14 +3803,12 @@ public class BackendDB
             DBCmd.Parameters.Add("@Type", SqlDbType.Int).Value = Type;
             var DBReturn = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-            if (DBReturn > 0)
-            {
+            if (DBReturn > 0) {
                 dbReturnImageID = ImageID;
             }
         }
 
-        if (dbReturnImageID > 0)
-        {
+        if (dbReturnImageID > 0) {
             returnStr = ImageName;
             Pay.SaveFileWithForderName(ImageName, ImageData, "FrozenPoint");
         }
@@ -4218,8 +3816,7 @@ public class BackendDB
         return returnStr;
     }
 
-    public DBModel.ImageTable GetImageTableResultByImageID(int ImageID)
-    {
+    public DBModel.ImageTable GetImageTableResultByImageID(int ImageID) {
         DBModel.ImageTable returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4235,10 +3832,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ImageTable>(DT).ToList().First();
             }
         }
@@ -4246,14 +3841,12 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteWithdrawalIP(int CompanyID, string IP)
-    {
+    public int DeleteWithdrawalIP(int CompanyID, string IP) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID); ;
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " DELETE FROM  WithdrawalIP" +
                  " WHERE WithdrawalIP=@WithdrawalIP And CompanyCode=@CompanyCode ";
 
@@ -4269,8 +3862,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.WithdrawalIP GetWithdrawalIP(int CompanyID, string IP)
-    {
+    public DBModel.WithdrawalIP GetWithdrawalIP(int CompanyID, string IP) {
         DBModel.WithdrawalIP returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4287,10 +3879,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@WithdrawalIP", SqlDbType.VarChar).Value = IP;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList().First();
             }
         }
@@ -4298,8 +3888,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public void DeleteImageTableData(int Type, string TransactionID, string CompanyCode)
-    {
+    public void DeleteImageTableData(int Type, string TransactionID, string CompanyCode) {
         String SS = String.Empty;
         SqlCommand DBCmd;
 
@@ -4316,8 +3905,7 @@ public class BackendDB
 
     }
 
-    public int DeleteImageByImageID(int ImageID)
-    {
+    public int DeleteImageByImageID(int ImageID) {
         int returnValue = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4335,8 +3923,7 @@ public class BackendDB
     #endregion
 
     #region 后台白名单
-    public List<DBModel.WithdrawalIP> GetBackendIPresult(int CompanyID)
-    {
+    public List<DBModel.WithdrawalIP> GetBackendIPresult(int CompanyID) {
         List<DBModel.WithdrawalIP> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4360,10 +3947,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList();
             }
         }
@@ -4371,14 +3956,12 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertBackendIP(int CompanyID, string IP)
-    {
+    public int InsertBackendIP(int CompanyID, string IP) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " INSERT INTO BackendLoginIP (IP,CompanyCode) " +
                  "   VALUES (@IP,@CompanyCode) ";
 
@@ -4394,14 +3977,12 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteBackendIP(int CompanyID, string IP)
-    {
+    public int DeleteBackendIP(int CompanyID, string IP) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " DELETE FROM  BackendLoginIP " +
                  " WHERE IP=@IP And CompanyCode=@CompanyCode ";
 
@@ -4418,8 +3999,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string UpdateBackendIPImage(int CompanyID, string IP, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type)
-    {
+    public string UpdateBackendIPImage(int CompanyID, string IP, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type) {
         int dbReturnImageID = -1;
         string returnStr = "";
         string SS;
@@ -4428,8 +4008,7 @@ public class BackendDB
         string FileExtension = _ImageName;
         string ImageName = CompanyCode + "_" + IP + "." + FileExtension;
 
-        if (ModifyType == "create")
-        {
+        if (ModifyType == "create") {
             SS = " INSERT INTO ImageTable (TransactionID,CompanyCode,Type) " +
                  "   VALUES (@TransactionID,@CompanyCode,2) " +
                  " SELECT @@IDENTITY ";
@@ -4440,8 +4019,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@CompanyCode", SqlDbType.VarChar).Value = CompanyCode;
             DBCmd.Parameters.Add("@ImageName", SqlDbType.NVarChar).Value = ImageName;
             var DBReturn = DBAccess.GetDBValue(Pay.DBConnStr, DBCmd);
-            if (DBReturn != null)
-            {
+            if (DBReturn != null) {
                 dbReturnImageID = int.Parse(DBReturn.ToString());
                 ImageName = dbReturnImageID + "." + FileExtension;
 
@@ -4457,9 +4035,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = dbReturnImageID;
                 DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
             }
-        }
-        else if (ModifyType == "update")
-        {
+        } else if (ModifyType == "update") {
             ImageName = ImageID + "." + FileExtension;
 
             SS = " UPDATE ImageTable SET ImageName=@ImageName " +
@@ -4473,14 +4049,12 @@ public class BackendDB
             DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = ImageID;
             var DBReturn = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-            if (DBReturn > 0)
-            {
+            if (DBReturn > 0) {
                 dbReturnImageID = ImageID;
             }
         }
 
-        if (dbReturnImageID > 0)
-        {
+        if (dbReturnImageID > 0) {
             returnStr = ImageName;
             Pay.SaveFileWithForderName(ImageName, ImageData, "BackendWithdrawalIP");
         }
@@ -4488,8 +4062,7 @@ public class BackendDB
         return returnStr;
     }
 
-    public DBModel.WithdrawalIP GetBackendIP(int CompanyID, string IP)
-    {
+    public DBModel.WithdrawalIP GetBackendIP(int CompanyID, string IP) {
         DBModel.WithdrawalIP returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4506,10 +4079,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@IP", SqlDbType.VarChar).Value = IP;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList().First();
             }
         }
@@ -4520,8 +4091,7 @@ public class BackendDB
     #endregion
 
     #region 后台下发白名单
-    public List<DBModel.WithdrawalIP> GetBackendWithdrawalIPresult(int CompanyID)
-    {
+    public List<DBModel.WithdrawalIP> GetBackendWithdrawalIPresult(int CompanyID) {
         List<DBModel.WithdrawalIP> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4538,10 +4108,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList();
             }
         }
@@ -4549,14 +4117,12 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertBackendWithdrawalIP(int CompanyID, string IP)
-    {
+    public int InsertBackendWithdrawalIP(int CompanyID, string IP) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " INSERT INTO BackendWithdrawalIP (IP,CompanyCode) " +
                  "   VALUES (@IP,@CompanyCode) ";
 
@@ -4572,16 +4138,14 @@ public class BackendDB
         return returnValue;
     }
 
-    public string UpdateBackendWithdrawalIPimg(int CompanyID, string IP, byte[] ImageData, string _ImageName)
-    {
+    public string UpdateBackendWithdrawalIPimg(int CompanyID, string IP, byte[] ImageData, string _ImageName) {
         int returnValue = -1;
         string returnStr = "";
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
         string ImageName = CompanyCode + "_" + IP + "." + _ImageName;
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " UPDATE BackendWithdrawalIP SET ImageName=@ImageName " +
                  "   WHERE CompanyCode=@CompanyCode AND IP=@IP ";
 
@@ -4594,8 +4158,7 @@ public class BackendDB
 
             returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-            if (returnValue > 0)
-            {
+            if (returnValue > 0) {
                 returnStr = ImageName;
                 Pay.SaveFileWithForderName(ImageName, ImageData, "BackendWithdrawalIP");
             }
@@ -4604,14 +4167,12 @@ public class BackendDB
         return returnStr;
     }
 
-    public int DeleteBackendWithdrawalIP(int CompanyID, string IP)
-    {
+    public int DeleteBackendWithdrawalIP(int CompanyID, string IP) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
-        if (!string.IsNullOrEmpty(CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(CompanyCode)) {
             SS = " DELETE FROM  BackendWithdrawalIP " +
                  " WHERE IP=@IP And CompanyCode=@CompanyCode ";
 
@@ -4627,8 +4188,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.WithdrawalIP GetBackendWithdrawalIP(int CompanyID, string IP)
-    {
+    public DBModel.WithdrawalIP GetBackendWithdrawalIP(int CompanyID, string IP) {
         DBModel.WithdrawalIP returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4645,10 +4205,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@IP", SqlDbType.VarChar).Value = IP;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalIP>(DT).ToList().First();
             }
         }
@@ -4660,8 +4218,7 @@ public class BackendDB
 
     #region AdminRole
 
-    public List<DBModel.AdminRole> GetAdminRoleTableByCompanyID(int CompanyID)
-    {
+    public List<DBModel.AdminRole> GetAdminRoleTableByCompanyID(int CompanyID) {
         List<DBModel.AdminRole> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4678,10 +4235,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AdminRole>(DT).ToList();
             }
         }
@@ -4689,8 +4244,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertAdminRole(int CompanyID, string RoleName, List<string> AdminPermission, List<string> NormalPermission)
-    {
+    public int InsertAdminRole(int CompanyID, string RoleName, List<string> AdminPermission, List<string> NormalPermission) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4704,14 +4258,12 @@ public class BackendDB
         DBCmd.Parameters.Add("@RoleName", SqlDbType.NVarChar).Value = RoleName;
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
         //角色名稱重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
 
             SS = "   INSERT INTO AdminRole" +
                  "              (RoleName," +
@@ -4728,8 +4280,7 @@ public class BackendDB
 
             AdminRoleID = int.Parse(T.GetDBValue(DBCmd).ToString());
             returnValue = AdminRoleID;
-            foreach (var AdminPermissionName in AdminPermission)
-            {
+            foreach (var AdminPermissionName in AdminPermission) {
                 SS = " INSERT INTO AdminRolePermission (forAdminRoleID,forCompanyID,forPermissionName)" +
                      " VALUES (@forAdminRoleID,@forCompanyID,@forPermissionName)";
 
@@ -4742,8 +4293,7 @@ public class BackendDB
                 T.ExecuteDB(DBCmd);
             }
 
-            foreach (var NormalPermissionName in NormalPermission)
-            {
+            foreach (var NormalPermissionName in NormalPermission) {
                 SS = " INSERT INTO AdminRolePermission (forAdminRoleID,forCompanyID,forPermissionName)" +
                      " VALUES (@forAdminRoleID,@forCompanyID,@forPermissionName)";
 
@@ -4761,8 +4311,7 @@ public class BackendDB
 
     }
 
-    public int UpdateAdminRole(int CompanyID, int AdminRoleID, string RoleName, List<string> AdminPermission, List<string> NormalPermission)
-    {
+    public int UpdateAdminRole(int CompanyID, int AdminRoleID, string RoleName, List<string> AdminPermission, List<string> NormalPermission) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4777,8 +4326,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@AdminRoleID", SqlDbType.Int).Value = AdminRoleID;
 
         //先檢查名稱是否與之前的相同
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) != 1)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) != 1) {
             SS = " SELECT count(*) FROM AdminRole WITH (NOLOCK) " +
                  " WHERE RoleName=@RoleName And forCompanyID=@forCompanyID";
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -4787,15 +4335,13 @@ public class BackendDB
             DBCmd.Parameters.Add("@RoleName", SqlDbType.NVarChar).Value = RoleName;
             DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
             //角色名稱重複
-            if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-            {
+            if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
                 returnValue = -1;
                 return returnValue;
             }
         }
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
 
             SS = " UPDATE AdminRole" +
                  " SET RoleName=@RoleName" +
@@ -4822,8 +4368,7 @@ public class BackendDB
             T.ExecuteDB(DBCmd);
 
 
-            foreach (var AdminPermissionName in AdminPermission)
-            {
+            foreach (var AdminPermissionName in AdminPermission) {
                 SS = " INSERT INTO AdminRolePermission (forAdminRoleID,forCompanyID,forPermissionName)" +
                      " VALUES (@forAdminRoleID,@forCompanyID,@forPermissionName)";
 
@@ -4836,8 +4381,7 @@ public class BackendDB
                 T.ExecuteDB(DBCmd);
             }
 
-            foreach (var NormalPermissionName in NormalPermission)
-            {
+            foreach (var NormalPermissionName in NormalPermission) {
                 SS = " INSERT INTO AdminRolePermission (forAdminRoleID,forCompanyID,forPermissionName)" +
                      " VALUES (@forAdminRoleID,@forCompanyID,@forPermissionName)";
 
@@ -4854,8 +4398,7 @@ public class BackendDB
 
     }
 
-    public List<DBViewModel.AdminRolePermission> GetPermissionByAdminRoleID(int AdminRoleID, int CompanyType)
-    {
+    public List<DBViewModel.AdminRolePermission> GetPermissionByAdminRoleID(int AdminRoleID, int CompanyType) {
         List<DBViewModel.AdminRolePermission> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4875,13 +4418,10 @@ public class BackendDB
         AdminRoleDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
         //取得所有權限
-        if (CompanyType == 0)
-        {
+        if (CompanyType == 0) {
             //管理者權限
             SS = " SELECT PermissionName, AdminPermission,Description FROM PermissionTable WITH(NOLOCK) ";
-        }
-        else
-        {
+        } else {
             //一般角色權限
             SS = " SELECT PermissionName, AdminPermission,Description FROM PermissionTable WITH(NOLOCK) where AdminPermission=0";
         }
@@ -4894,19 +4434,13 @@ public class BackendDB
 
 
 
-        if (AllAdminRoleDT != null)
-        {
-            if (AllAdminRoleDT.Rows.Count > 0)
-            {
+        if (AllAdminRoleDT != null) {
+            if (AllAdminRoleDT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminRolePermission>(AllAdminRoleDT).ToList();
-                foreach (var rowData in returnValue)
-                {
-                    if (AdminRoleDT.Select("PermissionName='" + rowData.PermissionName + "'").Count() > 0)
-                    {
+                foreach (var rowData in returnValue) {
+                    if (AdminRoleDT.Select("PermissionName='" + rowData.PermissionName + "'").Count() > 0) {
                         rowData.selectedPermission = true;
-                    }
-                    else
-                    {
+                    } else {
                         rowData.selectedPermission = false;
                     }
                 }
@@ -4916,8 +4450,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<string> GetPermissionByRoleName(string RoleName, int CompanyID)
-    {
+    public List<string> GetPermissionByRoleName(string RoleName, int CompanyID) {
         List<string> returnValue = new List<string>();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4936,10 +4469,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@RoleName", SqlDbType.VarChar).Value = RoleName;
         AdminRoleDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (AdminRoleDT != null && AdminRoleDT.Rows.Count > 0)
-        {
-            for (int i = 0; i < AdminRoleDT.Rows.Count; i++)
-            {
+        if (AdminRoleDT != null && AdminRoleDT.Rows.Count > 0) {
+            for (int i = 0; i < AdminRoleDT.Rows.Count; i++) {
                 returnValue.Add(AdminRoleDT.Rows[i]["forPermissionName"].ToString());
             }
 
@@ -4951,8 +4482,7 @@ public class BackendDB
 
     #region BackendNotify
 
-    public List<DBModel.BackendNotifyTable> GetBackendNotifyTableResult(int CompanyID)
-    {
+    public List<DBModel.BackendNotifyTable> GetBackendNotifyTableResult(int CompanyID) {
         List<DBModel.BackendNotifyTable> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4967,10 +4497,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.BackendNotifyTable>(DT).ToList();
             }
         }
@@ -4978,8 +4506,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.BackendNotifyTable> GetBackendNotifyTableResult2(int CompanyID, int AdminID)
-    {
+    public List<DBModel.BackendNotifyTable> GetBackendNotifyTableResult2(int CompanyID, int AdminID) {
         List<DBModel.BackendNotifyTable> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -4995,10 +4522,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.BackendNotifyTable>(DT).ToList();
                 //修改查看通知者為目前登入者
                 SS = " UPDATE BackendNotify" +
@@ -5018,8 +4543,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public void CreateBackendNotify(int forCompanyID, int Type, string Data)
-    {
+    public void CreateBackendNotify(int forCompanyID, int Type, string Data) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5042,8 +4566,7 @@ public class BackendDB
     #region  CompanyService
 
     #region 商户通道调整
-    public List<DBViewModel.CompanyServiceRelation> GetCompanyServiceRelationByEditView(string ServiceType, string ProviderCode, string CurrencyType)
-    {
+    public List<DBViewModel.CompanyServiceRelation> GetCompanyServiceRelationByEditView(string ServiceType, string ProviderCode, string CurrencyType) {
         List<DBViewModel.CompanyServiceRelation> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -5068,10 +4591,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServiceRelation>(DT).ToList();
             }
         }
@@ -5080,8 +4601,7 @@ public class BackendDB
     }
 
 
-    public int InsertCompanyServiceByEditView(FromBody.CompanyServiceSet fromBody, int CompanyType)
-    {
+    public int InsertCompanyServiceByEditView(FromBody.CompanyServiceSet fromBody, int CompanyType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5096,22 +4616,19 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.CompanyID;
 
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
 
-        if (CompanyTD == null)
-        {
+        if (CompanyTD == null) {
             returnValue = -2;
             return returnValue;
         }
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
             //新增目前選擇公司的 CompanyService
             SS = " INSERT INTO CompanyService (forCompanyID,ServiceType,CurrencyType,CollectRate,CollectCharge,MaxDaliyAmount,MaxOnceAmount,MinOnceAmount,State,DeviceType,MaxDaliyAmountByUse,CheckoutType,Description)" +
        " VALUES(@forCompanyID,@ServiceType,@CurrencyType,@CollectRate,@CollectCharge,@MaxDaliyAmount,@MaxOnceAmount,@MinOnceAmount,@State,@DeviceType,@MaxDaliyAmountByUse,@CheckoutType,@Description)";
@@ -5134,8 +4651,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@DeviceType", SqlDbType.Int).Value = 0;
 
             returnValue = T.ExecuteDB(DBCmd);
-            if (returnValue > 0)
-            {
+            if (returnValue > 0) {
                 RedisCache.CompanyService.UpdateCompanyService(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
             }
         });
@@ -5144,8 +4660,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int SetCompanyServiceRelationByEditView(FromBody.GPayRelationSet fromBody)
-    {
+    public int SetCompanyServiceRelationByEditView(FromBody.GPayRelationSet fromBody) {
         int returnValue = 0;
 
         String SS = String.Empty;
@@ -5153,17 +4668,14 @@ public class BackendDB
 
         var CompanyTD = GetCompanyByID(fromBody.forCompanyID);
 
-        if (CompanyTD == null)
-        {
+        if (CompanyTD == null) {
             returnValue = -1;
             return returnValue;
         }
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
             //如果是删除
-            if (!fromBody.isAddRelation)
-            {
+            if (!fromBody.isAddRelation) {
                 //先刪除舊有資料
                 SS = "DELETE FROM GPayRelation WHERE forCompanyID =@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType And ProviderCode=@ProviderCode ";
 
@@ -5176,8 +4688,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = fromBody.ProviderCode;
                 returnValue = T.ExecuteDB(DBCmd);
 
-                if (returnValue > 0)
-                {
+                if (returnValue > 0) {
                     SS = " SELECT COUNT(*) FROM GPayRelation WITH (NOLOCK) " +
                                                  " WHERE forCompanyID=@forCompanyID And ServiceType=@ServiceType  And CurrencyType=@CurrencyType";
                     DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -5187,20 +4698,15 @@ public class BackendDB
                     DBCmd.Parameters.Add("@CurrencyType", SqlDbType.NVarChar).Value = fromBody.CurrencyType;
                     DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.forCompanyID;
 
-                    if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-                    {
+                    if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
                         RedisCache.GPayRelation.UpdateGPayRelation(fromBody.forCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
-                    }
-                    else
-                    {
+                    } else {
                         RedisCache.GPayRelation.DeleteGPayRelation(fromBody.forCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                     }
                 }
-            }
-            else
-            {//新增
-                SS = " INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight) " +
-               " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight)";
+            } else {//新增
+                SS = " INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight,ProviderChannelCode) " +
+               " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight,@ProviderChannelCode)";
 
                 DBCmd = new System.Data.SqlClient.SqlCommand();
                 DBCmd.CommandText = SS;
@@ -5210,9 +4716,9 @@ public class BackendDB
                 DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
                 DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.forCompanyID;
                 DBCmd.Parameters.Add("@Weight", SqlDbType.Int).Value = 1;
+                DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = "";
                 returnValue = T.ExecuteDB(DBCmd);
-                if (returnValue > 0)
-                {
+                if (returnValue > 0) {
                     RedisCache.GPayRelation.UpdateGPayRelation(fromBody.forCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                 }
             }
@@ -5222,22 +4728,19 @@ public class BackendDB
 
     }
 
-    public int UpdateCompanyServiceByEditView(FromBody.CompanyServiceSet fromBody)
-    {
+    public int UpdateCompanyServiceByEditView(FromBody.CompanyServiceSet fromBody) {
         int returnValue = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
         //新增 GPayRelation
-        if (CompanyTD == null)
-        {
+        if (CompanyTD == null) {
             returnValue = -2;
             return returnValue;
         }
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
             SS = " UPDATE CompanyService";
             SS += " SET CollectRate=@CollectRate,CollectCharge=@CollectCharge,MaxDaliyAmount=@MaxDaliyAmount,MaxOnceAmount=@MaxOnceAmount,MinOnceAmount=@MinOnceAmount,DeviceType=@DeviceType,State=@State,CheckoutType=@CheckoutType,MaxDaliyAmountByUse=MaxDaliyAmountByUse - @modifyMaxDaliyAmountByUse";
             SS += " WHERE forCompanyID=@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5260,19 +4763,14 @@ public class BackendDB
 
             returnValue = T.ExecuteDB(DBCmd);
 
-            if (returnValue > 0)
-            {
+            if (returnValue > 0) {
                 RedisCache.CompanyService.UpdateCompanyService(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
 
-                if (CompanyTD.ParentCompanyID == 0)
-                {
+                if (CompanyTD.ParentCompanyID == 0) {
                     var childCompanys = GetCompany2(fromBody.CompanyID, 2);
-                    if (childCompanys != null)
-                    {
-                        if (childCompanys.Count > 0)
-                        {
-                            foreach (var childCompany in childCompanys)
-                            {
+                    if (childCompanys != null) {
+                        if (childCompanys.Count > 0) {
+                            foreach (var childCompany in childCompanys) {
                                 SS = " UPDATE CompanyService";
                                 SS += " SET CheckoutType=@CheckoutType";
                                 SS += " WHERE forCompanyID=@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5286,8 +4784,7 @@ public class BackendDB
                                 DBCmd.Parameters.Add("@CheckoutType", SqlDbType.Int).Value = fromBody.CheckoutType;
 
                                 var updateCount = T.ExecuteDB(DBCmd);
-                                if (updateCount > 0)
-                                {
+                                if (updateCount > 0) {
                                     RedisCache.CompanyService.UpdateCompanyService(childCompany.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                                 }
                             }
@@ -5304,8 +4801,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateCompanyServiceWeightByEditView(FromBody.CompanyServiceSet fromBody)
-    {
+    public int UpdateCompanyServiceWeightByEditView(FromBody.CompanyServiceSet fromBody) {
 
         int returnValue = 0;
         int successCount = 0;
@@ -5314,14 +4810,12 @@ public class BackendDB
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
 
-        if (CompanyTD == null)
-        {
+        if (CompanyTD == null) {
             returnValue = -2;
             return returnValue;
         }
 
-        foreach (var providerdata in fromBody.ProviderCodeAndWeight)
-        {
+        foreach (var providerdata in fromBody.ProviderCodeAndWeight) {
             SS = " Update GPayRelation SET Weight=@Weight " +
                                    " WHERE ProviderCode=@ProviderCode And ServiceType=@ServiceType" +
                                    " And CurrencyType=@CurrencyType And forCompanyID=@forCompanyID";
@@ -5336,8 +4830,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@Weight", SqlDbType.Int).Value = providerdata.Weight;
             successCount += DBAccess.ExecuteDB(DBConnStr, DBCmd);
         }
-        if (successCount > 0)
-        {
+        if (successCount > 0) {
             returnValue = successCount;
             RedisCache.GPayRelation.UpdateGPayRelation(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
         }
@@ -5345,8 +4838,7 @@ public class BackendDB
     }
     #endregion
 
-    public List<DBViewModel.CompanyServiceTableResult> GetCompanyServiceTableByCompanyID(int CompanyID)
-    {
+    public List<DBViewModel.CompanyServiceTableResult> GetCompanyServiceTableByCompanyID(int CompanyID) {
         List<DBViewModel.CompanyServiceTableResult> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5374,10 +4866,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServiceTableResult>(DT).ToList();
             }
         }
@@ -5385,8 +4875,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int GetCompanyServiceState(string ServiceType, string CurrencyType, int CompanyID)
-    {
+    public int GetCompanyServiceState(string ServiceType, string CurrencyType, int CompanyID) {
 
         int returnValue = -1;
         string SS;
@@ -5403,8 +4892,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.CompanyService GetCompanyService(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public DBModel.CompanyService GetCompanyService(int CompanyID, string ServiceType, string CurrencyType) {
         DBModel.CompanyService returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5421,10 +4909,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServiceTableResult>(DT).First();
             }
         }
@@ -5432,8 +4918,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public decimal GetCompanyServiceMaxDaliyAmountByUse(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public decimal GetCompanyServiceMaxDaliyAmountByUse(int CompanyID, string ServiceType, string CurrencyType) {
         decimal returnValue = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5453,8 +4938,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.CompanyService GetSelectedCompanyService(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public DBModel.CompanyService GetSelectedCompanyService(int CompanyID, string ServiceType, string CurrencyType) {
         DataTable DT;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5470,10 +4954,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyService>(DT).FirstOrDefault();
             }
         }
@@ -5481,8 +4963,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertCompanyService(FromBody.CompanyServiceSet fromBody, int CompanyType)
-    {
+    public int InsertCompanyService(FromBody.CompanyServiceSet fromBody, int CompanyType) {
         int returnValue = 0;
         int CheckoutType = 0;
         String SS = String.Empty;
@@ -5498,18 +4979,15 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.CompanyID;
 
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
-        if (CompanyTD != null)
-        {
+        if (CompanyTD != null) {
             //當有上線時,先查詢上線額度
-            if (CompanyTD.ParentCompanyID != 0)
-            {
+            if (CompanyTD.ParentCompanyID != 0) {
                 //var upLineMaxDaliyAmountByUse = GetCompanyServiceMaxDaliyAmountByUse(CompanyTD.ParentCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                 //if (upLineMaxDaliyAmountByUse == -1)
                 //{//查詢不到上線渠道時
@@ -5529,14 +5007,12 @@ public class BackendDB
                 //}
                 //取得上線渠道設定
                 var parentServiceType = GetSelectedCompanyService(CompanyTD.ParentCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
-                if (parentServiceType != null)
-                {
+                if (parentServiceType != null) {
                     CheckoutType = parentServiceType.CheckoutType;
                 }
             }
 
-            DBAccess.ExecuteTransDB(DBConnStr, T =>
-            {
+            DBAccess.ExecuteTransDB(DBConnStr, T => {
                 //新增目前選擇公司的 CompanyService
                 SS = " INSERT INTO CompanyService (forCompanyID,ServiceType,CurrencyType,CollectRate,CollectCharge,MaxDaliyAmount,MaxOnceAmount,MinOnceAmount,State,DeviceType,MaxDaliyAmountByUse,CheckoutType,Description)" +
            " VALUES(@forCompanyID,@ServiceType,@CurrencyType,@CollectRate,@CollectCharge,@MaxDaliyAmount,@MaxOnceAmount,@MinOnceAmount,@State,@DeviceType,@MaxDaliyAmountByUse,@CheckoutType,@Description)";
@@ -5581,8 +5057,7 @@ public class BackendDB
 
 
                 //新增 GPayRelation
-                if (returnValue > 0)
-                {
+                if (returnValue > 0) {
                     // if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0) {
                     //先刪除舊有資料
                     SS = "DELETE FROM GPayRelation WHERE forCompanyID =@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5597,10 +5072,9 @@ public class BackendDB
                     RedisCache.GPayRelation.DeleteGPayRelation(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                     //最高權限允許以勾選方式新增供應商
                     //新增資料
-                    foreach (var providerdata in fromBody.ProviderCodeAndWeight)
-                    {
-                        SS = " INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight) " +
-                             " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight)";
+                    foreach (var providerdata in fromBody.ProviderCodeAndWeight) {
+                        SS = " INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight,ProviderChannelCode) " +
+                             " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight,@ProviderChannelCode)";
 
                         DBCmd = new System.Data.SqlClient.SqlCommand();
                         DBCmd.CommandText = SS;
@@ -5609,6 +5083,7 @@ public class BackendDB
                         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = fromBody.ServiceType;
                         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
                         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.CompanyID;
+                        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = providerdata.ProviderChannelCode;
                         DBCmd.Parameters.Add("@Weight", SqlDbType.Int).Value = providerdata.Weight;
                         T.ExecuteDB(DBCmd);
 
@@ -5624,19 +5099,16 @@ public class BackendDB
 
     }
 
-    public int UpdateCompanyService(FromBody.CompanyServiceSet fromBody, int CompanyType)
-    {
+    public int UpdateCompanyService(FromBody.CompanyServiceSet fromBody, int CompanyType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
         //新增 GPayRelation
-        if (CompanyTD != null)
-        {
+        if (CompanyTD != null) {
 
-            DBAccess.ExecuteTransDB(DBConnStr, T =>
-            {
+            DBAccess.ExecuteTransDB(DBConnStr, T => {
                 SS = " UPDATE CompanyService";
                 SS += " SET Description=@Description,CollectRate=@CollectRate,CollectCharge=@CollectCharge,MaxDaliyAmount=@MaxDaliyAmount,MaxOnceAmount=@MaxOnceAmount,MinOnceAmount=@MinOnceAmount,DeviceType=@DeviceType,State=@State,CheckoutType=@CheckoutType,MaxDaliyAmountByUse=MaxDaliyAmountByUse - @modifyMaxDaliyAmountByUse";
                 SS += " WHERE forCompanyID=@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5661,16 +5133,12 @@ public class BackendDB
                 returnValue = T.ExecuteDB(DBCmd);
                 RedisCache.CompanyService.UpdateCompanyService(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
 
-                if (CompanyTD.ParentCompanyID == 0)
-                {
+                if (CompanyTD.ParentCompanyID == 0) {
 
                     var childCompanys = GetCompany2(fromBody.CompanyID, 2);
-                    if (childCompanys != null)
-                    {
-                        if (childCompanys.Count > 0)
-                        {
-                            foreach (var childCompany in childCompanys)
-                            {
+                    if (childCompanys != null) {
+                        if (childCompanys.Count > 0) {
+                            foreach (var childCompany in childCompanys) {
                                 SS = " UPDATE CompanyService";
                                 SS += " SET CheckoutType=@CheckoutType";
                                 SS += " WHERE forCompanyID=@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5684,8 +5152,7 @@ public class BackendDB
                                 DBCmd.Parameters.Add("@CheckoutType", SqlDbType.Int).Value = fromBody.CheckoutType;
 
                                 var updateCount = T.ExecuteDB(DBCmd);
-                                if (updateCount > 0)
-                                {
+                                if (updateCount > 0) {
                                     RedisCache.CompanyService.UpdateCompanyService(childCompany.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                                 }
                             }
@@ -5695,8 +5162,7 @@ public class BackendDB
 
                 }
 
-                if (returnValue > 0)
-                {
+                if (returnValue > 0) {
                     //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0) {
                     //先刪除舊有資料
                     SS = "DELETE FROM GPayRelation WHERE forCompanyID =@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
@@ -5710,10 +5176,9 @@ public class BackendDB
                     T.ExecuteDB(DBCmd);
                     RedisCache.GPayRelation.DeleteGPayRelation(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                     //新增資料
-                    foreach (var providerdata in fromBody.ProviderCodeAndWeight)
-                    {
-                        SS = " INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight) " +
-                                               " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight)";
+                    foreach (var providerdata in fromBody.ProviderCodeAndWeight) {
+                        SS = " INSERT INTO GPayRelation (ProviderCode, ServiceType, CurrencyType, forCompanyID, Weight, ProviderChannelCode)" +
+                             " VALUES (@ProviderCode, @ServiceType, @CurrencyType, @forCompanyID, @Weight, @ProviderChannelCode)";
 
                         DBCmd = new System.Data.SqlClient.SqlCommand();
                         DBCmd.CommandText = SS;
@@ -5723,8 +5188,8 @@ public class BackendDB
                         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
                         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = fromBody.CompanyID;
                         DBCmd.Parameters.Add("@Weight", SqlDbType.Int).Value = providerdata.Weight;
+                        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = providerdata.ProviderChannelCode;
                         T.ExecuteDB(DBCmd);
-                        RedisCache.GPayRelation.UpdateGPayRelation(fromBody.CompanyID, fromBody.ServiceType, fromBody.CurrencyType);
                     }
                     //}
                 }
@@ -5733,8 +5198,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteProviderService(FromBody.DeleteProviderService fromBody)
-    {
+    public int DeleteProviderService(FromBody.DeleteProviderService fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5750,8 +5214,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
 
         returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
-        if (returnValue > 0)
-        {
+        if (returnValue > 0) {
             RedisCache.ProviderService.DeleteProviderService(fromBody.ProviderCode, fromBody.ServiceType, fromBody.CurrencyType);
         }
 
@@ -5759,8 +5222,7 @@ public class BackendDB
 
     }
 
-    public int DisableCompanyService(FromBody.CompanyServiceSet fromBody)
-    {
+    public int DisableCompanyService(FromBody.CompanyServiceSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5782,8 +5244,7 @@ public class BackendDB
 
     }
 
-    public int UpdateBlockChainRate(string CurrencyType, decimal Rate, decimal DownFloatRate, decimal UpFloatRate)
-    {
+    public int UpdateBlockChainRate(string CurrencyType, decimal Rate, decimal DownFloatRate, decimal UpFloatRate) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5807,8 +5268,7 @@ public class BackendDB
 
     }
 
-    public int CreateBlockChainRate(string CurrencyType, decimal Rate, decimal DownFloatRate, decimal UpFloatRate)
-    {
+    public int CreateBlockChainRate(string CurrencyType, decimal Rate, decimal DownFloatRate, decimal UpFloatRate) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5820,8 +5280,7 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
-        if (returnValue > 0)
-        {
+        if (returnValue > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -5845,8 +5304,7 @@ public class BackendDB
 
     }
 
-    public int UpdateWithdrawOption(string WithdrawOption)
-    {
+    public int UpdateWithdrawOption(string WithdrawOption) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5868,8 +5326,7 @@ public class BackendDB
 
     }
 
-    public int UpdateWebsiteOption(string WithdrawOption)
-    {
+    public int UpdateWebsiteOption(string WithdrawOption) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5904,12 +5361,9 @@ public class BackendDB
         JObject jobj = new JObject();
         jobj["auth"] = auth;
 
-        if (WithdrawOption == "0")
-        {
+        if (WithdrawOption == "0") {
             MaintainUrl = Pay.MaintainUrl + "/clear-maint";
-        }
-        else
-        {
+        } else {
             MaintainUrl = Pay.MaintainUrl + "/set-maint";
         }
         CodingControl.RequestJsonAPI(MaintainUrl, jobj.ToString());
@@ -5918,8 +5372,7 @@ public class BackendDB
 
     }
 
-    public int UpdateConfigSetting(string SettingKey, string SettingValue)
-    {
+    public int UpdateConfigSetting(string SettingKey, string SettingValue) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -5941,18 +5394,14 @@ public class BackendDB
 
     }
 
-    public List<DBModel.ConfigSetting> GetConfigSetting(string SettingKey = "")
-    {
+    public List<DBModel.ConfigSetting> GetConfigSetting(string SettingKey = "") {
         List<DBModel.ConfigSetting> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
-        if (SettingKey == "")
-        {
+        if (SettingKey == "") {
             SS = " Select * from WebSetting";
-        }
-        else
-        {
+        } else {
             SS = " Select * from WebSetting";
             SS += " WHERE SettingKey=@SettingKey";
         }
@@ -5965,10 +5414,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ConfigSetting>(DT).ToList();
             }
         }
@@ -5976,8 +5423,7 @@ public class BackendDB
 
     }
 
-    public string GetConfigSettingFormServer()
-    {
+    public string GetConfigSettingFormServer() {
         List<DBModel.ConfigSetting> returnValue = null;
         string MaintainUrl;
         string DBreturn = "F";
@@ -6000,38 +5446,29 @@ public class BackendDB
         MaintainUrl = MaintainUrl + "?auth=" + auth;
         var rtn = CodingControl.RequestJsonAPIByGet(MaintainUrl);
 
-        try
-        {
+        try {
             JObject jsonData = JsonConvert.DeserializeObject<JObject>(rtn);
-            if (jsonData["maintenance"].ToString().ToUpper() == "TRUE")
-            {
+            if (jsonData["maintenance"].ToString().ToUpper() == "TRUE") {
                 DBreturn = "Y";
-            }
-            else if (jsonData["maintenance"].ToString().ToUpper() == "FALSE")
-            {
+            } else if (jsonData["maintenance"].ToString().ToUpper() == "FALSE") {
                 DBreturn = "N";
             }
 
             return DBreturn;
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             return rtn;
         }
     }
 
-    public List<DBModel.ConfigSetting> GetConfigSettingFromRedis(string SettingKey)
-    {
+    public List<DBModel.ConfigSetting> GetConfigSettingFromRedis(string SettingKey) {
         List<DBModel.ConfigSetting> returnValue = null;
 
         DataTable DT;
 
         DT = RedisCache.WebSetting.GetWebSetting(SettingKey);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ConfigSetting>(DT).ToList();
             }
         }
@@ -6039,8 +5476,7 @@ public class BackendDB
 
     }
 
-    public void FastInsertCompanyServiceFromParentCompany(int ParentCompanyID, int CompanyID, string CurrencyType)
-    {
+    public void FastInsertCompanyServiceFromParentCompany(int ParentCompanyID, int CompanyID, string CurrencyType) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6055,15 +5491,11 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = ParentCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 var CompanyServiceDT = DataTableExtensions.ToList<DBModel.CompanyService>(DT).ToList();
-                foreach (var companyServiceRow in CompanyServiceDT)
-                {
-                    if (!companyServiceRow.ServiceType.Contains("PROXY"))
-                    {
+                foreach (var companyServiceRow in CompanyServiceDT) {
+                    if (!companyServiceRow.ServiceType.Contains("PROXY")) {
                         SS = " INSERT INTO CompanyService (forCompanyID,ServiceType,CurrencyType,CollectRate,CollectCharge,MaxDaliyAmount,MaxOnceAmount,MinOnceAmount,State,DeviceType,MaxDaliyAmountByUse,CheckoutType)" +
                                        " VALUES(@forCompanyID,@ServiceType,@CurrencyType,@CollectRate,@CollectCharge,@MaxDaliyAmount,@MaxOnceAmount,@MinOnceAmount,@State,@DeviceType,@MaxDaliyAmountByUse,@CheckoutType)";
 
@@ -6093,8 +5525,7 @@ public class BackendDB
 
     #region AgentReceive
 
-    public List<DBModel.AgentReceive> GetAgentReceiveTableResult(FromBody.AgentReceiveSet fromBody)
-    {
+    public List<DBModel.AgentReceive> GetAgentReceiveTableResult(FromBody.AgentReceiveSet fromBody) {
         List<DBModel.AgentReceive> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6143,10 +5574,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AgentReceive>(DT).ToList();
 
             }
@@ -6155,8 +5584,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.AgentClose> GetAgentCloseTableResult(FromBody.AgentReceiveSet fromBody)
-    {
+    public List<DBModel.AgentClose> GetAgentCloseTableResult(FromBody.AgentReceiveSet fromBody) {
         List<DBModel.AgentClose> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6173,10 +5601,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.AgentClose>(DT).ToList();
 
             }
@@ -6185,8 +5611,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.AgentReceiveVM GetAgentAmountResult(FromBody.AgentReceiveSet fromBody)
-    {
+    public DBViewModel.AgentReceiveVM GetAgentAmountResult(FromBody.AgentReceiveSet fromBody) {
         DBViewModel.AgentReceiveVM returnValue = new DBViewModel.AgentReceiveVM();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6209,10 +5634,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue.AgentAmount = (decimal)DT.Rows[0]["ReceiveAmount"];
                 returnValue.OrderAmount = (decimal)DT.Rows[0]["PartialOrderAmount"];
 
@@ -6222,15 +5645,24 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.AgentReceiveVM GetCompanyAgentPointResult(int CompanyID, string CurrencyType = "")
-    {
+    public DBViewModel.AgentReceiveVM GetCompanyAgentPointResult(int CompanyID, string CurrencyType = "") {
         DBViewModel.AgentReceiveVM returnValue = new DBViewModel.AgentReceiveVM();
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CurrencyType != "")
-        {
+        if (CurrencyType != "") {
+            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive " +
+                     " WHERE forCompanyID = @CompanyID " +
+                     " AND Currency = @CurrencyType ";
+
+            DBCmd = new SqlCommand();
+            DBCmd.CommandText = SS;
+            DBCmd.CommandType = System.Data.CommandType.Text;
+            DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
+            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+            DT = DBAccess.GetDB(DBConnStr, DBCmd);
+        } else {
             SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive " +
                      " WHERE forCompanyID = @CompanyID " +
                      " AND Currency = @CurrencyType ";
@@ -6242,24 +5674,9 @@ public class BackendDB
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
-        else
-        {
-            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive " +
-                     " WHERE forCompanyID = @CompanyID " +
-                     " AND Currency = @CurrencyType ";
 
-            DBCmd = new SqlCommand();
-            DBCmd.CommandText = SS;
-            DBCmd.CommandType = System.Data.CommandType.Text;
-            DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
-            DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
-            DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue.CloseAmount = (decimal)DT.Rows[0]["CloseAmount"];
                 returnValue.UnCloseAmount = (decimal)DT.Rows[0]["UnCloseAmount"];
             }
@@ -6268,8 +5685,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int SetAgentClose(int CompanyID, string CurrencyType)
-    {
+    public int SetAgentClose(int CompanyID, string CurrencyType) {
         int returnValue = -4;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6288,12 +5704,9 @@ public class BackendDB
         var ServiceType = "";
         ServiceType = "PROXY";
 
-        if (CurrencyType == "CNY")
-        {
+        if (CurrencyType == "CNY") {
             ServiceType = "PROXY";
-        }
-        else
-        {
+        } else {
             ServiceType = "PROXYJPY";
         }
 
@@ -6310,8 +5723,7 @@ public class BackendDB
     #endregion
 
     #region ProviderService
-    public DBModel.ProviderService GetProviderServiceByProviderCodeAndServiceType(string ProviderCode, string ServiceType, string CurrencyType)
-    {
+    public DBModel.ProviderService GetProviderServiceByProviderCodeAndServiceType(string ProviderCode, string ServiceType, string CurrencyType) {
         DBModel.ProviderService returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -6328,10 +5740,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProviderService>(DT).First();
             }
         }
@@ -6339,8 +5749,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.ProviderService GetProxyProviderByGroupID(string ProviderCode, string ServiceType, string CurrencyType, int GroupID)
-    {
+    public DBModel.ProviderService GetProxyProviderByGroupID(string ProviderCode, string ServiceType, string CurrencyType, int GroupID) {
         DBModel.ProviderService returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -6359,10 +5768,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProviderService>(DT).First();
             }
         }
@@ -6370,8 +5777,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderServiceVM> GetProviderServiceResultByProviderCode(string ProviderCode)
-    {
+    public List<DBViewModel.ProviderServiceVM> GetProviderServiceResultByProviderCode(string ProviderCode) {
         List<DBViewModel.ProviderServiceVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -6387,10 +5793,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderServiceVM>(DT) as List<DBViewModel.ProviderServiceVM>;
             }
         }
@@ -6398,15 +5802,13 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderServiceVM> GetProviderServiceResult(string ProviderCode = "", string ServiceType = "", string CurrencyType = "")
-    {
+    public List<DBViewModel.ProviderServiceVM> GetProviderServiceResult(string ProviderCode = "", string ServiceType = "", string CurrencyType = "") {
         List<DBViewModel.ProviderServiceVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
             SS = "SELECT * FROM ProviderService WHERE ProviderCode =@ProviderCode AND ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
@@ -6415,11 +5817,8 @@ public class BackendDB
             DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
-            if (ServiceType != "" && CurrencyType != "")
-            {
+        } else {
+            if (ServiceType != "" && CurrencyType != "") {
                 SS = "SELECT * FROM ProviderService WHERE ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
                 DBCmd = new SqlCommand();
                 DBCmd.CommandText = SS;
@@ -6427,9 +5826,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
                 DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
                 DT = DBAccess.GetDB(DBConnStr, DBCmd);
-            }
-            else
-            {
+            } else {
                 SS = "SELECT * FROM ProviderService WITH (NOLOCK)";
                 DBCmd = new SqlCommand();
                 DBCmd.CommandText = SS;
@@ -6438,10 +5835,8 @@ public class BackendDB
             }
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderServiceVM>(DT) as List<DBViewModel.ProviderServiceVM>;
             }
         }
@@ -6449,8 +5844,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertProviderService(DBModel.ProviderService Model)
-    {
+    public int InsertProviderService(DBModel.ProviderService Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6476,11 +5870,11 @@ public class BackendDB
 
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
         RedisCache.ProviderService.UpdateProviderService(Model.ProviderCode, Model.ServiceType, Model.CurrencyType);
+
         return returnValue;
     }
 
-    public int UpdateProviderService(DBModel.ProviderService Model, string RealName, int CompanyID)
-    {
+    public int UpdateProviderService(DBModel.ProviderService Model, string RealName, int CompanyID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6508,8 +5902,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DisableProvider(string ProviderCode)
-    {
+    public int DisableProvider(string ProviderCode) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6529,8 +5922,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DisableProviderService(DBModel.ProviderService Model, string RealName, int CompanyID)
-    {
+    public int DisableProviderService(DBModel.ProviderService Model, string RealName, int CompanyID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6549,13 +5941,10 @@ public class BackendDB
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
         RedisCache.ProviderService.UpdateProviderService(Model.ProviderCode, Model.ServiceType, Model.CurrencyType);
 
-        //CheckGPayRelationByUpdateProviderServiceState(Model.ServiceType, Model.CurrencyType, RealName, Model.ProviderCode, CompanyID);
-
         return returnValue;
     }
 
-    public int ChangeProviderServiceState(DBModel.ProviderService Model, string RealName, int CompanyID)
-    {
+    public int ChangeProviderServiceState(DBModel.ProviderService Model, string RealName, int CompanyID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6571,13 +5960,53 @@ public class BackendDB
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
         RedisCache.ProviderService.UpdateProviderService(Model.ProviderCode, Model.ServiceType, Model.CurrencyType);
 
-        //CheckGPayRelationByUpdateProviderServiceState(Model.ServiceType, Model.CurrencyType, RealName, Model.ProviderCode, CompanyID);
-
         return returnValue;
     }
 
-    public int GetProviderServiceState(string ServiceType, string CurrencyType, string ProviderCode)
-    {
+    public void SyncToggleDefaultProviderServiceTierState(string ProviderCode, string ServiceType, string CurrencyType) {
+        string SS;
+        System.Data.SqlClient.SqlCommand DBCmd = null;
+
+        SS = "UPDATE ProviderServiceTier SET State=(IIF(State=0,1,0)) " +
+             "WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType AND ProviderChannelCode=''";
+        DBCmd = new System.Data.SqlClient.SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
+        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(ProviderCode, ServiceType, CurrencyType, "");
+    }
+
+    public void SyncDefaultProviderServiceTier(DBModel.ProviderService Model) {
+        string SS;
+        System.Data.SqlClient.SqlCommand DBCmd = null;
+
+        SS = "IF EXISTS (SELECT 1 FROM ProviderServiceTier WITH (NOLOCK) WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType AND ProviderChannelCode='') " +
+             "    UPDATE ProviderServiceTier SET CostRate=@CostRate,CostCharge=@CostCharge,MaxOnceAmount=@MaxOnceAmount,MinOnceAmount=@MinOnceAmount,MaxDaliyAmount=@MaxDaliyAmount,State=@State,Description=@Description " +
+             "    WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType AND ProviderChannelCode='' " +
+             "ELSE " +
+             "    INSERT INTO ProviderServiceTier (ProviderCode,ServiceType,CurrencyType,ProviderChannelCode,CostRate,CostCharge,MaxOnceAmount,MinOnceAmount,MaxDaliyAmount,State,Description) " +
+             "    VALUES (@ProviderCode,@ServiceType,@CurrencyType,'',@CostRate,@CostCharge,@MaxOnceAmount,@MinOnceAmount,@MaxDaliyAmount,@State,@Description)";
+        DBCmd = new System.Data.SqlClient.SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = Model.ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = Model.ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Model.CurrencyType;
+        DBCmd.Parameters.Add("@CostRate", SqlDbType.Decimal).Value = Model.CostRate;
+        DBCmd.Parameters.Add("@CostCharge", SqlDbType.Decimal).Value = Model.CostCharge;
+        DBCmd.Parameters.Add("@MaxOnceAmount", SqlDbType.Decimal).Value = Model.MaxOnceAmount;
+        DBCmd.Parameters.Add("@MinOnceAmount", SqlDbType.Decimal).Value = Model.MinOnceAmount;
+        DBCmd.Parameters.Add("@MaxDaliyAmount", SqlDbType.Decimal).Value = Model.MaxDaliyAmount;
+        DBCmd.Parameters.Add("@State", SqlDbType.Int).Value = Model.State;
+        DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = Model.Description;
+        DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
+        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(Model.ProviderCode, Model.ServiceType, Model.CurrencyType, "");
+    }
+
+    public int GetProviderServiceState(string ServiceType, string CurrencyType, string ProviderCode) {
 
         int returnValue = -1;
         string SS;
@@ -6596,24 +6025,20 @@ public class BackendDB
     #endregion
 
     #region PermissionCategory
-    public List<DBModel.PermissionCategory> GetPermissionCategoryResult(int PermissionCategoryID = 0)
-    {
+    public List<DBModel.PermissionCategory> GetPermissionCategoryResult(int PermissionCategoryID = 0) {
         List<DBModel.PermissionCategory> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (PermissionCategoryID != 0)
-        {
+        if (PermissionCategoryID != 0) {
             SS = "SELECT * FROM PermissionCategory WHERE PermissionCategoryID =@PermissionCategoryID";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
             DBCmd.Parameters.Add("@PermissionCategoryID", SqlDbType.Int).Value = PermissionCategoryID;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM PermissionCategory WITH (NOLOCK) order by SortIndex";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
@@ -6621,10 +6046,8 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PermissionCategory>(DT) as List<DBModel.PermissionCategory>;
             }
         }
@@ -6632,8 +6055,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertPermissionCategory(DBModel.PermissionCategory Model)
-    {
+    public int InsertPermissionCategory(DBModel.PermissionCategory Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6652,8 +6074,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdatePermissionCategory(DBModel.PermissionCategory Model)
-    {
+    public int UpdatePermissionCategory(DBModel.PermissionCategory Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6672,8 +6093,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeletePermissionCategory(DBModel.PermissionCategory Model)
-    {
+    public int DeletePermissionCategory(DBModel.PermissionCategory Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -6691,8 +6111,7 @@ public class BackendDB
 
     #region Permission
 
-    public bool CheckLoginPermission(int CompanyID)
-    {
+    public bool CheckLoginPermission(int CompanyID) {
 
         bool returnValue = false;
         string SS;
@@ -6707,15 +6126,13 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT.Rows.Count > 0)
-        {
+        if (DT.Rows.Count > 0) {
             returnValue = true;
         }
         return returnValue;
     }
 
-    public bool CheckPermission(string PermissionName, int AdminID)
-    {
+    public bool CheckPermission(string PermissionName, int AdminID) {
 
         bool returnValue = false;
         string SS;
@@ -6732,15 +6149,13 @@ public class BackendDB
         DBCmd.Parameters.Add("@AdminID", SqlDbType.Int).Value = AdminID;
         DBCmd.Parameters.Add("@PermissionName", SqlDbType.VarChar).Value = PermissionName;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT.Rows.Count > 0)
-        {
+        if (DT.Rows.Count > 0) {
             returnValue = true;
         }
         return returnValue;
     }
 
-    public int InsertPermission(FromBody.PermissionSet fromBody)
-    {
+    public int InsertPermission(FromBody.PermissionSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6752,8 +6167,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@PermissionName", SqlDbType.VarChar).Value = fromBody.PermissionName;
 
         //登入帳號重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -6776,8 +6190,7 @@ public class BackendDB
 
     }
 
-    public int UpdatePermission(FromBody.PermissionSet fromBody)
-    {
+    public int UpdatePermission(FromBody.PermissionSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6801,8 +6214,7 @@ public class BackendDB
 
     }
 
-    public int DeletePermission(FromBody.PermissionSet fromBody)
-    {
+    public int DeletePermission(FromBody.PermissionSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6826,8 +6238,7 @@ public class BackendDB
 
     }
 
-    public List<DBViewModel.AdminRolePermissionResult> GetAdminRolePermissionResultByPermissionName(string PermissionName)
-    {
+    public List<DBViewModel.AdminRolePermissionResult> GetAdminRolePermissionResultByPermissionName(string PermissionName) {
         List<DBViewModel.AdminRolePermissionResult> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -6853,19 +6264,13 @@ public class BackendDB
         selectedAdminRoleDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (allAdminRoleDT != null)
-        {
-            if (allAdminRoleDT.Rows.Count > 0)
-            {
+        if (allAdminRoleDT != null) {
+            if (allAdminRoleDT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminRolePermissionResult>(allAdminRoleDT).ToList();
-                foreach (var rowData in returnValue)
-                {
-                    if (selectedAdminRoleDT.Select("forAdminRoleID='" + rowData.AdminRoleID + "'").Count() > 0)
-                    {
+                foreach (var rowData in returnValue) {
+                    if (selectedAdminRoleDT.Select("forAdminRoleID='" + rowData.AdminRoleID + "'").Count() > 0) {
                         rowData.selectedAdminRole = true;
-                    }
-                    else
-                    {
+                    } else {
                         rowData.selectedAdminRole = false;
                     }
                 }
@@ -6874,15 +6279,13 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdatePermissionRole(string PermissionName, List<string> PermissionRoles)
-    {
+    public int UpdatePermissionRole(string PermissionName, List<string> PermissionRoles) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
         int CompanyID;
         int AdminRoleID;
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
             SS = " DELETE FROM AdminRolePermission" +
                  " WHERE forPermissionName=@forPermissionName";
 
@@ -6892,8 +6295,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@forPermissionName", SqlDbType.NVarChar).Value = PermissionName;
 
             T.ExecuteDB(DBCmd);
-            foreach (var permissionrole in PermissionRoles)
-            {
+            foreach (var permissionrole in PermissionRoles) {
 
                 AdminRoleID = Convert.ToInt32(permissionrole.Split('_')[0]);
                 CompanyID = Convert.ToInt32(permissionrole.Split('_')[1]);
@@ -6917,19 +6319,15 @@ public class BackendDB
 
     }
 
-    public List<DBModel.Permission> GetPermissionTable(bool AdminPermission)
-    {
+    public List<DBModel.Permission> GetPermissionTable(bool AdminPermission) {
         List<DBModel.Permission> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
 
-        if (AdminPermission)
-        {
+        if (AdminPermission) {
             SS = "SELECT * FROM PermissionTable WITH (NOLOCK) ";
-        }
-        else
-        {
+        } else {
             SS = "SELECT * FROM PermissionTable WITH (NOLOCK) WHERE AdminPermission=0";
         }
 
@@ -6939,10 +6337,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Permission>(DT).ToList();
             }
         }
@@ -6950,22 +6346,18 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Permission> GetPermissionTableByPermissionCategoryID(int PermissionCategoryID)
-    {
+    public List<DBModel.Permission> GetPermissionTableByPermissionCategoryID(int PermissionCategoryID) {
         List<DBModel.Permission> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
 
         //PermissionCategoryID==0 取得全部資料
-        if (PermissionCategoryID == 0)
-        {
+        if (PermissionCategoryID == 0) {
             SS = "SELECT PermissionTable.*,PermissionCategory.Description AS PermissionCategoryDescription FROM PermissionTable WITH (NOLOCK) " +
                   " JOIN PermissionCategory WITH (NOLOCK) ON PermissionCategory.PermissionCategoryID=PermissionTable.PermissionCategoryID " +
                   " Order By PermissionCategory.SortIndex,PermissionTable.SortIndex ";
-        }
-        else
-        {
+        } else {
             SS = "SELECT PermissionTable.*,PermissionCategory.Description AS PermissionCategoryDescription FROM PermissionTable WITH (NOLOCK)" +
                 " JOIN PermissionCategory WITH (NOLOCK) ON PermissionCategory.PermissionCategoryID=PermissionTable.PermissionCategoryID" +
                 " WHERE PermissionTable.PermissionCategoryID=@PermissionCategoryID" +
@@ -6978,10 +6370,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@PermissionCategoryID", System.Data.SqlDbType.Int).Value = PermissionCategoryID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Permission>(DT).ToList();
             }
         }
@@ -6992,8 +6382,7 @@ public class BackendDB
     #endregion  
 
     #region ProviderPoint
-    public List<DBViewModel.ProviderPointVM> GetAllProviderPointByCompanyID(int CompanyID)
-    {
+    public List<DBViewModel.ProviderPointVM> GetAllProviderPointByCompanyID(int CompanyID) {
         List<DBViewModel.ProviderPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7020,10 +6409,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@CompanyID", System.Data.SqlDbType.Int).Value = CompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointVM>(DT).ToList();
             }
         }
@@ -7031,8 +6418,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderPointVM> GetAllProviderPoint(bool SearchAllProvider = false)
-    {
+    public List<DBViewModel.ProviderPointVM> GetAllProviderPoint(bool SearchAllProvider = false) {
         List<DBViewModel.ProviderPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7053,8 +6439,7 @@ public class BackendDB
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode ";
 
-        if (!SearchAllProvider)
-        {
+        if (!SearchAllProvider) {
             SS += " WHERE PC.ProviderState = 0";
         }
 
@@ -7062,10 +6447,8 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointVM>(DT).ToList();
             }
         }
@@ -7073,8 +6456,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderPointVM> GetAllProviderPoint2(bool SearchAllProvider = false)
-    {
+    public List<DBViewModel.ProviderPointVM> GetAllProviderPoint2(bool SearchAllProvider = false) {
         List<DBViewModel.ProviderPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7095,8 +6477,7 @@ public class BackendDB
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode WHERE 1=1 And PC.forCompanyID=0";
 
-        if (!SearchAllProvider)
-        {
+        if (!SearchAllProvider) {
             SS += " And PC.ProviderState = 0";
         }
 
@@ -7105,10 +6486,8 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointVM>(DT).ToList();
             }
         }
@@ -7117,8 +6496,7 @@ public class BackendDB
     }
 
 
-    public List<DBViewModel.ProviderPointVM> GetAllProviderPointBC(string CurrencyType, string ServiceType, bool SearchAllProvider = false)
-    {
+    public List<DBViewModel.ProviderPointVM> GetAllProviderPointBC(string CurrencyType, string ServiceType, bool SearchAllProvider = false) {
         List<DBViewModel.ProviderPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7141,8 +6519,7 @@ public class BackendDB
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode WHERE WL.BlockChainRate IS NOT NULL ";
 
-        if (!SearchAllProvider)
-        {
+        if (!SearchAllProvider) {
             SS += " And PC.ProviderState = 0";
         }
 
@@ -7153,10 +6530,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointVM>(DT).ToList();
             }
         }
@@ -7164,8 +6539,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.ProviderPointVM GetProviderPointByProviderCode(string ProviderCode)
-    {
+    public DBViewModel.ProviderPointVM GetProviderPointByProviderCode(string ProviderCode) {
         DBViewModel.ProviderPointVM returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7180,10 +6554,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointVM>(DT).ToList().First();
             }
         }
@@ -7191,8 +6563,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProviderManualHistory> GetProviderProfitManualHistoryResult()
-    {
+    public List<DBModel.ProviderManualHistory> GetProviderProfitManualHistoryResult() {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.ProviderManualHistory> returnValue = new List<DBModel.ProviderManualHistory>();
@@ -7216,24 +6587,20 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProviderManualHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public int UpdateProviderProfit(DBModel.ProviderManualHistory Model)
-    {
+    public int UpdateProviderProfit(DBModel.ProviderManualHistory Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -7253,8 +6620,7 @@ public class BackendDB
     #endregion
 
     #region CompanyPoint
-    public List<DBViewModel.CompanyServicePointVM> GetCanUseCompanyServicePoint(int CompanyID)
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetCanUseCompanyServicePoint(int CompanyID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -7288,10 +6654,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
@@ -7299,8 +6663,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.CompanyServicePointVM GetCanUseCompanyServicePointByService(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public DBViewModel.CompanyServicePointVM GetCanUseCompanyServicePointByService(int CompanyID, string ServiceType, string CurrencyType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -7337,10 +6700,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ServiceType", System.Data.SqlDbType.VarChar).Value = ServiceType;
         DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList().First();
             }
         }
@@ -7348,8 +6709,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointByServiceType(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointByServiceType(int CompanyID, string ServiceType, string CurrencyType) {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7371,10 +6731,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
@@ -7382,8 +6740,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointByServiceTypeAPI(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointByServiceTypeAPI(int CompanyID, string ServiceType, string CurrencyType) {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7405,10 +6762,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
@@ -7416,8 +6771,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderPointHistory> GetProviderPointHistory(FromBody.GetProviderPointHistorySet fromBody)
-    {
+    public List<DBViewModel.ProviderPointHistory> GetProviderPointHistory(FromBody.GetProviderPointHistorySet fromBody) {
         List<DBViewModel.ProviderPointHistory> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7436,13 +6790,11 @@ public class BackendDB
              " left join ProviderCode  on ProviderCode.ProviderCode = CH.ProviderCode" +
              " WHERE CH.CreateDate Between @StartDate And @EndDate ";
 
-        if (fromBody.OperatorType != 99)
-        {
+        if (fromBody.OperatorType != 99) {
             SS += " And CH.OperatorType=@OperatorType";
         }
 
-        if (fromBody.ProviderCode != "99")
-        {
+        if (fromBody.ProviderCode != "99") {
             SS += " And CH.ProviderCode=@ProviderCode";
         }
 
@@ -7456,10 +6808,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointHistory>(DT).ToList();
             }
         }
@@ -7467,8 +6817,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderPointHistory> GetProviderPrePaidHistory(FromBody.GetProviderPointHistorySet fromBody)
-    {
+    public List<DBViewModel.ProviderPointHistory> GetProviderPrePaidHistory(FromBody.GetProviderPointHistorySet fromBody) {
         List<DBViewModel.ProviderPointHistory> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7483,13 +6832,11 @@ public class BackendDB
              " left join ProviderCode  on ProviderCode.ProviderCode = CH.ProviderCode" +
              " WHERE CH.CreateDate Between @StartDate And @EndDate ";
 
-        if (fromBody.OperatorType != 99)
-        {
+        if (fromBody.OperatorType != 99) {
             SS += " And CH.OperatorType=@OperatorType";
         }
 
-        if (fromBody.ProviderCode != "99")
-        {
+        if (fromBody.ProviderCode != "99") {
             SS += " And CH.ProviderCode=@ProviderCode";
         }
 
@@ -7503,10 +6850,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderPointHistory>(DT).ToList();
             }
         }
@@ -7514,8 +6859,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProxyProviderPointHistory> GetProxyProviderPointHistory(FromBody.GetProviderPointHistorySet fromBody)
-    {
+    public List<DBViewModel.ProxyProviderPointHistory> GetProxyProviderPointHistory(FromBody.GetProviderPointHistorySet fromBody) {
         List<DBViewModel.ProxyProviderPointHistory> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7534,13 +6878,11 @@ public class BackendDB
              " LEFT JOIN ProxyProviderGroup PPG WITH (NOLOCK) ON PPG.GroupID=CH.GroupID " +
              " WHERE CH.CreateDate Between @StartDate And @EndDate And ProviderCode=@ProviderCode ";
 
-        if (fromBody.OperatorType != 99)
-        {
+        if (fromBody.OperatorType != 99) {
             SS += " And CH.OperatorType=@OperatorType";
         }
 
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += " And CH.GroupID=@GroupID";
         }
 
@@ -7557,10 +6899,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProxyProviderPointHistory>(DT).ToList();
             }
         }
@@ -7568,8 +6908,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyServicePointVM> GetAllCompanyServicePoint(string CurrencyType)
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetAllCompanyServicePoint(string CurrencyType) {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7604,10 +6943,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
@@ -7615,23 +6952,19 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointDetail(int CompanyID, string CurrencyType = "")
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointDetail(int CompanyID, string CurrencyType = "") {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        if (string.IsNullOrEmpty(CurrencyType))
-        {
+        if (string.IsNullOrEmpty(CurrencyType)) {
             SS = " SELECT CompanyServicePoint.*,CompanyService.State,ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge" +
             " FROM  CompanyServicePoint" +
             " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
             " LEFT JOIN CompanyService ON CompanyService.ServiceType=CompanyServicePoint.ServiceType And CompanyService.CurrencyType=CompanyServicePoint.CurrencyType And CompanyService.forCompanyID=CompanyServicePoint.CompanyID " +
             " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
             " WHERE CompanyServicePoint.CompanyID = @CompanyID";
-        }
-        else
-        {
+        } else {
             SS = " SELECT CompanyServicePoint.*,CompanyService.State,ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge" +
                 " FROM  CompanyServicePoint" +
                 " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
@@ -7650,10 +6983,8 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
@@ -7661,8 +6992,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointDetail2(int CompanyID, string CurrencyType = "")
-    {
+    public List<DBViewModel.CompanyServicePointVM> GetCompanyServicePointDetail2(int CompanyID, string CurrencyType = "") {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -7686,25 +7016,21 @@ public class BackendDB
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyServicePointVM>(DT).ToList();
             }
         }
 
         return returnValue;
     }
-    public List<DBViewModel.CompanyPointVM> GetCompanyPointTableResult(int CompanyID, string CurrencyType = "")
-    {
+    public List<DBViewModel.CompanyPointVM> GetCompanyPointTableResult(int CompanyID, string CurrencyType = "") {
         List<DBViewModel.CompanyPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CurrencyType != "")
-        {
+        if (CurrencyType != "") {
             SS = " SELECT CompanyTable.CompanyName,CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
                  " FROM   CompanyPoint" +
                  " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
@@ -7718,9 +7044,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {
+        } else {
             SS = " SELECT CompanyTable.CompanyName,CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
                  " FROM   CompanyPoint" +
                  " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
@@ -7734,19 +7058,15 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyPointVM>(DT) as List<DBViewModel.CompanyPointVM>;
-                foreach (var data in returnValue)
-                {
+                foreach (var data in returnValue) {
                     //檢查錢包金額是否足夠
                     var CanUseCompanyPointDT = GetCanUseCompanyPoint(CompanyID, data.CurrencyType);
 
                     ////錢包檢查
-                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0)
-                    {
+                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0) {
                         var CompanyPointModel = DataTableExtensions.ToList<DBModel.CompanyPoint>(CanUseCompanyPointDT).First();
                         data.LockPointValue = CompanyPointModel.PointValue - CompanyPointModel.CanUsePoint;
                         data.FrozenPoint = CompanyPointModel.FrozenPoint;
@@ -7818,15 +7138,13 @@ public class BackendDB
     //    return returnValue;
     //}
 
-    public List<DBViewModel.CompanyPointVM> GetCompanyPointDetailTableResult(int CompanyID, string CurrencyType = "")
-    {
+    public List<DBViewModel.CompanyPointVM> GetCompanyPointDetailTableResult(int CompanyID, string CurrencyType = "") {
         List<DBViewModel.CompanyPointVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        if (CurrencyType != "")
-        {//OB003 内充渠道
+        if (CurrencyType != "") {//OB003 内充渠道
             SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
                  " FROM   CompanyPoint" +
                  " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
@@ -7839,9 +7157,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        }
-        else
-        {   //OB003 内充渠道
+        } else {   //OB003 内充渠道
             SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
                  " FROM   CompanyPoint" +
                  " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
@@ -7854,19 +7170,15 @@ public class BackendDB
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.CompanyPointVM>(DT) as List<DBViewModel.CompanyPointVM>;
-                foreach (var data in returnValue)
-                {
+                foreach (var data in returnValue) {
                     //檢查錢包金額是否足夠
                     var CanUseCompanyPointDT = GetCanUseCompanyPointDetail(CompanyID, data.CurrencyType);
 
                     ////錢包檢查
-                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0)
-                    {
+                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0) {
                         var CompanyPointModel = DataTableExtensions.ToList<DBModel.CompanyPoint>(CanUseCompanyPointDT).First();
                         data.LockPointValue = CompanyPointModel.PointValue - CompanyPointModel.CanUsePoint;
                         data.FrozenPoint = CompanyPointModel.FrozenPoint;
@@ -7880,8 +7192,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.CompanyPointVM> GetAllCompanyPointTableResult(string CurrencyType)
-    {
+    public List<DBViewModel.CompanyPointVM> GetAllCompanyPointTableResult(string CurrencyType) {
         List<DBViewModel.CompanyPointVM> returnValue = new List<DBViewModel.CompanyPointVM>();
         DBViewModel.CompanyPointVM tempdata = new DBViewModel.CompanyPointVM();
         List<DBViewModel.CompanyPointVM> tempResult = null;
@@ -7902,23 +7213,19 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 tempResult = DataTableExtensions.ToList<DBViewModel.CompanyPointVM>(DT) as List<DBViewModel.CompanyPointVM>;
                 tempdata.CompanyName = "ALL";
                 tempdata.CurrencyType = CurrencyType;
                 tempdata.CompanyCount = tempResult.Count;
-                foreach (var data in tempResult)
-                {
+                foreach (var data in tempResult) {
                     tempdata.PointValue = Decimal.Add(tempdata.PointValue, data.PointValue);
                     //檢查錢包金額是否足夠
                     var CanUseCompanyPointDT = GetCanUseCompanyPoint(data.forCompanyID, tempdata.CurrencyType);
 
                     ////錢包檢查
-                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0)
-                    {
+                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0) {
                         var CompanyPointModel = DataTableExtensions.ToList<DBModel.CompanyPoint>(CanUseCompanyPointDT).First();
                         tempdata.LockPointValue = Decimal.Add(tempdata.LockPointValue, Decimal.Subtract(CompanyPointModel.PointValue, CompanyPointModel.CanUsePoint));
                         tempdata.FrozenPoint = Decimal.Add(tempdata.FrozenPoint, CompanyPointModel.FrozenPoint);
@@ -7926,8 +7233,7 @@ public class BackendDB
                 }
                 returnValue.Add(tempdata);
 
-                foreach (var data in tempResult)
-                {
+                foreach (var data in tempResult) {
                     DBViewModel.CompanyPointVM tempdata2 = new DBViewModel.CompanyPointVM();
                     tempdata2.CompanyName = data.CompanyName;
                     tempdata2.CurrencyType = data.CurrencyType;
@@ -7936,8 +7242,7 @@ public class BackendDB
                     var CanUseCompanyPointDT = GetCanUseCompanyPoint(data.forCompanyID, data.CurrencyType);
 
                     ////錢包檢查
-                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0)
-                    {
+                    if (CanUseCompanyPointDT != null && CanUseCompanyPointDT.Rows.Count > 0) {
                         var CompanyPointModel = DataTableExtensions.ToList<DBModel.CompanyPoint>(CanUseCompanyPointDT).First();
                         tempdata2.LockPointValue = CompanyPointModel.PointValue - CompanyPointModel.CanUsePoint;
                         tempdata2.FrozenPoint = CompanyPointModel.FrozenPoint;
@@ -7951,8 +7256,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertCompanyPoint(int CompanyID, string CurrencyType)
-    {
+    public int InsertCompanyPoint(int CompanyID, string CurrencyType) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -7992,8 +7296,7 @@ public class BackendDB
 
     #region  BankCode
 
-    public List<DBModel.BankCodeTable> GetBankCodeTableResult()
-    {
+    public List<DBModel.BankCodeTable> GetBankCodeTableResult() {
         List<DBModel.BankCodeTable> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8007,10 +7310,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.BankCodeTable>(DT).ToList();
             }
         }
@@ -8018,8 +7319,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertBankCode(FromBody.BankCodeSet fromBody)
-    {
+    public int InsertBankCode(FromBody.BankCodeSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8033,8 +7333,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@BankCode", SqlDbType.VarChar).Value = fromBody.BankCode;
 
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -8058,8 +7357,7 @@ public class BackendDB
 
     }
 
-    public int UpdateBankCode(FromBody.BankCodeSet fromBody)
-    {
+    public int UpdateBankCode(FromBody.BankCodeSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8084,8 +7382,7 @@ public class BackendDB
 
     }
 
-    public int DisableBankCode(FromBody.BankCodeSet fromBody)
-    {
+    public int DisableBankCode(FromBody.BankCodeSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8109,8 +7406,7 @@ public class BackendDB
 
     #region BankCard
 
-    public List<DBViewModel.BankCardVM> GetBankCardTableResult(FromBody.BankCardSet fromBody)
-    {
+    public List<DBViewModel.BankCardVM> GetBankCardTableResult(FromBody.BankCardSet fromBody) {
         List<DBViewModel.BankCardVM> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8127,10 +7423,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.BankCardVM>(DT).ToList();
             }
         }
@@ -8138,8 +7432,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertBankCard(FromBody.BankCardSet fromBody)
-    {
+    public int InsertBankCard(FromBody.BankCardSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8153,8 +7446,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@BankCard", SqlDbType.VarChar).Value = fromBody.BankCard;
 
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -8178,8 +7470,7 @@ public class BackendDB
 
     }
 
-    public int UpdateBankCard(FromBody.BankCardSet fromBody)
-    {
+    public int UpdateBankCard(FromBody.BankCardSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8204,8 +7495,7 @@ public class BackendDB
 
     }
 
-    public int DeleteBankCard(FromBody.BankCardSet fromBody)
-    {
+    public int DeleteBankCard(FromBody.BankCardSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8228,8 +7518,7 @@ public class BackendDB
 
     #region BlockChainAddress
 
-    public List<DBModel.CompanyBlockChainAddress> GetCompanyBlockChainAddressResult(int CompanyID)
-    {
+    public List<DBModel.CompanyBlockChainAddress> GetCompanyBlockChainAddressResult(int CompanyID) {
         List<DBModel.CompanyBlockChainAddress> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8245,10 +7534,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyBlockChainAddress>(DT).ToList();
             }
         }
@@ -8256,8 +7543,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertBlockChainAddress(FromBody.BlockChainAddressSet fromBody, int CompanyID)
-    {
+    public int InsertBlockChainAddress(FromBody.BlockChainAddressSet fromBody, int CompanyID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8272,8 +7558,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = CompanyID;
 
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
@@ -8293,8 +7578,7 @@ public class BackendDB
 
     }
 
-    public int UpdateBlockChainAddress(FromBody.BlockChainAddressSet fromBody, int CompanyID)
-    {
+    public int UpdateBlockChainAddress(FromBody.BlockChainAddressSet fromBody, int CompanyID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8316,8 +7600,7 @@ public class BackendDB
 
     }
 
-    public int DeleteBlockChainAddress(FromBody.BlockChainAddressSet fromBody)
-    {
+    public int DeleteBlockChainAddress(FromBody.BlockChainAddressSet fromBody) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8339,8 +7622,7 @@ public class BackendDB
     #endregion
 
     #region 提現相關
-    public int RemoveWithdrawal(int WithdrawID)
-    {
+    public int RemoveWithdrawal(int WithdrawID) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8360,8 +7642,7 @@ public class BackendDB
         return updateCount;
     }
 
-    public int RemoveAllWithdrawal(List<int> WithdrawIDs)
-    {
+    public int RemoveAllWithdrawal(List<int> WithdrawIDs) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8371,8 +7652,7 @@ public class BackendDB
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
         DBCmd.CommandType = CommandType.Text;
-        for (int i = 0; i < WithdrawIDs.Count; i++)
-        {
+        for (int i = 0; i < WithdrawIDs.Count; i++) {
             parameters[i] = string.Format("@WithdrawID{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
         }
@@ -8384,8 +7664,7 @@ public class BackendDB
         return updateCount;
     }
 
-    public List<DBModel.Withdrawal> TmpWithdrawalCreate(FromBody.WithdrawalCreate fromBody, int CompnayID)
-    {
+    public List<DBModel.Withdrawal> TmpWithdrawalCreate(FromBody.WithdrawalCreate fromBody, int CompnayID) {
         var returnValue = new List<DBModel.Withdrawal>();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8399,23 +7678,17 @@ public class BackendDB
         _WithdrawLimit.ProviderCode = "";
         var withdrawLimitResult = GetWithdrawLimitResult(_WithdrawLimit);
 
-        DBAccess.ExecuteTransDB(Pay.DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(Pay.DBConnStr, T => {
 
-            foreach (var data in fromBody.WithdrawalData)
-            {
+            foreach (var data in fromBody.WithdrawalData) {
 
                 WithdrawalID = 0;
 
-                if (withdrawLimitResult != null)
-                {
+                if (withdrawLimitResult != null) {
                     var tmpWithdrawLimitResult = withdrawLimitResult.Where(w => w.CurrencyType == data.CurrencyType && w.ServiceType == data.ServiceType).ToList();
-                    if (tmpWithdrawLimitResult.Count > 0)
-                    {
+                    if (tmpWithdrawLimitResult.Count > 0) {
                         Charge = tmpWithdrawLimitResult.First().Charge;
-                    }
-                    else
-                    {
+                    } else {
                         Charge = 0;
                     }
 
@@ -8447,8 +7720,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@Status", SqlDbType.Int).Value = 0;
 
                 int.TryParse(DBAccess.GetDBValue(DBConnStr, DBCmd).ToString(), out WithdrawalID);
-                if (WithdrawalID != 0)
-                {
+                if (WithdrawalID != 0) {
                     WithdrawSerial = "OP" + System.DateTime.Now.ToString("yyyyMMddHHmm") + (new string('0', 10 - WithdrawalID.ToString().Length) + WithdrawalID.ToString());
                     SS = "UPDATE Withdrawal  SET WithdrawSerial=@WithdrawSerial " +
                     " WHERE WithdrawID=@WithdrawID";
@@ -8464,16 +7736,14 @@ public class BackendDB
             }
         });
 
-        foreach (var withdrawSerial in lst_WithdrawSerial)
-        {
+        foreach (var withdrawSerial in lst_WithdrawSerial) {
             returnValue.Add(GetWithdrawalByWithdrawSerial(withdrawSerial));
         }
 
         return returnValue;
     }
 
-    public DBModel.Withdrawal TmpWithdrawalUpdate(DBModel.Withdrawal data, int CompnayID)
-    {
+    public DBModel.Withdrawal TmpWithdrawalUpdate(DBModel.Withdrawal data, int CompnayID) {
         DBModel.Withdrawal returnValue = null;
         String SS = String.Empty;
         int UpdateCount = 0;
@@ -8499,16 +7769,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = data.Amount;
         UpdateCount = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-        if (UpdateCount > 0)
-        {
+        if (UpdateCount > 0) {
             returnValue = GetWithdrawalByWithdrawID(data.WithdrawID);
         }
 
         return returnValue;
     }
 
-    public DBModel.Withdrawal WithdrawalUpdate(DBModel.Withdrawal data, int CompnayID)
-    {
+    public DBModel.Withdrawal WithdrawalUpdate(DBModel.Withdrawal data, int CompnayID) {
         DBModel.Withdrawal returnValue = null;
         String SS = String.Empty;
         int UpdateCount = 0;
@@ -8534,8 +7802,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = data.Amount;
         UpdateCount = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-        if (UpdateCount > 0)
-        {
+        if (UpdateCount > 0) {
             returnValue = GetWithdrawalByWithdrawID(data.WithdrawID);
         }
 
@@ -8674,8 +7941,7 @@ public class BackendDB
     //    return returnValue;
     //}
 
-    public DBViewModel.ProviderWithdrawalOrderCount GetProviderWithdrawalOrderCount(string ProviderCode, int GroupID)
-    {
+    public DBViewModel.ProviderWithdrawalOrderCount GetProviderWithdrawalOrderCount(string ProviderCode, int GroupID) {
         DBViewModel.ProviderWithdrawalOrderCount returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8694,10 +7960,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderWithdrawalOrderCount>(DT).ToList().FirstOrDefault();
             }
         }
@@ -8705,8 +7969,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int GetProviderPaymentOrderCount(string ProviderCode, int GroupID)
-    {
+    public int GetProviderPaymentOrderCount(string ProviderCode, int GroupID) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8726,8 +7989,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string GetWithdrawalCount()
-    {
+    public string GetWithdrawalCount() {
         string returnValue = "";
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8746,8 +8008,7 @@ public class BackendDB
     }
 
     //建立提現訂單
-    public int WithdrawalCreate(FromBody.WithdrawalCreate fromBody, int CompnayID, string ProviderGroups, int BackendWithdrawType)
-    {
+    public int WithdrawalCreate(FromBody.WithdrawalCreate fromBody, int CompnayID, string ProviderGroups, int BackendWithdrawType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8770,27 +8031,18 @@ public class BackendDB
     .ToList();
 
 
-        foreach (var data in fromBody.WithdrawalData)
-        {
+        foreach (var data in fromBody.WithdrawalData) {
 
-            if (CheckWitdrawal(data.WithdrawID, data.BankCard, data.BankCardName, data.BankName) == 0)
-            {
+            if (CheckWitdrawal(data.WithdrawID, data.BankCard, data.BankCardName, data.BankName) == 0) {
 
-                if (DistinctWithdrawalData.Contains(data))
-                {
-                    if (data.ServiceType == "OOB02" && AutoWithdrawalProviderCode == "LPay2" && BackendWithdrawType == 1)
-                    {
-                        if (ProxyProviderModel != null && data.Amount <= ProxyProviderModel.MaxWithdrawalAmount)
-                        {
+                if (DistinctWithdrawalData.Contains(data)) {
+                    if (data.ServiceType == "OOB02" && AutoWithdrawalProviderCode == "LPay2" && BackendWithdrawType == 1) {
+                        if (ProxyProviderModel != null && data.Amount <= ProxyProviderModel.MaxWithdrawalAmount) {
 
-                            if (GetProxyProviderOrderByOrderSerial(data.WithdrawSerial, 1) == null)
-                            {
-                                if (ProviderGroups == "0")
-                                {
+                            if (GetProxyProviderOrderByOrderSerial(data.WithdrawSerial, 1) == null) {
+                                if (ProviderGroups == "0") {
                                     GroupID = BackendFunction.SelectProxyProviderGroup(AutoWithdrawalProviderCode, data.Amount);
-                                }
-                                else
-                                {
+                                } else {
                                     GroupID = BackendFunction.SelectProxyProviderGroupByCompanySelected(AutoWithdrawalProviderCode, data.Amount, ProviderGroups);
                                 }
 
@@ -8809,9 +8061,7 @@ public class BackendDB
                             DBCmd.Parameters.Add("@CreateDate", SqlDbType.DateTime).Value = DateTime.Now;
                             DBCmd.Parameters.Add("@CompanyDescription", SqlDbType.NVarChar).Value = CompanyDescription;
                             returnValue += DBAccess.ExecuteDB(DBConnStr, DBCmd);
-                        }
-                        else
-                        {
+                        } else {
                             SS = " UPDATE Withdrawal  SET Status=0,CreateDate=@CreateDate,CompanyDescription=@CompanyDescription " +
                          " WHERE WithdrawID=@WithdrawID  And Status=8 And FinishDate is Null";
 
@@ -8824,20 +8074,13 @@ public class BackendDB
 
                             returnValue += DBAccess.ExecuteDB(DBConnStr, DBCmd);
                         }
-                    }
-                    else if (data.ServiceType == "OOB02" && AutoWithdrawalProviderCode == "YE888" && BackendWithdrawType == 1)
-                    {
-                        if (ProxyProviderModel != null && data.Amount <= ProxyProviderModel.MaxWithdrawalAmount)
-                        {
+                    } else if (data.ServiceType == "OOB02" && AutoWithdrawalProviderCode == "YE888" && BackendWithdrawType == 1) {
+                        if (ProxyProviderModel != null && data.Amount <= ProxyProviderModel.MaxWithdrawalAmount) {
 
-                            if (GetProxyProviderOrderByOrderSerial(data.WithdrawSerial, 1) == null)
-                            {
-                                if (ProviderGroups == "0")
-                                {
+                            if (GetProxyProviderOrderByOrderSerial(data.WithdrawSerial, 1) == null) {
+                                if (ProviderGroups == "0") {
                                     GroupID = BackendFunction.SelectProxyProviderGroup(AutoWithdrawalProviderCode, data.Amount);
-                                }
-                                else
-                                {
+                                } else {
                                     GroupID = BackendFunction.SelectProxyProviderGroupByCompanySelected(AutoWithdrawalProviderCode, data.Amount, ProviderGroups);
                                 }
 
@@ -8856,9 +8099,7 @@ public class BackendDB
                             DBCmd.Parameters.Add("@CreateDate", SqlDbType.DateTime).Value = DateTime.Now;
                             DBCmd.Parameters.Add("@CompanyDescription", SqlDbType.NVarChar).Value = CompanyDescription;
                             returnValue += DBAccess.ExecuteDB(DBConnStr, DBCmd);
-                        }
-                        else
-                        {
+                        } else {
                             SS = " UPDATE Withdrawal  SET Status=0,CreateDate=@CreateDate,CompanyDescription=@CompanyDescription " +
                          " WHERE WithdrawID=@WithdrawID  And Status=8 And FinishDate is Null";
 
@@ -8871,9 +8112,7 @@ public class BackendDB
 
                             returnValue += DBAccess.ExecuteDB(DBConnStr, DBCmd);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         SS = " UPDATE Withdrawal  SET Status=0,CreateDate=@CreateDate,CompanyDescription=@CompanyDescription " +
                              " WHERE WithdrawID=@WithdrawID  And Status=8 And FinishDate is Null";
 
@@ -8886,9 +8125,7 @@ public class BackendDB
 
                         returnValue += DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     }
-                }
-                else
-                {
+                } else {
                     SS = " UPDATE Withdrawal SET RejectDescription=@RejectDescription" +
                          " WHERE WithdrawID=@WithdrawID ";
 
@@ -8904,9 +8141,7 @@ public class BackendDB
 
 
 
-            }
-            else
-            {
+            } else {
                 SS = " UPDATE Withdrawal SET RejectDescription=@RejectDescription" +
               " WHERE WithdrawID=@WithdrawID ";
 
@@ -8925,8 +8160,7 @@ public class BackendDB
 
 
 
-    public int CheckWitdrawal(int WithdrawID, string BankCard, string BankCardName, string BankName)
-    {
+    public int CheckWitdrawal(int WithdrawID, string BankCard, string BankCardName, string BankName) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -1;
@@ -8951,16 +8185,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@BankName", SqlDbType.NVarChar).Value = BankName;
         DBCmd.Parameters.Add("@WithdrawID", SqlDbType.Int).Value = WithdrawID;
         var dbreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
-        if (dbreturn != null)
-        {
+        if (dbreturn != null) {
             returnValue = int.Parse(dbreturn.ToString());
         }
 
         return returnValue;
     }
 
-    public string GetCompanyAutoWithdrawalProviderCode(int CompnayID)
-    {
+    public string GetCompanyAutoWithdrawalProviderCode(int CompnayID) {
         string returnValue = "";
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -8977,8 +8209,7 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompnayID;
-        if (DBAccess.GetDBValue(DBConnStr, DBCmd) != null)
-        {
+        if (DBAccess.GetDBValue(DBConnStr, DBCmd) != null) {
             returnValue = DBAccess.GetDBValue(DBConnStr, DBCmd).ToString();
         }
 
@@ -8986,8 +8217,7 @@ public class BackendDB
     }
 
     //每日提現額度與筆數查詢       
-    public List<DBModel.WithdrawalTotalAmountsByDate> GetWithdrawalTotalAmountsByDate()
-    {
+    public List<DBModel.WithdrawalTotalAmountsByDate> GetWithdrawalTotalAmountsByDate() {
         List<DBModel.WithdrawalTotalAmountsByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9005,10 +8235,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalTotalAmountsByDate>(DT).ToList();
             }
         }
@@ -9016,8 +8244,7 @@ public class BackendDB
         return returnValue;
     }
     //代付查詢
-    public List<DBModel.Withdrawal> GetWithdrawalReport(FromBody.WithdrawalReportSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalReport(FromBody.WithdrawalReportSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9030,26 +8257,21 @@ public class BackendDB
              " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91  And (FloatType=1 OR FloatType=2) ";
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And WithdrawSerial=@WithdrawSerial";
         }
 
-        if (fromBody.BankCardName != "")
-        {
+        if (fromBody.BankCardName != "") {
             SS += " And BankCardName=@BankCardName";
         }
 
-        if (fromBody.OrderID != "")
-        {
+        if (fromBody.OrderID != "") {
             SS += " And DownOrderID=@OrderID";
         }
 
-        if (fromBody.Status.FirstOrDefault() != 99)
-        {
+        if (fromBody.Status.FirstOrDefault() != 99) {
 
-            for (int i = 0; i < fromBody.Status.Count; i++)
-            {
+            for (int i = 0; i < fromBody.Status.Count; i++) {
                 parameters[i] = string.Format("@Status{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.Status[i]);
             }
@@ -9069,10 +8291,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -9080,8 +8300,7 @@ public class BackendDB
         return returnValue;
     }
     //提現查詢
-    public List<DBModel.Withdrawal> GetWithdrawalTableResult(FromBody.WithdrawalSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalTableResult(FromBody.WithdrawalSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9091,14 +8310,12 @@ public class BackendDB
              " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91 And FloatType=0  ";
 
         //過濾資料
-        if (fromBody.Status != 99)
-        { //99代表取得所有資料
+        if (fromBody.Status != 99) { //99代表取得所有資料
             SS += " And Status=@Status";
         }
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And WithdrawSerial=@WithdrawSerial";
         }
 
@@ -9114,10 +8331,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -9125,8 +8340,7 @@ public class BackendDB
         return returnValue;
     }
     //提現申請
-    public List<DBModel.Withdrawal> GetWithdrawalTableResultByCompanyID(int CompanyID)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalTableResultByCompanyID(int CompanyID) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9145,10 +8359,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -9156,8 +8368,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Withdrawal GetWithdrawalResultByWithdrawSerial(string WithdrawSerial)
-    {
+    public DBModel.Withdrawal GetWithdrawalResultByWithdrawSerial(string WithdrawSerial) {
         DBModel.Withdrawal returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9178,10 +8389,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).First();
             }
         }
@@ -9189,8 +8398,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateWithdrawalBankSequence(string WithdrawSerial, string BankDescription, int Status)
-    {
+    public int UpdateWithdrawalBankSequence(string WithdrawSerial, string BankDescription, int Status) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9212,8 +8420,7 @@ public class BackendDB
         return updateCount;
     }
 
-    public int UpdateWithdrawalRejectDescription(string WithdrawSerial, string RejectDescription, int Status)
-    {
+    public int UpdateWithdrawalRejectDescription(string WithdrawSerial, string RejectDescription, int Status) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9221,8 +8428,7 @@ public class BackendDB
 
 
         SS += " UPDATE Withdrawal  SET Status=@Status";
-        switch (Status)
-        {
+        switch (Status) {
             case 9:
                 SS += " ,RejectDescription=@RejectDescription";
                 break;
@@ -9249,8 +8455,7 @@ public class BackendDB
         return updateCount;
     }
 
-    public DBModel.UpdateWithdrawalResultsByAdminCheck UpdateWithdrawalResultsByAdminCheck(int Status, List<int> WithdrawIDs, int AdminID)
-    {
+    public DBModel.UpdateWithdrawalResultsByAdminCheck UpdateWithdrawalResultsByAdminCheck(int Status, List<int> WithdrawIDs, int AdminID) {
         DBModel.UpdateWithdrawalResultsByAdminCheck returnValue = new DBModel.UpdateWithdrawalResultsByAdminCheck();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9264,8 +8469,7 @@ public class BackendDB
         //var WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
 
         //失敗單
-        if (Status == 3)
-        {
+        if (Status == 3) {
             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID,FinishDate=@FinishDate" +
                 " WHERE WithdrawID IN ({0}) And Status=4;";
 
@@ -9275,8 +8479,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@AdminID", SqlDbType.Int).Value = AdminID;
             DBCmd.Parameters.Add("@FinishDate", SqlDbType.DateTime).Value = DateTime.Now;
 
-            for (int i = 0; i < WithdrawIDs.Count; i++)
-            {
+            for (int i = 0; i < WithdrawIDs.Count; i++) {
                 parameters[i] = string.Format("@WithdrawID{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
             }
@@ -9284,16 +8487,14 @@ public class BackendDB
             SS = string.Format(SS, string.Join(", ", parameters));
             DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-            if (DBreturn > 0)
-            {
+            if (DBreturn > 0) {
 
                 SS = " Select * From Withdrawal  WITH (NOLOCK)  " +
                      " WHERE WithdrawID IN ({0});";
 
                 DBCmd = new System.Data.SqlClient.SqlCommand();
 
-                for (int i = 0; i < WithdrawIDs.Count; i++)
-                {
+                for (int i = 0; i < WithdrawIDs.Count; i++) {
                     parameters[i] = string.Format("@WithdrawID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
                 }
@@ -9304,41 +8505,30 @@ public class BackendDB
 
                 DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-                if (DT != null)
-                {
-                    if (DT.Rows.Count > 0)
-                    {
+                if (DT != null) {
+                    if (DT.Rows.Count > 0) {
                         WithdrawalModel = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
                         returnValue.WithdrawalModel = WithdrawalModel;
                         returnValue.State = 0;
-                    }
-                    else
-                    {
+                    } else {
                         returnValue.Message = "Error";
                         returnValue.State = -1;
                     }
-                }
-                else
-                {
+                } else {
                     returnValue.Message = "Error";
                     returnValue.State = -1;
                 }
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "Error";
                 returnValue.State = -1;
             }
-        }
-        else
-        {
+        } else {
             SS = " Select * From Withdrawal  WITH (NOLOCK)  " +
                  " WHERE WithdrawID IN ({0});";
 
             DBCmd = new System.Data.SqlClient.SqlCommand();
 
-            for (int i = 0; i < WithdrawIDs.Count; i++)
-            {
+            for (int i = 0; i < WithdrawIDs.Count; i++) {
                 parameters[i] = string.Format("@WithdrawID{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
             }
@@ -9349,35 +8539,25 @@ public class BackendDB
 
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-            if (DT != null)
-            {
-                if (DT.Rows.Count > 0)
-                {
+            if (DT != null) {
+                if (DT.Rows.Count > 0) {
                     WithdrawalModel = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
-                }
-                else
-                {
+                } else {
                     returnValue.Message = "Error";
                     returnValue.State = -1;
                 }
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "Error";
                 returnValue.State = -1;
             }
 
-            if (WithdrawalModel != null)
-            {
+            if (WithdrawalModel != null) {
                 ProviderModel = GetProviderCodeResult();
 
-                foreach (var withdrawaldata in WithdrawalModel)
-                {
+                foreach (var withdrawaldata in WithdrawalModel) {
                     //找不到訂單資訊
-                    if (withdrawaldata.Status == 4)
-                    {
-                        if (withdrawaldata.WithdrawType == 0 && Status == 5)
-                        {
+                    if (withdrawaldata.Status == 4) {
+                        if (withdrawaldata.WithdrawType == 0 && Status == 5) {
                             //水池撥款
                             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                                  " WHERE WithdrawID=@WithdrawID";
@@ -9391,31 +8571,24 @@ public class BackendDB
 
                             DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-                            if (DBreturn == 0)
-                            {
+                            if (DBreturn == 0) {
                                 returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                             }
 
-                        }
-                        else if (withdrawaldata.WithdrawType == 1 && Status == 5)
-                        {
+                        } else if (withdrawaldata.WithdrawType == 1 && Status == 5) {
                             //代付
-                            if (!string.IsNullOrEmpty(withdrawaldata.ProviderCode))
-                            {
+                            if (!string.IsNullOrEmpty(withdrawaldata.ProviderCode)) {
 
                                 bool autoPay = false;
 
-                                if (ProviderModel != null)
-                                {
+                                if (ProviderModel != null) {
                                     var ProviderData = ProviderModel.Where(w => (w.ProviderCode == withdrawaldata.ProviderCode && (w.ProviderAPIType & 2) == 2));
 
-                                    if (ProviderData.Count() > 0)
-                                    {
+                                    if (ProviderData.Count() > 0) {
                                         autoPay = true;
                                     }
 
-                                    if (autoPay)
-                                    {   //api自動代付
+                                    if (autoPay) {   //api自動代付
                                         SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                                              " WHERE WithdrawID=@WithdrawID";
 
@@ -9446,12 +8619,10 @@ public class BackendDB
 
                                         var strRequireWithdrawal = CodingControl.RequestJsonAPI(GPayApiUrl + "RequireWithdrawal", JsonConvert.SerializeObject(_RequireWithdrawalSet));
 
-                                        if (!string.IsNullOrEmpty(strRequireWithdrawal))
-                                        {
+                                        if (!string.IsNullOrEmpty(strRequireWithdrawal)) {
                                             returnRequireWithdrawal = JsonConvert.DeserializeObject<DBModel.API_WithdrawResult>(strRequireWithdrawal);
                                             //OK = 0,ERR = 1,SignErr = 2,Invalidate = 3
-                                            switch (returnRequireWithdrawal.Status)
-                                            {
+                                            switch (returnRequireWithdrawal.Status) {
                                                 case 0:
 
                                                 case 1:
@@ -9516,9 +8687,7 @@ public class BackendDB
                                                     returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                                                     break;
                                             }
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID,ManagerRejectDescription=@ManagerRejectDescription" +
                                                   " WHERE WithdrawID=@WithdrawID";
 
@@ -9532,9 +8701,7 @@ public class BackendDB
                                             DBAccess.ExecuteDB(DBConnStr, DBCmd);
                                             returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                                         }
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         //手動供應商後台撥款
                                         SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                                              " WHERE WithdrawID=@WithdrawID";
@@ -9548,24 +8715,16 @@ public class BackendDB
 
                                         DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         returnValue.ErrorWithdrawal.Add(withdrawaldata.WithdrawSerial);
                     }
                 }
@@ -9576,8 +8735,7 @@ public class BackendDB
 
                 DBCmd = new System.Data.SqlClient.SqlCommand();
 
-                for (int i = 0; i < WithdrawIDs.Count; i++)
-                {
+                for (int i = 0; i < WithdrawIDs.Count; i++) {
                     parameters[i] = string.Format("@WithdrawID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
                 }
@@ -9588,19 +8746,15 @@ public class BackendDB
 
                 DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-                if (DT != null)
-                {
-                    if (DT.Rows.Count > 0)
-                    {
+                if (DT != null) {
+                    if (DT.Rows.Count > 0) {
                         WithdrawalModel = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
                         returnValue.WithdrawalModel = WithdrawalModel;
                         returnValue.State = 0;
                     }
                 }
                 #endregion
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "Error";
                 returnValue.State = -1;
             }
@@ -9608,8 +8762,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.UpdateWithdrawalResultsByAdminCheck UpdateWithdrawalResultsByAdminDoubleCheck(List<int> WithdrawIDs)
-    {
+    public DBModel.UpdateWithdrawalResultsByAdminCheck UpdateWithdrawalResultsByAdminDoubleCheck(List<int> WithdrawIDs) {
         DBModel.UpdateWithdrawalResultsByAdminCheck returnValue = new DBModel.UpdateWithdrawalResultsByAdminCheck();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9625,8 +8778,7 @@ public class BackendDB
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
-        for (int i = 0; i < WithdrawIDs.Count; i++)
-        {
+        for (int i = 0; i < WithdrawIDs.Count; i++) {
             parameters[i] = string.Format("@WithdrawID{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
         }
@@ -9637,22 +8789,17 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 WithdrawalModel = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
 
         #endregion
 
-        if (WithdrawalModel != null)
-        {
-            foreach (var withdrawaldata in WithdrawalModel)
-            {
-                if (withdrawaldata.Status == 6)
-                {
+        if (WithdrawalModel != null) {
+            foreach (var withdrawaldata in WithdrawalModel) {
+                if (withdrawaldata.Status == 6) {
                     //扣除公司額度
                     SS = "spReviewWithdrawal";
                     DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -9662,8 +8809,7 @@ public class BackendDB
                     DBCmd.Parameters.Add("@Return", SqlDbType.VarChar).Direction = System.Data.ParameterDirection.ReturnValue;
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     DBreturn = (int)DBCmd.Parameters["@Return"].Value;
-                    switch (DBreturn)
-                    {
+                    switch (DBreturn) {
                         case 0://成功
 
                             break;
@@ -9692,9 +8838,7 @@ public class BackendDB
                             // UpdateWithdrawal(withdrawaldata.WithdrawSerial, "其他錯誤");
                             break;
                     }
-                }
-                else if (withdrawaldata.Status == 7)
-                {
+                } else if (withdrawaldata.Status == 7) {
                     SS = " UPDATE Withdrawal  SET Status=@Status,FinishDate=@FinishDate" +
                          " WHERE WithdrawID=@WithdrawID";
 
@@ -9706,13 +8850,10 @@ public class BackendDB
                     DBCmd.Parameters.Add("@FinishDate", SqlDbType.DateTime).Value = DateTime.Now;
                     DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-                    if (DBreturn == 0)
-                    {
+                    if (DBreturn == 0) {
                         UpdateWithdrawal(withdrawaldata.WithdrawSerial, "更新訂單狀態失敗");
                     }
-                }
-                else
-                {
+                } else {
                     UpdateWithdrawal(withdrawaldata.WithdrawSerial, "訂單狀態錯誤");
                 }
             }
@@ -9723,8 +8864,7 @@ public class BackendDB
 
             DBCmd = new System.Data.SqlClient.SqlCommand();
 
-            for (int i = 0; i < WithdrawIDs.Count; i++)
-            {
+            for (int i = 0; i < WithdrawIDs.Count; i++) {
                 parameters[i] = string.Format("@WithdrawID{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], WithdrawIDs[i]);
             }
@@ -9735,31 +8875,23 @@ public class BackendDB
 
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-            if (DT != null)
-            {
-                if (DT.Rows.Count > 0)
-                {
+            if (DT != null) {
+                if (DT.Rows.Count > 0) {
                     WithdrawalModel = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
                     returnValue.WithdrawalModel = WithdrawalModel;
                     returnValue.State = 0;
-                }
-                else
-                {
+                } else {
                     returnValue.Message = "Error";
                     returnValue.State = -1;
                 }
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "Error";
                 returnValue.State = -1;
             }
 
             #endregion
 
-        }
-        else
-        {
+        } else {
             returnValue.Message = "Error";
             returnValue.State = -1;
         }
@@ -9767,8 +8899,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerial(int Status, string WithdrawSerial, int AdminID, string ProviderCode, int WithdrawType, string ServiceType)
-    {
+    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerial(int Status, string WithdrawSerial, int AdminID, string ProviderCode, int WithdrawType, string ServiceType) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -9782,51 +8913,43 @@ public class BackendDB
         int CompanyType;
 
         CompanyType = GetCompanyTypeByWithdrawSerial(WithdrawSerial);
-        if (CompanyType == -1)
-        {
+        if (CompanyType == -1) {
             returnValue.Message = "商户状态有误";
             return returnValue;
         }
 
-        if (WithdrawData == null)
-        {
+        if (WithdrawData == null) {
             returnValue.WithdrawalData = WithdrawData;
             returnValue.Message = "订单不存在";
             returnValue.Status = -1;
             return returnValue;
         }
 
-        if (WithdrawData.Status == 1)
-        {
+        if (WithdrawData.Status == 1) {
             returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
             returnValue.Message = "订单审核中";
             returnValue.Status = -2;
             return returnValue;
         }
 
-        if (WithdrawData.Status == 2 || WithdrawData.Status == 3)
-        {
+        if (WithdrawData.Status == 2 || WithdrawData.Status == 3) {
             returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
             returnValue.Message = "订单已完成";
             returnValue.Status = -2;
             return returnValue;
         }
 
-        if (Status != 3)
-        {
+        if (Status != 3) {
             //取得供應商代付手續費
-            DBModel.WithdrawLimit _WithdrawLimit = new DBModel.WithdrawLimit()
-            {
+            DBModel.WithdrawLimit _WithdrawLimit = new DBModel.WithdrawLimit() {
                 CompanyID = WithdrawData.forCompanyID,
                 WithdrawLimitType = 0,
                 ProviderCode = ProviderCode
             };
 
-            if (WithdrawData.IsBlockChainOrder == 1)
-            {
+            if (WithdrawData.IsBlockChainOrder == 1) {
                 System.Data.DataTable ProviderWithdrawLimitDT = RedisCache.ProviderWithdrawLimit.GetProviderWithdrawLimitBlockChainRate(ProviderCode, WithdrawData.CurrencyType);
-                if (ProviderWithdrawLimitDT == null)
-                {
+                if (ProviderWithdrawLimitDT == null) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "尚未定供应商浮动马数";
                     returnValue.Status = -1;
@@ -9835,8 +8958,7 @@ public class BackendDB
 
                 List<DBModel.WithdrawLimit> ProviderWithdrawLimitModels = DataTableExtensions.ToList<DBModel.WithdrawLimit>(ProviderWithdrawLimitDT).ToList();
                 DBModel.WithdrawLimit ProviderWithdrawLimitModel = ProviderWithdrawLimitModels.Where(w => w.ServiceType == WithdrawData.ServiceType).FirstOrDefault();
-                if (ProviderWithdrawLimitModel == null)
-                {
+                if (ProviderWithdrawLimitModel == null) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "尚未定供应商浮动马数";
                     returnValue.Status = -1;
@@ -9845,8 +8967,7 @@ public class BackendDB
 
                 ProviderBlockChainRate = ProviderWithdrawLimitModel.BlockChainRate;
 
-                if (ProviderWithdrawLimitModel.BlockChainRate > WithdrawData.DownBlockChainRate)
-                {
+                if (ProviderWithdrawLimitModel.BlockChainRate > WithdrawData.DownBlockChainRate) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "商户浮动马数 > 上游浮动马数";
                     returnValue.Status = -1;
@@ -9856,27 +8977,21 @@ public class BackendDB
 
                 System.Data.DataTable BlockChainRateDT = RedisCache.BlockChainRate.GetBlockChainRate(WithdrawData.CurrencyType);
 
-                if (BlockChainRateDT != null && BlockChainRateDT.Rows.Count > 0)
-                {
+                if (BlockChainRateDT != null && BlockChainRateDT.Rows.Count > 0) {
                     OKEXRate = (decimal)BlockChainRateDT.Rows[0]["Rate"];
                 }
-            }
-            else
-            {
+            } else {
 
                 //0=上游手續費，API/1=提現手續費/2=代付手續費(下游)
                 DBModel.WithdrawLimit withdrawLimitResult = null;
                 if (WithdrawData.FloatType == 0) //後台下發
                 {
                     withdrawLimitResult = GetWithdrawLimitResultByCurrencyType(WithdrawData.CurrencyType, 0, ProviderCode, WithdrawData.forCompanyID);
-                }
-                else
-                { //api 下發 
+                } else { //api 下發 
                     withdrawLimitResult = GetWithdrawLimitResultByCurrencyType(WithdrawData.CurrencyType, 3, ProviderCode, WithdrawData.forCompanyID);
                 }
 
-                if (withdrawLimitResult == null)
-                {
+                if (withdrawLimitResult == null) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "尚未定供应商手续费";
                     returnValue.Status = -1;
@@ -9889,28 +9004,22 @@ public class BackendDB
 
             //检查供应商通道额度
             var ProviderPointModel = GetProviderPointByProviderCode(ProviderCode);
-            if (ProviderPointModel == null)
-            {
+            if (ProviderPointModel == null) {
                 returnValue.WithdrawalData = WithdrawData;
                 returnValue.Message = "供应商通道额度错误";
                 returnValue.Status = -1;
                 return returnValue;
             }
 
-            if (WithdrawData.IsBlockChainOrder == 1)
-            {
-                if (WithdrawData.Amount > ProviderPointModel.SystemPointValue)
-                {
+            if (WithdrawData.IsBlockChainOrder == 1) {
+                if (WithdrawData.Amount > ProviderPointModel.SystemPointValue) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "供应商通道额度不足";
                     returnValue.Status = -1;
                     return returnValue;
                 }
-            }
-            else
-            {
-                if (WithdrawData.Amount + Charge + (Rate * 0.01M * WithdrawData.Amount) > ProviderPointModel.SystemPointValue)
-                {
+            } else {
+                if (WithdrawData.Amount + Charge + (Rate * 0.01M * WithdrawData.Amount) > ProviderPointModel.SystemPointValue) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "供应商通道额度不足";
                     returnValue.Status = -1;
@@ -9919,31 +9028,25 @@ public class BackendDB
             }
 
 
-            if (CompanyType != 4)
-            {
+            if (CompanyType != 4) {
                 //检查商户支付通道额度
                 List<DBViewModel.CompanyServicePointVM> ServicePointModel = null;
-                if (WithdrawData.FloatType == 0)
-                {
+                if (WithdrawData.FloatType == 0) {
                     //後台提單
                     ServicePointModel = GetCompanyServicePointByServiceType(WithdrawData.forCompanyID, ServiceType, WithdrawData.CurrencyType);
-                }
-                else
-                {
+                } else {
                     //API
                     ServicePointModel = GetCompanyServicePointByServiceTypeAPI(WithdrawData.forCompanyID, ServiceType, WithdrawData.CurrencyType);
                 }
 
-                if (ServicePointModel == null)
-                {
+                if (ServicePointModel == null) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "商户支付通道额度错误";
                     returnValue.Status = -1;
                     return returnValue;
                 }
 
-                if (ServicePointModel.First().MaxLimit == 0 || ServicePointModel.First().MinLimit == 0)
-                {
+                if (ServicePointModel.First().MaxLimit == 0 || ServicePointModel.First().MinLimit == 0) {
                     returnValue.WithdrawalData = WithdrawData;
                     returnValue.Message = "尚未设定商户支付通道限额";
                     returnValue.Status = -1;
@@ -9952,21 +9055,16 @@ public class BackendDB
 
                 WithdrawData.CollectCharge = ServicePointModel.First().Charge;
 
-                if (WithdrawData.IsBlockChainOrder == 1)
-                {
+                if (WithdrawData.IsBlockChainOrder == 1) {
                     WithdrawData.CollectCharge = 0;
-                    if (WithdrawData.Amount > ServicePointModel.First().SystemPointValue)
-                    {
+                    if (WithdrawData.Amount > ServicePointModel.First().SystemPointValue) {
                         returnValue.WithdrawalData = WithdrawData;
                         returnValue.Message = "商户支付通道额度不足";
                         returnValue.Status = -1;
                         return returnValue;
                     }
-                }
-                else
-                {
-                    if (WithdrawData.Amount + ServicePointModel.First().Charge + (ServicePointModel.First().Rate * 0.01M * WithdrawData.Amount) > ServicePointModel.First().SystemPointValue)
-                    {
+                } else {
+                    if (WithdrawData.Amount + ServicePointModel.First().Charge + (ServicePointModel.First().Rate * 0.01M * WithdrawData.Amount) > ServicePointModel.First().SystemPointValue) {
                         returnValue.WithdrawalData = WithdrawData;
                         returnValue.Message = "商户支付通道额度不足";
                         returnValue.Status = -1;
@@ -9974,9 +9072,7 @@ public class BackendDB
                     }
                 }
 
-            }
-            else
-            {
+            } else {
                 WithdrawData.CollectCharge = Charge;
             }
 
@@ -9999,8 +9095,7 @@ public class BackendDB
             DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;
             DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-            if (DBreturn == 0)
-            {
+            if (DBreturn == 0) {
                 returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
                 returnValue.Message = "修改订单状态错误";
                 returnValue.Status = -3;
@@ -10011,8 +9106,7 @@ public class BackendDB
         }
 
         //更改為失敗單
-        if (Status == 3)
-        {
+        if (Status == 3) {
             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID,FinishDate=@FinishDate,FinishDateUTC=@FinishDateUTC " +
                 " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10029,37 +9123,28 @@ public class BackendDB
             returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
 
             //如果不是后台申请提现,发送API回调
-            if (WithdrawData.FloatType != 0)
-            {
+            if (WithdrawData.FloatType != 0) {
                 ReSendWithdrawal(WithdrawData.WithdrawSerial, false);
             }
 
             return returnValue;
-        }
-        else
-        {
-            if (WithdrawType == 0)
-            {
+        } else {
+            if (WithdrawType == 0) {
                 returnValue.Message = "审核完成";
                 returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
                 return returnValue;
-            }
-            else if (WithdrawType == 1)
-            { //代付
+            } else if (WithdrawType == 1) { //代付
 
                 bool autoPay = false;
                 var ProviderData = GetProviderCodeResult(WithdrawData.ProviderCode);
-                if (ProviderData != null)
-                {
+                if (ProviderData != null) {
                     var ProviderAPIType = ProviderData.First().ProviderAPIType;
 
-                    if ((ProviderAPIType & 2) == 2)
-                    {
+                    if ((ProviderAPIType & 2) == 2) {
                         autoPay = true;
                     }
                 }
-                if (autoPay)
-                {
+                if (autoPay) {
                     //api自動代付
                     string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
                     string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
@@ -10082,37 +9167,29 @@ public class BackendDB
 
                     var strRequireWithdrawal = CodingControl.RequestJsonAPI(GPayApiUrl + "SendWithdraw", JsonConvert.SerializeObject(_RequireWithdrawalSet));
 
-                    if (!string.IsNullOrEmpty(strRequireWithdrawal))
-                    {
+                    if (!string.IsNullOrEmpty(strRequireWithdrawal)) {
                         returnRequireWithdrawal = JsonConvert.DeserializeObject<APIResult>(strRequireWithdrawal);
                         //OK = 0,ERR = 1,SignErr = 2,Invalidate = 3(查無此單) //Success=4 (交易已完成)
                         returnValue.Message = returnRequireWithdrawal.Message;
 
-                        if ((int)returnRequireWithdrawal.Status == 1 || (int)returnRequireWithdrawal.Status == 2 || (int)returnRequireWithdrawal.Status == 3)
-                        {
+                        if ((int)returnRequireWithdrawal.Status == 1 || (int)returnRequireWithdrawal.Status == 2 || (int)returnRequireWithdrawal.Status == 3) {
                             UpdateWithdrawalStatus(WithdrawSerial, 0);
                             returnValue.Message = returnRequireWithdrawal.Message;
                             returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
                             return returnValue;
-                        }
-                        else
-                        {
+                        } else {
                             returnValue.Message = "审核完成";
                             returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
                             return returnValue;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         UpdateWithdrawalStatus(WithdrawSerial, 0);
                         returnValue.Message = "API代付失败";
                         returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
                         returnValue.Status = -4;
                         return returnValue;
                     }
-                }
-                else
-                {
+                } else {
                     //更改訂單狀態回建立狀態
                     UpdateWithdrawalStatus(WithdrawSerial, 0);
                     returnValue.Message = "供应商尚未开启API代付";
@@ -10120,9 +9197,7 @@ public class BackendDB
                     returnValue.Status = -5;
                     return returnValue;
                 }
-            }
-            else
-            {
+            } else {
                 //更改訂單狀態回建立狀態
                 UpdateWithdrawalStatus(WithdrawSerial, 0);
                 returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
@@ -10135,8 +9210,7 @@ public class BackendDB
     }
 
 
-    public int GetCompanyTypeByWithdrawSerial(string WithdrawSerial)
-    {
+    public int GetCompanyTypeByWithdrawSerial(string WithdrawSerial) {
         int ret = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -10151,16 +9225,14 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;
         DBreturn = DBAccess.GetDBValue(DBConnStr, DBCmd);
-        if (DBreturn != null)
-        {
+        if (DBreturn != null) {
             ret = int.Parse(DBreturn.ToString());
         }
 
         return ret;
     }
 
-    public int ModifyCompanyServicePointByWithdrawal(int WithdrawID, string ServiceType, int CompanyID, string CurrencyType, decimal FinishtAmount)
-    {
+    public int ModifyCompanyServicePointByWithdrawal(int WithdrawID, string ServiceType, int CompanyID, string CurrencyType, decimal FinishtAmount) {
         int DBreturn = -9;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10180,23 +9252,18 @@ public class BackendDB
         return DBreturn;
     }
 
-    public DBViewModel.UpdateWithdrawalResult ConfirmManualWithdrawal(string WithdrawSerial, int modifyStatus, int AdminID)
-    {
+    public DBViewModel.UpdateWithdrawalResult ConfirmManualWithdrawal(string WithdrawSerial, int modifyStatus, int AdminID) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         DBModel.Withdrawal WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
 
-        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 0)
-        {
+        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 0) {
             //取消
-            if (modifyStatus == 0)
-            {
+            if (modifyStatus == 0) {
                 UpdateWithdrawalStatus(WithdrawSerial, 0);
-            }
-            else if (modifyStatus == 2)
-            {//成功
+            } else if (modifyStatus == 2) {//成功
 
                 //扣除公司額度
                 SS = "spReviewWithdrawal";
@@ -10208,8 +9275,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                if (DBreturn == 0)
-                {
+                if (DBreturn == 0) {
                     //手動到後台下發
                     SS = " UPDATE Withdrawal  SET ConfirmByAdminID=@AdminID " +
                          " WHERE WithdrawSerial=@WithdrawSerial";
@@ -10222,23 +9288,17 @@ public class BackendDB
                     returnValue.Message = "審核完成";
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     //如果不是后台申请提现,发送API回调
-                    if (WithdrawData.FloatType != 0)
-                    {
-                        if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com"))
-                        {
+                    if (WithdrawData.FloatType != 0) {
+                        if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawData.WithdrawSerial, false);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     UpdateWithdrawalStatus(WithdrawSerial, 0);
                     returnValue.Status = -6;
                     returnValue.Message = "扣除商戶額度失敗 " + DBreturn;
                 }
-            }
-            else if (modifyStatus == 3)
-            {//失败
+            } else if (modifyStatus == 3) {//失败
                 SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID,FinishDate=@FinishDate" +
                      " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10253,26 +9313,21 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
                 //如果不是后台申请提现,发送API回调
-                if (WithdrawData.FloatType != 0)
-                {
-                    if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com"))
-                    {
+                if (WithdrawData.FloatType != 0) {
+                    if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com")) {
                         ReSendWithdrawal(WithdrawData.WithdrawSerial, false);
                     }
                 }
             }
 
-        }
-        else
-        {
+        } else {
             returnValue.Message = "目前状态无法审核确认";
         }
         returnValue.WithdrawalData = GetWithdrawalByWithdrawSerialByAdmin(WithdrawSerial);
         return returnValue;
     }
 
-    public int spAddWithdrawalByBackendDownData(int WithdrawType, int forCompanyID, string ProviderCode, string CurrencyType, string ServiceType, decimal Amount, decimal CollectCharge, decimal CollectRate, decimal CostCharge, int Status, string BankCard, string BankCardName, string BankName, string BankBranchName, string OwnProvince, string OwnCity, int DownStatus, int FloatType, decimal DownBlockChainRate = 0, decimal OKEXRate = 0, int IsBlockChainOrder = 0)
-    {
+    public int spAddWithdrawalByBackendDownData(int WithdrawType, int forCompanyID, string ProviderCode, string CurrencyType, string ServiceType, decimal Amount, decimal CollectCharge, decimal CollectRate, decimal CostCharge, int Status, string BankCard, string BankCardName, string BankName, string BankBranchName, string OwnProvince, string OwnCity, int DownStatus, int FloatType, decimal DownBlockChainRate = 0, decimal OKEXRate = 0, int IsBlockChainOrder = 0) {
         int DBreturn = -9;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10305,12 +9360,10 @@ public class BackendDB
 
         DBCmd.Parameters.Add("@Return", SqlDbType.VarChar).Direction = ParameterDirection.ReturnValue;
         DBAccess.ExecuteDB(DBConnStr, DBCmd);
-        if ((int)DBCmd.Parameters["@RETURN"].Value == 0)
-        {
+        if ((int)DBCmd.Parameters["@RETURN"].Value == 0) {
             DBreturn = (int)DBCmd.Parameters["@WithdrawID"].Value;
             int WithdrawalID = DBreturn;
-            if (WithdrawalID != 0)
-            {
+            if (WithdrawalID != 0) {
                 string WithdrawSerial = "OP" + System.DateTime.Now.ToString("yyyyMMddHHmm") + (new string('0', 10 - WithdrawalID.ToString().Length) + WithdrawalID.ToString());
                 SS = "UPDATE Withdrawal  SET WithdrawSerial=@WithdrawSerial " +
                 " WHERE WithdrawID=@WithdrawID";
@@ -10324,15 +9377,12 @@ public class BackendDB
             }
 
             return DBreturn;
-        }
-        else
-        {
+        } else {
             return (int)DBCmd.Parameters["@RETURN"].Value;
         }
     }
 
-    public DBViewModel.UpdateWithdrawalResult ConfirmManualWithdrawalForProxyProivder(int CompanyID, string WithdrawSerial, int modifyStatus, int AdminID, string BankDescription)
-    {
+    public DBViewModel.UpdateWithdrawalResult ConfirmManualWithdrawalForProxyProivder(int CompanyID, string WithdrawSerial, int modifyStatus, int AdminID, string BankDescription) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10340,20 +9390,14 @@ public class BackendDB
         DBModel.Withdrawal WithdrawData = GetWithdrawalByWithdrawSerial2(WithdrawSerial);
         DBModel.ProxyProvider ProxyProviderModel;
         string fingerprint = GetFingerprint();
-        try
-        {
-            if (WithdrawData.Status == 1)
-            {
+        try {
+            if (WithdrawData.Status == 1) {
                 //取消
-                if (modifyStatus == 0)
-                {
+                if (modifyStatus == 0) {
                     UpdateWithdrawalStatusByWithdrawID(WithdrawData.WithdrawID, 0);
-                }
-                else if (modifyStatus == 2)
-                {//成功
+                } else if (modifyStatus == 2) {//成功
                     ProxyProviderModel = GetProxyProviderResult(WithdrawData.ProviderCode);
-                    if (ProxyProviderModel == null)
-                    {
+                    if (ProxyProviderModel == null) {
                         returnValue.Status = -6;
                         returnValue.WithdrawalData = GetProviderWithdrawalByWithdrawID(WithdrawData.WithdrawID);
                         returnValue.Message = "尚未设定专属供应商费率,请联系系统商";
@@ -10361,8 +9405,7 @@ public class BackendDB
                     }
 
 
-                    if (GetProxyProviderOrderByOrderSerial(WithdrawSerial, 1) != null)
-                    {
+                    if (GetProxyProviderOrderByOrderSerial(WithdrawSerial, 1) != null) {
                         UpdateProxyProviderOrder(WithdrawSerial, 1, ProxyProviderModel.Charge, 0);
                     }
 
@@ -10387,31 +9430,23 @@ public class BackendDB
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                    if (DBreturn == 0)
-                    {
+                    if (DBreturn == 0) {
 
                         returnValue.Message = "審核完成";
                         //如果不是后台申请提现,发送API回调
-                        if (WithdrawData.FloatType != 0)
-                        {
-                            if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com"))
-                            {
+                        if (WithdrawData.FloatType != 0) {
+                            if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com")) {
                                 ReSendWithdrawal(WithdrawData.WithdrawSerial, false);
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         returnValue.Status = -6;
                         InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + DBreturn, "", fingerprint);
                         returnValue.Message = "系统忙碌中,请稍后再试, " + DBreturn;
                     }
-                }
-                else if (modifyStatus == 3)
-                {//失败
+                } else if (modifyStatus == 3) {//失败
                     ProxyProviderModel = GetProxyProviderResult(WithdrawData.ProviderCode);
-                    if (ProxyProviderModel == null)
-                    {
+                    if (ProxyProviderModel == null) {
                         returnValue.Status = -6;
                         returnValue.WithdrawalData = GetProviderWithdrawalByWithdrawID(WithdrawData.WithdrawID);
                         returnValue.Message = "尚未设定专属供应商费率,请联系系统商";
@@ -10419,8 +9454,7 @@ public class BackendDB
                     }
 
 
-                    if (GetProxyProviderOrderByOrderSerial(WithdrawSerial, 1) != null)
-                    {
+                    if (GetProxyProviderOrderByOrderSerial(WithdrawSerial, 1) != null) {
                         UpdateProxyProviderOrder(WithdrawSerial, 1, ProxyProviderModel.Charge, 0);
                     }
 
@@ -10439,25 +9473,19 @@ public class BackendDB
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
                     //如果不是后台申请提现,发送API回调
-                    if (WithdrawData.FloatType != 0)
-                    {
-                        if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com"))
-                        {
+                    if (WithdrawData.FloatType != 0) {
+                        if (!(WithdrawData.DownUrl == "https://www.baidu.com/" || WithdrawData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawData.WithdrawSerial, false);
                         }
                     }
                 }
 
-            }
-            else
-            {
+            } else {
                 returnValue.Status = -6;
                 returnValue.Message = "目前状态无法审核确认";
             }
             returnValue.WithdrawalData = GetProviderWithdrawalByWithdrawID(WithdrawData.WithdrawID);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             returnValue.Status = -6;
             returnValue.Message = "审核失败,资讯:" + ex.Message;
             InsertAdminOPLog(CompanyID, AdminID, 5, "专属供应商审核失败,单号:" + WithdrawData.WithdrawSerial + ",错误资讯:" + ex.Message, "", fingerprint);
@@ -10467,8 +9495,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdateWithdrawalResult ConfirmAutoWithdrawal(string WithdrawSerial)
-    {
+    public DBViewModel.UpdateWithdrawalResult ConfirmAutoWithdrawal(string WithdrawSerial) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10480,8 +9507,7 @@ public class BackendDB
 
         DBModel.Withdrawal WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
 
-        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 1)
-        {
+        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 1) {
 
             #region SignCheck
 
@@ -10502,27 +9528,19 @@ public class BackendDB
             var QueryWithdrawReturn = CodingControl.RequestJsonAPI(GPayApiUrl + "QueryWithdraw", JsonConvert.SerializeObject(_ReSendWithdraw));
 
 
-            if (!string.IsNullOrEmpty(QueryWithdrawReturn))
-            {
+            if (!string.IsNullOrEmpty(QueryWithdrawReturn)) {
                 var _APIResult = JsonConvert.DeserializeObject<APIResult>(QueryWithdrawReturn);
-                if (_APIResult.Status == ResultStatus.OK)
-                {
+                if (_APIResult.Status == ResultStatus.OK) {
                     returnValue.Status = 0;
-                }
-                else
-                {
+                } else {
                     returnValue.Status = -1;
                 }
                 returnValue.Message = _APIResult.Message;
-            }
-            else
-            {
+            } else {
                 returnValue.Status = -1;
                 returnValue.Message = "查询失败";
             }
-        }
-        else
-        {
+        } else {
             returnValue.Status = -1;
             returnValue.Message = "目前状态无法查询订单";
         }
@@ -10530,8 +9548,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdateWithdrawalResult QueryAPIWithdrawal(string WithdrawSerial)
-    {
+    public DBViewModel.UpdateWithdrawalResult QueryAPIWithdrawal(string WithdrawSerial) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10543,8 +9560,7 @@ public class BackendDB
 
         DBModel.Withdrawal WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
 
-        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 1)
-        {
+        if (WithdrawData.Status == 1 && WithdrawData.WithdrawType == 1) {
 
             #region SignCheck
 
@@ -10565,29 +9581,21 @@ public class BackendDB
             var QueryWithdrawReturn = CodingControl.RequestJsonAPI(GPayApiUrl + "QueryWithdraw", JsonConvert.SerializeObject(_ReSendWithdraw));
 
 
-            if (!string.IsNullOrEmpty(QueryWithdrawReturn))
-            {
+            if (!string.IsNullOrEmpty(QueryWithdrawReturn)) {
                 var _APIResult = JsonConvert.DeserializeObject<APIResult>(QueryWithdrawReturn);
-                if (_APIResult.Status == ResultStatus.OK)
-                {
+                if (_APIResult.Status == ResultStatus.OK) {
                     returnValue.Status = 0;
-                }
-                else
-                {
+                } else {
                     returnValue.Status = -1;
                 }
 
                 returnValue.Message = _APIResult.Message;
 
-            }
-            else
-            {
+            } else {
                 returnValue.Status = -1;
                 returnValue.Message = "查询失败,请联系工程师";
             }
-        }
-        else
-        {
+        } else {
             returnValue.Status = -1;
             returnValue.Message = "目前状态无法查询订单";
         }
@@ -10595,8 +9603,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerialCheck(int Status, string WithdrawSerial, int AdminID)
-    {
+    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerialCheck(int Status, string WithdrawSerial, int AdminID) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10604,8 +9611,7 @@ public class BackendDB
         var WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
 
         //失敗單
-        if (Status == 3)
-        {
+        if (Status == 3) {
             SS = " UPDATE  Withdrawal SET Status=@Status,ConfirmByAdminID=@AdminID,FinishDate=@FinishDate" +
                 " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10619,8 +9625,7 @@ public class BackendDB
 
             DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-            if (DBreturn > 0)
-            {
+            if (DBreturn > 0) {
                 SS = "Select Status from Withdrawal  WITH (NOLOCK)   " +
                      " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10633,14 +9638,10 @@ public class BackendDB
                 returnValue.Status = DBreturn;
 
             }
-        }
-        else
-        {
+        } else {
             //找不到訂單資訊
-            if (WithdrawData != null && (WithdrawData.Status == 4))
-            {
-                if (WithdrawData.WithdrawType == 0 && Status == 5)
-                {
+            if (WithdrawData != null && (WithdrawData.Status == 4)) {
+                if (WithdrawData.WithdrawType == 0 && Status == 5) {
                     //水池撥款
                     SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                  " WHERE WithdrawSerial=@WithdrawSerial";
@@ -10654,8 +9655,7 @@ public class BackendDB
 
                     DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-                    if (DBreturn > 0)
-                    {
+                    if (DBreturn > 0) {
                         SS = "Select Status from Withdrawal  WITH (NOLOCK)  " +
                              " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10668,27 +9668,21 @@ public class BackendDB
                         returnValue.Status = DBreturn;
 
                     }
-                }
-                else
-                {
+                } else {
                     //代付
-                    if (!string.IsNullOrEmpty(WithdrawData.ProviderCode) && WithdrawData.WithdrawType == 1)
-                    {
+                    if (!string.IsNullOrEmpty(WithdrawData.ProviderCode) && WithdrawData.WithdrawType == 1) {
 
                         bool autoPay = false;
                         var ProviderData = GetProviderCodeResult(WithdrawData.ProviderCode);
-                        if (ProviderData != null)
-                        {
+                        if (ProviderData != null) {
                             var ProviderAPIType = ProviderData.First().ProviderAPIType;
 
-                            if ((ProviderAPIType & 2) == 2)
-                            {
+                            if ((ProviderAPIType & 2) == 2) {
                                 autoPay = true;
                             }
 
                         }
-                        if (autoPay)
-                        {   //api自動代付
+                        if (autoPay) {   //api自動代付
                             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                                  " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10721,12 +9715,10 @@ public class BackendDB
 
                             var strRequireWithdrawal = CodingControl.RequestJsonAPI(GPayApiUrl + "RequireWithdrawal", JsonConvert.SerializeObject(_RequireWithdrawalSet));
 
-                            if (!string.IsNullOrEmpty(strRequireWithdrawal))
-                            {
+                            if (!string.IsNullOrEmpty(strRequireWithdrawal)) {
                                 returnRequireWithdrawal = JsonConvert.DeserializeObject<DBModel.API_WithdrawResult>(strRequireWithdrawal);
                                 //OK = 0,ERR = 1,SignErr = 2,Invalidate = 3
-                                switch (returnRequireWithdrawal.Status)
-                                {
+                                switch (returnRequireWithdrawal.Status) {
                                     case 0:
                                         SS = "Select Status from Withdrawal  WITH (NOLOCK)   " +
                                        " WHERE WithdrawSerial=@WithdrawSerial";
@@ -10791,9 +9783,7 @@ public class BackendDB
                                     default:
                                         break;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 SS = " UPDATE Withdrawal SET Status=@Status,ConfirmByAdminID=@AdminID,ManagerRejectDescription=@ManagerRejectDescription" +
                                              " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10809,9 +9799,7 @@ public class BackendDB
                                 returnValue.Message = "API代付失敗";
                                 returnValue.Status = 7;
                             }
-                        }
-                        else
-                        {
+                        } else {
                             //手動供應商後台撥款
                             SS = " UPDATE Withdrawal  SET Status=@Status,ConfirmByAdminID=@AdminID" +
                                  " WHERE WithdrawSerial=@WithdrawSerial";
@@ -10825,8 +9813,7 @@ public class BackendDB
 
                             DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-                            if (DBreturn > 0)
-                            {
+                            if (DBreturn > 0) {
                                 SS = "Select Status from Withdrawal  WITH (NOLOCK)  " +
                                      " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10840,16 +9827,12 @@ public class BackendDB
                             }
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         returnValue.Message = "訂單狀態錯誤";
                         returnValue.Status = 7;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "訂單狀態錯誤";
                 returnValue.Status = 7;
             }
@@ -10857,8 +9840,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public void UpdateWithdrawal(string WithdrawSerial, string ManagerRejectDescription)
-    {
+    public void UpdateWithdrawal(string WithdrawSerial, string ManagerRejectDescription) {
         String SS = String.Empty;
         SqlCommand DBCmd;
 
@@ -10875,8 +9857,7 @@ public class BackendDB
 
     }
 
-    public int UpdateWithdrawalStatus(string WithdrawSerial, int Status)
-    {
+    public int UpdateWithdrawalStatus(string WithdrawSerial, int Status) {
         int DBreturn = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10894,8 +9875,7 @@ public class BackendDB
         return DBreturn;
     }
 
-    public int UpdateWithdrawalStatusByWithdrawID(int WithdrawID, int Status)
-    {
+    public int UpdateWithdrawalStatusByWithdrawID(int WithdrawID, int Status) {
         int DBreturn = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -10913,18 +9893,15 @@ public class BackendDB
         return DBreturn;
     }
 
-    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerialDoubleCheck(string WithdrawSerial)
-    {
+    public DBViewModel.UpdateWithdrawalResult UpdateWithdrawalResultByWithdrawSerialDoubleCheck(string WithdrawSerial) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var WithdrawData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
         //找不到訂單資訊
-        if (WithdrawData != null)
-        {
-            if (WithdrawData.Status == 6)
-            {
+        if (WithdrawData != null) {
+            if (WithdrawData.Status == 6) {
                 //扣除公司額度
                 SS = "spReviewWithdrawal";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -10935,8 +9912,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
                 returnValue = new DBViewModel.UpdateWithdrawalResult();
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0://成功
                         returnValue.Message = "審核完成";
                         returnValue.Status = 2;
@@ -10972,9 +9948,7 @@ public class BackendDB
                         //UpdateWithdrawal(WithdrawSerial, "其他錯誤");
                         break;
                 }
-            }
-            else if (WithdrawData.Status == 7)
-            {
+            } else if (WithdrawData.Status == 7) {
                 SS = " UPDATE Withdrawal  SET Status=@Status,FinishDate=@FinishDate" +
                  " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10986,8 +9960,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@FinishDate", SqlDbType.DateTime).Value = DateTime.Now;
                 DBreturn = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-                if (DBreturn > 0)
-                {
+                if (DBreturn > 0) {
                     SS = "Select Status from Withdrawal  WITH (NOLOCK)  " +
                          " WHERE WithdrawSerial=@WithdrawSerial";
 
@@ -10999,17 +9972,13 @@ public class BackendDB
                     returnValue.Message = "審核完成";
                     returnValue.Status = DBreturn;
                 }
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "訂單狀態錯誤";
                 returnValue.Status = -1;
                 UpdateWithdrawal(WithdrawSerial, "訂單狀態錯誤");
             }
 
-        }
-        else
-        {
+        } else {
             returnValue.Message = "訂單狀態錯誤";
             returnValue.Status = -1;
 
@@ -11019,8 +9988,7 @@ public class BackendDB
     }
 
     //BackendDB層使用
-    public DBModel.Withdrawal GetWithdrawalByWithdrawSerial(string WithdrawSerial)
-    {
+    public DBModel.Withdrawal GetWithdrawalByWithdrawSerial(string WithdrawSerial) {
         DBModel.Withdrawal returnValue = null;
         DataTable DT;
         String SS = String.Empty;
@@ -11037,10 +10005,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().FirstOrDefault();
             }
         }
@@ -11048,8 +10014,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Withdrawal GetWithdrawalByWithdrawSerial2(string WithdrawSerial)
-    {
+    public DBModel.Withdrawal GetWithdrawalByWithdrawSerial2(string WithdrawSerial) {
         DBModel.Withdrawal returnValue = null;
         DataTable DT;
         String SS = String.Empty;
@@ -11065,10 +10030,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().FirstOrDefault();
             }
         }
@@ -11077,8 +10040,7 @@ public class BackendDB
     }
 
     //BackendDB層使用
-    private DBModel.Withdrawal GetWithdrawalByWithdrawID(int WithdrawID)
-    {
+    private DBModel.Withdrawal GetWithdrawalByWithdrawID(int WithdrawID) {
         DBModel.Withdrawal returnValue = null;
         DataTable DT;
         String SS = String.Empty;
@@ -11095,10 +10057,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().FirstOrDefault();
             }
         }
@@ -11106,8 +10066,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Withdrawal GetWithdrawalByWithdrawSerialByAdmin(string WithdrawSerial)
-    {
+    public DBModel.Withdrawal GetWithdrawalByWithdrawSerialByAdmin(string WithdrawSerial) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11128,10 +10087,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().First();
             }
         }
@@ -11139,8 +10096,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Withdrawal> GetWithdrawalByWithdrawSerialsByAdmin(List<string> WithdrawSerial)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalByWithdrawSerialsByAdmin(List<string> WithdrawSerial) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11152,8 +10108,7 @@ public class BackendDB
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
         DBCmd.CommandType = CommandType.Text;
-        for (int i = 0; i < WithdrawSerial.Count; i++)
-        {
+        for (int i = 0; i < WithdrawSerial.Count; i++) {
             parameters[i] = string.Format("@WithdrawSerial{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], WithdrawSerial[i]);
         }
@@ -11171,10 +10126,8 @@ public class BackendDB
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -11182,8 +10135,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CancelCheckHandleByAdmin(string WithdrawSerial, int AdminID)
-    {
+    public int CancelCheckHandleByAdmin(string WithdrawSerial, int AdminID) {
 
         int returnValue = -1;
         String SS = String.Empty;
@@ -11202,8 +10154,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ConfirmModifyBankCrad(string WithdrawSerial, string BankDescription)
-    {
+    public int ConfirmModifyBankCrad(string WithdrawSerial, string BankDescription) {
 
         int returnValue = -1;
         String SS = String.Empty;
@@ -11222,8 +10173,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ConfirmModifyBankCradByPayment(string PaymentSerial, string PatchDescription)
-    {
+    public int ConfirmModifyBankCradByPayment(string PaymentSerial, string PatchDescription) {
 
         int returnValue = -1;
         String SS = String.Empty;
@@ -11242,8 +10192,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CheckHandleByChangeGroupByHandleByAdminID(string WithdrawSerial)
-    {
+    public int CheckHandleByChangeGroupByHandleByAdminID(string WithdrawSerial) {
 
         int returnValue = 0;
         String SS = String.Empty;
@@ -11264,8 +10213,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CheckHandleByChangeGroup(string WithdrawSerial, int GroupID)
-    {
+    public int CheckHandleByChangeGroup(string WithdrawSerial, int GroupID) {
 
         int returnValue = 0;
         String SS = String.Empty;
@@ -11287,8 +10235,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CheckHandleByChangeGroupByAdmin(string WithdrawSerial)
-    {
+    public int CheckHandleByChangeGroupByAdmin(string WithdrawSerial) {
 
         int returnValue = 0;
         String SS = String.Empty;
@@ -11309,8 +10256,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CheckHandleByAdminGroup(string WithdrawSerial, int AdminID, int GroupID)
-    {
+    public int CheckHandleByAdminGroup(string WithdrawSerial, int AdminID, int GroupID) {
 
         int returnValue = -1;
         String SS = String.Empty;
@@ -11330,8 +10276,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int CheckHandleByAdmin(string WithdrawSerial, int AdminID)
-    {
+    public int CheckHandleByAdmin(string WithdrawSerial, int AdminID) {
 
         int returnValue = -1;
         String SS = String.Empty;
@@ -11350,8 +10295,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ChangeWithdrawHandleByAdmin(string WithdrawSerial, int AdminID)
-    {
+    public int ChangeWithdrawHandleByAdmin(string WithdrawSerial, int AdminID) {
         int returnValue = -1;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11371,8 +10315,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.GetProviderWithdrawalByGroupAmount GetProviderWithdrawalByGroupAmount(int GroupID)
-    {
+    public DBModel.GetProviderWithdrawalByGroupAmount GetProviderWithdrawalByGroupAmount(int GroupID) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11390,10 +10333,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = GroupID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.GetProviderWithdrawalByGroupAmount>(DT).ToList().First();
             }
         }
@@ -11401,8 +10342,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Withdrawal GetProviderWithdrawalByWithdrawSerial(string WithdrawSerial)
-    {
+    public DBModel.Withdrawal GetProviderWithdrawalByWithdrawSerial(string WithdrawSerial) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11418,10 +10358,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().First();
             }
         }
@@ -11429,8 +10367,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.Withdrawal GetProviderWithdrawalByWithdrawID(int WithdrawID)
-    {
+    public DBModel.Withdrawal GetProviderWithdrawalByWithdrawID(int WithdrawID) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11446,10 +10383,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@WithdrawID", SqlDbType.Int).Value = WithdrawID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList().First();
             }
         }
@@ -11457,8 +10392,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.WithdrawalV2> GetWithdrawalV2(FromBody.WithdrawalSetV2 fromBody)
-    {
+    public List<DBModel.WithdrawalV2> GetWithdrawalV2(FromBody.WithdrawalSetV2 fromBody) {
         List<DBModel.WithdrawalV2> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11481,55 +10415,43 @@ public class BackendDB
         SS += " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode";
         SS += " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 ";
         SS += " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
-        if (!fromBody.IsSearchWaitReview)
-        {
-            if (fromBody.TimeType == "F")
-            {
+        if (!fromBody.IsSearchWaitReview) {
+            if (fromBody.TimeType == "F") {
                 SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
-            }
-            else
-            {
+            } else {
                 SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
             }
 
             #region 筛选条件
             //過濾資料
-            if (fromBody.Status != 99)
-            { //99代表取得所有資料
+            if (fromBody.Status != 99) { //99代表取得所有資料
                 SS += " And Status=@Status";
             }
             //供应商过滤
-            if (fromBody.ProviderCode != "0")
-            { //99代表取得所有資料
+            if (fromBody.ProviderCode != "0") { //99代表取得所有資料
                 SS += " And Withdrawal.ProviderCode=@ProviderCode";
             }
 
             //序號過濾
-            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial))
-            {
+            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial)) {
                 SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
             }
 
             //營運商過濾
-            if (fromBody.CompanyID != 0)
-            {
+            if (fromBody.CompanyID != 0) {
                 SS += " And Withdrawal.forCompanyID=@CompanyID";
             }
 
             //群組選擇
-            if (fromBody.GroupID != 0)
-            {
+            if (fromBody.GroupID != 0) {
                 SS += " And PPO.GroupID=@GroupID";
             }
             #endregion
-        }
-        else
-        {
+        } else {
             SS += " WHERE Status IN ({0}) AND (FloatType=0 OR FloatType=1) ";
             fromBody.LstStatus = new List<int>() { 0, 1, 13, 14 };
             var parameters = new string[fromBody.LstStatus.Count];
-            for (int i = 0; i < fromBody.LstStatus.Count; i++)
-            {
+            for (int i = 0; i < fromBody.LstStatus.Count; i++) {
                 parameters[i] = string.Format("@Status{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
             }
@@ -11537,8 +10459,7 @@ public class BackendDB
             SS = string.Format(SS, string.Join(", ", parameters));
         }
 
-        if (!string.IsNullOrEmpty(fromBody.search.value))
-        {
+        if (!string.IsNullOrEmpty(fromBody.search.value)) {
             SS += " And (Withdrawal.WithdrawSerial like '%'+@SearchFilter+'%' OR  Withdrawal.DownOrderID like '%'+@SearchFilter+'%'  OR  ProviderName like '%'+@SearchFilter+'%'  OR  CompanyName like '%'+@SearchFilter+'%'  OR  Withdrawal.BankCard like '%'+@SearchFilter+'%'  OR   Withdrawal.BankCard like '%'+@SearchFilter+'%' OR  Withdrawal.BankCardName like '%'+@SearchFilter+'%' OR  Withdrawal.Amount like '%'+@SearchFilter+'%' OR  Withdrawal.CollectCharge like '%'+@SearchFilter+'%' OR  AT1.RealName like '%'+@SearchFilter+'%'  OR  AT2.RealName like '%'+@SearchFilter+'%'  OR  Withdrawal.OwnCity like '%'+@SearchFilter+'%' OR  Withdrawal.OwnProvince like '%'+@SearchFilter+'%' OR  Withdrawal.BankBranchName like '%'+@SearchFilter+'%'  OR  Withdrawal.FinishAmount like '%'+@SearchFilter+'%'  ) ";
         }
 
@@ -11549,8 +10470,7 @@ public class BackendDB
         SS += " FROM T";
         #region 排序
 
-        switch (fromBody.columns[fromBody.order.First().column].data.ToString())
-        {
+        switch (fromBody.columns[fromBody.order.First().column].data.ToString()) {
             case "Status":
                 SS += " Order By T.Status ";
                 break;
@@ -11600,12 +10520,9 @@ public class BackendDB
                 break;
         }
 
-        if (fromBody.order.First().dir == "asc")
-        {
+        if (fromBody.order.First().dir == "asc") {
             SS += " ASC ";
-        }
-        else
-        {
+        } else {
             SS += " DESC ";
         }
         #endregion
@@ -11640,10 +10557,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalV2>(DT).ToList();
             }
         }
@@ -11651,8 +10566,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.WithdrawalV2> GetWithdrawalV3(FromBody.WithdrawalSetV2 fromBody)
-    {
+    public List<DBModel.WithdrawalV2> GetWithdrawalV3(FromBody.WithdrawalSetV2 fromBody) {
         List<DBModel.WithdrawalV2> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11675,48 +10589,39 @@ public class BackendDB
         SS += " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode";
         SS += " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 ";
         SS += " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
-        if (!fromBody.IsSearchWaitReview)
-        {
+        if (!fromBody.IsSearchWaitReview) {
             SS += " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 AND CompanyTable.CompanyType<>4 ";
 
             #region 筛选条件
             //過濾資料
-            if (fromBody.Status != 99)
-            { //99代表取得所有資料
+            if (fromBody.Status != 99) { //99代表取得所有資料
                 SS += " And Status=@Status";
             }
             //供应商过滤
-            if (fromBody.ProviderCode != "0")
-            { //99代表取得所有資料
+            if (fromBody.ProviderCode != "0") { //99代表取得所有資料
                 SS += " And Withdrawal.ProviderCode=@ProviderCode";
             }
 
             //序號過濾
-            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial))
-            {
+            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial)) {
                 SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
             }
 
             //營運商過濾
-            if (fromBody.CompanyID != 0)
-            {
+            if (fromBody.CompanyID != 0) {
                 SS += " And Withdrawal.forCompanyID=@CompanyID";
             }
 
             //群組選擇
-            if (fromBody.GroupID != 0)
-            {
+            if (fromBody.GroupID != 0) {
                 SS += " And PPO.GroupID=@GroupID";
             }
             #endregion
-        }
-        else
-        {
+        } else {
             SS += " WHERE Status IN ({0}) AND (FloatType=0 OR FloatType=1) And CompanyTable.CompanyType<>4 ";
             fromBody.LstStatus = new List<int>() { 0, 1, 13, 14 };
             var parameters = new string[fromBody.LstStatus.Count];
-            for (int i = 0; i < fromBody.LstStatus.Count; i++)
-            {
+            for (int i = 0; i < fromBody.LstStatus.Count; i++) {
                 parameters[i] = string.Format("@Status{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
             }
@@ -11724,8 +10629,7 @@ public class BackendDB
             SS = string.Format(SS, string.Join(", ", parameters));
         }
 
-        if (!string.IsNullOrEmpty(fromBody.search.value))
-        {
+        if (!string.IsNullOrEmpty(fromBody.search.value)) {
             SS += " And (Withdrawal.WithdrawSerial like '%'+@SearchFilter+'%' OR  Withdrawal.DownOrderID like '%'+@SearchFilter+'%'  OR  ProviderName like '%'+@SearchFilter+'%'  OR  CompanyName like '%'+@SearchFilter+'%'  OR  Withdrawal.BankCard like '%'+@SearchFilter+'%'  OR   Withdrawal.BankCard like '%'+@SearchFilter+'%' OR  Withdrawal.BankCardName like '%'+@SearchFilter+'%' OR  Withdrawal.Amount like '%'+@SearchFilter+'%' OR  Withdrawal.CollectCharge like '%'+@SearchFilter+'%' OR  AT1.RealName like '%'+@SearchFilter+'%'  OR  AT2.RealName like '%'+@SearchFilter+'%'  OR  Withdrawal.OwnCity like '%'+@SearchFilter+'%' OR  Withdrawal.OwnProvince like '%'+@SearchFilter+'%' OR  Withdrawal.BankBranchName like '%'+@SearchFilter+'%'  OR  Withdrawal.FinishAmount like '%'+@SearchFilter+'%'  ) ";
         }
 
@@ -11736,8 +10640,7 @@ public class BackendDB
         SS += " FROM T";
         #region 排序
 
-        switch (fromBody.columns[fromBody.order.First().column].data.ToString())
-        {
+        switch (fromBody.columns[fromBody.order.First().column].data.ToString()) {
             case "Status":
                 SS += " Order By T.Status ";
                 break;
@@ -11787,12 +10690,9 @@ public class BackendDB
                 break;
         }
 
-        if (fromBody.order.First().dir == "asc")
-        {
+        if (fromBody.order.First().dir == "asc") {
             SS += " ASC ";
-        }
-        else
-        {
+        } else {
             SS += " DESC ";
         }
         #endregion
@@ -11827,10 +10727,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalV2>(DT).ToList();
             }
         }
@@ -11838,8 +10736,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.WithdrawalV2TotalAmount GetWithdrawalBySearchFilter(FromBody.WithdrawalSetV2 fromBody, bool selectAllCompany)
-    {
+    public DBModel.WithdrawalV2TotalAmount GetWithdrawalBySearchFilter(FromBody.WithdrawalSetV2 fromBody, bool selectAllCompany) {
         DBModel.WithdrawalV2TotalAmount returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -11856,56 +10753,44 @@ public class BackendDB
         //SS += " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode";
         SS += " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 ";
         //SS += " LEFT JOIN  ProxyProviderGroup PPG ON PPO.GroupID= PPG.GroupID  ";
-        if (!fromBody.IsSearchWaitReview)
-        {
-            if (fromBody.TimeType == "F")
-            {
+        if (!fromBody.IsSearchWaitReview) {
+            if (fromBody.TimeType == "F") {
                 SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate And DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
-            }
-            else
-            {
+            } else {
                 SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate And DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
             }
 
 
             #region 筛选条件
             //過濾資料
-            if (fromBody.Status != 99)
-            { //99代表取得所有資料
+            if (fromBody.Status != 99) { //99代表取得所有資料
                 SS += " And Status=@Status";
             }
             //供应商过滤
-            if (fromBody.ProviderCode != "0")
-            { //99代表取得所有資料
+            if (fromBody.ProviderCode != "0") { //99代表取得所有資料
                 SS += " And Withdrawal.ProviderCode=@ProviderCode";
             }
 
             //序號過濾
-            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial))
-            {
+            if (!string.IsNullOrEmpty(fromBody.WithdrawSerial)) {
                 SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
             }
 
             //營運商過濾
-            if (fromBody.CompanyID != 0)
-            {
+            if (fromBody.CompanyID != 0) {
                 SS += " And Withdrawal.forCompanyID=@CompanyID";
             }
 
             //群組選擇
-            if (fromBody.GroupID != 0)
-            {
+            if (fromBody.GroupID != 0) {
                 SS += " And PPO.GroupID=@GroupID";
             }
             #endregion
-        }
-        else
-        {
+        } else {
             SS += " WHERE Status IN ({0}) AND (FloatType=0 OR FloatType=1) ";
             fromBody.LstStatus = new List<int>() { 0, 1, 13, 14 };
             var parameters = new string[fromBody.LstStatus.Count];
-            for (int i = 0; i < fromBody.LstStatus.Count; i++)
-            {
+            for (int i = 0; i < fromBody.LstStatus.Count; i++) {
                 parameters[i] = string.Format("@Status{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
             }
@@ -11913,8 +10798,7 @@ public class BackendDB
             SS = string.Format(SS, string.Join(", ", parameters));
         }
 
-        if (!selectAllCompany)
-        {
+        if (!selectAllCompany) {
             SS += " AND CompanyTable.CompanyType<>4 ";
         }
         //if (!string.IsNullOrEmpty(fromBody.search.value))
@@ -12016,10 +10900,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawalV2TotalAmount>(DT).ToList().First();
             }
         }
@@ -12029,8 +10911,7 @@ public class BackendDB
 
 
 
-    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResult2(FromBody.WithdrawalSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResult2(FromBody.WithdrawalSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12047,31 +10928,26 @@ public class BackendDB
              " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 And CompanyTable.CompanyType<>4 ";
 
         //過濾資料
-        if (fromBody.Status != 99)
-        { //99代表取得所有資料
+        if (fromBody.Status != 99) { //99代表取得所有資料
             SS += " And Status=@Status";
         }
         //供应商过滤
-        if (fromBody.ProviderCode != "0")
-        { //99代表取得所有資料
+        if (fromBody.ProviderCode != "0") { //99代表取得所有資料
             SS += " And Withdrawal.ProviderCode=@ProviderCode";
         }
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
         }
 
         //營運商過濾
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += " And Withdrawal.forCompanyID=@CompanyID";
         }
 
         //群組選擇
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += " And PPO.GroupID=@GroupID";
         }
 
@@ -12088,10 +10964,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -12099,8 +10973,7 @@ public class BackendDB
         return returnValue;
     }
     //提現審核 提現審核(主管) 出納匯款
-    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResult(FromBody.WithdrawalSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalAdminTableResult(FromBody.WithdrawalSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12115,41 +10988,33 @@ public class BackendDB
              " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
              " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
 
-        if (fromBody.TimeType == "F")
-        {
+        if (fromBody.TimeType == "F") {
             SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate  And Status<>8 AND Status <> 90 AND Status <> 91  ";
-        }
-        else
-        {
+        } else {
             SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate  And Status<>8 AND Status <> 90 AND Status <> 91  ";
         }
 
         //過濾資料
-        if (fromBody.Status != 99)
-        { //99代表取得所有資料
+        if (fromBody.Status != 99) { //99代表取得所有資料
             SS += " And Status=@Status";
         }
         //供应商过滤
-        if (fromBody.ProviderCode != "0")
-        { //99代表取得所有資料
+        if (fromBody.ProviderCode != "0") { //99代表取得所有資料
             SS += " And Withdrawal.ProviderCode=@ProviderCode";
         }
 
         //序號過濾
-        if (fromBody.WithdrawSerial != "")
-        {
+        if (fromBody.WithdrawSerial != "") {
             SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
         }
 
         //營運商過濾
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += " And Withdrawal.forCompanyID=@CompanyID";
         }
 
         //群組選擇
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += " And PPO.GroupID=@GroupID";
         }
 
@@ -12167,10 +11032,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -12178,8 +11041,7 @@ public class BackendDB
         return returnValue;
     }
     //提現審核 提現審核(主管) 出納匯款
-    public List<DBModel.Withdrawal> GetWithdrawalTableResultByLstStatus(FromBody.WithdrawalSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalTableResultByLstStatus(FromBody.WithdrawalSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12198,8 +11060,7 @@ public class BackendDB
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
-        for (int i = 0; i < fromBody.LstStatus.Count; i++)
-        {
+        for (int i = 0; i < fromBody.LstStatus.Count; i++) {
             parameters[i] = string.Format("@Status{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
         }
@@ -12209,10 +11070,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -12220,8 +11079,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.Withdrawal> GetWithdrawalTableResultByLstWithdrawID(FromBody.WithdrawalSet fromBody)
-    {
+    public List<DBModel.Withdrawal> GetWithdrawalTableResultByLstWithdrawID(FromBody.WithdrawalSet fromBody) {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12240,8 +11098,7 @@ public class BackendDB
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
-        for (int i = 0; i < fromBody.WithdrawIDs.Count; i++)
-        {
+        for (int i = 0; i < fromBody.WithdrawIDs.Count; i++) {
             parameters[i] = string.Format("@WithdrawID{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], fromBody.WithdrawIDs[i]);
         }
@@ -12251,10 +11108,8 @@ public class BackendDB
         DBCmd.CommandType = CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -12319,8 +11174,7 @@ public class BackendDB
     #endregion
 
     #region GPayRelation
-    public System.Data.DataTable GetTopParentGPayRelation(int CompanyID, string ServiceType, string CurrencyType, string SortKey)
-    {
+    public System.Data.DataTable GetTopParentGPayRelation(int CompanyID, string ServiceType, string CurrencyType, string SortKey) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -12346,8 +11200,7 @@ public class BackendDB
         return DT;
     }
 
-    public System.Data.DataTable GetGPayRelation(int CompanyID, string ServiceType, string CurrencyType)
-    {
+    public System.Data.DataTable GetGPayRelation(int CompanyID, string ServiceType, string CurrencyType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -12364,8 +11217,7 @@ public class BackendDB
         return DT;
     }
 
-    public List<DBViewModel.ProviderServiceVM> GetGPayRelationByCompany(int forCompanyID, string ServiceType, string CurrencyType)
-    {
+    public List<DBViewModel.ProviderServiceVM> GetGPayRelationByCompany(int forCompanyID, string ServiceType, string CurrencyType) {
         List<DBViewModel.ProviderServiceVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12383,10 +11235,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = forCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ProviderServiceVM>(DT) as List<DBViewModel.ProviderServiceVM>;
             }
         }
@@ -12394,8 +11244,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.GPayRelationResult> GetGPayRelationTableResult(string ProviderCode)
-    {
+    public List<DBViewModel.GPayRelationResult> GetGPayRelationTableResult(string ProviderCode) {
         List<DBViewModel.GPayRelationResult> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12412,10 +11261,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.GPayRelationResult>(DT) as List<DBViewModel.GPayRelationResult>;
             }
         }
@@ -12423,8 +11270,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.GPayRelationResult> GetGPayRelationTableResultByServiceType(string ServiceType)
-    {
+    public List<DBViewModel.GPayRelationResult> GetGPayRelationTableResultByServiceType(string ServiceType) {
         List<DBViewModel.GPayRelationResult> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12442,10 +11288,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.GPayRelationResult>(DT) as List<DBViewModel.GPayRelationResult>;
             }
         }
@@ -12453,8 +11297,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.GPayRelation> GetGPayRelationResult(string ServiceType, string CurrencyType, string ProviderCode = "", int forCompanyID = 0)
-    {
+    public List<DBModel.GPayRelation> GetGPayRelationResult(string ServiceType, string CurrencyType, string ProviderCode = "", int forCompanyID = 0) {
         List<DBModel.GPayRelation> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12463,12 +11306,9 @@ public class BackendDB
              " JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=GPayRelation.ProviderCode " +
              " WHERE  GPayRelation.ServiceType =@ServiceType AND GPayRelation.CurrencyType =@CurrencyType ";
 
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
             SS += " AND GPayRelation.ProviderCode=@ProviderCode";
-        }
-        else
-        {
+        } else {
             SS += " AND GPayRelation.forCompanyID=@forCompanyID";
         }
 
@@ -12477,20 +11317,15 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
-        if (ProviderCode != "")
-        {
+        if (ProviderCode != "") {
             DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
-        }
-        else
-        {
+        } else {
             DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = forCompanyID;
         }
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.GPayRelation>(DT) as List<DBModel.GPayRelation>;
             }
         }
@@ -12498,8 +11333,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.GPayRelation> GetGPayRelationResultByCurrencyTypeAndforCompanyID(string CurrencyType, int forCompanyID)
-    {
+    public List<DBModel.GPayRelation> GetGPayRelationResultByCurrencyTypeAndforCompanyID(string CurrencyType, int forCompanyID) {
         List<DBModel.GPayRelation> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12515,10 +11349,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.GPayRelation>(DT) as List<DBModel.GPayRelation>;
             }
         }
@@ -12526,20 +11358,21 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ProviderServiceVM> GetProviderServiceGPayRelationByCompany(int CompanyID, string ServiceType, string CurrencyType, int CompanyType)
-    {
+    public List<DBViewModel.ProviderServiceVM> GetProviderServiceGPayRelationByCompany(
+    int CompanyID, string ServiceType, string CurrencyType, int CompanyType) {
         List<DBViewModel.ProviderServiceVM> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
         DataTable ProviderServiceDT;
         DataTable GPayRelationDT;
+        DataTable TierDT;
 
-        SS = " SELECT ProviderService.*,ProviderName FROM ProviderService WITH (NOLOCK) " +
-             " JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=ProviderService.ProviderCode " +
-             " WHERE ServiceType = @ServiceType AND CurrencyType =@CurrencyType And ProviderCode.ProviderState=0";
-        if (CompanyType == 4)
-        {
-            SS += " And ProviderCode.forCompanyID=@CompanyID";
+        // 原本查 ProviderService 不變
+        SS = " SELECT ProviderService.*, ProviderName FROM ProviderService WITH (NOLOCK)" +
+             " JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode = ProviderService.ProviderCode" +
+             " WHERE ServiceType = @ServiceType AND CurrencyType = @CurrencyType AND ProviderCode.ProviderState = 0";
+        if (CompanyType == 4) {
+            SS += " AND ProviderCode.forCompanyID = @CompanyID";
         }
 
         DBCmd = new SqlCommand();
@@ -12550,7 +11383,9 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
         ProviderServiceDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        SS = "SELECT * FROM GPayRelation WHERE forCompanyID =@CompanyID AND ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
+        // 查 GPayRelation
+        SS = " SELECT * FROM GPayRelation" +
+             " WHERE forCompanyID = @CompanyID AND ServiceType = @ServiceType AND CurrencyType = @CurrencyType";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
@@ -12559,23 +11394,72 @@ public class BackendDB
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = CompanyID;
         GPayRelationDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (ProviderServiceDT != null)
-        {
-            if (ProviderServiceDT.Rows.Count > 0)
-            {
-                returnValue = DataTableExtensions.ToList<DBViewModel.ProviderServiceVM>(ProviderServiceDT).ToList();
-                foreach (var rowData in returnValue)
-                {
-                    if (GPayRelationDT.Select("ProviderCode='" + rowData.ProviderCode + "'").Count() > 0)
-                    {
-                        rowData.selectedProviderService = true;
-                        rowData.Weight = GPayRelationDT.Select("ProviderCode='" + rowData.ProviderCode + "'").First().Field<int>("Weight");
+        if (ProviderServiceDT != null && ProviderServiceDT.Rows.Count > 0) {
+            returnValue = new List<DBViewModel.ProviderServiceVM>();
+            List<DBViewModel.ProviderServiceVM> providerServices =
+                DataTableExtensions.ToList<DBViewModel.ProviderServiceVM>(ProviderServiceDT).ToList();
+
+            foreach (var ps in providerServices) {
+                // 查這筆 ProviderService 有沒有 Tier
+                SS = " SELECT * FROM ProviderServiceTier WITH (NOLOCK)" +
+                     " WHERE ProviderCode = @ProviderCode AND ServiceType = @ServiceType" +
+                     "   AND CurrencyType = @CurrencyType AND State = 0 AND ProviderChannelCode <> ''" +
+                     " ORDER BY MinOnceAmount ASC";
+                DBCmd = new SqlCommand();
+                DBCmd.CommandText = SS;
+                DBCmd.CommandType = System.Data.CommandType.Text;
+                DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ps.ProviderCode;
+                DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+                DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+                TierDT = DBAccess.GetDB(DBConnStr, DBCmd);
+
+                if (TierDT != null && TierDT.Rows.Count > 0) {
+                    // 有 Tier：展開成多筆，每筆代表一個 Tier
+                    foreach (DataRow tierRow in TierDT.Rows) {
+                        DBViewModel.ProviderServiceVM vm = new DBViewModel.ProviderServiceVM();
+                        vm.ProviderCode = ps.ProviderCode;
+                        vm.ProviderName = ps.ProviderName;
+                        vm.ServiceType = ps.ServiceType;
+                        vm.CurrencyType = ps.CurrencyType;
+                        vm.State = ps.State;
+                        vm.DeviceType = ps.DeviceType;
+                        vm.CheckoutType = ps.CheckoutType;
+                        vm.Description = ps.Description;
+                        // Tier 的資料覆蓋 ProviderService 的限額費率
+                        vm.ProviderChannelCode = tierRow["ProviderChannelCode"].ToString();
+                        vm.MinOnceAmount = (decimal)tierRow["MinOnceAmount"];
+                        vm.MaxOnceAmount = (decimal)tierRow["MaxOnceAmount"];
+                        vm.CostRate = (decimal)tierRow["CostRate"];
+                        vm.CostCharge = (decimal)tierRow["CostCharge"];
+                        vm.MaxDaliyAmount = 0;
+
+                        // 比對 GPayRelation：ProviderCode + ProviderChannelCode 都要符合
+                        DataRow[] matched = GPayRelationDT.Select(
+                            "ProviderCode='" + vm.ProviderCode + "' AND ProviderChannelCode='" + vm.ProviderChannelCode + "'");
+                        if (matched.Length > 0) {
+                            vm.selectedProviderService = true;
+                            vm.Weight = matched[0].Field<int>("Weight");
+                        } else {
+                            vm.selectedProviderService = false;
+                            vm.Weight = 1;
+                        }
+
+                        returnValue.Add(vm);
                     }
-                    else
-                    {
-                        rowData.selectedProviderService = false;
-                        rowData.Weight = 1;
+                } else {
+                    // 沒有 Tier：比對 ProviderCode 且 ProviderChannelCode = ''
+                    DataRow[] matched = GPayRelationDT.Select(
+                        "ProviderCode='" + ps.ProviderCode + "' AND ProviderChannelCode=''");
+                    if (matched.Length > 0) {
+                        ps.selectedProviderService = true;
+                        ps.Weight = matched[0].Field<int>("Weight");
+                    } else {
+                        ps.selectedProviderService = false;
+                        ps.Weight = 1;
                     }
+                    ps.ProviderChannelCode = "";
+
+                    returnValue.Add(ps);
                 }
             }
         }
@@ -12583,14 +11467,13 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertGPayRelation(DBModel.GPayRelation Model)
-    {
+    public int InsertGPayRelation(DBModel.GPayRelation Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID) " +
-         "                          VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID)";
+        SS = "INSERT INTO GPayRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,ProviderChannelCode) " +
+         "                          VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@ProviderChannelCode)";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -12599,13 +11482,13 @@ public class BackendDB
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = Model.ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = Model.CurrencyType;
         DBCmd.Parameters.Add("@forCompanyID", SqlDbType.Int).Value = Model.forCompanyID;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = Model.ProviderChannelCode;
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
         RedisCache.GPayRelation.UpdateGPayRelation(Model.forCompanyID, Model.ServiceType, Model.CurrencyType);
         return returnValue;
     }
 
-    public int DeleteGPayRelation(DBModel.GPayRelation Model)
-    {
+    public int DeleteGPayRelation(DBModel.GPayRelation Model) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -12625,8 +11508,7 @@ public class BackendDB
     #endregion
 
     #region GPayWithdrawRelation
-    public List<DBModel.WithdrawLimit> GetCompanyWithdrawRelationResult(int CompanyID)
-    {
+    public List<DBModel.WithdrawLimit> GetCompanyWithdrawRelationResult(int CompanyID) {
         List<DBModel.WithdrawLimit> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12642,10 +11524,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.WithdrawLimit>(DT) as List<DBModel.WithdrawLimit>;
             }
         }
@@ -12653,8 +11533,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.GPayWithdrawRelation> GetGPayWithdrawRelationByCompanyID(int CompanyID)
-    {
+    public List<DBViewModel.GPayWithdrawRelation> GetGPayWithdrawRelationByCompanyID(int CompanyID) {
         List<DBViewModel.GPayWithdrawRelation> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12671,10 +11550,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.GPayWithdrawRelation>(DT) as List<DBViewModel.GPayWithdrawRelation>;
             }
         }
@@ -12682,8 +11559,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ApiWithdrawLimit> GetApiWithdrawLimitByProviderCompanyID(int CompanyID, int ProviderCompanyID)
-    {
+    public List<DBViewModel.ApiWithdrawLimit> GetApiWithdrawLimitByProviderCompanyID(int CompanyID, int ProviderCompanyID) {
         List<DBViewModel.ApiWithdrawLimit> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12698,27 +11574,19 @@ public class BackendDB
         DBCmd.Parameters.Add("@ProviderCompanyID", SqlDbType.Int).Value = ProviderCompanyID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ApiWithdrawLimit>(DT) as List<DBViewModel.ApiWithdrawLimit>;
 
-                if (CompanyID != 0)
-                {
+                if (CompanyID != 0) {
                     CompanyWithdrawRelationModel = GetGPayWithdrawRelationByCompanyID(CompanyID);
-                    if (CompanyWithdrawRelationModel != null && CompanyWithdrawRelationModel.Count > 0)
-                    {
-                        for (int i = 0; i < returnValue.Count; i++)
-                        {
-                            if (CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).Count() > 0)
-                            {
+                    if (CompanyWithdrawRelationModel != null && CompanyWithdrawRelationModel.Count > 0) {
+                        for (int i = 0; i < returnValue.Count; i++) {
+                            if (CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).Count() > 0) {
                                 returnValue[i].selectedWithdrawLimit = true;
                                 returnValue[i].Weight = CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).First().Weight;
                                 returnValue[i].WithdrawType = CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).First().WithdrawType;
-                            }
-                            else
-                            {
+                            } else {
                                 returnValue[i].Weight = 1;
                                 returnValue[i].selectedWithdrawLimit = false;
                             }
@@ -12730,8 +11598,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.ApiWithdrawLimit> GetApiWithdrawLimit(int CompanyID)
-    {
+    public List<DBViewModel.ApiWithdrawLimit> GetApiWithdrawLimit(int CompanyID) {
         List<DBViewModel.ApiWithdrawLimit> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -12746,27 +11613,19 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.ApiWithdrawLimit>(DT) as List<DBViewModel.ApiWithdrawLimit>;
 
-                if (CompanyID != 0)
-                {
+                if (CompanyID != 0) {
                     CompanyWithdrawRelationModel = GetGPayWithdrawRelationByCompanyID(CompanyID);
-                    if (CompanyWithdrawRelationModel != null && CompanyWithdrawRelationModel.Count > 0)
-                    {
-                        for (int i = 0; i < returnValue.Count; i++)
-                        {
-                            if (CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).Count() > 0)
-                            {
+                    if (CompanyWithdrawRelationModel != null && CompanyWithdrawRelationModel.Count > 0) {
+                        for (int i = 0; i < returnValue.Count; i++) {
+                            if (CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).Count() > 0) {
                                 returnValue[i].selectedWithdrawLimit = true;
                                 returnValue[i].Weight = CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).First().Weight;
                                 returnValue[i].WithdrawType = CompanyWithdrawRelationModel.Where(w => w.ProviderCode == returnValue[i].ProviderCode).First().WithdrawType;
-                            }
-                            else
-                            {
+                            } else {
                                 returnValue[i].Weight = 1;
                                 returnValue[i].selectedWithdrawLimit = false;
                             }
@@ -12778,8 +11637,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertGPayWithdrawRelation(FromBody.GPayWithdrawRelationSet fromBody, int CompanyType)
-    {
+    public int InsertGPayWithdrawRelation(FromBody.GPayWithdrawRelationSet fromBody, int CompanyType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12792,16 +11650,14 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.NVarChar).Value = fromBody.CurrencyType;
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = fromBody.CompanyID;
         //資料重複
-        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0)
-        {
+        if ((int)DBAccess.GetDBValue(DBConnStr, DBCmd) > 0) {
             returnValue = -1;
             return returnValue;
         }
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
 
-        DBAccess.ExecuteTransDB(DBConnStr, T =>
-        {
+        DBAccess.ExecuteTransDB(DBConnStr, T => {
 
             SS = " INSERT INTO WithdrawLimit (WithdrawLimitType,CurrencyType,forCompanyID,MaxLimit,MinLimit,Charge,Rate)" +
            " VALUES(2,@CurrencyType,@forCompanyID,@MaxLimit,@MinLimit,@Charge,@Rate)";
@@ -12820,8 +11676,7 @@ public class BackendDB
 
 
             //新增 GPayRelation
-            if (returnValue > 0)
-            {
+            if (returnValue > 0) {
                 //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0)
                 //{
                 //先刪除舊有資料
@@ -12836,8 +11691,7 @@ public class BackendDB
                 RedisCache.GPayWithdrawRelation.DeleteGPayWithdrawRelation(fromBody.CompanyID, fromBody.CurrencyType);
                 //最高權限允許以勾選方式新增供應商
                 //新增資料
-                foreach (var providerdata in fromBody.ProviderCodeAndWeight)
-                {
+                foreach (var providerdata in fromBody.ProviderCodeAndWeight) {
                     SS = " INSERT INTO GPayWithdrawRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight) " +
                          " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight)";
 
@@ -12862,19 +11716,16 @@ public class BackendDB
 
     }
 
-    public int UpdateGPayWithdrawRelation(FromBody.GPayWithdrawRelationSet fromBody, int CompanyType)
-    {
+    public int UpdateGPayWithdrawRelation(FromBody.GPayWithdrawRelationSet fromBody, int CompanyType) {
         int returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
 
         var CompanyTD = GetCompanyByID(fromBody.CompanyID);
         //新增 GPayRelation
-        if (CompanyTD != null)
-        {
+        if (CompanyTD != null) {
             //(WithdrawLimitType,CurrencyType,forCompanyID,MaxLimit,MinLimit,Charge)
-            DBAccess.ExecuteTransDB(DBConnStr, T =>
-            {
+            DBAccess.ExecuteTransDB(DBConnStr, T => {
                 SS = " UPDATE WithdrawLimit";
                 SS += " SET MaxLimit=@MaxLimit,MinLimit=@MinLimit,Charge=@Charge,Rate=@Rate ";
                 SS += " WHERE CurrencyType=@CurrencyType And WithdrawLimitType=2 And forCompanyID=@forCompanyID";
@@ -12892,8 +11743,7 @@ public class BackendDB
                 returnValue = T.ExecuteDB(DBCmd);
                 RedisCache.CompanyWithdrawLimit.UpdateCompanyAPIWithdrawLimit(fromBody.CompanyID, fromBody.CurrencyType);
 
-                if (returnValue > 0)
-                {
+                if (returnValue > 0) {
                     //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0)
                     //{
                     //先刪除舊有資料
@@ -12908,8 +11758,7 @@ public class BackendDB
                     RedisCache.GPayWithdrawRelation.DeleteGPayWithdrawRelation(fromBody.CompanyID, fromBody.CurrencyType);
                     //最高權限允許以勾選方式新增供應商
                     //新增資料
-                    foreach (var providerdata in fromBody.ProviderCodeAndWeight)
-                    {
+                    foreach (var providerdata in fromBody.ProviderCodeAndWeight) {
                         SS = " INSERT INTO GPayWithdrawRelation (ProviderCode,ServiceType,CurrencyType,forCompanyID,Weight) " +
                              " VALUES (@ProviderCode,@ServiceType,@CurrencyType,@forCompanyID,@Weight)";
 
@@ -12935,8 +11784,7 @@ public class BackendDB
     #endregion
 
     #region SummaryProviderByDate
-    public List<DBModel.SummaryProviderByDate> GetSummaryProviderByDateTableResult(FromBody.SummaryProviderByDate fromBody)
-    {
+    public List<DBModel.SummaryProviderByDate> GetSummaryProviderByDateTableResult(FromBody.SummaryProviderByDate fromBody) {
         List<DBModel.SummaryProviderByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12948,12 +11796,10 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryProviderByDate.CurrencyType=@CurrencyType AND (SummaryAmount <> 0 OR SummaryWithdrawalAmount <> 0) ";
 
-        if (fromBody.ServiceType != "0")
-        {
+        if (fromBody.ServiceType != "0") {
             SS += " And SummaryProviderByDate.ServiceType=@ServiceType ";
         }
-        if (fromBody.ProviderCode != "-99")
-        {
+        if (fromBody.ProviderCode != "-99") {
             SS += " And SummaryProviderByDate.ProviderCode=@ProviderCode ";
         }
 
@@ -12967,10 +11813,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = fromBody.CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryProviderByDate>(DT).ToList();
             }
         }
@@ -12978,8 +11822,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.ProxySummaryProviderByDate> GetProxySummaryProviderByDateTableResult(FromBody.SummaryProviderByDate fromBody)
-    {
+    public List<DBModel.ProxySummaryProviderByDate> GetProxySummaryProviderByDateTableResult(FromBody.SummaryProviderByDate fromBody) {
         List<DBModel.ProxySummaryProviderByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -12990,8 +11833,7 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And ProxySummaryProviderByDate.CurrencyType='JPY' AND (SummaryAmount <> 0 OR SummaryWithdrawalAmount <> 0) And ProviderCode=@ProviderCode ";
 
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += " And ProxySummaryProviderByDate.GroupID=@GroupID ";
         }
 
@@ -13005,10 +11847,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProxySummaryProviderByDate>(DT).ToList();
             }
         }
@@ -13018,8 +11858,7 @@ public class BackendDB
     #endregion
 
     #region SummaryCompanyByDate
-    public List<DBModel.CompanyServicePointHistory> GetCompanyServicePointHistoryResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.CompanyServicePointHistory> GetCompanyServicePointHistoryResult(FromBody.PaymentTable SearchData) {
         List<DBModel.CompanyServicePointHistory> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13035,13 +11874,11 @@ public class BackendDB
              " left join ServiceType ST on ST.ServiceType = CSP.ServiceType and ST.CurrencyType = CSP.CurrencyType" +
              " WHERE CSP.CreateDate Between @StartDate And @EndDate ";
 
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And CSP.ServiceType=@ServiceType ";
         }
 
-        if (SearchData.CompanyID != 0)
-        {
+        if (SearchData.CompanyID != 0) {
             SS += " And CSP.forCompanyID=@CompanyID ";
         }
 
@@ -13056,10 +11893,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = SearchData.CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyServicePointHistory>(DT).ToList();
             }
         }
@@ -13067,8 +11902,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryBlockChainByDate> GetSummaryBlockChainByDateResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.SummaryBlockChainByDate> GetSummaryBlockChainByDateResult(FromBody.PaymentTable SearchData) {
         List<DBModel.SummaryBlockChainByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13081,17 +11915,14 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryBlockChainByDate.CurrencyType=@CurrencyType ";
 
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And SummaryBlockChainByDate.ServiceType=@ServiceType ";
         }
 
-        if (SearchData.CompanyID != -99)
-        {
+        if (SearchData.CompanyID != -99) {
             SS += " And forCompanyID=@CompanyID ";
         }
-        if (SearchData.ProviderCode != "-99")
-        {
+        if (SearchData.ProviderCode != "-99") {
             SS += " And forProviderCode=@forProviderCode ";
         }
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -13105,10 +11936,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@forProviderCode", SqlDbType.VarChar).Value = SearchData.ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryBlockChainByDate>(DT).ToList();
             }
         }
@@ -13116,8 +11945,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByDateResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByDateResult(FromBody.PaymentTable SearchData) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13130,17 +11958,14 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType ";
 
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And SummaryCompanyByDate.ServiceType=@ServiceType ";
         }
 
-        if (SearchData.CompanyID != -99)
-        {
+        if (SearchData.CompanyID != -99) {
             SS += " And SummaryCompanyByDate.forCompanyID=@CompanyID ";
         }
-        if (SearchData.ProviderCode != "-99")
-        {
+        if (SearchData.ProviderCode != "-99") {
             SS += " And SummaryCompanyByDate.forProviderCode=@forProviderCode ";
         }
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -13154,10 +11979,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@forProviderCode", SqlDbType.VarChar).Value = SearchData.ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13165,8 +11988,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDateFlot> GetSummaryCompanyByDateResultFlot(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.SummaryCompanyByDateFlot> GetSummaryCompanyByDateResultFlot(FromBody.PaymentTable SearchData) {
         List<DBModel.SummaryCompanyByDateFlot> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13188,10 +12010,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = SearchData.CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDateFlot>(DT).ToList();
             }
         }
@@ -13199,8 +12019,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByHour> GetSummaryCompanyByHourResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.SummaryCompanyByHour> GetSummaryCompanyByHourResult(FromBody.PaymentTable SearchData) {
         List<DBModel.SummaryCompanyByHour> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13213,8 +12032,7 @@ public class BackendDB
 
 
 
-        if (SearchData.CompanyID != -99)
-        {
+        if (SearchData.CompanyID != -99) {
             SS += " And forCompanyID=@CompanyID ";
         }
 
@@ -13228,10 +12046,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByHour>(DT).ToList();
             }
         }
@@ -13239,8 +12055,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgent(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgent(FromBody.PaymentTable SearchData) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13253,17 +12068,14 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType And CompanyTable.CompanyType=2 And SummaryAgentAmount<>0 ";
 
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And SummaryCompanyByDate.ServiceType=@ServiceType ";
         }
 
-        if (SearchData.CompanyID != -99)
-        {
+        if (SearchData.CompanyID != -99) {
             SS += " And SummaryCompanyByDate.forCompanyID=@CompanyID ";
         }
-        if (SearchData.ProviderCode != "-99")
-        {
+        if (SearchData.ProviderCode != "-99") {
             SS += " And SummaryCompanyByDate.forProviderCode=@forProviderCode ";
         }
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -13277,10 +12089,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@forProviderCode", SqlDbType.VarChar).Value = SearchData.ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13288,8 +12098,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgent2(FromBody.PaymentTable SearchData, int CompanyID)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgent2(FromBody.PaymentTable SearchData, int CompanyID) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13301,8 +12110,7 @@ public class BackendDB
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType And CompanyTable.CompanyType=2 And SummaryAgentAmount<>0  And forCompanyID=@CompanyID ";
 
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And SummaryCompanyByDate.ServiceType=@ServiceType ";
         }
 
@@ -13317,10 +12125,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13328,8 +12134,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgentDownCompany(FromBody.PaymentTable SearchData, int CompanyID)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByAgentDownCompany(FromBody.PaymentTable SearchData, int CompanyID) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13361,8 +12166,7 @@ public class BackendDB
             LEFT JOIN CompanyTable CT ON CT.CompanyID = tmpTable.forCompanyID 
             LEFT JOIN ServiceType ST ON ST.ServiceType = tmpTable.ServiceType 
             WHERE SummaryAmount <> 0";
-        if (SearchData.ServiceType != "0")
-        {
+        if (SearchData.ServiceType != "0") {
             SS += " And SummaryCompanyByDate.ServiceType=@ServiceType ";
         }
 
@@ -13376,10 +12180,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13387,8 +12189,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByDateResultByCurrencyType(FromBody.SummaryCompanyByDateResultByCurrencyTypeSet SearchData)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetSummaryCompanyByDateResultByCurrencyType(FromBody.SummaryCompanyByDateResultByCurrencyTypeSet SearchData) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13409,10 +12210,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13420,8 +12219,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDateChartData> GetSummaryCompanyByDateResultForChart(FromBody.SummaryCompanyByDateSet SearchData)
-    {
+    public List<DBModel.SummaryCompanyByDateChartData> GetSummaryCompanyByDateResultForChart(FromBody.SummaryCompanyByDateSet SearchData) {
         List<DBModel.SummaryCompanyByDateChartData> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13440,31 +12238,21 @@ public class BackendDB
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = SearchData.CurrencyType;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDateChartData>(DT).ToList();
                 decimal amounts = 0;
-                foreach (var rowData in returnValue)
-                {
+                foreach (var rowData in returnValue) {
                     amounts += rowData.SummaryNetAmounts;
                 }
 
-                if (amounts == 0)
-                {
+                if (amounts == 0) {
                     returnValue = null;
-                }
-                else
-                {
-                    foreach (var rowData in returnValue)
-                    {
-                        if (amounts != 0)
-                        {
+                } else {
+                    foreach (var rowData in returnValue) {
+                        if (amounts != 0) {
                             rowData.SummaryNetAmountPercent = Convert.ToInt32((rowData.SummaryNetAmounts / amounts) * 100);
-                        }
-                        else
-                        {
+                        } else {
                             rowData.SummaryNetAmountPercent = 0;
                         }
                     }
@@ -13475,8 +12263,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.SummaryCompanyByDate> GetCompanySummary(DateTime SummaryDate, int CompanyID, string CurrencyType, string ServiceType)
-    {
+    public List<DBModel.SummaryCompanyByDate> GetCompanySummary(DateTime SummaryDate, int CompanyID, string CurrencyType, string ServiceType) {
         List<DBModel.SummaryCompanyByDate> returnValue = null;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -13493,10 +12280,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ServiceType", System.Data.SqlDbType.VarChar).Value = ServiceType;
         DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.SummaryCompanyByDate>(DT).ToList();
             }
         }
@@ -13504,8 +12289,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public decimal GetSummaryCompanyByDateLockAmount(int CompanyID, string CurrencyType)
-    {
+    public decimal GetSummaryCompanyByDateLockAmount(int CompanyID, string CurrencyType) {
         decimal returnValue = 0;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13531,8 +12315,7 @@ public class BackendDB
         var a = DateTime.Now.ToShortDateString();
         TodayDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (Today == DayOfWeek.Sunday)
-        {
+        if (Today == DayOfWeek.Sunday) {
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = CommandType.Text;
@@ -13543,27 +12326,20 @@ public class BackendDB
             BeforedayDT = DBAccess.GetDB(DBConnStr, DBCmd);
         }
 
-        if (TodayDT != null)
-        {
-            if (TodayDT.Rows.Count > 0)
-            {
+        if (TodayDT != null) {
+            if (TodayDT.Rows.Count > 0) {
                 var today_datas = DataTableExtensions.ToList<DBViewModel.SummaryCompanyByDateVM>(TodayDT).ToList();
-                foreach (var today_data in today_datas)
-                {
+                foreach (var today_data in today_datas) {
                     returnValue += today_data.SummaryNetAmount;
                 }
             }
         }
 
-        if (BeforedayDT != null)
-        {
-            if (BeforedayDT.Rows.Count > 0)
-            {
+        if (BeforedayDT != null) {
+            if (BeforedayDT.Rows.Count > 0) {
                 var Beforeday_datas = DataTableExtensions.ToList<DBViewModel.SummaryCompanyByDateVM>(BeforedayDT).ToList();
-                foreach (var beforeday_data in Beforeday_datas)
-                {
-                    if (beforeday_data.CheckoutType == 2)
-                    {
+                foreach (var beforeday_data in Beforeday_datas) {
+                    if (beforeday_data.CheckoutType == 2) {
                         returnValue += beforeday_data.SummaryNetAmount;
                     }
                 }
@@ -13576,22 +12352,18 @@ public class BackendDB
     #endregion
 
     #region 公司錢包歷程
-    public List<DBModel.CompanyPointHistory> GetCompanyPointHistoryTableResult(FromBody.CompanyPointHistoryeSet SearchData)
-    {
+    public List<DBModel.CompanyPointHistory> GetCompanyPointHistoryTableResult(FromBody.CompanyPointHistoryeSet SearchData) {
         List<DBModel.CompanyPointHistory> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
 
-        if (SearchData.SearchDays == "1")
-        {
+        if (SearchData.SearchDays == "1") {
             SS = " Select CONVERT(varchar(10), DATEPART(hh,CreateDate)) as CreateDate2,sum(CompanyPointHistory.Value) as Value FROM CompanyPointHistory WITH (NOLOCK)  " +
                  " Where convert(varchar, CompanyPointHistory.CreateDate, 111) =@CreateDate" +
                  " And CurrencyType=@CurrencyType And forCompanyID=@CompanyID" +
                  " Group by DATEPART(hh,CreateDate)";
-        }
-        else
-        {
+        } else {
             SS = " SELECT convert(varchar, CompanyPointHistory.CreateDate, 111) as CreateDate2,sum(CompanyPointHistory.Value) as Value" +
                  " FROM CompanyPointHistory WITH (NOLOCK) WHERE  forCompanyID=@CompanyID  And CurrencyType=@CurrencyType " +
                  " And CreateDate Between @StartDate And @EndDate" +
@@ -13609,10 +12381,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyPointHistory>(DT).ToList();
             }
         }
@@ -13620,8 +12390,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.CompanyServicePointLog> GetCompanyServicePointLogResultByCompany(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.CompanyServicePointLog> GetCompanyServicePointLogResultByCompany(FromBody.PaymentTable SearchData) {
         List<DBModel.CompanyServicePointLog> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13655,8 +12424,7 @@ public class BackendDB
                  " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
                  " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate AND CH.forCompanyID = @CompanyID ";
 
-        if (SearchData.OperatorType != 99)
-        {
+        if (SearchData.OperatorType != 99) {
             SS += " AND CH.OperatorType = @OperatorType ";
         }
 
@@ -13676,10 +12444,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyServicePointLog>(DT).ToList();
             }
         }
@@ -13687,8 +12453,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.CompanyServicePointLog> GetCompanyPointHistoryLogResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.CompanyServicePointLog> GetCompanyPointHistoryLogResult(FromBody.PaymentTable SearchData) {
         List<DBModel.CompanyServicePointLog> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13709,17 +12474,14 @@ public class BackendDB
              " LEFT JOIN CompanyTable CT ON CH.forCompanyID = CT.CompanyID " +
              " WHERE DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
 
-        if (SearchData.ServiceType.ToString() != "0")
-        {
+        if (SearchData.ServiceType.ToString() != "0") {
             SS += " AND CH.ServiceType = @ServiceType ";
         }
-        if (SearchData.CompanyID != -99)
-        {
+        if (SearchData.CompanyID != -99) {
             SS += "  AND CH.forCompanyID = @CompanyID ";
         }
 
-        if (SearchData.OperatorType != 99)
-        {
+        if (SearchData.OperatorType != 99) {
             SS += " AND CH.OperatorType = @OperatorType ";
         }
 
@@ -13740,10 +12502,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyServicePointLog>(DT).ToList();
             }
         }
@@ -13751,8 +12511,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.CompanyServiceAndProviderPointLog> GetManualPointLogResult(FromBody.PaymentTable SearchData)
-    {
+    public List<DBModel.CompanyServiceAndProviderPointLog> GetManualPointLogResult(FromBody.PaymentTable SearchData) {
         List<DBModel.CompanyServiceAndProviderPointLog> returnValue = new List<DBModel.CompanyServiceAndProviderPointLog>();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13848,8 +12607,7 @@ public class BackendDB
             " WHERE CreateDate2 between @StartDate and @EndDate";
 
 
-        if (SearchData.OperatorType != 99)
-        {
+        if (SearchData.OperatorType != 99) {
             SS += " AND tmpTable.OperatorType2 = @OperatorType ";
         }
 
@@ -13864,32 +12622,26 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyServiceAndProviderPointLog>(DT).ToList();
 
-                if (SearchData.ServiceType.ToString() != "0")
-                {
+                if (SearchData.ServiceType.ToString() != "0") {
                     returnValue = returnValue.Where(w => w.ServiceType2 == SearchData.ServiceType).ToList();
                 }
 
-                if (SearchData.ProviderCode.ToString() != "99")
-                {
+                if (SearchData.ProviderCode.ToString() != "99") {
                     returnValue = returnValue.Where(w => w.ProviderCode2 == SearchData.ProviderCode).ToList();
                 }
 
 
-                if (SearchData.CompanyID.ToString() != "-99")
-                {
+                if (SearchData.CompanyID.ToString() != "-99") {
                     returnValue = returnValue.Where(w => w.CompanyID2 == SearchData.CompanyID).ToList();
                 }
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
@@ -13899,8 +12651,7 @@ public class BackendDB
     #endregion
 
     #region PaymentTable
-    public List<DBModel.PaymentTransferLog> GetPaymentTransferLogResult(FromBody.PaymentTransferLogSet fromBody)
-    {
+    public List<DBModel.PaymentTransferLog> GetPaymentTransferLogResult(FromBody.PaymentTransferLogSet fromBody) {
         List<DBModel.PaymentTransferLog> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13910,16 +12661,13 @@ public class BackendDB
              " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode=PaymentTransferLog.forProviderCode " +
              " WHERE CreateDate >= @StartDate And CreateDate <= @EndDate ";
 
-        if (fromBody.ProcessStatus != 99)
-        {
+        if (fromBody.ProcessStatus != 99) {
             SS += " And PaymentTransferLog.Type=@Type ";
         }
-        if (!string.IsNullOrEmpty(fromBody.PaymentSerial))
-        {
+        if (!string.IsNullOrEmpty(fromBody.PaymentSerial)) {
             SS += " And PaymentTransferLog.forPaymentSerial=@PaymentSerial ";
         }
-        if (!string.IsNullOrEmpty(fromBody.ProviderCode))
-        {
+        if (!string.IsNullOrEmpty(fromBody.ProviderCode)) {
             SS += " And PaymentTransferLog.forProviderCode=@ProviderCode ";
         }
 
@@ -13933,10 +12681,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@Type", SqlDbType.Int).Value = fromBody.ProcessStatus;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentTransferLog>(DT).ToList();
             }
         }
@@ -13944,8 +12690,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentTable> GetPatchPaymentTableResult()
-    {
+    public List<DBModel.PaymentTable> GetPatchPaymentTableResult() {
         List<DBModel.PaymentTable> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -13971,10 +12716,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentTable>(DT).ToList();
             }
         }
@@ -13982,8 +12725,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentTable> GetPatchPaymentTableResultByDate(FromBody.PaymentTable fromBody)
-    {
+    public List<DBModel.PaymentTable> GetPatchPaymentTableResultByDate(FromBody.PaymentTable fromBody) {
         List<DBModel.PaymentTable> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -14012,10 +12754,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentTable>(DT).ToList();
             }
         }
@@ -14023,8 +12763,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.PaymentRow_NunberID GetAbnormalPaymentRow_NunberID(string OrderID, string ProviderID, int CompanyID, string ProviderCode, int SearchType, string IP)
-    {
+    public DBViewModel.PaymentRow_NunberID GetAbnormalPaymentRow_NunberID(string OrderID, string ProviderID, int CompanyID, string ProviderCode, int SearchType, string IP) {
         DBViewModel.PaymentRow_NunberID returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -14037,13 +12776,11 @@ public class BackendDB
         SS += " And ProviderCode = @ProviderCode";
 
 
-        if (CompanyID != 0)
-        {
+        if (CompanyID != 0) {
             SS += " And forCompanyID = @CompanyID";
         }
 
-        if (!string.IsNullOrEmpty(IP))
-        {
+        if (!string.IsNullOrEmpty(IP)) {
             SS += " And (UserIP = @UserIP OR ClientIP=@UserIP) ";
         }
 
@@ -14063,10 +12800,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.PaymentRow_NunberID>(DT).FirstOrDefault();
             }
         }
@@ -14074,8 +12809,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetAbnormalPaymentTableResult(FromBody.GetAbnormalPaymentSet fromBody)
-    {
+    public List<DBModel.PaymentReport> GetAbnormalPaymentTableResult(FromBody.GetAbnormalPaymentSet fromBody) {
 
         string SS = "";
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14085,8 +12819,7 @@ public class BackendDB
         string SummaryDateString = string.Empty;
         //System.Collections.Generic.Dictionary<int, string> SummaryDict = new Dictionary<int, string>();
         DBViewModel.PaymentRow_NunberID Row_NunberData = GetAbnormalPaymentRow_NunberID(fromBody.OrderID, fromBody.ProviderOrderID, fromBody.CompanyID, fromBody.Providercode, fromBody.SearchType, fromBody.IP);
-        if (Row_NunberData != null)
-        {
+        if (Row_NunberData != null) {
 
             SS = " SELECT * FROM(";
             SS += " SELECT ROW_NUMBER() OVER(ORDER BY P.CreateDate) AS ROWID,";
@@ -14109,22 +12842,17 @@ public class BackendDB
             SS += " Where 1=1 ";
             SS += " And P.ProviderCode = @ProviderCode";
 
-            if (!string.IsNullOrEmpty(fromBody.IP))
-            {
+            if (!string.IsNullOrEmpty(fromBody.IP)) {
                 SS += " And (P.UserIP = @UserIP OR P.ClientIP=@UserIP) ";
             }
 
-            if (fromBody.CompanyID != 0)
-            {
+            if (fromBody.CompanyID != 0) {
                 SS += " And P.forCompanyID = @CompanyID ";
             }
             SS += " ) as tmpTable";
-            if (fromBody.CheckType == 0)
-            {
+            if (fromBody.CheckType == 0) {
                 SS += " WHERE @ROWID-10<=tmpTable.ROWID And tmpTable.ROWID<=@ROWID+10";
-            }
-            else
-            {
+            } else {
                 SS += " WHERE dateadd(mi,-10,@SearchDate) <= tmpTable.CreateDate And tmpTable.CreateDate<= dateadd(mi,+10,@SearchDate)";
             }
 
@@ -14140,10 +12868,8 @@ public class BackendDB
             DBCmd.Parameters.Add("@ROWID", SqlDbType.Int).Value = Row_NunberData.ROWID;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-            if (DT != null)
-            {
-                if (DT.Rows.Count > 0)
-                {
+            if (DT != null) {
+                if (DT.Rows.Count > 0) {
                     returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
                 }
             }
@@ -14153,8 +12879,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentProviderReportReviewResult(FromBody.GetPaymentForAdmin fromBody, string CompanyCode, int GroupID)
-    {
+    public List<DBModel.PaymentReport> GetPaymentProviderReportReviewResult(FromBody.GetPaymentForAdmin fromBody, string CompanyCode, int GroupID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.PaymentReport> returnValue = new List<DBModel.PaymentReport>();
@@ -14175,14 +12900,12 @@ public class BackendDB
              " And(PPO.GroupID = 0 or PPO.GroupID = @GroupID) ";
 
         //商户订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             SS += " And P.PaymentSerial = @OrderID ";
         }
 
         //卡号
-        if (fromBody.PatchDescription != "")
-        {
+        if (fromBody.PatchDescription != "") {
             SS += " And P.PatchDescription=@PatchDescription";
         }
 
@@ -14197,10 +12920,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
@@ -14210,16 +12931,14 @@ public class BackendDB
         //    returnValue = returnValue.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         //}
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentReportReviewResult(FromBody.GetPaymentForAdmin fromBody)
-    {
+    public List<DBModel.PaymentReport> GetPaymentReportReviewResult(FromBody.GetPaymentForAdmin fromBody) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14248,27 +12967,23 @@ public class BackendDB
              " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  " +
              "WHERE P.CreateDate >= @StartDate And P.CreateDate <= @EndDate And SubmitType=1";
 
-        if (fromBody.CompanyID != -99)
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
             SS += " And P.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ServiceType != "0")
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.ServiceType != "0") {//-99代表所有營運商(有選營運商)
 
             SS += " And P.ServiceType = @ServiceType ";
         }
 
-        if (fromBody.ProviderCode != "0")
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.ProviderCode != "0") {//-99代表所有營運商(有選營運商)
 
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
         //商户订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             SS += " And P.PaymentSerial = @PaymentSerial ";
         }
 
@@ -14283,29 +12998,24 @@ public class BackendDB
         DBCmd.Parameters.Add("@ProviderCode", System.Data.SqlDbType.VarChar).Value = fromBody.ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             returnValue = returnValue.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentTableResultByWaitReview(List<int> ProcessStatus)
-    {
+    public List<DBModel.PaymentReport> GetPaymentTableResultByWaitReview(List<int> ProcessStatus) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14335,8 +13045,7 @@ public class BackendDB
              "WHERE  SubmitType=1";
 
 
-        if (!ProcessStatus.Contains(99))
-        {
+        if (!ProcessStatus.Contains(99)) {
             SS += " And P.ProcessStatus=@ProcessStatus";
         }
 
@@ -14346,10 +13055,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
@@ -14357,8 +13064,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetProviderPaymentTableResultByWaitReview(List<int> ProcessStatus, string ProviderCode, int GroupID)
-    {
+    public List<DBModel.PaymentReport> GetProviderPaymentTableResultByWaitReview(List<int> ProcessStatus, string ProviderCode, int GroupID) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14386,8 +13092,7 @@ public class BackendDB
              "WHERE  SubmitType=1 And P.ProviderCode=@ProviderCode And(PPO.GroupID = 0 or PPO.GroupID = @GroupID) ";
 
 
-        if (!ProcessStatus.Contains(99))
-        {
+        if (!ProcessStatus.Contains(99)) {
             SS += " And P.ProcessStatus=@ProcessStatus";
         }
 
@@ -14398,10 +13103,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@ProviderCode", System.Data.SqlDbType.VarChar).Value = ProviderCode;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
@@ -14409,8 +13112,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentTableResultByAdmin(FromBody.GetPaymentForAdmin fromBody)
-    {
+    public List<DBModel.PaymentReport> GetPaymentTableResultByAdmin(FromBody.GetPaymentForAdmin fromBody) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14443,36 +13145,28 @@ public class BackendDB
              " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID " +
              " LEFT JOIN ProviderBankCard AS PBC ON PDB.forBankCardGUID = PBC.BankCardGUID ";
 
-        if (fromBody.TimeType == "F")
-        {
+        if (fromBody.TimeType == "F") {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
-        }
-        else
-        {
+        } else {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
         }
 
 
-        if (fromBody.CompanyID != -99)
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
             SS += " And P.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ProviderCode != "0")
-        {//0代表所有供應商)(有選供應商)
+        if (fromBody.ProviderCode != "0") {//0代表所有供應商)(有選供應商)
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
         //商户订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstOrderID.Count > 0)
-            {
+            if (LstOrderID.Count > 0) {
                 var parameters = new string[LstOrderID.Count];
-                for (int i = 0; i < LstOrderID.Count; i++)
-                {
+                for (int i = 0; i < LstOrderID.Count; i++) {
                     parameters[i] = string.Format("@OrderID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstOrderID[i]);
                 }
@@ -14482,14 +13176,11 @@ public class BackendDB
         }
 
         //系统订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstPaymentSerial = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstPaymentSerial.Count > 0)
-            {
+            if (LstPaymentSerial.Count > 0) {
                 var parameters = new string[LstPaymentSerial.Count];
-                for (int i = 0; i < LstPaymentSerial.Count; i++)
-                {
+                for (int i = 0; i < LstPaymentSerial.Count; i++) {
                     parameters[i] = string.Format("@PaymentSerial{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstPaymentSerial[i]);
                 }
@@ -14498,43 +13189,35 @@ public class BackendDB
             }
         }
 
-        if (!string.IsNullOrEmpty(fromBody.CompanyName))
-        {
+        if (!string.IsNullOrEmpty(fromBody.CompanyName)) {
             SS += " And C.CompanyName=@CompanyName ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.ProviderName))
-        {
+        if (!string.IsNullOrEmpty(fromBody.ProviderName)) {
             SS += " And PC.ProviderName=@ProviderName ";
         }
 
-        if (fromBody.ServiceType != "99")
-        {
+        if (fromBody.ServiceType != "99") {
             SS += " And P.ServiceType=@ServiceType ";
         }
 
-        if (fromBody.StartAmount != 0)
-        {
+        if (fromBody.StartAmount != 0) {
             SS += " And P.OrderAmount >= @StartAmount";
 
-            if (fromBody.EndAmount != 0)
-            {
+            if (fromBody.EndAmount != 0) {
                 SS += " And P.OrderAmount <= @EndAmount";
             }
         }
 
-        if (fromBody.EndAmount != 0)
-        {
+        if (fromBody.EndAmount != 0) {
             SS += " And P.OrderAmount <= @EndAmount";
 
-            if (fromBody.StartAmount != 0)
-            {
+            if (fromBody.StartAmount != 0) {
                 SS += " And P.OrderAmount >= @StartAmount";
             }
         }
 
-        if (fromBody.SubmitType != 99)
-        {
+        if (fromBody.SubmitType != 99) {
             SS += " And P.SubmitType >= @SubmitType";
         }
 
@@ -14553,29 +13236,24 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             returnValue = returnValue.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public DBModel.StatisticsPaymentAmount GetPaymentPointBySearchFilter(FromBody.GetPaymentForAdmin fromBody)
-    {
+    public DBModel.StatisticsPaymentAmount GetPaymentPointBySearchFilter(FromBody.GetPaymentForAdmin fromBody) {
         List<DBModel.PointBySearchFilter> PointBySearchFilterModel = null;
         DBModel.StatisticsPaymentAmount _StatisticsPaymentAmount = new DBModel.StatisticsPaymentAmount();
         string SS;
@@ -14603,34 +13281,26 @@ public class BackendDB
             " FROM PaymentTable AS P " +
             " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode ";
 
-        if (fromBody.TimeType == "F")
-        {
+        if (fromBody.TimeType == "F") {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
-        }
-        else
-        {
+        } else {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
         }
-        if (fromBody.CompanyID != -99)
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
             SS += " And P.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ProviderCode != "0")
-        {//0代表所有供應商)(有選供應商)
+        if (fromBody.ProviderCode != "0") {//0代表所有供應商)(有選供應商)
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
         //商户订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstOrderID.Count > 0)
-            {
+            if (LstOrderID.Count > 0) {
                 var parameters = new string[LstOrderID.Count];
-                for (int i = 0; i < LstOrderID.Count; i++)
-                {
+                for (int i = 0; i < LstOrderID.Count; i++) {
                     parameters[i] = string.Format("@OrderID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstOrderID[i]);
                 }
@@ -14639,12 +13309,10 @@ public class BackendDB
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             var parameters = new string[fromBody.ProcessStatus.Count];
 
-            for (int i = 0; i < fromBody.ProcessStatus.Count; i++)
-            {
+            for (int i = 0; i < fromBody.ProcessStatus.Count; i++) {
 
                 parameters[i] = string.Format("@ProcessStatus{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.ProcessStatus[i]);
@@ -14654,14 +13322,11 @@ public class BackendDB
         }
 
         //系统订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstPaymentSerial = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstPaymentSerial.Count > 0)
-            {
+            if (LstPaymentSerial.Count > 0) {
                 var parameters = new string[LstPaymentSerial.Count];
-                for (int i = 0; i < LstPaymentSerial.Count; i++)
-                {
+                for (int i = 0; i < LstPaymentSerial.Count; i++) {
                     parameters[i] = string.Format("@PaymentSerial{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstPaymentSerial[i]);
                 }
@@ -14669,33 +13334,27 @@ public class BackendDB
                 SS += string.Format(" Or P.PaymentSerial IN ({0})", string.Join(", ", parameters));
             }
         }
-        if (fromBody.ServiceType != "99")
-        {
+        if (fromBody.ServiceType != "99") {
             SS += " And P.ServiceType=@ServiceType ";
         }
 
-        if (fromBody.StartAmount != 0)
-        {
+        if (fromBody.StartAmount != 0) {
             SS += " And P.OrderAmount >= @StartAmount";
 
-            if (fromBody.EndAmount != 0)
-            {
+            if (fromBody.EndAmount != 0) {
                 SS += " And P.OrderAmount <= @EndAmount";
             }
         }
 
-        if (fromBody.EndAmount != 0)
-        {
+        if (fromBody.EndAmount != 0) {
             SS += " And P.OrderAmount <= @EndAmount";
 
-            if (fromBody.StartAmount != 0)
-            {
+            if (fromBody.StartAmount != 0) {
                 SS += " And P.OrderAmount >= @StartAmount";
             }
         }
 
-        if (fromBody.SubmitType != 99)
-        {
+        if (fromBody.SubmitType != 99) {
             SS += " And P.SubmitType >= @SubmitType";
         }
 
@@ -14714,21 +13373,17 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 PointBySearchFilterModel = DataTableExtensions.ToList<DBModel.PointBySearchFilter>(DT).ToList();
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             PointBySearchFilterModel = PointBySearchFilterModel.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         }
 
-        if (PointBySearchFilterModel.Count > 0)
-        {
+        if (PointBySearchFilterModel.Count > 0) {
             _StatisticsPaymentAmount.OrderCount = PointBySearchFilterModel.Sum(s => s.OrderCount);
             _StatisticsPaymentAmount.SuccessOrderCount = PointBySearchFilterModel.Where(w => w.ProcessStatus == 2 || w.ProcessStatus == 4).Sum(s => s.OrderCount);
 
@@ -14751,8 +13406,7 @@ public class BackendDB
         return _StatisticsPaymentAmount;
     }
 
-    public List<DBModel.PaymentReportV2> GetPaymentResultV2(FromBody.GetPaymentForAdminV2 fromBody)
-    {
+    public List<DBModel.PaymentReportV2> GetPaymentResultV2(FromBody.GetPaymentForAdminV2 fromBody) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -14789,40 +13443,31 @@ public class BackendDB
         SS += " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID ";
         SS += " LEFT JOIN ProviderBankCard AS PBC ON PDB.forBankCardGUID = PBC.BankCardGUID ";
 
-        if (fromBody.TimeType == "F")
-        {
+        if (fromBody.TimeType == "F") {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
-        }
-        else
-        {
+        } else {
             SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
         }
         #region 筛选条件
-        if (fromBody.CompanyID != -99)
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
             SS += " And P.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ProviderCode != "0")
-        {//0代表所有供應商)(有選供應商)
+        if (fromBody.ProviderCode != "0") {//0代表所有供應商)(有選供應商)
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
-        if (fromBody.CurrencyType != "All")
-        {
+        if (fromBody.CurrencyType != "All") {
             SS += " And P.CurrencyType = @CurrencyType ";
         }
 
         //商户订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstOrderID.Count > 0)
-            {
+            if (LstOrderID.Count > 0) {
                 var parameters = new string[LstOrderID.Count];
-                for (int i = 0; i < LstOrderID.Count; i++)
-                {
+                for (int i = 0; i < LstOrderID.Count; i++) {
                     parameters[i] = string.Format("@OrderID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstOrderID[i]);
                 }
@@ -14832,14 +13477,11 @@ public class BackendDB
         }
 
         //系统订单号查询
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstPaymentSerial = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstPaymentSerial.Count > 0)
-            {
+            if (LstPaymentSerial.Count > 0) {
                 var parameters = new string[LstPaymentSerial.Count];
-                for (int i = 0; i < LstPaymentSerial.Count; i++)
-                {
+                for (int i = 0; i < LstPaymentSerial.Count; i++) {
                     parameters[i] = string.Format("@PaymentSerial{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstPaymentSerial[i]);
                 }
@@ -14848,52 +13490,42 @@ public class BackendDB
             }
         }
 
-        if (!string.IsNullOrEmpty(fromBody.CompanyName))
-        {
+        if (!string.IsNullOrEmpty(fromBody.CompanyName)) {
             SS += " And C.CompanyName=@CompanyName ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.ProviderName))
-        {
+        if (!string.IsNullOrEmpty(fromBody.ProviderName)) {
             SS += " And PC.ProviderName=@ProviderName ";
         }
 
-        if (fromBody.ServiceType != "99")
-        {
+        if (fromBody.ServiceType != "99") {
             SS += " And P.ServiceType=@ServiceType ";
         }
 
-        if (fromBody.StartAmount != 0)
-        {
+        if (fromBody.StartAmount != 0) {
             SS += " And P.OrderAmount >= @StartAmount";
 
-            if (fromBody.EndAmount != 0)
-            {
+            if (fromBody.EndAmount != 0) {
                 SS += " And P.OrderAmount <= @EndAmount";
             }
         }
 
-        if (fromBody.EndAmount != 0)
-        {
+        if (fromBody.EndAmount != 0) {
             SS += " And P.OrderAmount <= @EndAmount";
 
-            if (fromBody.StartAmount != 0)
-            {
+            if (fromBody.StartAmount != 0) {
                 SS += " And P.OrderAmount >= @StartAmount";
             }
         }
 
-        if (fromBody.SubmitType != 99)
-        {
+        if (fromBody.SubmitType != 99) {
             SS += " And P.SubmitType >= @SubmitType";
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             var parameters = new string[fromBody.ProcessStatus.Count];
 
-            for (int i = 0; i < fromBody.ProcessStatus.Count; i++)
-            {
+            for (int i = 0; i < fromBody.ProcessStatus.Count; i++) {
 
                 parameters[i] = string.Format("@ProcessStatus{0}", i);
                 DBCmd.Parameters.AddWithValue(parameters[i], fromBody.ProcessStatus[i]);
@@ -14902,8 +13534,7 @@ public class BackendDB
             SS += string.Format(" And P.ProcessStatus IN ({0})", string.Join(", ", parameters));
         }
 
-        if (!string.IsNullOrEmpty(fromBody.search.value))
-        {
+        if (!string.IsNullOrEmpty(fromBody.search.value)) {
             SS += " And (P.PaymentSerial like '%'+@SearchFilter+'%' OR  P.OrderID like '%'+@SearchFilter+'%'  OR  C.CompanyName like '%'+@SearchFilter+'%'  OR  PC.ProviderName like '%'+@SearchFilter+'%'  OR  S.ServiceTypeName like '%'+@SearchFilter+'%' OR    P.UserIP like '%'+@SearchFilter+'%'  OR    P.ClientIP like '%'+@SearchFilter+'%' ) ";
         }
         #endregion
@@ -14976,8 +13607,7 @@ public class BackendDB
         SS += " FROM T";
         #region 排序
 
-        switch (fromBody.columns[fromBody.order.First().column].data.ToString())
-        {
+        switch (fromBody.columns[fromBody.order.First().column].data.ToString()) {
             case "TransferRemark":
                 SS += " Order By T.TransferRemark ";
                 break;
@@ -15031,12 +13661,9 @@ public class BackendDB
                 break;
         }
 
-        if (fromBody.order.First().dir == "asc")
-        {
+        if (fromBody.order.First().dir == "asc") {
             SS += " ASC ";
-        }
-        else
-        {
+        } else {
             SS += " DESC ";
         }
         #endregion
@@ -15063,10 +13690,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@pageSize", System.Data.SqlDbType.Int).Value = fromBody.length;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReportV2>(DT).ToList();
             }
         }
@@ -15074,8 +13699,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentTableResultByLstPaymentID(FromBody.GetPaymentForAdmin fromBody)
-    {
+    public List<DBModel.PaymentReport> GetPaymentTableResultByLstPaymentID(FromBody.GetPaymentForAdmin fromBody) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -15107,8 +13731,7 @@ public class BackendDB
              "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
              "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode ";
 
-        for (int i = 0; i < fromBody.PaymentIDs.Count; i++)
-        {
+        for (int i = 0; i < fromBody.PaymentIDs.Count; i++) {
             parameters[i] = string.Format("@PaymentID{0}", i);
             DBCmd.Parameters.AddWithValue(parameters[i], fromBody.PaymentIDs[i]);
 
@@ -15118,24 +13741,20 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentTableResult(FromBody.GetPaymentForAdmin fromBody, int CompanyType, int LoginCompanyID)
-    {
+    public List<DBModel.PaymentReport> GetPaymentTableResult(FromBody.GetPaymentForAdmin fromBody, int CompanyType, int LoginCompanyID) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -15165,25 +13784,20 @@ public class BackendDB
              "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
              "WHERE P.CreateDate >= @StartDate And P.CreateDate <= @EndDate ";
 
-        if (fromBody.CompanyID != -99)
-        {//-99代表所有營運商(有選營運商)
+        if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
             SS += " And P.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ProviderCode != "0")
-        {//0代表所有供應商)(有選供應商)
+        if (fromBody.ProviderCode != "0") {//0代表所有供應商)(有選供應商)
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstOrderID.Count > 0)
-            {
+            if (LstOrderID.Count > 0) {
                 var parameters = new string[LstOrderID.Count];
-                for (int i = 0; i < LstOrderID.Count; i++)
-                {
+                for (int i = 0; i < LstOrderID.Count; i++) {
                     parameters[i] = string.Format("@OrderID{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstOrderID[i]);
                 }
@@ -15192,14 +13806,11 @@ public class BackendDB
             }
         }
 
-        if (!string.IsNullOrEmpty(fromBody.PaymentSerial))
-        {
+        if (!string.IsNullOrEmpty(fromBody.PaymentSerial)) {
             LstPaymentSerial = fromBody.PaymentSerial.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
-            if (LstPaymentSerial.Count > 0)
-            {
+            if (LstPaymentSerial.Count > 0) {
                 var parameters = new string[LstPaymentSerial.Count];
-                for (int i = 0; i < LstPaymentSerial.Count; i++)
-                {
+                for (int i = 0; i < LstPaymentSerial.Count; i++) {
                     parameters[i] = string.Format("@PaymentSerial{0}", i);
                     DBCmd.Parameters.AddWithValue(parameters[i], LstPaymentSerial[i]);
                 }
@@ -15208,13 +13819,11 @@ public class BackendDB
             }
         }
 
-        if (!string.IsNullOrEmpty(fromBody.UserIP))
-        {
+        if (!string.IsNullOrEmpty(fromBody.UserIP)) {
             SS += " And P.UserIP=@UserIP ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.ClientIP))
-        {
+        if (!string.IsNullOrEmpty(fromBody.ClientIP)) {
             SS += " And P.ClientIP=@ClientIP ";
         }
 
@@ -15229,29 +13838,24 @@ public class BackendDB
         DBCmd.Parameters.Add("@ClientIP", System.Data.SqlDbType.VarChar).Value = fromBody.ClientIP;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             returnValue = returnValue.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public List<DBModel.PaymentReport> GetPaymentTableResult2(FromBody.GetPayment fromBody, int LoginCompanyID)
-    {
+    public List<DBModel.PaymentReport> GetPaymentTableResult2(FromBody.GetPayment fromBody, int LoginCompanyID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.PaymentReport> returnValue = new List<DBModel.PaymentReport>();
@@ -15275,13 +13879,11 @@ public class BackendDB
              "And P.forCompanyID = @CompanyID";
 
 
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             SS += " And P.OrderID=@OrderID ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.PaymentSerial))
-        {
+        if (!string.IsNullOrEmpty(fromBody.PaymentSerial)) {
             SS += " And P.PaymentSerial=@PaymentSerial ";
         }
 
@@ -15296,29 +13898,24 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
 
-        if (!fromBody.ProcessStatus.Contains(99))
-        {
+        if (!fromBody.ProcessStatus.Contains(99)) {
             returnValue = returnValue.Where(w => fromBody.ProcessStatus.Contains(w.ProcessStatus)).ToList();
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public DBModel.CreatePatchPayment CreatePayment(int CompanyID, decimal Amount, string Description, string CurrencyType)
-    {
+    public DBModel.CreatePatchPayment CreatePayment(int CompanyID, decimal Amount, string Description, string CurrencyType) {
         String SS = String.Empty;
         DBModel.CreatePatchPayment returnValue = new DBModel.CreatePatchPayment();
 
@@ -15347,8 +13944,7 @@ public class BackendDB
 
         PaymentID = Convert.ToInt32(DBAccess.GetDBValue(Pay.DBConnStr, DBCmd));
 
-        if (PaymentID == 0)
-        {
+        if (PaymentID == 0) {
             //新增交易單失敗
             returnValue.PatchPaymentState = -2;
             return returnValue;
@@ -15357,8 +13953,7 @@ public class BackendDB
         #region 新建單 => 尚未提交
         PaymentSerial = "IP" + System.DateTime.Now.ToString("yyyyMMddHHmm") + (new string('0', 10 - PaymentID.ToString().Length) + PaymentID.ToString());
 
-        if (UpdatePaymentSerial2(PaymentSerial, PaymentID) == 0)
-        {
+        if (UpdatePaymentSerial2(PaymentSerial, PaymentID) == 0) {
             //建立單號失敗
             returnValue.PatchPaymentState = -2;
             return returnValue;
@@ -15374,8 +13969,7 @@ public class BackendDB
 
     }
 
-    public DBModel.CreatePatchPayment CreatePatchPayment(string oldPaymentSerial, decimal Amount, string PatchDescription)
-    {
+    public DBModel.CreatePatchPayment CreatePatchPayment(string oldPaymentSerial, decimal Amount, string PatchDescription) {
         String SS = String.Empty;
         DBModel.CreatePatchPayment returnValue = new DBModel.CreatePatchPayment();
         DBModel.PaymentTable PaymentModel;
@@ -15386,8 +13980,7 @@ public class BackendDB
 
         #region 查詢舊訂單狀態
 
-        if (PaymentModel == null)
-        {
+        if (PaymentModel == null) {
             //找不到舊交易單
             returnValue.PatchPaymentState = -1;
             return returnValue;
@@ -15415,8 +14008,7 @@ public class BackendDB
 
         PaymentID = InsertPayment(PaymentModel);
 
-        if (PaymentID == 0)
-        {
+        if (PaymentID == 0) {
             //新增交易單失敗
             returnValue.PatchPaymentState = -2;
             return returnValue;
@@ -15427,8 +14019,7 @@ public class BackendDB
         #region 新建單 => 尚未提交
         PaymentSerial = "IP" + System.DateTime.Now.ToString("yyyyMMddHHmm") + (new string('0', 10 - PaymentModel.PaymentID.ToString().Length) + PaymentModel.PaymentID.ToString());
 
-        if (UpdatePaymentSerial(PaymentSerial, PaymentModel.PaymentID) == 0)
-        {
+        if (UpdatePaymentSerial(PaymentSerial, PaymentModel.PaymentID) == 0) {
             //建立單號失敗
             returnValue.PatchPaymentState = -2;
             return returnValue;
@@ -15438,8 +14029,7 @@ public class BackendDB
         #endregion
         #endregion
 
-        if (!(PaymentModel.ProcessStatus == 2 || PaymentModel.ProcessStatus == 4))
-        {
+        if (!(PaymentModel.ProcessStatus == 2 || PaymentModel.ProcessStatus == 4)) {
             #region 將舊單改為失敗單
             UpdatePaymentSerialToFail(oldPaymentID);
             #endregion
@@ -15454,8 +14044,7 @@ public class BackendDB
 
     }
 
-    public static int UpdatePaymentCostRate(decimal CostRate, decimal CollectRate, string PaymentSerial)
-    {
+    public static int UpdatePaymentCostRate(decimal CostRate, decimal CollectRate, string PaymentSerial) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue = -1;
@@ -15472,8 +14061,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int UpdatePaymentSerialToFail(int PaymentID)
-    {
+    public static int UpdatePaymentSerialToFail(int PaymentID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -15488,8 +14076,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int UpdatePaymentSerial(string PaymentSerial, int PaymentID)
-    {
+    public static int UpdatePaymentSerial(string PaymentSerial, int PaymentID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -15505,8 +14092,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int UpdatePaymentSerial2(string PaymentSerial, int PaymentID)
-    {
+    public static int UpdatePaymentSerial2(string PaymentSerial, int PaymentID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -15522,8 +14108,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int UpdatePaymentPatchDescriptionAndConfirmAdminID(string PaymentSerial, string PatchDescription, int ConfirmAdminID)
-    {
+    public static int UpdatePaymentPatchDescriptionAndConfirmAdminID(string PaymentSerial, string PatchDescription, int ConfirmAdminID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int RetValue;
@@ -15540,8 +14125,7 @@ public class BackendDB
         return RetValue;
     }
 
-    public static int InsertPayment(DBModel.PaymentTable payment)
-    {
+    public static int InsertPayment(DBModel.PaymentTable payment) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         int PaymentID;
@@ -15582,8 +14166,7 @@ public class BackendDB
         return PaymentID;
     }
 
-    public DBModel.PaymentTable GetPaymentResultByPaymentSerial(string PaymentSerial)
-    {
+    public DBModel.PaymentTable GetPaymentResultByPaymentSerial(string PaymentSerial) {
         DBModel.PaymentTable returnValue = null;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -15597,10 +14180,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@PaymentSerial", System.Data.SqlDbType.VarChar).Value = PaymentSerial;
         DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentTable>(DT).First();
             }
         }
@@ -15608,8 +14189,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.PaymentReport GetPaymentReportByPaymentSerial(string PaymentSerial)
-    {
+    public DBModel.PaymentReport GetPaymentReportByPaymentSerial(string PaymentSerial) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -15645,10 +14225,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList().First();
             }
         }
@@ -15656,8 +14234,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.PaymentReport GetProxyProviderPaymentReportByPaymentSerial(string PaymentSerial)
-    {
+    public DBModel.PaymentReport GetProxyProviderPaymentReportByPaymentSerial(string PaymentSerial) {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -15692,10 +14269,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList().First();
             }
         }
@@ -15703,8 +14278,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdatePatmentResult ConfirmManualPayment(string PaymentSerial, int modifyStatus, int AdminID, string ProviderCode, string ServiceType, int GroupID)
-    {
+    public DBViewModel.UpdatePatmentResult ConfirmManualPayment(string PaymentSerial, int modifyStatus, int AdminID, string ProviderCode, string ServiceType, int GroupID) {
         DBViewModel.UpdatePatmentResult returnValue = new DBViewModel.UpdatePatmentResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -15716,25 +14290,21 @@ public class BackendDB
         //DBModel.ProxyProvider ProxyProviderModel = null;
         DBModel.ProxyProviderGroup ProxyProviderGroupModel = null;
         returnValue.Status = -1;
-        if (PaymentData == null)
-        {
+        if (PaymentData == null) {
             returnValue.Message = "订单资讯错误";
             return returnValue;
         }
 
-        if (PaymentData.ProcessStatus == 1 && PaymentData.SubmitType == 1)
-        {
+        if (PaymentData.ProcessStatus == 1 && PaymentData.SubmitType == 1) {
             ProviderModel = GetProviderCodeResult(ProviderCode);
 
-            if (ProviderModel == null)
-            {
+            if (ProviderModel == null) {
                 returnValue.Message = "尚未设定对应供应商";
                 return returnValue;
             }
 
             CompanyServiceModel = GetCompanyService(PaymentData.forCompanyID, ServiceType, PaymentData.CurrencyType);
-            if (CompanyServiceModel == null)
-            {
+            if (CompanyServiceModel == null) {
                 returnValue.Message = "商户尚未设定该支付通道";
                 return returnValue;
             }
@@ -15744,19 +14314,16 @@ public class BackendDB
             else
                 ProviderServiceModel = GetProviderServiceByProviderCodeAndServiceType(ProviderCode, ServiceType, PaymentData.CurrencyType);
 
-            if (ProviderServiceModel == null)
-            {
+            if (ProviderServiceModel == null) {
                 returnValue.Message = "供应商尚未设定该支付通道";
                 return returnValue;
             }
-            if (UpdatePaymentCostRate(ProviderServiceModel.CostRate, CompanyServiceModel.CollectRate, PaymentSerial) <= 0)
-            {
+            if (UpdatePaymentCostRate(ProviderServiceModel.CostRate, CompanyServiceModel.CollectRate, PaymentSerial) <= 0) {
                 returnValue.Message = "更改订单费率失败";
                 return returnValue;
             }
 
-            if (ProviderModel.First().CollectType == 1 && modifyStatus != 3)
-            {
+            if (ProviderModel.First().CollectType == 1 && modifyStatus != 3) {
                 //ProxyProviderModel = GetProxyProviderResult(ProviderCode);
                 //if (ProxyProviderModel == null) {
                 //    returnValue.Message = "尚未设定专属供应商费率";
@@ -15765,24 +14332,20 @@ public class BackendDB
 
                 ProxyProviderGroupModel = GetProxyProviderGroupByGroupID(ProviderCode, GroupID);
 
-                if (ProxyProviderGroupModel == null)
-                {
+                if (ProxyProviderGroupModel == null) {
                     returnValue.Message = "找不到专属供应商资料";
                     return returnValue;
                 }
 
-                if (ProxyProviderGroupModel.PaymentRate == 0)
-                {
+                if (ProxyProviderGroupModel.PaymentRate == 0) {
                     returnValue.Message = "尚未设定专属供应商费率";
                     return returnValue;
                 }
 
-                if (UpdatePaymentSerialByProxyProviderOrder(PaymentSerial, 8, ProviderCode, ServiceType) > 0)
-                {
+                if (UpdatePaymentSerialByProxyProviderOrder(PaymentSerial, 8, ProviderCode, ServiceType) > 0) {
 
 
-                    if (GetProxyProviderOrderByOrderSerial(PaymentSerial, 0) == null)
-                    {
+                    if (GetProxyProviderOrderByOrderSerial(PaymentSerial, 0) == null) {
 
                         InsertProxyProviderOrder(PaymentSerial, 0, 0, ProxyProviderGroupModel.PaymentRate, GroupID);
                     }
@@ -15790,14 +14353,10 @@ public class BackendDB
 
                     returnValue.Message = "上游审核中";
                     returnValue.Status = 0;
-                }
-                else
-                {
+                } else {
                     returnValue.Message = "修改订单状态失败";
                 }
-            }
-            else
-            {
+            } else {
 
                 //人工充值
                 SS = "spSetManualPayment";
@@ -15813,8 +14372,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0://成功
                         returnValue.Message = "审核完成";
                         returnValue.Status = 0;
@@ -15847,9 +14405,7 @@ public class BackendDB
                 }
 
             }
-        }
-        else
-        {
+        } else {
             returnValue.Message = "目前订单状态无法审核";
         }
 
@@ -15857,18 +14413,15 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBViewModel.UpdateWithdrawalResult SavePaymentConfirm(string PaymentSerial, decimal PatchAmount, string ProviderOrderID)
-    {
+    public DBViewModel.UpdateWithdrawalResult SavePaymentConfirm(string PaymentSerial, decimal PatchAmount, string ProviderOrderID) {
         DBViewModel.UpdateWithdrawalResult returnValue = new DBViewModel.UpdateWithdrawalResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var PaymentData = GetPaymentResultByPaymentSerial(PaymentSerial);
         //找不到訂單資訊
-        if (PaymentData != null && PaymentData.PaymentSerial != "")
-        {
-            if (PaymentData.ProcessStatus == 7)
-            {
+        if (PaymentData != null && PaymentData.PaymentSerial != "") {
+            if (PaymentData.ProcessStatus == 7) {
                 //扣除公司額度
                 SS = "spSetSupPayment";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -15881,8 +14434,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
                 returnValue = new DBViewModel.UpdateWithdrawalResult();
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0://成功
                         returnValue.Message = "審核完成";
                         break;
@@ -15912,16 +14464,12 @@ public class BackendDB
                 var newPaymentData = GetPaymentResultByPaymentSerial(PaymentSerial);
                 returnValue.Status = newPaymentData.ProcessStatus;
                 returnValue.PaymentAmount = newPaymentData.PaymentAmount;
-            }
-            else
-            {
+            } else {
                 returnValue.Message = "訂單狀態錯誤";
                 returnValue.Status = -1;
             }
 
-        }
-        else
-        {
+        } else {
             returnValue.Message = "訂單狀態錯誤";
             returnValue.Status = -1;
 
@@ -15935,18 +14483,15 @@ public class BackendDB
     /// </summary>
     /// <param name="PaymentSerial"></param>
     /// <returns></returns>
-    public string ChangePaymentProcessStatus(string PaymentSerial, int AdminID, Decimal RealAmount)
-    {
+    public string ChangePaymentProcessStatus(string PaymentSerial, int AdminID, Decimal RealAmount) {
         string returnValue = "其他错误";
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var PaymentData = GetPaymentResultByPaymentSerial(PaymentSerial);
         //找不到訂單資訊
-        if (PaymentData != null && PaymentData.PaymentSerial != "")
-        {
-            if (PaymentData.ProcessStatus == 1)
-            {
+        if (PaymentData != null && PaymentData.PaymentSerial != "") {
+            if (PaymentData.ProcessStatus == 1) {
                 //扣除公司額度
                 SS = "spSetPaymentToSuccess";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -15959,8 +14504,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0://成功
                         ReSendPaymentByManualPayment(PaymentSerial);
                         returnValue = "审核完成";
@@ -15985,15 +14529,11 @@ public class BackendDB
                         break;
                 }
 
-            }
-            else
-            {
+            } else {
                 returnValue = "订单状态错误";
             }
 
-        }
-        else
-        {
+        } else {
             returnValue = "订单不存在";
         }
 
@@ -16005,18 +14545,15 @@ public class BackendDB
     /// </summary>
     /// <param name="PaymentSerial"></param>
     /// <returns></returns>
-    public string ChangePaymentProcessStatusSuccessToFail(string PaymentSerial, int AdminID)
-    {
+    public string ChangePaymentProcessStatusSuccessToFail(string PaymentSerial, int AdminID) {
         string returnValue = "其他错误";
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var PaymentData = GetPaymentResultByPaymentSerial(PaymentSerial);
         //找不到訂單資訊
-        if (PaymentData != null && PaymentData.PaymentSerial != "")
-        {
-            if (PaymentData.ProcessStatus == 2 || PaymentData.ProcessStatus == 4)
-            {
+        if (PaymentData != null && PaymentData.PaymentSerial != "") {
+            if (PaymentData.ProcessStatus == 2 || PaymentData.ProcessStatus == 4) {
                 //扣除公司額度
                 SS = "spSetPaymentToFail";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -16028,8 +14565,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0://成功
                            //ReSendPaymentByManualPayment(PaymentSerial);
                         returnValue = "审核完成";
@@ -16054,15 +14590,11 @@ public class BackendDB
                         break;
                 }
 
-            }
-            else
-            {
+            } else {
                 returnValue = "订单状态错误";
             }
 
-        }
-        else
-        {
+        } else {
             returnValue = "订单不存在";
         }
 
@@ -16076,18 +14608,15 @@ public class BackendDB
     /// <param name="WithdrawSerial"></param>
     /// <param name="AdminID"></param>
     /// <returns></returns>
-    public string ChangeWithdrawalProcessStatus(string WithdrawSerial, int AdminID)
-    {
+    public string ChangeWithdrawalProcessStatus(string WithdrawSerial, int AdminID) {
         string returnValue = "其他错误";
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var WithdrawalData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
         //找不到訂單資訊
-        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "")
-        {
-            if (WithdrawalData.Status == 2)
-            {
+        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "") {
+            if (WithdrawalData.Status == 2) {
                 SS = "spReviewWithdrawaltoFail";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
                 DBCmd.CommandText = SS;
@@ -16099,12 +14628,10 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0:
                         returnValue = "审核完成";
-                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com"))
-                        {
+                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawalData.WithdrawSerial, false);
                         }
                         break;
@@ -16128,15 +14655,11 @@ public class BackendDB
                         break;
                 }
 
-            }
-            else
-            {
+            } else {
                 returnValue = "訂單狀態錯誤";
             }
 
-        }
-        else
-        {
+        } else {
             returnValue = "訂單狀態錯誤";
         }
 
@@ -16149,18 +14672,15 @@ public class BackendDB
     /// <param name="WithdrawSerial"></param>
     /// <param name="AdminID"></param>
     /// <returns></returns>
-    public string ChangeWithdrawalProcessStatusFailToSuccess(string WithdrawSerial, int AdminID)
-    {
+    public string ChangeWithdrawalProcessStatusFailToSuccess(string WithdrawSerial, int AdminID) {
         string returnValue = "其他错误";
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var WithdrawalData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
         //找不到訂單資訊
-        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "")
-        {
-            if (WithdrawalData.Status == 3)
-            {
+        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "") {
+            if (WithdrawalData.Status == 3) {
                 SS = "spReviewWithdrawalFailToSuccess";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
                 DBCmd.CommandText = SS;
@@ -16172,13 +14692,11 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                switch (DBreturn)
-                {
+                switch (DBreturn) {
                     case 0:
                         returnValue = "审核完成";
 
-                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com"))
-                        {
+                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawalData.WithdrawSerial, true);
                         }
                         break;
@@ -16202,15 +14720,11 @@ public class BackendDB
                         break;
                 }
 
-            }
-            else
-            {
+            } else {
                 returnValue = "訂單狀態錯誤";
             }
 
-        }
-        else
-        {
+        } else {
             returnValue = "訂單狀態錯誤";
         }
 
@@ -16223,18 +14737,15 @@ public class BackendDB
     /// <param name="WithdrawSerial"></param>
     /// <param name="AdminID"></param>
     /// <returns></returns>
-    public string CancelWithdrawalReviewToSuccess(string WithdrawSerial, int AdminID)
-    {
+    public string CancelWithdrawalReviewToSuccess(string WithdrawSerial, int AdminID) {
         string returnValue = "其他错误";
         String SS = String.Empty;
         SqlCommand DBCmd;
         int DBreturn = -6;//其他錯誤
         var WithdrawalData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
         //找不到訂單資訊
-        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "")
-        {
-            if (WithdrawalData.Status == 1)
-            {
+        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "") {
+            if (WithdrawalData.Status == 1) {
                 //扣除公司額度
                 SS = "spCancelWithdrawalReviewToSuccess";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -16245,8 +14756,7 @@ public class BackendDB
                 DBAccess.ExecuteDB(DBConnStr, DBCmd);
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                if (DBreturn == 0)
-                {
+                if (DBreturn == 0) {
                     returnValue = "审核完成";
                     //手動到後台下發
                     SS = " UPDATE Withdrawal  SET ConfirmByAdminID=@AdminID " +
@@ -16259,18 +14769,13 @@ public class BackendDB
                     DBCmd.Parameters.Add("@WithdrawSerial", SqlDbType.VarChar).Value = WithdrawSerial;
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     //如果不是后台申请提现,发送API回调
-                    if (WithdrawalData.FloatType != 0)
-                    {
-                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com"))
-                        {
+                    if (WithdrawalData.FloatType != 0) {
+                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawalData.WithdrawSerial, false);
                         }
                     }
-                }
-                else
-                {
-                    switch (DBreturn)
-                    {
+                } else {
+                    switch (DBreturn) {
                         case -1:
                             returnValue = "订单不存在";
                             break;
@@ -16297,14 +14802,10 @@ public class BackendDB
                             break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 returnValue = "訂單狀態錯誤";
             }
-        }
-        else
-        {
+        } else {
             returnValue = "訂單狀態錯誤";
         }
 
@@ -16317,8 +14818,7 @@ public class BackendDB
     /// <param name="WithdrawSerial"></param>
     /// <param name="AdminID"></param>
     /// <returns></returns>
-    public string CancelWithdrawalReviewToFail(string WithdrawSerial, int AdminID)
-    {
+    public string CancelWithdrawalReviewToFail(string WithdrawSerial, int AdminID) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16326,10 +14826,8 @@ public class BackendDB
         int DBreturn = -6;
         var WithdrawalData = GetWithdrawalByWithdrawSerial(WithdrawSerial);
         //找不到訂單資訊
-        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "")
-        {
-            if (WithdrawalData.Status == 1)
-            {
+        if (WithdrawalData != null && WithdrawalData.WithdrawSerial != "") {
+            if (WithdrawalData.Status == 1) {
                 //扣除公司額度
                 SS = "spCancelWithdrawalReviewToFail";
                 DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -16342,22 +14840,16 @@ public class BackendDB
 
                 DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                if (DBreturn == 0)
-                {
+                if (DBreturn == 0) {
                     returnValue = "审核完成";
                     //如果不是后台申请提现,发送API回调
-                    if (WithdrawalData.FloatType != 0)
-                    {
-                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com"))
-                        {
+                    if (WithdrawalData.FloatType != 0) {
+                        if (!(WithdrawalData.DownUrl == "https://www.baidu.com/" || WithdrawalData.DownUrl == "http://baidu.com")) {
                             ReSendWithdrawal(WithdrawalData.WithdrawSerial, false);
                         }
                     }
-                }
-                else
-                {
-                    switch (DBreturn)
-                    {
+                } else {
+                    switch (DBreturn) {
                         case -1:
                             returnValue = "订单不存在";
                             break;
@@ -16375,14 +14867,10 @@ public class BackendDB
                             break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 returnValue = "訂單狀態錯誤";
             }
-        }
-        else
-        {
+        } else {
             returnValue = "訂單狀態錯誤";
         }
 
@@ -16390,8 +14878,7 @@ public class BackendDB
     }
 
 
-    public int CancelWithdrawalProviderReview(string WithdrawSerial)
-    {
+    public int CancelWithdrawalProviderReview(string WithdrawSerial) {
 
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16411,8 +14898,7 @@ public class BackendDB
         return ReturnValue;
     }
 
-    public List<DBModel.Withdrawal> GetQueryWithdrawal()
-    {
+    public List<DBModel.Withdrawal> GetQueryWithdrawal() {
         List<DBModel.Withdrawal> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16429,10 +14915,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.Withdrawal>(DT).ToList();
             }
         }
@@ -16440,24 +14924,20 @@ public class BackendDB
         return returnValue;
     }
 
-    public APIResult ReSendPayment(string PaymentSerial, int CompanyID)
-    {
+    public APIResult ReSendPayment(string PaymentSerial, int CompanyID) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
         APIResult objReturnValue = new APIResult();
         var PaymentModel = GetPaymentReportByPaymentSerial(PaymentSerial);
 
-        if (PaymentModel == null)
-        {
+        if (PaymentModel == null) {
             objReturnValue.Status = ResultStatus.ERR;
             objReturnValue.Message = "查询不到此订单";
             return objReturnValue;
         }
 
-        if (CompanyID != 1)
-        {
-            if (PaymentModel.forCompanyID != CompanyID)
-            {
+        if (CompanyID != 1) {
+            if (PaymentModel.forCompanyID != CompanyID) {
                 objReturnValue.Status = ResultStatus.ERR;
                 objReturnValue.Message = "查询不到此订单";
                 return objReturnValue;
@@ -16483,8 +14963,7 @@ public class BackendDB
         _ReSendPayment.PaymentSerial = PaymentSerial;
         _ReSendPayment.Sign = sign;
 
-        System.Threading.Tasks.Task.Run(() =>
-        {
+        System.Threading.Tasks.Task.Run(() => {
             var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "ReSendPayment", JsonConvert.SerializeObject(_ReSendPayment));
         });
 
@@ -16493,8 +14972,7 @@ public class BackendDB
         return objReturnValue;
     }
 
-    public List<DBModel.PaymentTransferLog> PaymentRecord(string PaymentSerial)
-    {
+    public List<DBModel.PaymentTransferLog> PaymentRecord(string PaymentSerial) {
         List<DBModel.PaymentTransferLog> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16509,10 +14987,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@PaymentSerial", SqlDbType.VarChar).Value = PaymentSerial;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentTransferLog>(DT).ToList();
             }
         }
@@ -16520,8 +14996,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public APIResult ReSendPaymentByManualPayment(string PaymentSerial)
-    {
+    public APIResult ReSendPaymentByManualPayment(string PaymentSerial) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
 
@@ -16547,16 +15022,14 @@ public class BackendDB
 
         var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "ReSendPaymentByManualPayment", JsonConvert.SerializeObject(_ReSendPayment));
 
-        if (!string.IsNullOrEmpty(returnValue))
-        {
+        if (!string.IsNullOrEmpty(returnValue)) {
             objReturnValue = JsonConvert.DeserializeObject<APIResult>(returnValue);
         }
 
         return objReturnValue;
     }
 
-    public void ReSendWithdrawal(string WithdrawSerial, bool isReSendWithdraw)
-    {
+    public void ReSendWithdrawal(string WithdrawSerial, bool isReSendWithdraw) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
 
@@ -16579,8 +15052,7 @@ public class BackendDB
         _ReSendWithdraw.WithdrawSerial = WithdrawSerial;
         _ReSendWithdraw.Sign = sign;
 
-        System.Threading.Tasks.Task.Run(() =>
-        {
+        System.Threading.Tasks.Task.Run(() => {
             CodingControl.RequestJsonAPI(GPayApiUrl + "ReSendWithdraw", JsonConvert.SerializeObject(_ReSendWithdraw), WithdrawSerial, "");
         });
         //var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "ReSendWithdraw", JsonConvert.SerializeObject(_ReSendWithdraw), WithdrawSerial, "");
@@ -16594,8 +15066,7 @@ public class BackendDB
         //return objReturnValue;
     }
 
-    public APIResult ReSendWithdrawal2(string WithdrawSerial, bool isReSendWithdraw)
-    {
+    public APIResult ReSendWithdrawal2(string WithdrawSerial, bool isReSendWithdraw) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
 
@@ -16620,24 +15091,21 @@ public class BackendDB
         var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "ReSendWithdraw", JsonConvert.SerializeObject(_ReSendWithdraw), WithdrawSerial, "");
 
 
-        if (!string.IsNullOrEmpty(returnValue))
-        {
+        if (!string.IsNullOrEmpty(returnValue)) {
             objReturnValue = JsonConvert.DeserializeObject<APIResult>(returnValue);
         }
 
         return objReturnValue;
     }
 
-    public List<DBModel.CompanyPointHistory> WithdrawalRecord(string WithdrawalSerial)
-    {
+    public List<DBModel.CompanyPointHistory> WithdrawalRecord(string WithdrawalSerial) {
         List<DBModel.CompanyPointHistory> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
 
         DBModel.Withdrawal WithdrawalModel = GetWithdrawalByWithdrawSerial(WithdrawalSerial);
-        if (WithdrawalModel == null)
-        {
+        if (WithdrawalModel == null) {
             return returnValue;
         }
 
@@ -16651,10 +15119,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@TransactionID", SqlDbType.VarChar).Value = WithdrawalModel.WithdrawID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyPointHistory>(DT).ToList();
             }
         }
@@ -16663,9 +15129,136 @@ public class BackendDB
     }
     #endregion
 
+    #region ProviderServiceTier
+    public List<DBViewModel.ProviderServiceTierVM> GetProviderServiceTierList(
+    string ProviderCode, string ServiceType, string CurrencyType) {
+        List<DBViewModel.ProviderServiceTierVM> returnValue = null;
+        string SS;
+        SqlCommand DBCmd = null;
+        DataTable DT;
+
+        SS = " SELECT T.*, PC.ProviderName" +
+             " FROM ProviderServiceTier T WITH (NOLOCK)" +
+             " JOIN ProviderCode PC WITH (NOLOCK) ON PC.ProviderCode = T.ProviderCode" +
+             " WHERE T.ProviderCode = @ProviderCode" +
+             "   AND T.ServiceType  = @ServiceType" +
+             "   AND T.CurrencyType = @CurrencyType" +
+             "   AND T.ProviderChannelCode <> ''" +
+             " ORDER BY T.MinOnceAmount ASC";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DT = DBAccess.GetDB(DBConnStr, DBCmd);
+
+        if (DT != null && DT.Rows.Count > 0) {
+            returnValue = DataTableExtensions.ToList<DBViewModel.ProviderServiceTierVM>(DT).ToList();
+        }
+
+        return returnValue;
+    }
+
+    public int InsertProviderServiceTier(FromBody.ProviderServiceTier model) {
+        int returnValue;
+        string SS;
+        SqlCommand DBCmd = null;
+
+        SS = " INSERT INTO ProviderServiceTier" +
+             "     (ProviderCode, ServiceType, CurrencyType, ProviderChannelCode," +
+             "      MinOnceAmount, MaxOnceAmount, MaxDaliyAmount , CostRate, CostCharge, State, Description)" +
+             " VALUES" +
+             "     (@ProviderCode, @ServiceType, @CurrencyType, @ProviderChannelCode," +
+             "      @MinOnceAmount, @MaxOnceAmount, @MaxDaliyAmount, @CostRate, @CostCharge, 0, @Description)";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = model.ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = model.ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = model.CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = model.ProviderChannelCode;
+        DBCmd.Parameters.Add("@MinOnceAmount", SqlDbType.Decimal).Value = model.MinOnceAmount;
+        DBCmd.Parameters.Add("@MaxOnceAmount", SqlDbType.Decimal).Value = model.MaxOnceAmount;
+        DBCmd.Parameters.Add("@MaxDaliyAmount", SqlDbType.Decimal).Value = model.MaxDaliyAmount;
+        DBCmd.Parameters.Add("@CostRate", SqlDbType.Decimal).Value = model.CostRate;
+        DBCmd.Parameters.Add("@CostCharge", SqlDbType.Decimal).Value = model.CostCharge;
+        DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = string.IsNullOrEmpty(model.Description) ? "" : model.Description;
+
+        returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
+        return returnValue;
+    }
+
+    public int DeleteProviderServiceTier(string ProviderCode, string ServiceType, string CurrencyType, string ProviderChannelCode) {
+        int returnValue;
+        string SS;
+        SqlCommand DBCmd = null;
+        DataTable AffectedGPayRelationDT;
+
+        // 先查出哪些 GPayRelation 指著這筆 Tier
+        SS = "SELECT forCompanyID, ServiceType, CurrencyType" +
+             " FROM GPayRelation WITH (NOLOCK)" +
+             " WHERE ProviderCode = @ProviderCode AND ServiceType = @ServiceType" +
+             "   AND CurrencyType = @CurrencyType AND ProviderChannelCode = @ProviderChannelCode";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = ProviderChannelCode;
+        AffectedGPayRelationDT = DBAccess.GetDB(DBConnStr, DBCmd);
+
+        // 刪除指向這筆 Tier 的 GPayRelation
+        SS = "DELETE FROM GPayRelation" +
+             " WHERE ProviderCode = @ProviderCode AND ServiceType = @ServiceType" +
+             "   AND CurrencyType = @CurrencyType AND ProviderChannelCode = @ProviderChannelCode";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = ProviderChannelCode;
+        DBAccess.ExecuteDB(DBConnStr, DBCmd);
+
+        // 刪除 Tier
+        SS = "DELETE FROM ProviderServiceTier" +
+             " WHERE ProviderCode = @ProviderCode AND ServiceType = @ServiceType" +
+             "   AND CurrencyType = @CurrencyType AND ProviderChannelCode = @ProviderChannelCode";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = ProviderChannelCode;
+        returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
+
+        // 更新受影響的 GPayRelation Redis Cache
+        if (AffectedGPayRelationDT != null && AffectedGPayRelationDT.Rows.Count > 0) {
+            foreach (DataRow row in AffectedGPayRelationDT.Rows) {
+                int forCompanyID = (int)row["forCompanyID"];
+                string svcType = row["ServiceType"].ToString();
+                string currType = row["CurrencyType"].ToString();
+                RedisCache.GPayRelation.DeleteGPayRelation(forCompanyID, svcType, currType);
+            }
+        }
+
+        // 清除 ProviderServiceTier Redis Cache
+        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(ProviderCode, ServiceType, CurrencyType, ProviderChannelCode);
+
+        return returnValue;
+    }
+    #endregion
+
     #region TestPage
-    public List<DBViewModel.TestPageCompanyService> GetTestPageCompanyService(int CompanyID)
-    {
+    public List<DBViewModel.TestPageCompanyService> GetTestPageCompanyService(int CompanyID) {
         List<DBViewModel.TestPageCompanyService> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16685,10 +15278,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.TestPageCompanyService>(DT).ToList();
             }
         }
@@ -16696,8 +15287,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBViewModel.TestPageCompanyService> GetTestPageCompanyService2(int CompanyID)
-    {
+    public List<DBViewModel.TestPageCompanyService> GetTestPageCompanyService2(int CompanyID) {
         List<DBViewModel.TestPageCompanyService> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -16724,10 +15314,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.TestPageCompanyService>(DT).ToList();
             }
         }
@@ -16737,8 +15325,7 @@ public class BackendDB
     #endregion
 
     #region 左邊列表
-    public List<DBViewModel.LayoutLeftSideBarResult> GetPermissionTableResultbyAdminID(int AdminID)
-    {
+    public List<DBViewModel.LayoutLeftSideBarResult> GetPermissionTableResultbyAdminID(int AdminID) {
         List<DBViewModel.LayoutLeftSideBarResult> returnValue = null;
         string SS;
         SqlCommand DBCmd = null;
@@ -16764,10 +15351,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@AdminID", System.Data.SqlDbType.Int).Value = AdminID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.LayoutLeftSideBarResult>(DT) as List<DBViewModel.LayoutLeftSideBarResult>;
             }
         }
@@ -16777,8 +15362,7 @@ public class BackendDB
     #endregion
 
     #region 操作Log
-    public int InsertAdminOPLog(int CompanyID, int AdminID, int Type, string Description, string IP, string Fingerprint)
-    {
+    public int InsertAdminOPLog(int CompanyID, int AdminID, int Type, string Description, string IP, string Fingerprint) {
         string SS;
         int AdminOPID;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -16800,8 +15384,7 @@ public class BackendDB
         return AdminOPID;
     }
 
-    public List<DBViewModel.AdminOPLogVM> GetAdminOPLogResult(FromBody.GetAdminOPLogResult fromBody)
-    {
+    public List<DBViewModel.AdminOPLogVM> GetAdminOPLogResult(FromBody.GetAdminOPLogResult fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBViewModel.AdminOPLogVM> returnValue = new List<DBViewModel.AdminOPLogVM>();
@@ -16818,13 +15401,11 @@ public class BackendDB
              "        LEFT JOIN CompanyTable CT ON AOP.forCompanyID = CT.CompanyID " +
              " WHERE  DATEADD(HOUR, @TimeZone - 8, AOP.CreateDate) BETWEEN @StartDate AND @EndDate  ";
 
-        if (fromBody.Type != -1)
-        {
+        if (fromBody.Type != -1) {
             SS += "        AND AOP.Type = @Type ";
         }
 
-        if (fromBody.CompanyID != -99)
-        {
+        if (fromBody.CompanyID != -99) {
             SS += "        AND AOP.forCompanyID = @CompanyID ";
         }
 
@@ -16839,16 +15420,13 @@ public class BackendDB
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBViewModel.AdminOPLogVM>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
@@ -16857,8 +15435,7 @@ public class BackendDB
     #endregion
 
     #region ManualHistory
-    public List<DBModel.ProviderManualHistory> GetProviderManualHistoryResult(FromBody.GetProviderManualHistory fromBody)
-    {
+    public List<DBModel.ProviderManualHistory> GetProviderManualHistoryResult(FromBody.GetProviderManualHistory fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.ProviderManualHistory> returnValue = new List<DBModel.ProviderManualHistory>();
@@ -16876,8 +15453,7 @@ public class BackendDB
                  "               ON PC.ProviderCode = PMH.ProviderCode " +
                  " WHERE  PMH.CreateDate >= @StartDate And PMH.CreateDate <= @EndDate ";
 
-        if (fromBody.ProviderCode != "-99")
-        {
+        if (fromBody.ProviderCode != "-99") {
             SS += "        AND PMH.ProviderCode = @ProviderCode ";
         }
 
@@ -16889,24 +15465,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = fromBody.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.ProviderManualHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public DBModel.PaymentReport GetOrderByCompanyManualHistoryByFrozenPoint(string TransactionSerial)
-    {
+    public DBModel.PaymentReport GetOrderByCompanyManualHistoryByFrozenPoint(string TransactionSerial) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         DBModel.PaymentReport returnValue = null;
@@ -16914,8 +15486,7 @@ public class BackendDB
         DataTable DT;
         string SummaryDateString = string.Empty;
 
-        if (TransactionSerial.Contains("IP") || TransactionSerial.Contains("PD"))
-        {
+        if (TransactionSerial.Contains("IP") || TransactionSerial.Contains("PD")) {
             SS = "SELECT P.* ,  " +
                  "       PPG.GroupName, " +
                  "       S.ServiceTypeName, " +
@@ -16933,9 +15504,7 @@ public class BackendDB
                  " LEFT JOIN  ProxyProviderOrder PPO WITH(NOLOCK)  ON PPO.forOrderSerial= P.PaymentSerial AND PPO.Type=0" +
                  " LEFT JOIN  ProxyProviderGroup PPG WITH(NOLOCK)  ON PPO.GroupID= PPG.GroupID " +
                  " WHERE PaymentSerial=@TransactionSerial ";
-        }
-        else
-        {
+        } else {
             SS = " SELECT ProviderName,convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,convert(varchar,Withdrawal.FinishDate,120) as FinishDate2,Withdrawal.*,Amount AS OrderAmount,CompanyName,Status AS ProcessStatus,Withdrawal.WithdrawType as Accounting FROM Withdrawal WITH (NOLOCK) " +
                  " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
                  " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
@@ -16949,10 +15518,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@TransactionSerial", System.Data.SqlDbType.VarChar).Value = TransactionSerial;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList().First();
             }
         }
@@ -16960,8 +15527,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.PaymentReport GetOrderByCompanyManualHistory(string TransactionSerial)
-    {
+    public DBModel.PaymentReport GetOrderByCompanyManualHistory(string TransactionSerial) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         DBModel.PaymentReport returnValue = null;
@@ -16969,8 +15535,7 @@ public class BackendDB
         DataTable DT;
         string SummaryDateString = string.Empty;
 
-        if (TransactionSerial.Contains("IP") || TransactionSerial.Contains("PD"))
-        {
+        if (TransactionSerial.Contains("IP") || TransactionSerial.Contains("PD")) {
             SS = "SELECT P.* ,  " +
                  "       PDB.TransferRemark, " +
                  "       S.ServiceTypeName, " +
@@ -16987,9 +15552,7 @@ public class BackendDB
                  " LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
                  " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID " +
                  " WHERE PaymentSerial=@TransactionSerial ";
-        }
-        else
-        {
+        } else {
             SS = " SELECT ProviderName,convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,convert(varchar,Withdrawal.FinishDate,120) as FinishDate2,Withdrawal.*,Amount AS OrderAmount,CompanyName,Status AS ProcessStatus,Withdrawal.WithdrawType as Accounting FROM Withdrawal WITH (NOLOCK) " +
                  " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
                  " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
@@ -17003,10 +15566,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@TransactionSerial", System.Data.SqlDbType.VarChar).Value = TransactionSerial;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList().First();
             }
         }
@@ -17014,8 +15575,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.CompanyManualHistory> GetCompanyManualHistory(FromBody.GetCompanyManualHistory fromBody)
-    {
+    public List<DBModel.CompanyManualHistory> GetCompanyManualHistory(FromBody.GetCompanyManualHistory fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.CompanyManualHistory> returnValue = new List<DBModel.CompanyManualHistory>();
@@ -17039,8 +15599,7 @@ public class BackendDB
                   " WHERE  CMH.CreateDate >= @StartDate And CMH.CreateDate <= @EndDate ";
 
 
-        if (fromBody.forCompanyID != -99)
-        {
+        if (fromBody.forCompanyID != -99) {
             SS += " AND CMH.forCompanyID = @forCompanyID ";
         }
 
@@ -17053,24 +15612,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = fromBody.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyManualHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public int InsertProviderManualHistory(DBModel.ProviderManualHistory Model, int AdminID)
-    {
+    public int InsertProviderManualHistory(DBModel.ProviderManualHistory Model, int AdminID) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -4;
@@ -17096,8 +15651,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdatePrePaidPoint(string ProviderCode, string CurrencyType, decimal Amount)
-    {
+    public int UpdatePrePaidPoint(string ProviderCode, string CurrencyType, decimal Amount) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -99;
@@ -17120,8 +15674,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public void CreateProviderPoint(string CurrencyType, string ProviderCode)
-    {
+    public void CreateProviderPoint(string CurrencyType, string ProviderCode) {
         string SS;
         SqlCommand DBCmd = null;
 
@@ -17141,8 +15694,7 @@ public class BackendDB
         DBAccess.ExecuteDB(DBConnStr, DBCmd);
     }
 
-    public int InsertProviderManualHistoryByProfitAmount(DBModel.ProviderManualHistory Model, int AdminID)
-    {
+    public int InsertProviderManualHistoryByProfitAmount(DBModel.ProviderManualHistory Model, int AdminID) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -4;
@@ -17166,8 +15718,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertCompanyManualHistory(DBModel.CompanyManualHistory Model, int AdminID)
-    {
+    public int InsertCompanyManualHistory(DBModel.CompanyManualHistory Model, int AdminID) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -4;
@@ -17192,8 +15743,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int InsertManualHistory(DBModel.CompanyManualHistory Model, int AdminID)
-    {
+    public int InsertManualHistory(DBModel.CompanyManualHistory Model, int AdminID) {
         String SS = String.Empty;
         SqlCommand DBCmd;
         int returnValue = -4;
@@ -17221,25 +15771,19 @@ public class BackendDB
     #endregion
 
     #region 案件冻结
-    public int InsertFrozenPoint(DBModel.FrozenPoint Model, bool BoolActualProviderFrozenAmount, int AdminID)
-    {
+    public int InsertFrozenPoint(DBModel.FrozenPoint Model, bool BoolActualProviderFrozenAmount, int AdminID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         decimal ActualProviderFrozenAmount = Model.ProviderFrozenAmount;
-        if (ActualProviderFrozenAmount > 0)
-        {
-            if (BoolActualProviderFrozenAmount)
-            {
+        if (ActualProviderFrozenAmount > 0) {
+            if (BoolActualProviderFrozenAmount) {
                 var ProviderModel = GetProviderCodeResult(Model.forProviderCode);
-                if (ProviderModel != null)
-                {
-                    if (ProviderModel.First().CollectType == 1)
-                    {
+                if (ProviderModel != null) {
+                    if (ProviderModel.First().CollectType == 1) {
                         var ProxyGroupModel = GetProxyProviderGroupByGroupID(Model.forProviderCode, Model.GroupID);
                         var CompanyServiceModel = GetSelectedCompanyService(Model.forCompanyID, Model.ServiceType, Model.CurrencyType);
-                        if (ProxyGroupModel != null)
-                        {
+                        if (ProxyGroupModel != null) {
                             ActualProviderFrozenAmount = (decimal)((double)Model.ProviderFrozenAmount - ((double)Model.ProviderFrozenAmount * 0.01 * ((double)CompanyServiceModel.CollectRate - (double)ProxyGroupModel.PaymentRate)));
                         }
                     }
@@ -17275,8 +15819,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int ThawPoint(int FrozenID, int AdminID)
-    {
+    public int ThawPoint(int FrozenID, int AdminID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -17295,8 +15838,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.FrozenPointHistory> GetFrozenPointHistoryResult(FromBody.GetFrozenPointHistory fromBody)
-    {
+    public List<DBModel.FrozenPointHistory> GetFrozenPointHistoryResult(FromBody.GetFrozenPointHistory fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.FrozenPointHistory> returnValue = new List<DBModel.FrozenPointHistory>();
@@ -17317,38 +15859,30 @@ public class BackendDB
              " LEFT JOIN  CompanyTable CT WITH(NOLOCK) ON FP.forCompanyID = CT.CompanyID  " +
              " LEFT JOIN  ProviderCode PC WITH(NOLOCK) ON FP.forProviderCode = PC.ProviderCode " +
              " LEFT JOIN  ProxyProviderGroup PPG WITH(NOLOCK) ON PPG.GroupID = FP.GroupID ";
-        if (fromBody.Status == 1)
-        {
+        if (fromBody.Status == 1) {
             SS += " WHERE  FP.UnFrozenDate >= @StartDate And FP.UnFrozenDate <= @EndDate ";
-        }
-        else
-        {
+        } else {
             SS += " WHERE  FP.CreateDate >= @StartDate And FP.CreateDate <= @EndDate ";
         }
 
-        if (fromBody.PaymentSerial != "")
-        {
+        if (fromBody.PaymentSerial != "") {
             SS += "        AND FP.forPaymentSerial = @PaymentSerial ";
         }
 
 
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += "        AND FP.GroupID = @GroupID ";
         }
 
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += "        AND FP.forCompanyID = @CompanyID ";
         }
 
-        if (fromBody.ProviderCode != "-99")
-        {
+        if (fromBody.ProviderCode != "-99") {
             SS += "        AND FP.forProviderCode = @ProviderCode ";
         }
 
-        if (fromBody.Status != 99)
-        {
+        if (fromBody.Status != 99) {
             SS += "        AND FP.Status = @Status ";
         }
 
@@ -17364,24 +15898,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = fromBody.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.FrozenPointHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public List<DBModel.FrozenPointHistory> GetCompanyFrozenPointHistoryResult(FromBody.GetFrozenPointHistory fromBody)
-    {
+    public List<DBModel.FrozenPointHistory> GetCompanyFrozenPointHistoryResult(FromBody.GetFrozenPointHistory fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.FrozenPointHistory> returnValue = new List<DBModel.FrozenPointHistory>();
@@ -17392,20 +15922,17 @@ public class BackendDB
         SS = " SELECT FP.forPaymentSerial,FP.CompanyFrozenAmount,FP.Status,FP.BankCard,FP.BankCard,FP.BankName,FP.BankCardName " +
              " FROM   FrozenPoint FP WITH(NOLOCK) WHERE FP.CompanyFrozenAmount>0 ";
 
-        if (fromBody.PaymentSerial != "")
-        {
+        if (fromBody.PaymentSerial != "") {
             SS += "        AND FP.forPaymentSerial = @PaymentSerial ";
         }
 
 
-        if (fromBody.CompanyID != 0)
-        {
+        if (fromBody.CompanyID != 0) {
             SS += "        AND FP.forCompanyID = @CompanyID ";
         }
 
 
-        if (fromBody.Status != 99)
-        {
+        if (fromBody.Status != 99) {
             SS += "        AND FP.Status = @Status ";
         }
 
@@ -17417,24 +15944,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@Status", System.Data.SqlDbType.Int).Value = fromBody.Status;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.FrozenPointHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public DBModel.FrozenPointHistory GetSumFrozenPoint(string ProviderCode)
-    {
+    public DBModel.FrozenPointHistory GetSumFrozenPoint(string ProviderCode) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         DBModel.FrozenPointHistory returnValue = new DBModel.FrozenPointHistory();
@@ -17452,10 +15975,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.FrozenPointHistory>(DT).ToList().FirstOrDefault();
             }
         }
@@ -17463,8 +15984,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.FrozenPointHistory> GetFrozenPointHistoryByProxyProvider(FromBody.GetFrozenPointHistory fromBody)
-    {
+    public List<DBModel.FrozenPointHistory> GetFrozenPointHistoryByProxyProvider(FromBody.GetFrozenPointHistory fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.FrozenPointHistory> returnValue = new List<DBModel.FrozenPointHistory>();
@@ -17478,18 +15998,15 @@ public class BackendDB
              " LEFT JOIN  ProxyProviderGroup PPG ON PPG.GroupID = FP.GroupID " +
              " WHERE  FP.CreateDate >= @StartDate And FP.CreateDate <= @EndDate AND FP.forProviderCode = @ProviderCode  ";
 
-        if (fromBody.PaymentSerial != "")
-        {
+        if (fromBody.PaymentSerial != "") {
             SS += "        AND FP.forPaymentSerial = @PaymentSerial ";
         }
 
-        if (fromBody.Status != 99)
-        {
+        if (fromBody.Status != 99) {
             SS += "        AND FP.Status = @Status ";
         }
 
-        if (fromBody.GroupID != 0)
-        {
+        if (fromBody.GroupID != 0) {
             SS += "        AND PPG.GroupID = @GroupID ";
         }
 
@@ -17505,16 +16022,13 @@ public class BackendDB
         DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = fromBody.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.FrozenPointHistory>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
@@ -17523,8 +16037,7 @@ public class BackendDB
     #endregion
 
     #region 供應商專卡
-    public List<DBModel.CompanyWhiteList> GetCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody)
-    {
+    public List<DBModel.CompanyWhiteList> GetCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.CompanyWhiteList> returnValue = new List<DBModel.CompanyWhiteList>();
@@ -17543,24 +16056,20 @@ public class BackendDB
         DBCmd.Parameters.Add("@BankCardGUID", System.Data.SqlDbType.VarChar).Value = fromBody.BankCardGUID;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.CompanyWhiteList>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public int InsertCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody)
-    {
+    public int InsertCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody) {
         string WhiteListID;
         int returnValue = -1;
         string SS;
@@ -17579,8 +16088,7 @@ public class BackendDB
         DBCmd.Parameters.Add("@UserIdentity", SqlDbType.NVarChar).Value = fromBody.UserIdentity;
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = fromBody.Description;
         WhiteListID = DBAccess.GetDBValue(Pay.DBConnStr, DBCmd).ToString();
-        if (!string.IsNullOrEmpty(WhiteListID))
-        {
+        if (!string.IsNullOrEmpty(WhiteListID)) {
             SS = " INSERT INTO CompanyWhiteListProviderBankCard (WhiteListID, BankCardGUID) " +
                   " VALUES (@WhiteListID, @BankCardGUID)";
 
@@ -17596,8 +16104,7 @@ public class BackendDB
     }
 
 
-    public int UpdateCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody)
-    {
+    public int UpdateCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -17618,8 +16125,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody)
-    {
+    public int DeleteCompanyWhiteListProviderBankCard(FromBody.GetCompanyWhiteListProviderBankCard fromBody) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -17646,8 +16152,7 @@ public class BackendDB
     #endregion
 
     #region DownOrderTransferLog
-    public List<DBModel.DownOrderTransferLog> GetDownOrderTransferLogResult(FromBody.DownOrderTransferLogSet fromBody)
-    {
+    public List<DBModel.DownOrderTransferLog> GetDownOrderTransferLogResult(FromBody.DownOrderTransferLogSet fromBody) {
         List<DBModel.DownOrderTransferLog> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -17658,21 +16163,17 @@ public class BackendDB
              " WHERE DownOrderTransferLog.CompanyCode <> '5408' AND DownOrderTransferLog.CreateDate >= @StartDate And DownOrderTransferLog.CreateDate <= @EndDate";
 
 
-        if (fromBody.isErrorOrder != 99)
-        {
+        if (fromBody.isErrorOrder != 99) {
             SS += " AND isErrorOrder=@isErrorOrder ";
         }
 
-        if (fromBody.ProcessStatus != 99)
-        {
+        if (fromBody.ProcessStatus != 99) {
             SS += " And DownOrderTransferLog.Type=@Type ";
         }
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             SS += " And DownOrderTransferLog.DownOrderID=@OrderID ";
         }
-        if (!string.IsNullOrEmpty(fromBody.CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(fromBody.CompanyCode)) {
             SS += " And DownOrderTransferLog.CompanyCode=@CompanyCode ";
         }
 
@@ -17687,10 +16188,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@isErrorOrder", SqlDbType.Int).Value = fromBody.isErrorOrder;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.DownOrderTransferLog>(DT).ToList();
             }
         }
@@ -17698,8 +16197,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.DownOrderTransferLogV2> GetDownOrderTransferLogResultV2(FromBody.DownOrderTransferLogSetV2 fromBody)
-    {
+    public List<DBModel.DownOrderTransferLogV2> GetDownOrderTransferLogResultV2(FromBody.DownOrderTransferLogSetV2 fromBody) {
         List<DBModel.DownOrderTransferLogV2> returnValue = null;
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -17711,26 +16209,21 @@ public class BackendDB
         SS += " WHERE  DownOrderTransferLog.CreateDate >= @StartDate And DownOrderTransferLog.CreateDate <= @EndDate";
 
 
-        if (fromBody.isErrorOrder != 99)
-        {
+        if (fromBody.isErrorOrder != 99) {
             SS += " AND isErrorOrder=@isErrorOrder ";
         }
 
-        if (fromBody.ProcessStatus != 99)
-        {
+        if (fromBody.ProcessStatus != 99) {
             SS += " And DownOrderTransferLog.Type=@Type ";
         }
-        if (!string.IsNullOrEmpty(fromBody.OrderID))
-        {
+        if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             SS += " And DownOrderTransferLog.DownOrderID=@OrderID ";
         }
-        if (!string.IsNullOrEmpty(fromBody.CompanyCode))
-        {
+        if (!string.IsNullOrEmpty(fromBody.CompanyCode)) {
             SS += " And DownOrderTransferLog.CompanyCode=@CompanyCode ";
         }
 
-        if (!string.IsNullOrEmpty(fromBody.search.value))
-        {
+        if (!string.IsNullOrEmpty(fromBody.search.value)) {
             SS += " And (DownOrderTransferLog.DownOrderID like '%'+@SearchFilter+'%' OR  DownOrderTransferLog.Message like '%'+@SearchFilter+'%'  OR  CompanyTable.CompanyName like '%'+@SearchFilter+'%' ) ";
         }
 
@@ -17740,8 +16233,7 @@ public class BackendDB
         SS += " FROM T";
         #region 排序
 
-        switch (fromBody.columns[fromBody.order.First().column].data.ToString())
-        {
+        switch (fromBody.columns[fromBody.order.First().column].data.ToString()) {
             case "Message":
                 SS += " Order By T.Message ";
                 break;
@@ -17762,12 +16254,9 @@ public class BackendDB
                 break;
         }
 
-        if (fromBody.order.First().dir == "asc")
-        {
+        if (fromBody.order.First().dir == "asc") {
             SS += " ASC ";
-        }
-        else
-        {
+        } else {
             SS += " DESC ";
         }
         #endregion
@@ -17790,10 +16279,8 @@ public class BackendDB
         DBCmd.Parameters.Add("@pageSize", System.Data.SqlDbType.Int).Value = fromBody.length;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.DownOrderTransferLogV2>(DT).ToList();
             }
         }
@@ -17804,8 +16291,7 @@ public class BackendDB
 
     #region 黑名單
 
-    public int InsertBlackList(DBModel.BlackList Model, int AdminID)
-    {
+    public int InsertBlackList(DBModel.BlackList Model, int AdminID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -17827,8 +16313,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.BlackList> GetBlackListResult(FromBody.GetBlackList fromBody)
-    {
+    public List<DBModel.BlackList> GetBlackListResult(FromBody.GetBlackList fromBody) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.BlackList> returnValue = new List<DBModel.BlackList>();
@@ -17840,24 +16325,20 @@ public class BackendDB
              " FROM   BlackList  " +
              " WHERE  1=1 ";
 
-        if (fromBody.CompanyID != -99)
-        {
+        if (fromBody.CompanyID != -99) {
             SS += "        AND forCompanyID = @forCompanyID ";
         }
 
 
-        if (fromBody.UserIP != "")
-        {
+        if (fromBody.UserIP != "") {
             SS += "        AND UserIP = @UserIP ";
         }
 
-        if (fromBody.BankCard != "")
-        {
+        if (fromBody.BankCard != "") {
             SS += "        AND BankCard = @BankCard ";
         }
 
-        if (fromBody.BankCardName != "")
-        {
+        if (fromBody.BankCardName != "") {
             SS += "        AND BankCardName = @BankCardName ";
         }
 
@@ -17871,24 +16352,20 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.BlackList>(DT).ToList();
             }
         }
 
-        if (returnValue.Count == 0)
-        {
+        if (returnValue.Count == 0) {
             returnValue = null;
         }
 
         return returnValue;
     }
 
-    public int CancelBlackList(int FrozenID, int AdminID)
-    {
+    public int CancelBlackList(int FrozenID, int AdminID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -17907,8 +16384,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public DBModel.BlackList GetBlackListResult(int BlackListID)
-    {
+    public DBModel.BlackList GetBlackListResult(int BlackListID) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         DBModel.BlackList returnValue = new DBModel.BlackList();
@@ -17929,10 +16405,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.BlackList>(DT).ToList().First();
             }
         }
@@ -17942,8 +16416,7 @@ public class BackendDB
     #endregion
 
     #region 風控
-    public int RiskControlWithdrawalCount()
-    {
+    public int RiskControlWithdrawalCount() {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -17962,8 +16435,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public List<DBModel.RiskControlByPaymentSuccessCount> RiskControlByPaymentSuccessCount()
-    {
+    public List<DBModel.RiskControlByPaymentSuccessCount> RiskControlByPaymentSuccessCount() {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
         List<DBModel.RiskControlByPaymentSuccessCount> returnValue = null;
@@ -17979,10 +16451,8 @@ public class BackendDB
         DBCmd.CommandType = System.Data.CommandType.Text;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.RiskControlByPaymentSuccessCount>(DT).ToList();
                 InsertRiskControlPayment(returnValue);
             }
@@ -17991,13 +16461,11 @@ public class BackendDB
         return returnValue;
     }
 
-    public void InsertRiskControlPayment(List<DBModel.RiskControlByPaymentSuccessCount> data)
-    {
+    public void InsertRiskControlPayment(List<DBModel.RiskControlByPaymentSuccessCount> data) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
 
-        for (int i = 0; i < data.Count; i++)
-        {
+        for (int i = 0; i < data.Count; i++) {
             SS = " INSERT INTO RiskControlPaymentTable(forPaymentID)" +
           " SELECT PaymentID FROM PaymentTable PT" +
           " WHERE PT.PaymentID NOT IN(SELECT forPaymentID" +
@@ -18016,8 +16484,7 @@ public class BackendDB
 
     }
 
-    public List<DBModel.PaymentReport> GetRiskControlPayment()
-    {
+    public List<DBModel.PaymentReport> GetRiskControlPayment() {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -18053,10 +16520,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.PaymentReport>(DT).ToList();
             }
         }
@@ -18064,8 +16529,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public void InsertRiskControlWithdrawal(string CompanyCode, string BankCard, string BankCardName, string BankName)
-    {
+    public void InsertRiskControlWithdrawal(string CompanyCode, string BankCard, string BankCardName, string BankName) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
 
@@ -18081,8 +16545,7 @@ public class BackendDB
         DBAccess.ExecuteDB(DBConnStr, DBCmd);
     }
 
-    public List<DBModel.RiskControlWithdrawalTable> GetRiskControlWithdrawal()
-    {
+    public List<DBModel.RiskControlWithdrawalTable> GetRiskControlWithdrawal() {
 
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
@@ -18101,10 +16564,8 @@ public class BackendDB
 
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 
-        if (DT != null)
-        {
-            if (DT.Rows.Count > 0)
-            {
+        if (DT != null) {
+            if (DT.Rows.Count > 0) {
                 returnValue = DataTableExtensions.ToList<DBModel.RiskControlWithdrawalTable>(DT).ToList();
             }
         }
@@ -18114,8 +16575,7 @@ public class BackendDB
     #endregion
 
     #region 系統警示通知
-    public void InsertBotSendLog(string CompanyCode, string MsgContent)
-    {
+    public void InsertBotSendLog(string CompanyCode, string MsgContent) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd;
 
@@ -18134,8 +16594,7 @@ public class BackendDB
     #endregion
 
     #region 支付寶
-    public string UpdateAlipayImage(int CompanyID, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type)
-    {
+    public string UpdateAlipayImage(int CompanyID, byte[] ImageData, string _ImageName, string ModifyType, int ImageID, int Type) {
         int dbReturnImageID = -1;
         string returnStr = "";
         string SS;
@@ -18144,8 +16603,7 @@ public class BackendDB
         string FileExtension = _ImageName;
         string ImageName = string.Empty;
 
-        if (ModifyType == "create")
-        {
+        if (ModifyType == "create") {
             SS = " INSERT INTO ImageTable (CompanyCode,Type) " +
                  "   VALUES (@CompanyCode,3) " +
                  " SELECT @@IDENTITY ";
@@ -18154,8 +16612,7 @@ public class BackendDB
             DBCmd.CommandType = CommandType.Text;
             DBCmd.Parameters.Add("@CompanyCode", SqlDbType.VarChar).Value = CompanyCode;
             var DBReturn = DBAccess.GetDBValue(Pay.DBConnStr, DBCmd);
-            if (DBReturn != null)
-            {
+            if (DBReturn != null) {
                 dbReturnImageID = int.Parse(DBReturn.ToString());
                 ImageName = dbReturnImageID + "." + FileExtension;
 
@@ -18170,9 +16627,7 @@ public class BackendDB
                 DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = dbReturnImageID;
                 DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
             }
-        }
-        else if (ModifyType == "update")
-        {
+        } else if (ModifyType == "update") {
             ImageName = ImageID + "." + FileExtension;
 
             SS = " UPDATE ImageTable SET ImageName=@ImageName " +
@@ -18185,14 +16640,12 @@ public class BackendDB
             DBCmd.Parameters.Add("@ImageID", SqlDbType.Int).Value = ImageID;
             var DBReturn = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-            if (DBReturn > 0)
-            {
+            if (DBReturn > 0) {
                 dbReturnImageID = ImageID;
             }
         }
 
-        if (dbReturnImageID > 0)
-        {
+        if (dbReturnImageID > 0) {
             returnStr = ImageName;
             Pay.SaveFileWithForderName(ImageName, ImageData, "ProviderAlipay");
         }
@@ -18200,8 +16653,7 @@ public class BackendDB
         return returnStr;
     }
 
-    public int UpdateImageTableTransactionIDByImageID(int ImageID, string TransactionID)
-    {
+    public int UpdateImageTableTransactionIDByImageID(int ImageID, string TransactionID) {
         int returnValue;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -18219,8 +16671,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public string InsertProviderAlipay(FromBody.ProviderBankCardData companyAlipay)
-    {
+    public string InsertProviderAlipay(FromBody.ProviderBankCardData companyAlipay) {
         string returnValue = string.Empty;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -18228,14 +16679,12 @@ public class BackendDB
         SS = " INSERT INTO ProviderBankCard (BankCardGUID, forProviderCode, BankCardState, CurrencyType, Type, CardType, BankCardName, Description, AmountMax, TotalCreditValueDay, TotalCreditValueWeek, TotalCreditValueMonth, AmountMin, ServiceStartDate, ServiceEndDate) " +
                                   " VALUES (@BankCardGUID ,@ProviderCode, @BankCardState, @CurrencyType, @Type, @CardType, @BankCardName, @Description, @AmountMax, @TotalCreditValueDay, @TotalCreditValueWeek, @TotalCreditValueMonth, @AmountMin, @ServiceStartDate, @ServiceEndDate) ";
 
-        if (companyAlipay.AlipayArray.Length > 0)
-        {
+        if (companyAlipay.AlipayArray.Length > 0) {
             int index = 0;
 
             DBAccess.ExecuteTransDB(DBConnStr, T => {
 
-                foreach (var item in companyAlipay.AlipayArray)
-                {
+                foreach (var item in companyAlipay.AlipayArray) {
                     returnValue = System.Guid.NewGuid().ToString();
 
                     DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -18261,9 +16710,7 @@ public class BackendDB
                     index++;
                 }
             });
-        }
-        else
-        {
+        } else {
             returnValue = System.Guid.NewGuid().ToString();
 
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -18291,8 +16738,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int UpdateProviderAlipay(FromBody.ProviderBankCardData companyAlipay)
-    {
+    public int UpdateProviderAlipay(FromBody.ProviderBankCardData companyAlipay) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -18310,8 +16756,7 @@ public class BackendDB
              " , ServiceEndDate=@ServiceEndDate " +
              " WHERE BankCardGUID=@BankCardGUID ";
 
-        if (companyAlipay.AlipayArray.Length > 0)
-        {
+        if (companyAlipay.AlipayArray.Length > 0) {
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = CommandType.Text;
@@ -18331,9 +16776,7 @@ public class BackendDB
 
             returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 
-        }
-        else
-        {
+        } else {
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = CommandType.Text;
@@ -18356,8 +16799,7 @@ public class BackendDB
         return returnValue;
     }
 
-    public int DeleteProviderAlipay(FromBody.ProviderBankCardData companyAlipay)
-    {
+    public int DeleteProviderAlipay(FromBody.ProviderBankCardData companyAlipay) {
         int returnValue = -1;
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
@@ -18378,8 +16820,7 @@ public class BackendDB
     }
     #endregion
 
-    public string GetUserIP2()
-    {
+    public string GetUserIP2() {
         return CodingControl.GetUserIP();
     }
 
@@ -18389,8 +16830,7 @@ public class BackendDB
     /// <param name="CompanyID"></param>
     /// <param name="CurrencyType"></param>
     /// <returns></returns>
-    public DataTable GetCanUseCompanyPoint(int CompanyID, string CurrencyType)
-    {
+    public DataTable GetCanUseCompanyPoint(int CompanyID, string CurrencyType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
         System.Data.DataTable DT;
@@ -18425,8 +16865,7 @@ public class BackendDB
     }
 
     #region  RunPay
-    public APIResult RunPayTest(string PaymentSerial)
-    {
+    public APIResult RunPayTest(string PaymentSerial) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
 
@@ -18452,16 +16891,14 @@ public class BackendDB
         var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "RunPayTest", JsonConvert.SerializeObject(_ReSendPayment));
 
 
-        if (!string.IsNullOrEmpty(returnValue))
-        {
+        if (!string.IsNullOrEmpty(returnValue)) {
             objReturnValue = JsonConvert.DeserializeObject<APIResult>(returnValue);
         }
 
         return objReturnValue;
     }
 
-    public APIResult RunPayGetDepositByDownOrderID(string PaymentSerial)
-    {
+    public APIResult RunPayGetDepositByDownOrderID(string PaymentSerial) {
         string GPayApiUrl = System.Configuration.ConfigurationManager.AppSettings["GPayApiUrl"];
         string GPayBackendKey = System.Configuration.ConfigurationManager.AppSettings["GPayBackendKey"];
 
@@ -18487,16 +16924,14 @@ public class BackendDB
         var returnValue = CodingControl.RequestJsonAPI(GPayApiUrl + "RunPayGetDepositByDownOrderID", JsonConvert.SerializeObject(_ReSendPayment));
 
 
-        if (!string.IsNullOrEmpty(returnValue))
-        {
+        if (!string.IsNullOrEmpty(returnValue)) {
             objReturnValue = JsonConvert.DeserializeObject<APIResult>(returnValue);
         }
 
         return objReturnValue;
     }
 
-    public DBViewModel.UpdatePatmentResult ConfirmManualPaymentForRunPay(string PaymentSerial, int modifyStatus, int AdminID, string ProviderCode, string ServiceType, int GroupID)
-    {
+    public DBViewModel.UpdatePatmentResult ConfirmManualPaymentForRunPay(string PaymentSerial, int modifyStatus, int AdminID, string ProviderCode, string ServiceType, int GroupID) {
         DBViewModel.UpdatePatmentResult returnValue = new DBViewModel.UpdatePatmentResult();
         String SS = String.Empty;
         SqlCommand DBCmd;
@@ -18507,25 +16942,21 @@ public class BackendDB
         List<DBModel.Provider> ProviderModel = null;
         DBModel.ProxyProvider ProxyProviderModel = null;
         returnValue.Status = -1;
-        if (PaymentData == null)
-        {
+        if (PaymentData == null) {
             returnValue.Message = "订单资讯错误";
             return returnValue;
         }
 
-        if (PaymentData.ProcessStatus == 1 && PaymentData.SubmitType == 1)
-        {
+        if (PaymentData.ProcessStatus == 1 && PaymentData.SubmitType == 1) {
             ProviderModel = GetProviderCodeResult(ProviderCode);
 
-            if (ProviderModel == null)
-            {
+            if (ProviderModel == null) {
                 returnValue.Message = "尚未设定对应供应商";
                 return returnValue;
             }
 
             CompanyServiceModel = GetCompanyService(PaymentData.forCompanyID, ServiceType, PaymentData.CurrencyType);
-            if (CompanyServiceModel == null)
-            {
+            if (CompanyServiceModel == null) {
                 returnValue.Message = "商户尚未设定该支付通道";
                 return returnValue;
             }
@@ -18535,48 +16966,36 @@ public class BackendDB
             else
                 ProviderServiceModel = GetProviderServiceByProviderCodeAndServiceType(ProviderCode, ServiceType, PaymentData.CurrencyType);
 
-            if (ProviderServiceModel == null)
-            {
+            if (ProviderServiceModel == null) {
                 returnValue.Message = "供应商尚未设定该支付通道";
                 return returnValue;
             }
-            if (UpdatePaymentCostRate(ProviderServiceModel.CostRate, CompanyServiceModel.CollectRate, PaymentSerial) <= 0)
-            {
+            if (UpdatePaymentCostRate(ProviderServiceModel.CostRate, CompanyServiceModel.CollectRate, PaymentSerial) <= 0) {
                 returnValue.Message = "更改订单费率失败";
                 return returnValue;
             }
 
-            if (ProviderCode == "RunPay")
-            {
+            if (ProviderCode == "RunPay") {
                 var APIReturn = RunPayTest(PaymentSerial);
-                if (APIReturn.Status == ResultStatus.OK)
-                {
+                if (APIReturn.Status == ResultStatus.OK) {
                     UpdatePaymentSerialByProxyProviderOrder(PaymentSerial, 8, ProviderCode, ServiceType);
                     returnValue.Message = "审核完成";
                     returnValue.Status = 0;
-                }
-                else
-                {
+                } else {
                     returnValue.Message = JsonConvert.SerializeObject(APIReturn.Message);
                 }
-            }
-            else
-            {
-                if (ProviderModel.First().CollectType == 1 && modifyStatus != 3)
-                {
+            } else {
+                if (ProviderModel.First().CollectType == 1 && modifyStatus != 3) {
                     ProxyProviderModel = GetProxyProviderResult(ProviderCode);
-                    if (ProxyProviderModel == null)
-                    {
+                    if (ProxyProviderModel == null) {
                         returnValue.Message = "尚未设定专属供应商费率";
                         return returnValue;
                     }
 
-                    if (UpdatePaymentSerialByProxyProviderOrder(PaymentSerial, 8, ProviderCode, ServiceType) > 0)
-                    {
+                    if (UpdatePaymentSerialByProxyProviderOrder(PaymentSerial, 8, ProviderCode, ServiceType) > 0) {
 
 
-                        if (GetProxyProviderOrderByOrderSerial(PaymentSerial, 0) == null)
-                        {
+                        if (GetProxyProviderOrderByOrderSerial(PaymentSerial, 0) == null) {
 
                             InsertProxyProviderOrder(PaymentSerial, 0, 0, ProxyProviderModel.Rate, GroupID);
                         }
@@ -18587,14 +17006,10 @@ public class BackendDB
 
                         returnValue.Message = "上游审核中";
                         returnValue.Status = 0;
-                    }
-                    else
-                    {
+                    } else {
                         returnValue.Message = "修改订单状态失败";
                     }
-                }
-                else
-                {
+                } else {
 
                     //人工充值
                     SS = "spSetManualPayment";
@@ -18610,8 +17025,7 @@ public class BackendDB
                     DBAccess.ExecuteDB(DBConnStr, DBCmd);
                     DBreturn = (int)DBCmd.Parameters["@Return"].Value;
 
-                    switch (DBreturn)
-                    {
+                    switch (DBreturn) {
                         case 0://成功
                             returnValue.Message = "审核完成";
                             returnValue.Status = 0;
@@ -18647,9 +17061,7 @@ public class BackendDB
             }
 
 
-        }
-        else
-        {
+        } else {
             returnValue.Message = "目前订单状态无法审核";
         }
 
@@ -18666,8 +17078,7 @@ public class BackendDB
     /// <param name="CurrencyType"></param>
     /// <returns></returns>.
 
-    public DataTable GetCanUseCompanyPointDetail(int CompanyID, string CurrencyType)
-    {
+    public DataTable GetCanUseCompanyPointDetail(int CompanyID, string CurrencyType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
@@ -18706,26 +17117,22 @@ public class BackendDB
         return DT;
     }
 
-    public static string GetFingerprint()
-    {
+    public static string GetFingerprint() {
         HttpCookie cookie = HttpContext.Current.Request.Cookies["Fingerprint"];
 
-        if (cookie != null)
-        {
+        if (cookie != null) {
             return cookie.Value;
         }
 
         return "";
     }
 
-    public class APIResult
-    {
+    public class APIResult {
         public ResultStatus Status;
         public string Message;
     }
 
-    public enum ResultStatus
-    {
+    public enum ResultStatus {
         OK = 0,
         ERR = 1,
         SignErr = 2,

@@ -1930,11 +1930,10 @@
     }
 
     function editProviderWeight(objbtn) {
-
         var currencyType = $(objbtn).data('currencytype');
-        var ServiceType = $(objbtn).data('ServiceType');
+        var ServiceType = $(objbtn).data('servicetype');
         var companyid = $(objbtn).data('forcompanyid');
-   
+        
         api.getGPayRelationByCompany(companyid, ServiceType, currencyType, function (s, obj) {
             if (obj.ResultCode == 0) {
                 createGPayRelation(obj.ProviderServices);
