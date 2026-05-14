@@ -530,6 +530,8 @@
     <Content Include="Backend\assets\plugins\sweetalert\sweetalert2.min.js" />
     <Content Include="Backend\sendPayment.aspx" />
     <Content Include="Backend\sendPayment2.aspx" />
+    <Content Include="Backend\sendManualOrder.aspx" />
+    <Content Include="Backend\ManualOrder.cshtml" />
     <Content Include="Backend\wFrmRefresh.aspx" />
     <Content Include="Backend\wFrmRefresh2.aspx" />
     <Content Include="bin\Google.Authenticator.dll" />
@@ -637,6 +639,13 @@
     </Compile>
     <Compile Include="Backend\sendPayment2.aspx.designer.cs">
       <DependentUpon>sendPayment2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Backend\sendManualOrder.aspx.cs">
+      <DependentUpon>sendManualOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Backend\sendManualOrder.aspx.designer.cs">
+      <DependentUpon>sendManualOrder.aspx</DependentUpon>
     </Compile>
     <Compile Include="Backend\wFrmRefresh.aspx.cs">
       <DependentUpon>wFrmRefresh.aspx</DependentUpon>

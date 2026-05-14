@@ -12572,6 +12572,30 @@ public class BackendController : ApiController {
     }
     #endregion
 
+    #region ManualOrder
+    [HttpGet]
+    [HttpPost]
+    [ActionName("GetTestServiceTypeByCompanyID")]
+    public TestPageCompanyServiceResult GetTestServiceTypeByCompanyID([FromBody] FromBody.CompanyServiceSet fromBody) {
+        TestPageCompanyServiceResult retValue = new TestPageCompanyServiceResult();
+        BackendDB backendDB = new BackendDB();
+
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+            retValue.ResultCode = APIResult.enumResult.SessionError;
+            return retValue;
+        }
+
+        var serviceTypes = backendDB.GetTestPageCompanyService(fromBody.CompanyID);
+        if (serviceTypes != null) {
+            retValue.ServiceTypes = serviceTypes;
+        } else {
+            retValue.ResultCode = APIResult.enumResult.NoData;
+        }
+
+        return retValue;
+    }
+    #endregion // ManualOrder
+
     #region RunPay
 
     [HttpPost]

@@ -48,6 +48,7 @@
                             <a href="#相关 API" title="相关 API" smoothhashscroll="">相关 API</a>
                             <ul>
                                 <li><a href="#支付申请" title="支付申请" smoothhashscroll="">支付申請</a></li>
+                                <li><a href="#实名制支付申请" title="实名制支付申请" smoothhashscroll="">实名制支付申请</a></li>
                                 <li><a href="#支付异步回传结果" title="支付异步回传结果" smoothhashscroll="">支付异步回传结果</a></li>
                                 <li><a href="#支付订单查询" title="支付订单查询" smoothhashscroll="">支付订单查询</a></li>
                                 <li><a href="#銀行卡代付申请" title="銀行卡代付申请" smoothhashscroll="">銀行卡代付申请</a></li>
@@ -212,23 +213,14 @@
                     <td>UserName</td>
                     <td>String</td>
                     <td>否</td>
-                    <td>
-                        汇款人户名<br />
-                        <code>如果为实名制渠道需填写</code><br />
-                        <code>如果使用BitPay需填寫。請注意如果傳入的匯款人名稱與實際使用者轉帳的匯款人名稱不相同，就算轉帳了訂單也無法完成</code>
-                    </td>
+                    <td>汇款人户名</td>
                 </tr>
                 <tr>
                     <td>Description</td>
                     <td>String</td>
                     <td>否</td>
                     <td>
-                        額外資訊<br />
-                        <code>如果使用BitPay需填寫， 格式：銀行帳號；銀行代碼；訂單金額變更通知網址， 範例：3140371234；KTB；https://xxxxx.xxx/xxxxxxx</code><br />
-                        <a class="anchor hidden-xs" href="#Bitpay訂單金額變更通知" title="Bitpay訂單金額變更通知" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;Bitpay訂單金額變更通知(详见对照表)</a><br />
-                        <code>請注意如果傳入的銀行資訊與實際使用者轉帳的銀行資訊不相同，就算轉帳了訂單也無法完成</code><br />
-                        <code>BitPay 在建立訂單時，會依據申請的訂單金額隨機增加或減少最多 1.99 THB，以產生具有唯一性的實際付款金額。因此，系統需要提供「訂單金額變更通知網址」，以便將 BitPay 最終的實際付款金額回傳通知。</code><br />
-                        <code>**範例：**若使用者申請的金額為 100 THB，則 BitPay 實際產生的付款金額可能會落在 98.01 ~ 101.99 THB 之間</code>
+                        額外參數<br />
                     </td>
                 </tr>
                 <tr>
@@ -256,18 +248,17 @@
             </tbody>
         </table>
         <pre>
-        <code class="json">
-
+            <code class="json">
                 {
-                    ManageCode:'ManageCode',
-                    Currency:'CNY',
-                    Service:'AA001',
-                    CustomerIP:'111.111.11.111',
-                    OrderID:'OID001',
-                    OrderDate:'2020-01-01 01:01:01',
-                    OrderAmount:100.00,
-                    RevolveURL:'http://ReturnURL',
-                    Sign:'ManageCode=ManageCode&Currency=CNY&Service=AA001&OrderID=OID001&OrderAmount=100&OrderDate=2020-01-01 01:01:01&CompanyKey=CompanyKey'
+                ManageCode:'ManageCode',
+                Currency:'CNY',
+                Service:'AA001',
+                CustomerIP:'111.111.11.111',
+                OrderID:'OID001',
+                OrderDate:'2020-01-01 01:01:01',
+                OrderAmount:100,
+                RevolveURL:'http://ReturnURL',
+                Sign:'ManageCode=ManageCode&Currency=CNY&Service=AA001&OrderID=OID001&OrderAmount=100&OrderDate=2020-01-01 01:01:01&CompanyKey=CompanyKey'
                 }
             </code>
         </pre>
@@ -323,6 +314,206 @@
                 }
             </code>
         </pre>
+        <!--實名制支付申请-->
+        <h3 class="" id="实名制支付申请"><a class="anchor hidden-xs" href="#实名制支付申请" title="实名制支付申请" smoothhashscroll=""><span class="octicon octicon-link"></span></a>实名制支付申请</h3>
+        <p>URL: <code>{APIURL}/RequirePayingExtended</code></p>
+        <p>Method: <code>Post</code></p>
+        <p>Content-Type: <code>application/json</code></p>
+        <p><strong>Request</strong> :</p>
+        <p><strong>PS</strong> : 签章使用SHA256加密。系统会先验证必填栏位，验证通过后才进行下单流程，验证失败会回传 HTTP 400 及错误明细。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ManageCode</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>商户代码</td>
+                </tr>
+                <tr>
+                    <td>Currency</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td><a class="anchor hidden-xs" href="#币别" title="币别" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;币别(详见对照表)</a></td>
+                </tr>
+                <tr>
+                    <td>Service</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td><a class="anchor hidden-xs" href="#服务类型" title="服务类型" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;服务类型(详见对照表)</a></td>
+                </tr>
+                <tr>
+                    <td>CustomerIP</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>提单会员IP</td>
+                </tr>
+                <tr>
+                    <td>OrderID</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        订单编号<code>自行产生后带入</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OrderDate</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        订单日期<br />
+                        字串格式要求为 yyyy-MM-dd HH:mm:ss <code>ex:2018-01-01 11:22:33</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OrderAmount</td>
+                    <td>Number</td>
+                    <td>是</td>
+                    <td>
+                        商户订单金额<br />
+                        <code>只支援整数</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RevolveURL</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>回传网址</td>
+                </tr>
+                <tr>
+                    <td>UserName</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        汇款人户名<br />
+                        <code>請注意如果傳入的資訊與實際使用者轉帳的資訊不相同，就算轉帳了訂單也無法完成</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>BankCode</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>銀行代碼，<a href="#CUP05銀行列表">詳見 CUP05 銀行列表</a><br />
+                        <code>請注意如果傳入的資訊與實際使用者轉帳的資訊不相同，就算轉帳了訂單也無法完成</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>BankCardNo</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        銀行卡號<br />
+                        <code>請注意如果傳入的資訊與實際使用者轉帳的資訊不相同，就算轉帳了訂單也無法完成</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td>String</td>
+                    <td>否</td>
+                    <td>
+                        公用回传参数<br />
+                        商户如果支付请求时传递了该参数，则通知商户支付成功时会原样回传该参数(允许值为空字符串，如：
+                        State="")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sign</td>
+                    <td>String</td>
+                    <td>是</td>
+                    <td>
+                        签章:<code>需再使用SHA256加密后转大写</code><br>
+                        <code>OrderAmount如有小数时请将尾数0去除,100.00请带入100 (ex:100.00->100) 后加入签名中</code><br />
+                        格式:ManageCode=商户代码&Currency=币别&Service=服务类型&OrderID=订单编号&OrderAmount=商户订单金额&OrderDate=订单日期&CompanyKey=金钥<br />
+                        <code>只需依照格式内的参数加密，其余参数不加入签名。</code>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <pre>
+            <code class="json">
+                {
+                ManageCode:'ManageCode',
+                Currency:'THB',
+                Service:'CUP05',
+                CustomerIP:'111.111.11.111',
+                OrderID:'OID001',
+                OrderDate:'2020-01-01 01:01:01',
+                OrderAmount:100,
+                UserName:'John',
+                BankCode:'BBL',
+                BankCardNo:'1234567890',
+                RevolveURL:'http://ReturnURL',
+                Sign:'ManageCode=ManageCode&Currency=THB&Service=CUP05&OrderID=OID001&OrderAmount=100&OrderDate=2020-01-01 01:01:01&CompanyKey=CompanyKey'
+                }
+            </code>
+        </pre>
+        <p><strong>Response</strong></p>
+        <p><strong>PS</strong> : 驗證失敗時回傳 HTTP 400，驗證通過後回傳格式與支付申请相同。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PayingSerial</td>
+                    <td>String</td>
+                    <td>系统订单号</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>Number</td>
+                    <td>
+                        0=申请成功<br>
+                        1=申请失败<br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Message</td>
+                    <td>String</td>
+                    <td>其他资讯</td>
+                </tr>
+                <tr>
+                    <td>OrderAmount</td>
+                    <td>Number</td>
+                    <td>金额</td>
+                </tr>
+                <tr>
+                    <td>Url</td>
+                    <td>String</td>
+                    <td>支付网址</td>
+                </tr>
+            </tbody>
+        </table>
+        <pre>
+        <code class="json">
+                // 成功
+                {
+                    "PayingSerial":"PT2019122212480000000575",
+                    "OrderAmount":100.0000,
+                    "Status":0,
+                    "Message":null,
+                    "Url":"Url"
+                }
+
+                // 驗證失敗（HTTP 400）
+                {"Status":"ERR","Message":"參數驗證失敗","MissingFields":["UserName","BankCardNo"],"InvalidFields":[]}
+
+                // BankCode 不在有效列表（HTTP 400）
+                {"Status":"ERR","Message":"參數驗證失敗","MissingFields":[],"InvalidFields":["BankCode"]}
+            </code>
+        </pre>
+
         <!--支付異步回傳結果 -->
         <h3 class="" id="支付异步回传结果"><a class="anchor hidden-xs" href="#支付异步回传结果" title="支付异步回传结果" smoothhashscroll=""> <span class="octicon octicon-link"></span></a>支付异步回传结果</h3>
         <strong>PS : </strong>
@@ -1648,88 +1839,9 @@
             </tbody>
         </table>
 
-        <h3 class="" id="Bitpay訂單金額變更通知"><a class="anchor hidden-xs" href="#Bitpay訂單金額變更通知" title="Bitpay訂單金額變更通知" smoothhashscroll=""><span class="octicon octicon-link "></span></a>Bitpay訂單金額變更通知</h3>
-        <strong>PS : </strong>
-        <p>1 : API 需开启 Post 接口。 </p>
-        <p>2 : 回传格式为Json字串。 </p>
-        <p>3 : 成功后需回传 "SUCCESS"。 </p>
-        <p>4 : 如果未回传 "SUCCESS",系统会呼叫三次串接方API。 </p>
-        <p><strong>Response</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>PayingSerial</td>
-                    <td>Integer</td>
-                    <td>交易编号</td>
-                </tr>
-                <tr>
-                    <td>OrderAmount</td>
-                    <td>Number</td>
-                    <td>实际收单金额</td>
-                </tr>
-                <tr>
-                    <td>Service</td>
-                    <td>String</td>
-                    <td><a class="anchor hidden-xs" href="#服务类型" title="服务类型" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;服务类型(详见对照表)</a></td>
-                </tr>
-                <tr>
-                    <td>Currency</td>
-                    <td>String</td>
-                    <td><a class="anchor hidden-xs" href="#币别" title="币别" smoothhashscroll=""><span class="octicon octicon-link"></span>&nbsp;&nbsp;&nbsp;币别(详见对照表)</a></td>
-                </tr>
-                <tr>
-                    <td>ManageCode</td>
-                    <td>String</td>
-                    <td>商户代码</td>
-                </tr>
-                <tr>
-                    <td>OrderID</td>
-                    <td>String</td>
-                    <td>
-                        订单编号
-                    </td>
-                </tr>
-                <tr>
-                    <td>OrderDate</td>
-                    <td>String</td>
-                    <td>
-                        订单日期
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sign</td>
-                    <td>String</td>
-                    <td>
-                        签章:<code>需再使用SHA256加密后转大写</code><br>
-                        格式:ManageCode=商户代码&Currency=币别&Service=服务类型&OrderID=订单编号&OrderAmount=实际收单金额&OrderDate=订单日期&CompanyKey=金钥<br />
-                        <code>只需依照格式内的参数加密，其余参数不加入签名。</code>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <pre>
-        <code class="json">
-                {
-                    "PayingSerial": "PT001",
-                    "OrderAmount": 100.00,
-                    "Service": "AA001",
-                    "Currency":"CNY",
-                    "ManageCode": "ManageCode",
-                    "OrderID": "OID001",
-                    "OrderDate":"2020-01-01 01:01:01",
-                    "Sign":详细内容请见说明
-                }
-            </code>
         </pre>
 
-        <h3 class="" id="Bitpay銀行列表"><a class="anchor hidden-xs" href="#Bitpay銀行列表" title="Bitpay銀行列表" smoothhashscroll=""><span class="octicon octicon-link "></span></a>Bitpay銀行列表</h3>
+        <h3 class="" id="CUP05銀行列表"><a class="anchor hidden-xs" href="#CUP05銀行列表" title="CUP05銀行列表" smoothhashscroll=""><span class="octicon octicon-link "></span></a>CUP05銀行列表</h3>
         <table>
             <thead>
                 <tr>
@@ -1739,78 +1851,105 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>000</td>
-                    <td>PROMPTPAY</td>
-                </tr>
-                <tr>
-                    <td>002</td>
                     <td>BBL</td>
+                    <td>Bangkok Bank Public Company Limited</td>
                 </tr>
                 <tr>
-                    <td>004</td>
+                    <td>BOT</td>
+                    <td>Bank of Thailand</td>
+                </tr>
+                <tr>
                     <td>KBANK</td>
+                    <td>Kasikornbank Public Company Limited</td>
                 </tr>
                 <tr>
-                    <td>006</td>
                     <td>KTB</td>
+                    <td>Krung Thai Bank Public Company Limited</td>
                 </tr>
                 <tr>
-                    <td>011</td>
-                    <td>TMB</td>
-                </tr>
-                <tr>
-                    <td>014</td>
-                    <td>SCB</td>
-                </tr>
-                <tr>
-                    <td>022</td>
-                    <td>CIMB</td>
-                </tr>
-                <tr>
-                    <td>024</td>
-                    <td>UOB</td>
-                </tr>
-                <tr>
-                    <td>025</td>
-                    <td>BAY</td>
-                </tr>
-                <tr>
-                    <td>030</td>
-                    <td>GSB</td>
-                </tr>
-                <tr>
-                    <td>033</td>
-                    <td>GHB</td>
-                </tr>
-                <tr>
-                    <td>034</td>
-                    <td>BAAC</td>
-                </tr>
-                <tr>
-                    <td>067</td>
-                    <td>TISCO</td>
-                </tr>
-                <tr>
-                    <td>069</td>
-                    <td>KKP</td>
-                </tr>
-                <tr>
-                    <td>071</td>
-                    <td>TCRB</td>
-                </tr>
-                <tr>
-                    <td>073</td>
-                    <td>LHBANK</td>
-                </tr>
-                <tr>
-                    <td>074</td>
                     <td>TTB</td>
+                    <td>TMBThanachart Bank Public Company Limited</td>
                 </tr>
                 <tr>
-                    <td>USDT</td>
-                    <td>USDT</td>
+                    <td>SCB</td>
+                    <td>The Siam Commercial Bank Public Company Limited</td>
                 </tr>
-
+                <tr>
+                    <td>CITI</td>
+                    <td>Citibank Thailand</td>
+                </tr>
+                <tr>
+                    <td>SCBT</td>
+                    <td>Standard Chartered Thailand</td>
+                </tr>
+                <tr>
+                    <td>CIMBT</td>
+                    <td>CIMB Thai Bank Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>UOBT</td>
+                    <td>United Overseas Bank (Thai) Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>BAY</td>
+                    <td>Bank of Ayudhya Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>GSB</td>
+                    <td>Government Savings Bank</td>
+                </tr>
+                <tr>
+                    <td>GHB</td>
+                    <td>Government Housing Bank</td>
+                </tr>
+                <tr>
+                    <td>BAAC</td>
+                    <td>Bank for Agriculture and Agricultural Cooperatives</td>
+                </tr>
+                <tr>
+                    <td>EXIM</td>
+                    <td>Export-Import Bank of Thailand</td>
+                </tr>
+                <tr>
+                    <td>BOC</td>
+                    <td>Bank of China (Thai) Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>ISBT</td>
+                    <td>Islamic Bank of Thailand</td>
+                </tr>
+                <tr>
+                    <td>TISCO</td>
+                    <td>TISCO Bank Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>KKP</td>
+                    <td>Kiatnakin Phatra Bank Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>ICBCT</td>
+                    <td>Industrial and Commercial Bank of China (Thai) Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>TCD</td>
+                    <td>Thai Credit Retail Bank</td>
+                </tr>
+                <tr>
+                    <td>LHFG</td>
+                    <td>Land and Houses Bank Public Company Limited</td>
+                </tr>
+                <tr>
+                    <td>ANZ</td>
+                    <td>Australia and New Zealand Banking Group Limited</td>
+                </tr>
+                <tr>
+                    <td>SMBT</td>
+                    <td>Sumitomo Mitsui Trust Bank</td>
+                </tr>
+                <tr>
+                    <td>SME</td>
+                    <td>SME Development Bank</td>
+                </tr>
             </tbody>
         </table>
 

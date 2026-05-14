@@ -2420,6 +2420,24 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
+    this.getTestServiceTypeByCompanyID = function (companyID, cb) {
+        var url = APIUrl + "/GetTestServiceTypeByCompanyID";
+        var postData = {
+            BID: BID,
+            CompanyID: companyID
+        };
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb)
+                    cb(true, obj);
+            } else {
+                if (cb)
+                    cb(false, text);
+            }
+        });
+    };
+
     this.insertServiceType = function (ServiceTypeName, ServiceType, currencyType, allowCollect, allowPay, serviceSupplyType, servicePaymentType, cb) {
         var url = APIUrl + "/InsertServiceType";
 

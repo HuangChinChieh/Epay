@@ -1,9 +1,8 @@
-﻿@{ 
-    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ? HttpContext.Current.Request.Cookies["BID"].Value.ToString() : "";
     var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
     string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK) {
         CheckLoginPermission = "false";
     }
 
@@ -15,7 +14,7 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Favicon-->
     <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -942,9 +941,9 @@
         if (AdminObject.CompanyType == 0 && ParentCompanyID == 0) {
             $('#divCheckoutType').show();
         }
-      
+
         $('#btnCompanyServiceSave').on('click', function () {
-       
+
             if ($("#select_ServiceType").val()== 0) {
                 parent.warningAlert("请先选择渠道");
                 return;
@@ -1029,7 +1028,7 @@
                     parent.warningAlert("单笔交易费率(%)小于供应商费率");
                     return;
                 }
-               
+
                 if (toNumber(tmpMinOnceAmount) < MinOnceAmount) {
                     parent.warningAlert("单笔交易最低金额小于供应商最低金额");
                     return;
@@ -1050,7 +1049,7 @@
                     return;
                 }
 
-              
+
                 if (toNumber($("#input_MinOnceAmount").val()) < selectedServiceType.MinOnceAmount) {
                     parent.warningAlert("单笔交易最低金额 需超过或等于上线额");
                     $("#input_MinOnceAmount").focus();
@@ -1067,16 +1066,17 @@
                 //    return;
                 //}
             }
-            
+
             var lstProviderCode = [];
             for (var i = 0; i < $("#divGPayRelationDetail input:checked").length; i++) {
                 var provider = new Object();
                 provider.ProviderCode = $("#divGPayRelationDetail input:checked").eq(i).attr("id");
                 provider.Weight = $("#divGPayRelationDetail input:checked").eq(i).parent().parent().parent().find('.RelationModel_Weight').val();
+                provider.ProviderChannelCode = $("#divGPayRelationDetail input:checked").eq(i).data("provider-channel-code") || "";
                 lstProviderCode.push(provider);
-    
+
             }
-            
+
             var companyID = CompanyID;
             var ServiceType = $("#select_ServiceType").val().split("_")[0];
             var currencyType = $("#select_ServiceType").val().split("_")[1];
@@ -1090,7 +1090,7 @@
             var description = $('#Description').val();
             api.insertCompanyService(companyID, ServiceType, currencyType, collectRate, collectCharge, maxDaliyAmount, minOnceAmount, maxOnceAmount, checkoutType, state, lstProviderCode, description, function (success, obj) {
                 if (obj.ResultCode == 0) {
-            
+
                     TempData = {
                         "type": "afterModifyCompany",
                         "data": companyID
@@ -1203,17 +1203,17 @@
                 $('#notifyMinOnceAmount').text("");
                 $('#notifyMaxOnceAmount').text("");
                 $('#notifyMaxDaliyAmount').text("");
-       
+
             } else {
                 var _ServiceType = ServiceType.split("_")[0];
                 var _currencyType = ServiceType.split("_")[1];
-              
+
                 var selectedServiceTypeIndex = checkServiceTypeData.findIndex(function (d) { return d.ServiceType == _ServiceType && d.CurrencyType == _currencyType })
                 if (selectedServiceTypeIndex == -1) {
                     parent.warningAlert("渠道选择错误");
                 } else {
                     selectedServiceType = checkServiceTypeData[selectedServiceTypeIndex];
-              
+
                     if (selectedServiceType.isUpLine == 0) {
                         $('#notifyCollectRate').text("(最高需超过或等于" + selectedServiceType.CollectRate + "%" + ")");
                         $('#notifyCollectCharge').text("(最高需超过或等于" + toCurrency(selectedServiceType.CollectCharge) + ")");
@@ -1221,15 +1221,15 @@
                         $('#notifyMaxOnceAmount').text("(最高不可超过" + toCurrency(selectedServiceType.MaxOnceAmount) + ")");
                         //$('#notifyMaxDaliyAmount').text("(最高不可超过" + toCurrency(selectedServiceType.MaxDaliyAmount) + ")");
                     }
-            
+
 
                     //取得供應商渠道
                     //取得是否有以設定過的供應商,當為最高權限時才有此設定
                     // && selectedServiceType.isUpLine == 1
                     if (AdminObject.CompanyType == 0) {
-                      
+
                         $('#providerServiceSet').show();
-                 
+
                         $("#divGPayRelationDetail").html("&nbsp;&nbsp;&nbsp;&nbsp;尚未设定供应商");
                         api.getProviderServiceGPayRelationByCompany(_ServiceType, _currencyType, CompanyID, function (s, obj) {
                             if (obj.ResultCode == 0) {
@@ -1252,17 +1252,17 @@
                                     default:
                                         break;
                                 }
-                            }    
+                            }
                         });
                     }
-                       
+
 
                 }
-             
-          
+
+
             }
         }
-      
+
     }
 
 
@@ -1274,7 +1274,7 @@
             $.each(data, function (i, item) {
 
                 ProviderService = data[i].State == "0" ? '<span style="color:blue;">启用</span>' : '<span style="color:red;">停用</span>';
-         
+
                 switch (data[i].DeviceType) {
                     case 1:
                         DeviceType = "PC";
@@ -1295,7 +1295,7 @@
                     '<div class="card" >' +
                     '<div class="header" style="padding-bottom:0">';
 
-                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + data[i].ProviderCode + '" type="checkbox"><label for="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label></div>';
+                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + data[i].ProviderCode + '" type="checkbox" data-provider-channel-code="' + (data[i].ProviderChannelCode || '') + '"><label for="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label></div>';
 
                 strGPayRelationDetail += '</div > ' +
                     '<div class="body" style="padding-top:0"> ' +
@@ -1315,7 +1315,7 @@
         new AutoNumeric.multiple('.RelationModel_Weight', 'integerPos', { allowDecimalPadding: false, decimalPlaces: 0, minimumValue: 1, maximumValue: 100 });
 
         $('.RelationModel_checkbox').change(function () {
-    
+
             var CostRate = "";
             var CostCharge = "";
             var MinOnceAmount = "";
@@ -1349,7 +1349,7 @@
                     }
                 }
             }
-            
+
             $('#input_CollectCharge').val(toCurrency(CostCharge));
             $('#input_CollectRate').val(toCurrency(CostRate));
             $('#input_MinOnceAmount').val(toCurrency(MinOnceAmount));
@@ -1359,7 +1359,7 @@
         })
     }
 
-   
+
 </script>
 
 <body class="theme-cyan">
