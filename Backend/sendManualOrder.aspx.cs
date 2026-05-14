@@ -1,10 +1,15 @@
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
+using System.Web;
 
 namespace SkyPay.Backend
 {
@@ -23,8 +28,7 @@ namespace SkyPay.Backend
             if (string.IsNullOrWhiteSpace(amountStr) || string.IsNullOrWhiteSpace(serviceType) ||
                 string.IsNullOrWhiteSpace(currencyType) || string.IsNullOrWhiteSpace(companyIDStr))
             {
-                Response.Write(JsonConvert.SerializeObject(new { Status = -1, Message = "缺少必要參數" }));
-                Response.End();
+                WriteJson(new { Status = -1, Message = "缺少必要參數" });
                 return;
             }
 
@@ -32,62 +36,62 @@ namespace SkyPay.Backend
             int companyID;
             if (!decimal.TryParse(amountStr, out amount) || !int.TryParse(companyIDStr, out companyID))
             {
-                Response.Write(JsonConvert.SerializeObject(new { Status = -1, Message = "參數格式錯誤" }));
-                Response.End();
+                WriteJson(new { Status = -1, Message = "參數格式錯誤" });
                 return;
             }
 
             var result = CreateOrder(amount, serviceType, currencyType, companyID);
-            Response.Write(JsonConvert.SerializeObject(result));
+            WriteJson(result);
+        }
+
+        private void WriteJson(object obj)
+        {
+            Response.Write(JsonConvert.SerializeObject(obj));
             Response.End();
         }
 
         private object CreateOrder(decimal amount, string serviceType, string currencyType, int companyID)
         {
-            BackendDB backendDB = new BackendDB();
-            var companyModel = backendDB.GetCompanyWithKeyByCompanyID(companyID);
-
-            if (companyModel == null)
+            var company = GetCompanyByID(companyID);
+            if (company == null)
                 return new { Status = -1, Message = "找不到商戶資料" };
 
-            string apiUrl = Pay.IsTestSite
-                ? "http://gpay.dev4.mts.idv.tw/api/Gateway/RequirePayment"
-                : "https://www.richpay888.com/api/Gateway/RequirePayment";
+            string apiUrl = ConfigurationManager.AppSettings["ApiUrl"];
+            string returnUrl = apiUrl + "/ResultSuccess.cshtml";
+            string url = apiUrl + "/Gate/RequirePayingUrl";
 
-            string returnUrl = Pay.IsTestSite
-                ? "http://gpay.dev4.mts.idv.tw/api/ProviderResult/GPayTestCompanyReturn?result=AAA"
-                : "https://www.richpay888.com/api/ProviderResult/GPayTestCompanyReturn?result=AAA";
-
-            var companyCode = companyModel.CompanyCode;
-            var companyKey = companyModel.CompanyKey;
             var orderID = Guid.NewGuid().ToString("N");
             var orderDate = DateTime.Now;
+            var sign = GetGPaySign(orderID, amount, orderDate, serviceType, currencyType, company.CompanyCode, company.CompanyKey);
 
-            var sign = GetGPaySign(orderID, amount, orderDate, serviceType, currencyType, companyCode, companyKey);
+            var payload = new
+            {
+                ManageCode = company.CompanyCode,
+                Currency = currencyType,
+                Service = serviceType,
+                CustomerIP = GetClientIP(),
+                OrderID = orderID,
+                OrderDate = orderDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                OrderAmount = amount.ToString("#.##"),
+                RevolveURL = returnUrl,
+                UserName = "cs",
+                Description = string.Empty,
+                Sign = sign
+            };
 
-            var formData = new System.Collections.Specialized.NameValueCollection();
-            formData.Add("CompanyCode", companyCode);
-            formData.Add("CurrencyType", currencyType);
-            formData.Add("ServiceType", serviceType);
-            formData.Add("ClientIP", GetClientIP());
-            formData.Add("OrderID", orderID);
-            formData.Add("OrderDate", orderDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            formData.Add("OrderAmount", amount.ToString("#.##"));
-            formData.Add("ReturnURL", returnUrl);
-            formData.Add("Sign", sign);
+            string jsonBody = JsonConvert.SerializeObject(payload);
 
             try
             {
-                var responseText = PostFormData(apiUrl, formData);
+                var responseText = RequestJsonAPI(url, jsonBody);
 
-                // 閘道可能回傳 JSON（有 Url 欄位）或直接 HTML 跳轉
                 if (!string.IsNullOrWhiteSpace(responseText) &&
                     (responseText.TrimStart().StartsWith("{") || responseText.TrimStart().StartsWith("[")))
                 {
                     var json = JObject.Parse(responseText);
-                    string status = json["Status"]?.ToString() ?? json["status"]?.ToString() ?? "-1";
-                    string payUrl = json["Url"]?.ToString() ?? json["url"]?.ToString() ?? string.Empty;
-                    string message = json["Message"]?.ToString() ?? json["message"]?.ToString() ?? responseText;
+                    string status = json["Status"]?.ToString() ?? "-1";
+                    string payUrl = json["Url"]?.ToString() ?? string.Empty;
+                    string message = json["Message"]?.ToString() ?? responseText;
 
                     if (status == "0" && !string.IsNullOrEmpty(payUrl))
                         return new { Status = 0, OrderID = orderID, PayUrl = payUrl };
@@ -96,9 +100,7 @@ namespace SkyPay.Backend
                 }
                 else
                 {
-                    // 閘道直接回傳 HTML 頁面（部分渠道行為），此時無法取得純URL
-                    // 回傳臨時頁面 URL 讓客服使用
-                    return new { Status = -1, Message = "閘道未回傳支付連結，請改用舊版測試頁手動確認" };
+                    return new { Status = -1, Message = "閘道未回傳支付連結：" + responseText };
                 }
             }
             catch (Exception ex)
@@ -107,30 +109,67 @@ namespace SkyPay.Backend
             }
         }
 
-        private static string PostFormData(string url, System.Collections.Specialized.NameValueCollection data)
+        public static string RequestJsonAPI(string Url, string JsonString)
         {
-            using (var client = new HttpClient())
+            bool IsTestSite = Convert.ToBoolean(ConfigurationManager.AppSettings["IsTestSite"]);
+            string result = string.Empty;
+
+            using (HttpClientHandler handler = new HttpClientHandler())
+            using (HttpClient client = new HttpClient(handler))
             {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                var pairs = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>>();
-                foreach (string key in data)
-                    pairs.Add(new System.Collections.Generic.KeyValuePair<string, string>(key, data[key]));
-
-                using (var content = new FormUrlEncodedContent(pairs))
+                try
                 {
-                    var response = client.PostAsync(url, content).GetAwaiter().GetResult();
-                    return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, Url);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    request.Content = new StringContent(JsonString, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.SendAsync(request).GetAwaiter().GetResult();
+
+                    if (response != null && response.IsSuccessStatusCode)
+                        result = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    result = ex.Message;
                 }
             }
+
+            return result;
+        }
+
+        private class CompanyInfo
+        {
+            public string CompanyCode { get; set; }
+            public string CompanyKey { get; set; }
+        }
+
+        private static CompanyInfo GetCompanyByID(int companyID)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["DBConnStr"].ConnectionString;
+            string sql = "SELECT CompanyCode, CompanyKey FROM CompanyTable WITH (NOLOCK) WHERE CompanyID = @CompanyID";
+
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = companyID;
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return new CompanyInfo
+                        {
+                            CompanyCode = reader["CompanyCode"].ToString(),
+                            CompanyKey = reader["CompanyKey"].ToString()
+                        };
+                }
+            }
+            return null;
         }
 
         private static string GetClientIP()
         {
-            var request = HttpContext.Current.Request;
-            string ip = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            string ip = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             if (string.IsNullOrEmpty(ip))
-                ip = request.ServerVariables["REMOTE_ADDR"];
+                ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             return ip ?? "127.0.0.1";
         }
 
@@ -138,29 +177,25 @@ namespace SkyPay.Backend
                                            string serviceType, string currencyType,
                                            string companyCode, string companyKey)
         {
-            string signStr = "CompanyCode=" + companyCode;
-            signStr += "&CurrencyType=" + currencyType;
-            signStr += "&ServiceType=" + serviceType;
-            signStr += "&OrderID=" + orderID;
-            signStr += "&OrderAmount=" + orderAmount.ToString("#.##");
-            signStr += "&OrderDate=" + orderDate.ToString("yyyy-MM-dd HH:mm:ss");
-            signStr += "&CompanyKey=" + companyKey;
+            string signStr = "ManageCode=" + companyCode
+                + "&Currency=" + currencyType
+                + "&Service=" + serviceType
+                + "&OrderID=" + orderID
+                + "&OrderAmount=" + orderAmount.ToString("#.##")
+                + "&OrderDate=" + orderDate.ToString("yyyy-MM-dd HH:mm:ss")
+                + "&CompanyKey=" + companyKey;
 
-            return GetSHA256(signStr, false).ToUpper();
-        }
-
-        private static string GetSHA256(string data, bool base64 = true)
-        {
-            var bytes = Encoding.UTF8.GetBytes(data);
-            var hash = new System.Security.Cryptography.SHA256CryptoServiceProvider().ComputeHash(bytes);
-            if (base64) return Convert.ToBase64String(hash);
-            var sb = new StringBuilder();
-            foreach (var b in hash)
+            using (var sha256 = new SHA256CryptoServiceProvider())
             {
-                var s = b.ToString("x");
-                sb.Append(new string('0', 2 - s.Length) + s);
+                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(signStr));
+                var sb = new StringBuilder();
+                foreach (var b in hash)
+                {
+                    var s = b.ToString("x");
+                    sb.Append(s.Length == 1 ? "0" + s : s);
+                }
+                return sb.ToString().ToUpper();
             }
-            return sb.ToString();
         }
     }
 }

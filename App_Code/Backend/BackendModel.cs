@@ -252,6 +252,7 @@ public class DBModel {
         public string CurrencyType { get; set; }
         public int BackendWithdrawIPType { get; set; }
         public decimal Timezone { get; set; }
+        public int HasDownstream { get; set; }
     }
 
     public class CompanyWithKey {

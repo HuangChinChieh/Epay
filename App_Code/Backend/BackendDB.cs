@@ -464,7 +464,8 @@ public class BackendDB {
                      "               BackendWithdrawIPType," +
                      "               Timezone," +
                      "               DailyWithdrawalLimit," +
-                     "               CurrencyType)" +
+                     "               CurrencyType," +
+                     "               HasDownstream)" +
                      "   VALUES" +
                      "              (@CompanyType," +
                      "               @CompanyName," +
@@ -490,7 +491,8 @@ public class BackendDB {
                      "               @BackendWithdrawIPType," +
                      "               @Timezone," +
                      "               @DailyWithdrawalLimit," +
-                     "               @CurrencyType)" +
+                     "               @CurrencyType," +
+                     "               @HasDownstream)" +
                      "                      SELECT @@IDENTITY;";
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
@@ -519,6 +521,7 @@ public class BackendDB {
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = company.CurrencyType;
             DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
             DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
+            DBCmd.Parameters.Add("@HasDownstream", SqlDbType.Int).Value = company.HasDownstream;
 
             CompanyID = int.Parse(T.GetDBValue(DBCmd).ToString());
         });
@@ -537,7 +540,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone,DailyWithdrawalLimit=@DailyWithdrawalLimit " +
+        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone,DailyWithdrawalLimit=@DailyWithdrawalLimit,HasDownstream=@HasDownstream " +
              " WHERE CompanyID=@CompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -567,6 +570,7 @@ public class BackendDB {
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = company.Description;
         DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
         DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
+        DBCmd.Parameters.Add("@HasDownstream", SqlDbType.Int).Value = company.HasDownstream;
 
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 

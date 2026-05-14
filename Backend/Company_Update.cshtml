@@ -1028,6 +1028,18 @@
 
 
 
+                            <label>有下游 : </label>
+                            <div class="form-group">
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="HasDownstream" id="HasDownstream1" class="with-gap" value="1">
+                                    <label for="HasDownstream1">是</label>
+                                </div>
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="HasDownstream" id="HasDownstream0" class="with-gap" value="0">
+                                    <label for="HasDownstream0">否</label>
+                                </div>
+                            </div>
+
                             <label>后台IP检查 : </label>
                             <div class="form-group">
                                 <div class="radio inlineblock">
@@ -1218,6 +1230,7 @@
         $("input[name*='BackendWithdrawIPType'][value='" + EditData.data.BackendWithdrawIPType + "']").prop("checked", true);
         $("input[name*='BackendWithdrawType'][value='" + EditData.data.BackendWithdrawType + "']").prop("checked", true);
         $("input[name*='CheckCompanyWithdrawType'][value='" + EditData.data.CheckCompanyWithdrawType + "']").prop("checked", true);
+        $("input[name*='HasDownstream'][value='" + EditData.data.HasDownstream + "']").prop("checked", true);
         if (EditData.data.WithdrawAPIType != "0") {
             checkedWithdrawAPIType(EditData.data.WithdrawAPIType);
         }
@@ -1260,6 +1273,7 @@
             var providerGroupsData = $('input:checkbox:checked[name="proxyProviderGroup"]');
             var description = $("#Description").val();
             var DailyWithdrawalLimit = $("#DailyWithdrawalLimit").val();
+            var hasDownstream = $('input[name=HasDownstream]:checked').val();
 
             var providerGroups = "";
             if (providerGroupsData.length > 0) {
@@ -1295,7 +1309,7 @@
                 withdrawAPIType += parseInt($("#WithdrawAPIType2:checked").val());
             }
 
-            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, Timezone, DailyWithdrawalLimit,function (success, obj) {
+            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, Timezone, DailyWithdrawalLimit, hasDownstream, function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {

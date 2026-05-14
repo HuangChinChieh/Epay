@@ -188,6 +188,7 @@
     <Content Include="App_Readme\Transformer.NET\LICENSE.txt" />
     <Content Include="App_Readme\Transformer.NET\README.txt" />
     <Content Include="Backend\assets\css\fontawesome.css" />
+    <Content Include="Backend\sendManualOrder.aspx" />
     <Content Include="document\api_data.js" />
     <Content Include="document\api_project.js" />
     <Content Include="document\atelier-savanna-light.css" />
@@ -530,8 +531,6 @@
     <Content Include="Backend\assets\plugins\sweetalert\sweetalert2.min.js" />
     <Content Include="Backend\sendPayment.aspx" />
     <Content Include="Backend\sendPayment2.aspx" />
-    <Content Include="Backend\sendManualOrder.aspx" />
-    <Content Include="Backend\ManualOrder.cshtml" />
     <Content Include="Backend\wFrmRefresh.aspx" />
     <Content Include="Backend\wFrmRefresh2.aspx" />
     <Content Include="bin\Google.Authenticator.dll" />
@@ -575,6 +574,7 @@
     <Content Include="Backend\ProviderAlipay_Update.cshtml" />
     <Content Include="App_Data\ProviderSetting\withdrawBankTHB.json" />
     <Content Include="App_Data\ProviderSetting\withdrawBankINR.json" />
+    <Content Include="Backend\ManualOrder.cshtml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
@@ -611,6 +611,13 @@
     <Content Include="App_Code\Backend\BackendFunction.cs" />
     <Content Include="App_Code\Backend\BackendModel.cs" />
     <Content Include="App_Code\Redis\RedisCache.cs" />
+    <Compile Include="Backend\sendManualOrder.aspx.cs">
+      <DependentUpon>sendManualOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Backend\sendManualOrder.aspx.designer.cs">
+      <DependentUpon>sendManualOrder.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Ewin\Common.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -639,13 +646,6 @@
     </Compile>
     <Compile Include="Backend\sendPayment2.aspx.designer.cs">
       <DependentUpon>sendPayment2.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Backend\sendManualOrder.aspx.cs">
-      <DependentUpon>sendManualOrder.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Backend\sendManualOrder.aspx.designer.cs">
-      <DependentUpon>sendManualOrder.aspx</DependentUpon>
     </Compile>
     <Compile Include="Backend\wFrmRefresh.aspx.cs">
       <DependentUpon>wFrmRefresh.aspx</DependentUpon>

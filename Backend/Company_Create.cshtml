@@ -1029,6 +1029,18 @@
                             </div>
 
 
+                            <label>有下游 : </label>
+                            <div class="form-group">
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="HasDownstream" id="HasDownstream1" class="with-gap" value="1" checked="checked">
+                                    <label for="HasDownstream1">是</label>
+                                </div>
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="HasDownstream" id="HasDownstream0" class="with-gap" value="0">
+                                    <label for="HasDownstream0">否</label>
+                                </div>
+                            </div>
+
                             <label>后台IP检查 : </label>
                             <div class="form-group">
                                 <div class="radio inlineblock">
@@ -1264,8 +1276,9 @@
 
             var backendWithdrawType = $('input[name=BackendWithdrawType]:checked').val();
             var providerGroupID ="0";
+            var hasDownstream = $('input[name=HasDownstream]:checked').val();
 
-            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, function (success, obj) {
+            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {

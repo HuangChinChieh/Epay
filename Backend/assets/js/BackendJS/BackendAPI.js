@@ -4703,7 +4703,7 @@ var BackendAPI = function (BID, APIUrl) {
     };
 
 
-    this.insertCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, cb) {
+    this.insertCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, cb) {
         var url = APIUrl + "/InsertCompanyTableResult";
         var postData;
 
@@ -4728,7 +4728,8 @@ var BackendAPI = function (BID, APIUrl) {
             CurrencyType: currencyType,
             BackendWithdrawIPType: backendWithdrawIPType,
             Timezone: timezone,
-            DailyWithdrawalLimit: DailyWithdrawalLimit
+            DailyWithdrawalLimit: DailyWithdrawalLimit,
+            HasDownstream: hasDownstream
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -4746,7 +4747,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, timezone, DailyWithdrawalLimit, cb) {
+    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, cb) {
         var url = APIUrl + "/UpdateCompanyTableResult";
         var postData;
 
@@ -4775,7 +4776,8 @@ var BackendAPI = function (BID, APIUrl) {
             Description: description,
             BackendWithdrawIPType: backendWithdrawIPType,
             Timezone: timezone,
-            DailyWithdrawalLimit: DailyWithdrawalLimit
+            DailyWithdrawalLimit: DailyWithdrawalLimit,
+            HasDownstream: hasDownstream
         };
 
         callServiceByPost(url, postData, function (success, text) {

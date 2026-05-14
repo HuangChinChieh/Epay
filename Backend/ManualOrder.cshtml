@@ -17,6 +17,13 @@
     {
         CheckLoginPermission = "false";
     }
+
+    var companyListResult = bc.GetCompanyTableResult(BID);
+    var companyList = (companyListResult != null
+        && companyListResult.ResultCode == BackendController.APIResult.enumResult.OK
+        && companyListResult.CompanyResults != null)
+        ? companyListResult.CompanyResults.Where(c => c.HasDownstream == 0).ToList()
+        : new System.Collections.Generic.List<DBModel.Company>();
 }
 
 <head>
@@ -64,6 +71,7 @@
         }
         .block-header h2 { color: #565d67; font-weight: bold; }
         .block-header .col { padding: 16px; }
+        .tips { font-size: 12px; color: #565d67; padding-left: 12px; }
         .card .body {
             font-size: 14px !important;
             color: #575b61 !important;
@@ -87,7 +95,6 @@
         .theme-cyan .btn-primary:focus { background: #45B6B0; }
         #companySelectRow { padding: 16px 20px 8px; }
         #companySelectRow label { font-weight: bold; margin-right: 8px; font-size: 15px; }
-        #sel_company { min-width: 320px; }
 
         /* 建單結果 overlay */
         #resultOverlay {
@@ -104,20 +111,20 @@
             background: #fff;
             border-radius: 8px;
             padding: 32px 40px;
-            min-width: 500px;
-            max-width: 700px;
+            min-width: 520px;
+            max-width: 720px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
         #resultBox h4 { font-weight: bold; margin-bottom: 20px; color: #253856; }
-        #resultBox .info-row { margin-bottom: 10px; font-size: 14px; }
-        #resultBox .info-row span.label-text { font-weight: bold; display: inline-block; width: 100px; }
+        .info-row { margin-bottom: 10px; font-size: 14px; }
+        .info-row .lbl { font-weight: bold; display: inline-block; width: 90px; }
         #payUrlBox {
             display: flex;
             align-items: center;
-            margin-top: 16px;
+            margin-top: 12px;
             margin-bottom: 20px;
         }
-        #payUrlBox input {
+        #resPayUrl {
             flex: 1;
             font-size: 13px;
             padding: 8px;
@@ -137,267 +144,255 @@
         #btnCopyUrl:hover { background: #3a9e98; }
         #copyHint { font-size: 12px; color: green; margin-left: 8px; display: none; }
         #btnCloseResult {
-            background: #888;
-            color: #fff;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 4px;
-            cursor: pointer;
+            background: #888; color: #fff; border: none;
+            padding: 8px 24px; border-radius: 4px; cursor: pointer;
         }
         #btnCloseResult:hover { background: #666; }
-        .result-error { color: red; font-size: 14px; margin-top: 12px; }
     </style>
 </head>
 
-<body class="theme-cyan">
-    <div class="block-header paper-wrap">
-        <div class="row">
-            <div class="col col-lg-3 col-md-3 col-sm-3">
-                <h2>代客建單</h2>
+<div class="block-header paper-wrap">
+    <div class="row">
+        <div class="col col-lg-3 col-md-3 col-sm-3">
+            <h2>代客建單</h2>
+        </div>
+        <div class="col col-lg-9 col-md-9 col-sm-9">
+            <div class="tips">
+                <span>選擇商戶及渠道後輸入金額，點「建立訂單」取得支付連結，再將連結傳送給客戶</span>
             </div>
-            <div class="col col-lg-9 col-md-9 col-sm-9">
-                <div class="tips">
-                    <span>選擇商戶及渠道後輸入金額，點「建立訂單」即可取得支付連結，再將連結傳送給客戶</span>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <div id="companySelectRow">
+                        <label for="sel_company">商戶選擇：</label>
+                        <select id="sel_company" class="form-control" style="display:inline-block; width:auto; min-width:320px;">
+                            <option value="">-- 請選擇商戶 --</option>
+                            @foreach (var c in companyList)
+                            {
+                                <option value="@c.CompanyID" data-code="@c.CompanyCode">@c.CompanyCode - @c.CompanyName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="body">
+                    <div>
+                        <table class="table table-bordered table-striped table-hover dataTable nowrap" style="width:100%" id="dataTable"></table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <div id="companySelectRow">
-                            <label for="sel_company">商戶選擇：</label>
-                            <select id="sel_company" class="form-control" style="display:inline-block; width:auto;">
-                                <option value="">-- 請選擇商戶 --</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <div>
-                            <table class="table table-bordered table-striped table-hover dataTable nowrap" style="width:100%" id="dataTable"></table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- 建單結果 overlay -->
+<div id="resultOverlay">
+    <div id="resultBox">
+        <h4>訂單建立成功，請將支付連結傳送給客戶</h4>
+        <div class="info-row"><span class="lbl">商戶代碼</span><span id="resCompanyCode"></span></div>
+        <div class="info-row"><span class="lbl">訂單號</span><span id="resOrderID"></span></div>
+        <div class="info-row"><span class="lbl">支付類型</span><span id="resServiceType"></span></div>
+        <div class="info-row"><span class="lbl">金額</span><span id="resAmount"></span></div>
+        <div class="info-row"><span class="lbl">幣別</span><span id="resCurrency"></span></div>
+        <div class="info-row"><span class="lbl">支付連結</span></div>
+        <div id="payUrlBox">
+            <input type="text" id="resPayUrl" readonly />
+            <button id="btnCopyUrl" onclick="copyUrl()">複製連結</button>
+            <button id="btnOpenUrl" onclick="openUrl()" style="margin-left:8px; padding:8px 16px; background:#253856; color:#fff; border:none; border-radius:4px; cursor:pointer; white-space:nowrap;">開啟連結</button>
+            <span id="copyHint">已複製</span>
         </div>
+        <button id="btnCloseResult" onclick="closeResult()">關閉</button>
     </div>
+</div>
 
-    <!-- 建單結果 overlay -->
-    <div id="resultOverlay">
-        <div id="resultBox">
-            <h4>訂單建立成功，請將以下支付連結傳送給客戶</h4>
-            <div class="info-row"><span class="label-text">商戶代碼：</span><span id="resCompanyCode"></span></div>
-            <div class="info-row"><span class="label-text">訂單號：</span><span id="resOrderID"></span></div>
-            <div class="info-row"><span class="label-text">支付類型：</span><span id="resServiceType"></span></div>
-            <div class="info-row"><span class="label-text">金額：</span><span id="resAmount"></span></div>
-            <div class="info-row"><span class="label-text">支付連結：</span></div>
-            <div id="payUrlBox">
-                <input type="text" id="resPayUrl" readonly />
-                <button id="btnCopyUrl" onclick="copyUrl()">複製連結</button>
-                <span id="copyHint">已複製</span>
-            </div>
-            <button id="btnCloseResult" onclick="closeResult()">關閉</button>
-        </div>
-    </div>
+<script>
+    var AdminObject;
+    var api;
+    var dataTable = null;
+    var selectedCompanyID = null;
+    var selectedCompanyCode = '';
 
-    <script>
-        var dataTable = null;
-        var selectedCompanyID = null;
-        var selectedCompanyCode = '';
+    $(document).ready(function () {
+        if ('@CheckLoginPermission' == 'false') {
+            location.href = "Login.cshtml";
+            return;
+        }
 
-        $(document).ready(function () {
-            if ('@CheckPermission' == 'false') {
-                parent.errorAlertCallback("权限不足", function () {
-                    parent.GoPage("Home");
-                    parent.CloseActivePage(window.frameElement.id.split('_')[1]);
-                });
+        if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        pageLoad();
+    });
+
+    function pageLoad() {
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+
+        document.getElementById('sel_company').addEventListener('change', function () {
+            var val = this.value;
+            if (val) {
+                selectedCompanyID = parseInt(val);
+                var opt = this.options[this.selectedIndex];
+                selectedCompanyCode = opt.getAttribute('data-code') || '';
+                loadServiceTypes(selectedCompanyID);
+            } else {
+                selectedCompanyID = null;
+                selectedCompanyCode = '';
+                clearTable();
             }
-            pageLoad();
         });
 
-        function pageLoad() {
-            if ('@CheckLoginPermission' == 'false') {
-                location.href = "Login.cshtml";
+        parent.wrapperFadeOut();
+    }
+
+    function loadServiceTypes(companyID) {
+        clearTable();
+        api.getTestServiceTypeByCompanyID(companyID, function (s, o) {
+            if (s && o.ResultCode == 0 && o.ServiceTypes && o.ServiceTypes.length > 0) {
+                buildTable(o.ServiceTypes);
+            } else if (s && (o.ResultCode == 5 || !o.ServiceTypes || o.ServiceTypes.length == 0)) {
+                parent.warningAlert("此商戶尚未設定渠道");
+            } else {
+                parent.warningAlert("載入渠道資料失敗");
             }
+        });
+    }
 
-            AdminObject = parent.AdminObject;
-            api = parent.api;
+    function clearTable() {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+        $('#dataTable').empty();
+    }
 
-            loadCompanyList();
-
-            $('#sel_company').on('change', function () {
-                var val = $(this).val();
-                if (val) {
-                    var opt = $(this).find('option:selected');
-                    selectedCompanyID = parseInt(val);
-                    selectedCompanyCode = opt.data('code');
-                    loadServiceTypes(selectedCompanyID);
-                } else {
-                    selectedCompanyID = null;
-                    selectedCompanyCode = '';
-                    clearTable();
-                }
-            });
-
-            parent.wrapperFadeOut();
-        }
-
-        function loadCompanyList() {
-            api.getCompanyTableResult(function (s, o) {
-                if (s && o.ResultCode == 0) {
-                    var $sel = $('#sel_company');
-                    $sel.empty().append('<option value="">-- 請選擇商戶 --</option>');
-                    $.each(o.CompanyResults, function (i, c) {
-                        $sel.append('<option value="' + c.CompanyID + '" data-code="' + c.CompanyCode + '">'
-                            + c.CompanyCode + ' - ' + c.CompanyName + '</option>');
-                    });
-                } else {
-                    parent.warningAlert("無法載入商戶列表");
-                }
-            });
-        }
-
-        function loadServiceTypes(companyID) {
-            clearTable();
-            api.getTestServiceTypeByCompanyID(companyID, function (s, o) {
-                if (s && o.ResultCode == 0) {
-                    buildTable(o.ServiceTypes);
-                } else if (s && o.ResultCode == 5) {
-                    parent.warningAlert("此商戶尚未設定渠道");
-                } else {
-                    parent.warningAlert("載入渠道資料失敗");
-                }
-                parent.wrapperFadeOut();
-            });
-        }
-
-        function clearTable() {
-            if (dataTable) {
-                dataTable.destroy();
-                dataTable = null;
-            }
-            $('#dataTable').empty();
-        }
-
-        function buildTable(data) {
-            dataTable = $('#dataTable').DataTable({
-                data: data,
-                columns: [
-                    {
-                        title: "操作",
-                        data: null,
-                        render: function () {
-                            return '<input class="input_amount" placeholder="輸入金額" style="width:120px;" />' +
-                                   '<button class="btn btn-sm btn-primary" style="margin-left:4px;" onclick="createOrder(this)">建立訂單</button>';
-                        }
-                    },
-                    { title: "支付類型", data: 'ServiceTypeName' },
-                    { title: "支付代碼", data: 'ServiceType' },
-                    { title: "幣別", data: 'CurrencyType' },
-                    { title: "手續費(%)", data: 'CollectRate' },
-                    {
-                        title: "最低金額", data: 'MinOnceAmount',
-                        render: function (d) { return toCurrency(d); }
-                    },
-                    {
-                        title: "最高金額", data: 'MaxOnceAmount',
-                        render: function (d) { return toCurrency(d); }
-                    },
-                    {
-                        title: "商戶狀態", data: 'State',
-                        render: function (d) {
-                            return d == 0 ? '<span style="color:green;">啟用</span>' : '<span style="color:red;">停用</span>';
-                        }
-                    },
-                    {
-                        title: "供應商狀態", data: 'ProviderState',
-                        render: function (d) {
-                            return d == 0 ? '<span style="color:green;">啟用</span>' : '<span style="color:red;">停用</span>';
-                        }
-                    }
-                ],
-                info: false,
-                scrollX: true,
-                autoWidth: false,
-                language: chineseTableLang
-            });
-        }
-
-        function createOrder(btn) {
-            if (!selectedCompanyID) { parent.warningAlert("請先選擇商戶"); return; }
-
-            var amount = $(btn).siblings('.input_amount').val();
-            if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-                alert('請輸入正確金額');
-                return;
-            }
-
-            var row = dataTable.row($(btn).closest('tr'));
-            var rowData = row.data();
-
-            if (rowData.State != 0) { parent.warningAlert("商戶渠道已停用"); return; }
-            if (rowData.ProviderState != 0) { parent.warningAlert("供應商渠道已停用"); return; }
-
-            $(btn).prop('disabled', true).text('建立中...');
-
-            $.ajax({
-                url: '/Backend/sendManualOrder.aspx',
-                type: 'GET',
-                data: {
-                    amount: amount,
-                    ServiceType: rowData.ServiceType,
-                    CurrencyType: rowData.CurrencyType,
-                    CompanyID: selectedCompanyID
-                },
-                success: function (resp) {
-                    try {
-                        var obj = typeof resp === 'string' ? JSON.parse(resp) : resp;
-                        if (obj.Status == 0 && obj.PayUrl) {
-                            showResult(selectedCompanyCode, obj.OrderID, rowData.ServiceTypeName, amount, obj.PayUrl);
-                        } else {
-                            parent.warningAlert("建單失敗：" + (obj.Message || JSON.stringify(obj)));
-                        }
-                    } catch (ex) {
-                        parent.warningAlert("回應解析失敗：" + resp);
+    function buildTable(data) {
+        dataTable = $('#dataTable').DataTable({
+            data: data,
+            columns: [
+                {
+                    title: "操作", data: null,
+                    render: function () {
+                        return '<input class="input_amount" placeholder="輸入金額" style="width:110px;" />' +
+                               '<button class="btn btn-sm btn-primary" style="margin-left:4px;" onclick="createOrder(this)">建立訂單</button>';
                     }
                 },
-                error: function (xhr) {
-                    parent.warningAlert("建單請求失敗，請稍後再試");
+                { title: "支付類型", data: 'ServiceTypeName' },
+                { title: "支付代碼", data: 'ServiceType' },
+                { title: "幣別", data: 'CurrencyType' },
+                { title: "手續費(%)", data: 'CollectRate' },
+                {
+                    title: "最低金額", data: 'MinOnceAmount',
+                    render: function (d) { return toCurrency(d); }
                 },
-                complete: function () {
-                    $(btn).prop('disabled', false).text('建立訂單');
+                {
+                    title: "最高金額", data: 'MaxOnceAmount',
+                    render: function (d) { return toCurrency(d); }
+                },
+                {
+                    title: "商戶狀態", data: 'State',
+                    render: function (d) {
+                        return d == 0 ? '<span style="color:green;">啟用</span>' : '<span style="color:red;">停用</span>';
+                    }
+                },
+                {
+                    title: "供應商狀態", data: 'ProviderState',
+                    render: function (d) {
+                        return d == 0 ? '<span style="color:green;">啟用</span>' : '<span style="color:red;">停用</span>';
+                    }
                 }
-            });
+            ],
+            info: false,
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+    }
+
+    function createOrder(btn) {
+        if (!selectedCompanyID) { parent.warningAlert('請先選擇商戶'); return; }
+
+        var amount = $(btn).siblings('.input_amount').val();
+        if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+            parent.warningAlert('請輸入正確金額');
+            return;
         }
 
-        function showResult(companyCode, orderID, serviceTypeName, amount, payUrl) {
-            $('#resCompanyCode').text(companyCode);
-            $('#resOrderID').text(orderID);
-            $('#resServiceType').text(serviceTypeName);
-            $('#resAmount').text(amount);
-            $('#resPayUrl').val(payUrl);
-            $('#copyHint').hide();
-            $('#resultOverlay').addClass('active');
-        }
+        var row = dataTable.row($(btn).closest('tr'));
+        var rowData = row.data();
 
-        function closeResult() {
-            $('#resultOverlay').removeClass('active');
-        }
+        if (rowData.State != 0) { parent.warningAlert('商戶渠道已停用'); return; }
+        if (rowData.ProviderState != 0) { parent.warningAlert('供應商渠道已停用'); return; }
 
-        function copyUrl() {
-            var inp = document.getElementById('resPayUrl');
-            inp.select();
-            inp.setSelectionRange(0, 99999);
-            try {
-                document.execCommand('copy');
-                $('#copyHint').show();
-                setTimeout(function () { $('#copyHint').hide(); }, 2000);
-            } catch (e) {
-                alert('請手動複製連結');
+        $(btn).prop('disabled', true).text('建立中...');
+
+        $.ajax({
+            url: '/Backend/sendManualOrder.aspx',
+            type: 'GET',
+            data: {
+                amount: amount,
+                ServiceType: rowData.ServiceType,
+                CurrencyType: rowData.CurrencyType,
+                CompanyID: selectedCompanyID
+            },
+            success: function (resp) {
+                try {
+                    var obj = typeof resp === 'string' ? JSON.parse(resp) : resp;
+                    if (obj.Status == 0 && obj.PayUrl) {
+                        showResult(selectedCompanyCode, obj.OrderID, rowData.ServiceTypeName,
+                                   amount, rowData.CurrencyType, obj.PayUrl);
+                    } else {
+                        parent.errorAlert('建單失敗：' + (obj.Message || JSON.stringify(obj)));
+                    }
+                } catch (ex) {
+                    parent.errorAlert('回應解析失敗：' + resp);
+                }
+            },
+            error: function () {
+                parent.errorAlert('建單請求失敗，請稍後再試');
+            },
+            complete: function () {
+                $(btn).prop('disabled', false).text('建立訂單');
             }
+        });
+    }
+
+    function showResult(companyCode, orderID, serviceTypeName, amount, currency, payUrl) {
+        $('#resCompanyCode').text(companyCode);
+        $('#resOrderID').text(orderID);
+        $('#resServiceType').text(serviceTypeName);
+        $('#resAmount').text(amount);
+        $('#resCurrency').text(currency);
+        $('#resPayUrl').val(payUrl);
+        $('#copyHint').hide();
+        $('#resultOverlay').addClass('active');
+    }
+
+    function closeResult() {
+        $('#resultOverlay').removeClass('active');
+    }
+
+    function openUrl() {
+        var url = document.getElementById('resPayUrl').value;
+        if (url) window.open(url, '_blank');
+    }
+
+    function copyUrl() {
+        var inp = document.getElementById('resPayUrl');
+        inp.select();
+        inp.setSelectionRange(0, 99999);
+        try {
+            document.execCommand('copy');
+            $('#copyHint').show();
+            setTimeout(function () { $('#copyHint').hide(); }, 2000);
+        } catch (e) {
+            parent.warningAlert('請手動複製連結');
         }
-    </script>
-</body>
+    }
+</script>
