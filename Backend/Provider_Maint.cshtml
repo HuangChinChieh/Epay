@@ -1092,6 +1092,10 @@
                                 <h2><strong>限額通道設定 (<span id="tierProviderServiceName"></span>)</strong></h2>
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
+                                <button title="修改" id="btnTierEdit" type="button"
+                                        class="btn btn-raised btn-primary btn-circle waves-effect float-right">
+                                    <i class="fas fa-pen"></i>
+                                </button>
                                 <button title="新增" id="btnTierCreate" type="button"
                                         class="btn btn-raised btn-primary btn-circle waves-effect float-right">
                                     <i class="fas fa-plus"></i>
@@ -1253,8 +1257,11 @@
                         <input type="hidden" id="modalTier_CurrencyType">
                         <div class="form-group">
                             <label>上游通道代碼 *</label>
-                            <input type="text" class="form-control" id="modalTier_ProviderChannelCode"
-                                   placeholder="例：AL200">
+                            <input type="text" class="form-control" id="modalTier_ProviderChannelCode" placeholder="例：AL200">
+                        </div>
+                        <div class="form-group">
+                            <label>上游群組通道名稱</label>
+                            <input type="text" class="form-control" id="modalTier_ProviderChannelAlias" placeholder="群組中對應的通道名稱">
                         </div>
                         <div class="form-group">
                             <label>最低金額 *</label>
@@ -1278,14 +1285,67 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-primary"
-                                id="btnTierSave">
-                            儲存
-                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="btnTierSave">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 編輯限額通道 modal -->
+        <div class="modal fade" id="modalTierEdit" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">修改限額通道</h5>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editTier_ProviderCode">
+                        <input type="hidden" id="editTier_ServiceType">
+                        <input type="hidden" id="editTier_CurrencyType">
+                        <div class="form-group">
+                            <label>上游通道代碼</label>
+                            <input type="text" class="form-control" id="editTier_ProviderChannelCode" readonly style="background:#f5f5f5;">
+                        </div>
+                        <div class="form-group">
+                            <label>上游群組通道名稱</label>
+                            <input type="text" class="form-control" id="editTier_ProviderChannelAlias" placeholder="群組中對應的通道名稱">
+                        </div>
+                        <div class="form-group">
+                            <label>最低金額 *</label>
+                            <input type="text" class="form-control" id="editTier_MinOnceAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>最高金額 *</label>
+                            <input type="text" class="form-control" id="editTier_MaxOnceAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>每日交易量 *</label>
+                            <input type="text" class="form-control" id="editTier_MaxDaliyAmount">
+                        </div>
+                        <div class="form-group">
+                            <label>費率 (%)</label>
+                            <input type="text" class="form-control" id="editTier_CostRate">
+                        </div>
+                        <div class="form-group">
+                            <label>手續費 (次)</label>
+                            <input type="text" class="form-control" id="editTier_CostCharge">
+                        </div>
+                        <div class="form-group">
+                            <label>備註</label>
+                            <input type="text" class="form-control" id="editTier_Description">
+                        </div>
+                        <div class="form-group">
+                            <label>狀態</label>
+                            <div>
+                                <label class="radio-inline"><input type="radio" name="editTier_State" value="0"> 啟用</label>
+                                <label class="radio-inline" style="margin-left:16px;"><input type="radio" name="editTier_State" value="1"> 停用</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="btnTierEditSave">儲存</button>
                     </div>
                 </div>
             </div>
@@ -2465,6 +2525,7 @@ if ('@CheckLoginPermission' == 'false') {
             data: data,
             columns: [
                 { "title": "上游通道代碼", "data": "ProviderChannelCode" },
+                { "title": "群組通道名稱", "data": "ProviderChannelAlias" },
                 {
                     "title": "最低金額", "data": "MinOnceAmount",
                     "render": function (data) { return toCurrency(data); }
@@ -2475,15 +2536,15 @@ if ('@CheckLoginPermission' == 'false') {
                 },
                 { "title": "費率", "data": "CostRate" },
                 { "title": "手續費(次)", "data": "CostCharge" },
+                { "title": "備註", "data": "Description" },
                 {
                     "title": "狀態", "data": "State",
                     "render": function (data) {
                         return data == 0
-                            ? '<span style="color:blue;">启用</span>'
+                            ? '<span style="color:blue;">啟用</span>'
                             : '<span style="color:red;">停用</span>';
                     }
                 },
-                { "title": "備註", "data": "Description" },
                 {
                     "title": "功能", "data": "ProviderChannelCode",
                     "render": function (data, type, row) {
@@ -2498,6 +2559,15 @@ if ('@CheckLoginPermission' == 'false') {
             scrollX: true,
             autoWidth: false,
             language: chineseTableLang
+        });
+
+        $('#table_ProviderServiceTier tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                TierTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
         });
     }
 
@@ -2842,6 +2912,7 @@ if ('@CheckLoginPermission' == 'false') {
         $('#modalTier_ServiceType').val(rowData.ServiceType);
         $('#modalTier_CurrencyType').val(rowData.CurrencyType);
         $('#modalTier_ProviderChannelCode').val('');
+        $('#modalTier_ProviderChannelAlias').val('');
         $('#modalTier_MinOnceAmount').val('');
         $('#modalTier_MaxOnceAmount').val('');
         $('#modalTier_MaxDaliyAmount').val('');
@@ -2855,6 +2926,7 @@ if ('@CheckLoginPermission' == 'false') {
         var serviceType = $('#modalTier_ServiceType').val();
         var currencyType = $('#modalTier_CurrencyType').val();
         var channelCode = $('#modalTier_ProviderChannelCode').val().trim();
+        var channelAlias = $('#modalTier_ProviderChannelAlias').val().trim();
         var minOnceAmount = $('#modalTier_MinOnceAmount').val().trim();
         var maxOnceAmount = $('#modalTier_MaxOnceAmount').val().trim();
         var maxDaliyAmount = $('#modalTier_MaxDaliyAmount').val().trim();
@@ -2866,13 +2938,64 @@ if ('@CheckLoginPermission' == 'false') {
             return;
         }
 
-        api.insertProviderServiceTier(providerCode, serviceType, currencyType, channelCode, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge,"",
+        api.insertProviderServiceTier(providerCode, serviceType, currencyType, channelCode, channelAlias, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, '',
             function (success, obj) {
                 if (obj.ResultCode == 0) {
                     $('#modalTierCreate').modal('hide');
                     getTierTableResult(providerCode, serviceType, currencyType);
                 } else {
                     showMsg(obj.Message);
+                }
+            }
+        );
+    });
+
+    $('#btnTierEdit').on('click', function () {
+        if (!TierTable) { showMsg('尚無資料'); return; }
+        var rowData = TierTable.row('.selected').data();
+        if (rowData == undefined) { showMsg('請先選擇一筆通道'); return; }
+
+        $('#editTier_ProviderCode').val(rowData.ProviderCode);
+        $('#editTier_ServiceType').val(rowData.ServiceType);
+        $('#editTier_CurrencyType').val(rowData.CurrencyType);
+        $('#editTier_ProviderChannelCode').val(rowData.ProviderChannelCode);
+        $('#editTier_ProviderChannelAlias').val(rowData.ProviderChannelAlias || '');
+        $('#editTier_MinOnceAmount').val(rowData.MinOnceAmount);
+        $('#editTier_MaxOnceAmount').val(rowData.MaxOnceAmount);
+        $('#editTier_MaxDaliyAmount').val(rowData.MaxDaliyAmount);
+        $('#editTier_CostRate').val(rowData.CostRate);
+        $('#editTier_CostCharge').val(rowData.CostCharge);
+        $('#editTier_Description').val(rowData.Description || '');
+        $('input[name="editTier_State"][value="' + rowData.State + '"]').prop('checked', true);
+        $('#modalTierEdit').modal('show');
+    });
+
+    $('#btnTierEditSave').on('click', function () {
+        var providerCode  = $('#editTier_ProviderCode').val();
+        var serviceType   = $('#editTier_ServiceType').val();
+        var currencyType  = $('#editTier_CurrencyType').val();
+        var channelCode   = $('#editTier_ProviderChannelCode').val();
+        var channelAlias  = $('#editTier_ProviderChannelAlias').val().trim();
+        var minOnceAmount = $('#editTier_MinOnceAmount').val().trim();
+        var maxOnceAmount = $('#editTier_MaxOnceAmount').val().trim();
+        var maxDaliyAmount = $('#editTier_MaxDaliyAmount').val().trim();
+        var costRate      = $('#editTier_CostRate').val().trim();
+        var costCharge    = $('#editTier_CostCharge').val().trim();
+        var description   = $('#editTier_Description').val().trim();
+        var state         = parseInt($('input[name="editTier_State"]:checked').val());
+
+        if (!minOnceAmount || !maxOnceAmount || !maxDaliyAmount) {
+            showMsg('請填入必填欄位');
+            return;
+        }
+
+        api.updateProviderServiceTier(providerCode, serviceType, currencyType, channelCode, channelAlias, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, description, state,
+            function (success, obj) {
+                if (obj.ResultCode == 0) {
+                    $('#modalTierEdit').modal('hide');
+                    getTierTableResult(providerCode, serviceType, currencyType);
+                } else {
+                    showMsg(obj.Message || '修改失敗');
                 }
             }
         );

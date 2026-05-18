@@ -1931,11 +1931,13 @@ public class FromBody {
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
         public string ProviderChannelCode { get; set; }
+        public string ProviderChannelAlias { get; set; }
         public decimal MinOnceAmount { get; set; }
         public decimal MaxOnceAmount { get; set; }
         public decimal MaxDaliyAmount { get; set; }
         public decimal CostRate { get; set; }
         public decimal CostCharge { get; set; }
+        public int State { get; set; }
         public string Description { get; set; }
     }
 
@@ -2246,8 +2248,10 @@ public class DBViewModel {
         public string ServiceType { get; set; }
         public string CurrencyType { get; set; }
         public string ProviderChannelCode { get; set; }
+        public string ProviderChannelAlias { get; set; }
         public decimal MinOnceAmount { get; set; }
         public decimal MaxOnceAmount { get; set; }
+        public decimal MaxDaliyAmount { get; set; }
         public decimal CostRate { get; set; }
         public decimal CostCharge { get; set; }
         public int State { get; set; }

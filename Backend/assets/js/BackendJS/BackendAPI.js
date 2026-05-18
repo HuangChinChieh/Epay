@@ -7796,7 +7796,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.insertProviderServiceTier = function (providerCode, serviceType, currencyType, providerChannelCode, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, description, cb) {
+    this.insertProviderServiceTier = function (providerCode, serviceType, currencyType, providerChannelCode, providerChannelAlias, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, description, cb) {
         var url = APIUrl + "/InsertProviderServiceTier";
         var postData = {
             BID: BID,
@@ -7804,12 +7804,40 @@ var BackendAPI = function (BID, APIUrl) {
             ServiceType: serviceType,
             CurrencyType: currencyType,
             ProviderChannelCode: providerChannelCode,
+            ProviderChannelAlias: providerChannelAlias,
             MinOnceAmount: minOnceAmount,
             MaxOnceAmount: maxOnceAmount,
             MaxDaliyAmount: maxDaliyAmount,
             CostRate: costRate,
             CostCharge: costCharge,
             Description: description
+        };
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb) cb(true, obj);
+            } else {
+                if (cb) cb(false, text);
+            }
+        });
+    };
+
+    this.updateProviderServiceTier = function (providerCode, serviceType, currencyType, providerChannelCode, providerChannelAlias, minOnceAmount, maxOnceAmount, maxDaliyAmount, costRate, costCharge, description, state, cb) {
+        var url = APIUrl + "/UpdateProviderServiceTier";
+        var postData = {
+            BID: BID,
+            ProviderCode: providerCode,
+            ServiceType: serviceType,
+            CurrencyType: currencyType,
+            ProviderChannelCode: providerChannelCode,
+            ProviderChannelAlias: providerChannelAlias,
+            MinOnceAmount: minOnceAmount,
+            MaxOnceAmount: maxOnceAmount,
+            MaxDaliyAmount: maxDaliyAmount,
+            CostRate: costRate,
+            CostCharge: costCharge,
+            Description: description,
+            State: state
         };
         callServiceByPost(url, postData, function (success, text) {
             if (success == true) {

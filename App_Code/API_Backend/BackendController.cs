@@ -12401,6 +12401,42 @@ public class BackendController : ApiController {
 
         return retValue;
     }
+
+    [HttpGet]
+    [HttpPost]
+    [ActionName("UpdateProviderServiceTier")]
+    public APIResult UpdateProviderServiceTier([FromBody] FromBody.ProviderServiceTier fromBody) {
+        APIResult retValue = new APIResult();
+        BackendDB backendDB = new BackendDB();
+        BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
+
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+            retValue.ResultCode = APIResult.enumResult.SessionError;
+            return retValue;
+        }
+
+        RedisCache.BIDContext.BIDInfo AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
+        if (AdminData.CompanyType != 0) {
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            return retValue;
+        }
+
+        int DBretValue = backendDB.UpdateProviderServiceTier(fromBody);
+        if (DBretValue >= 1) {
+            string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
+            int AdminOP = backendDB.InsertAdminOPLog(
+                AdminData.forCompanyID, AdminData.AdminID, 2,
+                "修改供應商通道Tier," + fromBody.ProviderCode + "," + fromBody.ServiceType + "," + fromBody.CurrencyType + "," + fromBody.ProviderChannelCode,
+                IP, fingerprint);
+            CodingControl.WriteXFowardForIP(AdminOP);
+            retValue.ResultCode = APIResult.enumResult.OK;
+        } else {
+            retValue.ResultCode = APIResult.enumResult.Other;
+        }
+
+        return retValue;
+    }
     #endregion
 
     [HttpGet]

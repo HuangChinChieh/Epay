@@ -5970,9 +5970,22 @@ public class BackendDB {
     public void SyncToggleDefaultProviderServiceTierState(string ProviderCode, string ServiceType, string CurrencyType) {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
+        DataTable DT;
 
+        // 先查出所有 ProviderChannelCode，用於清 Redis 快取
+        SS = "SELECT ProviderChannelCode FROM ProviderServiceTier WITH (NOLOCK) " +
+             "WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType";
+        DBCmd = new System.Data.SqlClient.SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
+        DT = DBAccess.GetDB(Pay.DBConnStr, DBCmd);
+
+        // 所有 tier 一起 toggle（不限 ProviderChannelCode）
         SS = "UPDATE ProviderServiceTier SET State=(IIF(State=0,1,0)) " +
-             "WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType AND ProviderChannelCode=''";
+             "WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND CurrencyType=@CurrencyType";
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
@@ -5980,7 +5993,13 @@ public class BackendDB {
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
         DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
-        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(ProviderCode, ServiceType, CurrencyType, "");
+
+        // 清所有對應的 Redis 快取
+        if (DT != null) {
+            foreach (DataRow row in DT.Rows) {
+                RedisCache.ProviderServiceTier.DeleteProviderServiceTier(ProviderCode, ServiceType, CurrencyType, row["ProviderChannelCode"].ToString());
+            }
+        }
     }
 
     public void SyncDefaultProviderServiceTier(DBModel.ProviderService Model) {
@@ -15147,7 +15166,6 @@ public class BackendDB {
              " WHERE T.ProviderCode = @ProviderCode" +
              "   AND T.ServiceType  = @ServiceType" +
              "   AND T.CurrencyType = @CurrencyType" +
-             "   AND T.ProviderChannelCode <> ''" +
              " ORDER BY T.MinOnceAmount ASC";
 
         DBCmd = new SqlCommand();
@@ -15171,10 +15189,10 @@ public class BackendDB {
         SqlCommand DBCmd = null;
 
         SS = " INSERT INTO ProviderServiceTier" +
-             "     (ProviderCode, ServiceType, CurrencyType, ProviderChannelCode," +
+             "     (ProviderCode, ServiceType, CurrencyType, ProviderChannelCode, ProviderChannelAlias," +
              "      MinOnceAmount, MaxOnceAmount, MaxDaliyAmount , CostRate, CostCharge, State, Description)" +
              " VALUES" +
-             "     (@ProviderCode, @ServiceType, @CurrencyType, @ProviderChannelCode," +
+             "     (@ProviderCode, @ServiceType, @CurrencyType, @ProviderChannelCode, @ProviderChannelAlias," +
              "      @MinOnceAmount, @MaxOnceAmount, @MaxDaliyAmount, @CostRate, @CostCharge, 0, @Description)";
 
         DBCmd = new SqlCommand();
@@ -15184,6 +15202,7 @@ public class BackendDB {
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = model.ServiceType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = model.CurrencyType;
         DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = model.ProviderChannelCode;
+        DBCmd.Parameters.Add("@ProviderChannelAlias", SqlDbType.NVarChar).Value = string.IsNullOrEmpty(model.ProviderChannelAlias) ? "" : model.ProviderChannelAlias;
         DBCmd.Parameters.Add("@MinOnceAmount", SqlDbType.Decimal).Value = model.MinOnceAmount;
         DBCmd.Parameters.Add("@MaxOnceAmount", SqlDbType.Decimal).Value = model.MaxOnceAmount;
         DBCmd.Parameters.Add("@MaxDaliyAmount", SqlDbType.Decimal).Value = model.MaxDaliyAmount;
@@ -15192,6 +15211,48 @@ public class BackendDB {
         DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = string.IsNullOrEmpty(model.Description) ? "" : model.Description;
 
         returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
+        return returnValue;
+    }
+
+    public int UpdateProviderServiceTier(FromBody.ProviderServiceTier model) {
+        int returnValue;
+        string SS;
+        SqlCommand DBCmd = null;
+
+        SS = " UPDATE ProviderServiceTier SET" +
+             "   ProviderChannelAlias = @ProviderChannelAlias," +
+             "   MinOnceAmount   = @MinOnceAmount," +
+             "   MaxOnceAmount   = @MaxOnceAmount," +
+             "   MaxDaliyAmount  = @MaxDaliyAmount," +
+             "   CostRate        = @CostRate," +
+             "   CostCharge      = @CostCharge," +
+             "   State           = @State," +
+             "   Description     = @Description" +
+             " WHERE ProviderCode = @ProviderCode" +
+             "   AND ServiceType  = @ServiceType" +
+             "   AND CurrencyType = @CurrencyType" +
+             "   AND ProviderChannelCode = @ProviderChannelCode";
+
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = model.ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = model.ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = model.CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = model.ProviderChannelCode;
+        DBCmd.Parameters.Add("@ProviderChannelAlias", SqlDbType.NVarChar).Value = string.IsNullOrEmpty(model.ProviderChannelAlias) ? "" : model.ProviderChannelAlias;
+        DBCmd.Parameters.Add("@MinOnceAmount", SqlDbType.Decimal).Value = model.MinOnceAmount;
+        DBCmd.Parameters.Add("@MaxOnceAmount", SqlDbType.Decimal).Value = model.MaxOnceAmount;
+        DBCmd.Parameters.Add("@MaxDaliyAmount", SqlDbType.Decimal).Value = model.MaxDaliyAmount;
+        DBCmd.Parameters.Add("@CostRate", SqlDbType.Decimal).Value = model.CostRate;
+        DBCmd.Parameters.Add("@CostCharge", SqlDbType.Decimal).Value = model.CostCharge;
+        DBCmd.Parameters.Add("@State", SqlDbType.Int).Value = model.State;
+        DBCmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = string.IsNullOrEmpty(model.Description) ? "" : model.Description;
+
+        returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
+
+        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(model.ProviderCode, model.ServiceType, model.CurrencyType, model.ProviderChannelCode);
+
         return returnValue;
     }
 
