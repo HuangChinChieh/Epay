@@ -15219,6 +15219,20 @@ public class BackendDB {
         string SS;
         SqlCommand DBCmd = null;
 
+        // 先讀舊 State，供後續判斷是否需要執行同步邏輯
+        SS = "SELECT State FROM ProviderServiceTier WITH (NOLOCK)" +
+             " WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType" +
+             "   AND CurrencyType=@CurrencyType AND ProviderChannelCode=@ProviderChannelCode";
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = model.ProviderCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = model.ServiceType;
+        DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = model.CurrencyType;
+        DBCmd.Parameters.Add("@ProviderChannelCode", SqlDbType.VarChar).Value = model.ProviderChannelCode;
+        object oldStateObj = DBAccess.GetDBValue(DBConnStr, DBCmd);
+        int oldState = (oldStateObj != null && oldStateObj != DBNull.Value) ? Convert.ToInt32(oldStateObj) : -1;
+
         SS = " UPDATE ProviderServiceTier SET" +
              "   ProviderChannelAlias = @ProviderChannelAlias," +
              "   MinOnceAmount   = @MinOnceAmount," +
@@ -15251,9 +15265,98 @@ public class BackendDB {
 
         returnValue = DBAccess.ExecuteDB(DBConnStr, DBCmd);
 
-        RedisCache.ProviderServiceTier.DeleteProviderServiceTier(model.ProviderCode, model.ServiceType, model.CurrencyType, model.ProviderChannelCode);
+        if (oldState != model.State) {
+            SyncProviderServiceTierState(model.ProviderCode, model.ServiceType, model.ProviderChannelCode, model.State);
+        } else {
+            RedisCache.ProviderServiceTier.DeleteProviderServiceTier(model.ProviderCode, model.ServiceType, model.CurrencyType, model.ProviderChannelCode);
+        }
 
         return returnValue;
+    }
+
+    private void SyncProviderServiceTierState(string providerCode, string serviceType, string providerChannelCode, int newState) {
+        string SS;
+        SqlCommand DBCmd = null;
+        bool isBaseRecord = string.IsNullOrEmpty(providerChannelCode);
+
+        if (newState == 1) {
+            // 停用
+            if (isBaseRecord) {
+                // 情況一：停用 '' → 全部 Tier + ProviderService 一起停用
+                ExecProviderSync("UPDATE ProviderServiceTier SET State=1 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+                ExecProviderSync("UPDATE ProviderService SET State=1 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+            } else {
+                // 情況二：停用子通道 → 檢查是否還有任何子通道啟用中
+                SS = "SELECT COUNT(1) FROM ProviderServiceTier WITH (NOLOCK)" +
+                     " WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND ProviderChannelCode!='' AND State=0";
+                DBCmd = new SqlCommand();
+                DBCmd.CommandText = SS;
+                DBCmd.CommandType = CommandType.Text;
+                DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = providerCode;
+                DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = serviceType;
+                object countObj = DBAccess.GetDBValue(DBConnStr, DBCmd);
+                int activeCount = (countObj != null && countObj != DBNull.Value) ? Convert.ToInt32(countObj) : 0;
+
+                if (activeCount == 0) {
+                    // 已無任何啟用子通道 → '' 列和 ProviderService 也一起停用
+                    ExecProviderSync("UPDATE ProviderServiceTier SET State=1 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND ProviderChannelCode=''", providerCode, serviceType);
+                    ExecProviderSync("UPDATE ProviderService SET State=1 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+                }
+            }
+        } else {
+            // 啟用
+            if (isBaseRecord) {
+                // 情況一：啟用 '' → 全部 Tier + ProviderService 一起啟用
+                ExecProviderSync("UPDATE ProviderServiceTier SET State=0 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+                ExecProviderSync("UPDATE ProviderService SET State=0 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+            } else {
+                // 情況二：啟用子通道 → '' 列和 ProviderService 也一起啟用
+                ExecProviderSync("UPDATE ProviderServiceTier SET State=0 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType AND ProviderChannelCode=''", providerCode, serviceType);
+                ExecProviderSync("UPDATE ProviderService SET State=0 WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType", providerCode, serviceType);
+            }
+        }
+
+        // 清除該 (ProviderCode, ServiceType) 下所有 ProviderServiceTier Redis 快取
+        SS = "SELECT DISTINCT CurrencyType, ProviderChannelCode FROM ProviderServiceTier WITH (NOLOCK)" +
+             " WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType";
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = providerCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = serviceType;
+        DataTable tierDT = DBAccess.GetDB(DBConnStr, DBCmd);
+        if (tierDT != null) {
+            foreach (DataRow row in tierDT.Rows) {
+                RedisCache.ProviderServiceTier.DeleteProviderServiceTier(
+                    providerCode, serviceType,
+                    row["CurrencyType"].ToString(),
+                    row["ProviderChannelCode"].ToString());
+            }
+        }
+
+        // 清除該 (ProviderCode, ServiceType) 下所有 ProviderService Redis 快取
+        SS = "SELECT DISTINCT CurrencyType FROM ProviderService WITH (NOLOCK)" +
+             " WHERE ProviderCode=@ProviderCode AND ServiceType=@ServiceType";
+        DBCmd = new SqlCommand();
+        DBCmd.CommandText = SS;
+        DBCmd.CommandType = CommandType.Text;
+        DBCmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = providerCode;
+        DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = serviceType;
+        DataTable svcDT = DBAccess.GetDB(DBConnStr, DBCmd);
+        if (svcDT != null) {
+            foreach (DataRow row in svcDT.Rows) {
+                RedisCache.ProviderService.UpdateProviderService(providerCode, serviceType, row["CurrencyType"].ToString());
+            }
+        }
+    }
+
+    private void ExecProviderSync(string sql, string providerCode, string serviceType) {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = sql;
+        cmd.CommandType = CommandType.Text;
+        cmd.Parameters.Add("@ProviderCode", SqlDbType.VarChar).Value = providerCode;
+        cmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = serviceType;
+        DBAccess.ExecuteDB(DBConnStr, cmd);
     }
 
     public int DeleteProviderServiceTier(string ProviderCode, string ServiceType, string CurrencyType, string ProviderChannelCode) {

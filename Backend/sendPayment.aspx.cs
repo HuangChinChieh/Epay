@@ -42,13 +42,24 @@ namespace SkyPay.Backend
                 ? "81a5ad6e8048459590f47a13c4a48e09"
                 : "1aa1a43a2b5c4e0abf5b674943d1597d";
             var Description = string.Empty;
+            var BankCode = string.Empty;
+            var BankCardNo = string.Empty;
+            var PhoneNo = string.Empty;
 
             if (ServiceType.ToUpper() == "BITPAY") {
                 //銀行帳號；銀行代碼
                 Description = "12354489184；KKP";
             }
 
-            var Sign = GetGPaySign(OrderID, OrderAmount, OrderDate, ServiceType, CurrencyType, CompanyCode, CompanyKey);
+            if (ServiceType.ToUpper() == "CUP05") {
+                URL = ApiUrl + "/Gate/RequirePayingExtended";
+
+                BankCode = "Tisco bank";
+                BankCardNo = "521478526";
+                PhoneNo = "886952145236";
+            }
+
+                var Sign = GetGPaySign(OrderID, OrderAmount, OrderDate, ServiceType, CurrencyType, CompanyCode, CompanyKey);
             var payload = new
             {
                 ManageCode = CompanyCode,
@@ -61,6 +72,9 @@ namespace SkyPay.Backend
                 RevolveURL = ReturnURL,
                 UserName = "vince",
                 Description= Description,
+                BankCode= BankCode,
+                BankCardNo = BankCardNo,
+                PhoneNo = PhoneNo,
                 Sign = Sign
             };
 

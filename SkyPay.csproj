@@ -575,6 +575,7 @@
     <Content Include="App_Data\ProviderSetting\withdrawBankTHB.json" />
     <Content Include="App_Data\ProviderSetting\withdrawBankINR.json" />
     <Content Include="Backend\ManualOrder.cshtml" />
+    <Content Include="App_Data\ProviderSetting\withdrawBankVND.json" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />

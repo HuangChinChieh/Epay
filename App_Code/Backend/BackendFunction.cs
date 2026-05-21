@@ -23,6 +23,10 @@ public class BackendFunction {
         {
             path = Pay.ProviderSettingPath + "\\" + "withdrawBankINR.json";
         }
+        else if (CurrencyType == "VND")
+        {
+            path = Pay.ProviderSettingPath + "\\" + "withdrawBankVND.json";
+        }
         else {
              path = Pay.ProviderSettingPath + "\\" + "withdrawBankCN.json";
         }

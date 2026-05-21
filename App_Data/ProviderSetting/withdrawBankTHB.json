@@ -149,6 +149,105 @@
         "ShortCode": "UOB",
         "NumericCode": "0024",
         "Aliases": [ "UNITED OVERSEAS BANK (THAI) PUBLIC COMPANY LIMITED" ]
+      },
+
+
+
+      {
+        "BankName": "Bangkok Bank",
+        "ShortCode": "Bangkok Bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Kasikorn bank",
+        "ShortCode": "Kasikorn bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "KrungThaibank",
+        "ShortCode": "KrungThaibank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Thai Military bank",
+        "ShortCode": "Thai Military bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Siam commercial bank",
+        "ShortCode": "Siam commercial bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "CIMB Thai",
+        "ShortCode": "CIMB Thai",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "United Overseas bank",
+        "ShortCode": "United Overseas bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Bank of Ayudhya",
+        "ShortCode": "Bank of Ayudhya",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Government Savings bank",
+        "ShortCode": "Government Savings bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Government Housing bank",
+        "ShortCode": "Government Housing bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Bank for Agriculture and Agricultural Cooperatives",
+        "ShortCode": "Bank for Agriculture and Agricultural Cooperatives",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Tisco bank",
+        "ShortCode": "Tisco bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Kiatnakin bank",
+        "ShortCode": "Kiatnakin bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Thai Credit Retail Bank",
+        "ShortCode": "Thai Credit Retail Bank",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "LHBANK",
+        "ShortCode": "LHBANK",
+        "NumericCode": "",
+        "Aliases": []
+      },
+      {
+        "BankName": "Thanachart Bank",
+        "ShortCode": "Thanachart Bank",
+        "NumericCode": "",
+        "Aliases": []
       }
     ]
   }
