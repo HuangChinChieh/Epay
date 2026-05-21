@@ -50,7 +50,7 @@ namespace SkyPay.Backend
                 //銀行帳號；銀行代碼
                 Description = "12354489184；KKP";
             }
-
+            //泰國 PromptPay（二维码）強制要求實名制
             if (ServiceType.ToUpper() == "CUP05") {
                 URL = ApiUrl + "/Gate/RequirePayingExtended";
 
