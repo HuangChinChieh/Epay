@@ -1070,9 +1070,9 @@
             var lstProviderCode = [];
             for (var i = 0; i < $("#divGPayRelationDetail input:checked").length; i++) {
                 var provider = new Object();
-                provider.ProviderCode = $("#divGPayRelationDetail input:checked").eq(i).attr("id");
+                provider.ProviderCode = $("#divGPayRelationDetail input:checked").eq(i).data("providercode");
+                provider.ProviderChannelCode = $("#divGPayRelationDetail input:checked").eq(i).data("providerchannelcode");
                 provider.Weight = $("#divGPayRelationDetail input:checked").eq(i).parent().parent().parent().find('.RelationModel_Weight').val();
-                provider.ProviderChannelCode = $("#divGPayRelationDetail input:checked").eq(i).data("provider-channel-code") || "";
                 lstProviderCode.push(provider);
 
             }
@@ -1295,7 +1295,16 @@
                     '<div class="card" >' +
                     '<div class="header" style="padding-bottom:0">';
 
-                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + data[i].ProviderCode + '" type="checkbox" data-provider-channel-code="' + (data[i].ProviderChannelCode || '') + '"><label for="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label></div>';
+                // id 用 ProviderCode_ProviderChannelCode 組合，ProviderChannelCode="" 代表預設渠道
+                var checkboxId = (data[i].ProviderChannelCode != null && data[i].ProviderChannelCode != "")
+                    ? data[i].ProviderCode + "_" + data[i].ProviderChannelCode
+                    : data[i].ProviderCode;
+                // 顯示名稱：有渠道代碼時加上讓管理員看清楚
+                var displayName = (data[i].ProviderChannelCode != null && data[i].ProviderChannelCode != "")
+                    ? data[i].ProviderName + " [" + data[i].ProviderChannelCode + "]"
+                    : data[i].ProviderName;
+
+                strGPayRelationDetail += '<div class="checkbox inlineblock delete_all"><input class="RelationModel_checkbox" id="' + checkboxId + '" type="checkbox" data-providercode="' + data[i].ProviderCode + '" data-providerchannelcode="' + (data[i].ProviderChannelCode || '') + '"><label for="' + checkboxId + '">' + displayName + ' </label></div>';
 
                 strGPayRelationDetail += '</div > ' +
                     '<div class="body" style="padding-top:0"> ' +
