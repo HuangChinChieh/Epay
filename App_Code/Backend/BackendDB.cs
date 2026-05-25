@@ -12445,7 +12445,11 @@ public class BackendDB {
                  " FROM      CompanyPointHistory CH WITH (NOLOCK) " +
                  " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
                  " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
-                 " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate AND CH.forCompanyID = @CompanyID ";
+                 " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
+
+        if (SearchData.CompanyID != 0) {
+            SS += " AND CH.forCompanyID = @CompanyID ";
+        }
 
         if (SearchData.OperatorType != 99) {
             SS += " AND CH.OperatorType = @OperatorType ";

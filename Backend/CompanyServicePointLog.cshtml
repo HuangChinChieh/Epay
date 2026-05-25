@@ -1100,7 +1100,7 @@ if ('@CheckLoginPermission' == 'false') {
             if (obj.ResultCode == 0) {
                 if (obj.CompanyResults.length > 0) {
                     $("#select_Company").children().remove();
-                    $("#select_Company").append('<option value="0">全部</option>');
+                    $("#select_Company").append('<option value="-99">全部</option>');
                     $.each(obj.CompanyResults, function (i, item) {
                         $("#select_Company").append('<option value="' + obj.CompanyResults[i].CompanyID + '">' + obj.CompanyResults[i].CompanyName + '</option>');
                     })
