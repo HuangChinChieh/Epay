@@ -1729,6 +1729,12 @@ public class FromBody {
         public string LoginAccount { get; set; }
     }
 
+    public class ResetCompanyGoogleKey {
+        public string BID { get; set; }
+        public int CompanyID { get; set; }
+        public string UserKey { get; set; }  // 管理員自己的 Google 動態碼
+    }
+
     public class ConfigSetting {
         public string BID { get; set; }
         public string SettingKey { get; set; }

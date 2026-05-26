@@ -859,6 +859,26 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
+    // 管理員重置商戶谷歌驗證（以管理員自身 Google Code 驗證後清除商戶 GoogleKey）
+    this.resetCompanyGoogleKey = function (companyid, userKey, cb) {
+        var url = APIUrl + "/ResetCompanyGoogleKey";
+        var postData = {
+            CompanyID: companyid,
+            UserKey: userKey
+        };
+        postData["BID"] = BID;
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+                if (cb)
+                    cb(true, obj);
+            } else {
+                if (cb)
+                    cb(false, text);
+            }
+        });
+    };
+
     this.getGoogleQrCode = function (cb) {
         var url = APIUrl + "/GetGoogleQrCode";
 

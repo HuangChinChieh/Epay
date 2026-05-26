@@ -1004,6 +1004,7 @@
                                         <button id="btnCompanyDisable" type="button" class="btn btn-raised btn-danger btn-round waves-effect float-right">商户停用</button>
                                         <button id="btnCompanyEdit" type="button" class="btn btn-raised btn-primary btn-round waves-effect float-right">商户修改</button>
                                         <button id="btnCompanyEditWithdrawal" type="button" class="btn btn-raised btn-primary btn-round waves-effect float-right">调整代付方式</button>
+                                        <button id="btnResetGoogleKey" type="button" class="btn btn-raised btn-warning btn-round waves-effect float-right" style="display:none">重置谷歌验证</button>
                                     </div>
                                 </div>
                             </div>
@@ -1226,6 +1227,7 @@
             </div>
         </div>
     </div>
+    <div id="ResetGoogleKeyContent"></div>
 </body>
 
 <script>
@@ -1277,6 +1279,11 @@
                 $('.hideDiv2').hide();
             } else {
                 $('#btnCompanyEditWithdrawal').hide();
+            }
+
+            // 重置商戶谷歌驗證按鈕只有系統管理員可見
+            if (AdminObject.CompanyType == 0) {
+                $('#btnResetGoogleKey').show();
             }
 
             createCompanyServicePointTable();
@@ -1388,6 +1395,34 @@
                             }
                         });
                 }
+            });
+
+            // 重置商戶谷歌驗證（需輸入管理員自身的動態碼）
+            $("#btnResetGoogleKey").on("click", function () {
+                if (!seleCompanyid || $('#select_company').val() == 0) {
+                    parent.warningAlert("请先选择商户");
+                    return;
+                }
+                $('#ResetGoogleKeyContent').empty();
+                var dochtml =
+                    '<div class="modal fade" style="background-color:rgba(0,0,0,0.4);" data-backdrop=false id="ResetGoogleKeyModal" tabindex="-1" role="dialog" aria-hidden="true">' +
+                    '<div class="modal-dialog modal-sm" role="document">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header"><h4 class="title">重置商户谷歌验证</h4></div>' +
+                    '<div class="modal-body">' +
+                    '<span style="display:block">商户：<span id="modal_ResetCompanyName" style="margin-left:5px;font-weight:bold;"></span></span>' +
+                    '<span style="display:block;margin-top:10px;">请输入您的管理员动态密码：</span>' +
+                    '<input type="text" id="modal_AdminGoogleKey" class="form-control" maxlength="6" placeholder="6位动态密码" style="text-align:center;font-size:18px;letter-spacing:4px;margin-top:8px;">' +
+                    '</div>' +
+                    '<div class="modal-footer">' +
+                    '<button onclick="saveResetGoogleKey()" type="button" class="btn btn-danger btn-round waves-effect">确定重置</button>' +
+                    '<button onclick="cancelResetGoogleKey()" type="button" class="btn btn-primary btn-round waves-effect">取消</button>' +
+                    '</div>' +
+                    '</div></div></div>';
+                $('#ResetGoogleKeyContent').append(dochtml);
+                $('#modal_ResetCompanyName').text($('#select_company option:selected').text().trim());
+                $('#modal_AdminGoogleKey').val('');
+                $('#ResetGoogleKeyModal').modal('show');
             });
 
             //新增商戶渠道資料
@@ -2493,4 +2528,43 @@
     //    });
     //});
        //#endregion
+
+    function saveResetGoogleKey() {
+        var userKey = $('#modal_AdminGoogleKey').val().trim();
+        if (userKey === '') {
+            parent.warningAlert("请输入谷歌验证码");
+            return;
+        }
+        api.resetCompanyGoogleKey(seleCompanyid, userKey, function (success, obj) {
+            if (success) {
+                if (obj.ResultCode == 0) {
+                    cancelResetGoogleKey();
+                    parent.successAlert(function () { });
+                } else {
+                    var message = "";
+                    switch (obj.ResultCode) {
+                        case 13: message = "您尚未绑定管理员谷歌验证"; break;
+                        case 14: message = "谷歌验证码有误"; break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            return;
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            return;
+                        default: message = "操作失败，请稍后再试"; break;
+                    }
+                    parent.warningAlert(message);
+                }
+            } else {
+                parent.warningAlert("请求失败，请稍后再试");
+            }
+        });
+    }
+
+    function cancelResetGoogleKey() {
+        $('#ResetGoogleKeyModal').modal('hide');
+    }
 </script>

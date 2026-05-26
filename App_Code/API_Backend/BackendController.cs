@@ -7873,6 +7873,58 @@ public class BackendController : ApiController {
     //}
 
     [HttpPost]
+    [ActionName("ResetCompanyGoogleKey")]
+    public APIResult ResetCompanyGoogleKey([FromBody] FromBody.ResetCompanyGoogleKey fromBody) {
+        APIResult retValue = new APIResult();
+        string fingerprint = GetFingerprint();
+
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+            retValue.ResultCode = APIResult.enumResult.SessionError;
+            return retValue;
+        }
+
+        RedisCache.BIDContext.BIDInfo AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
+
+        // 只有系統管理員 (CompanyType == 0) 可操作
+        if (AdminData.CompanyType != 0) {
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            return retValue;
+        }
+
+        BackendFunction backendFunction = new BackendFunction();
+        BackendDB backendDB = new BackendDB();
+
+        // 取管理員自己的 Google Key（存於 AdminTable，以 LoginAccount 查詢）
+        DBModel.AdminWithGoogleKey adminGoogleKey = backendDB.GetAdminByLoginAccountWithGoogleKey(AdminData.AdminAccount);
+
+        if (adminGoogleKey == null || string.IsNullOrEmpty(adminGoogleKey.GoogleKey)) {
+            retValue.ResultCode = APIResult.enumResult.GoogleKeyEmpty;
+            return retValue;
+        }
+
+        // 驗證管理員的 Google 動態碼
+        if (!backendFunction.CheckGoogleKey(adminGoogleKey.GoogleKey, fromBody.UserKey)) {
+            retValue.ResultCode = APIResult.enumResult.GoogleKeyError;
+            return retValue;
+        }
+
+        // 清除商戶 Google Key
+        string CompanyName = backendDB.GetCompanyNameByCompanyID(fromBody.CompanyID);
+        int DBreturn = backendDB.UpdateCompanyGoogleKey("", fromBody.CompanyID);
+
+        if (DBreturn > 0) {
+            string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
+            int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, "重置谷歌验证,商户:" + CompanyName, IP, fingerprint);
+            CodingControl.WriteXFowardForIP(AdminOP);
+            retValue.ResultCode = APIResult.enumResult.OK;
+        } else {
+            retValue.ResultCode = APIResult.enumResult.Error;
+        }
+
+        return retValue;
+    }
+
+    [HttpPost]
     [ActionName("GetGoogleQrCode")]
     public GoogleQrCode GetGoogleQrCode([FromBody] string BID) {
         GoogleQrCode retValue = new GoogleQrCode();
