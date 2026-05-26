@@ -1200,17 +1200,24 @@
         $("#divGPayRelationDetail").html(strGPayRelationDetail);
         new AutoNumeric.multiple('.RelationModel_Weight', 'integerPos', { allowDecimalPadding: false, decimalPlaces: 0, minimumValue: 1, maximumValue: 100 });
 
+        // 初始狀態強制單選：只保留幣別與本次編輯相符且已勾選的項目
+        var targetChecked = null;
+        $('.RelationModel_checkbox:checked').each(function () {
+            var cardCurrencyType = $(this).closest('.card').find('.RelationModel_CurrencyType').text().trim();
+            if (cardCurrencyType === tmpdata.CurrencyType) {
+                targetChecked = $(this);
+                return false; // break
+            }
+        });
+        $('.RelationModel_checkbox').prop('checked', false);
+        if (targetChecked) {
+            targetChecked.prop('checked', true);
+        }
 
-        $('.RelationModel_checkbox').change(function () {
-
-            var Charge = "";
-            var MinLimit = "";
-            var MaxLimit = "";
-            //$("input[name='RelationModel_checkbox']").each(function () {
-            //    $(this).prop("checked", false);
-            //});
+        $('.RelationModel_checkbox').on('click', function () {
+            var isChecked = $(this).prop('checked');
             $('.RelationModel_checkbox').prop('checked', false);
-            $(this).prop('checked', true);
+            $(this).prop('checked', isChecked);
         });
         //$('.RelationModel_checkbox').change(function () {
 
