@@ -2032,7 +2032,8 @@
             }
 
 
-            selectedParentCompanyID = CSeleData[0]["ParentCompanyID"]
+            selectedParentCompanyID = CSeleData[0]["ParentCompanyID"];
+            seleCurrency = CSeleData[0]["CurrencyType"] == '' ? parent.API_GetSelectCurrency() : CSeleData[0]["CurrencyType"];
             switch (CSeleData[0]["ContacterMethod"]) {
                 case 0:
                     $("#pContacterMethod").text("QQ");
@@ -2228,9 +2229,9 @@
 
         });
 
-            ShowCompanyPoint();
-            ShowCompanyDetail();
-        }
+        ShowCompanyDetail();
+        ShowCompanyPoint();
+    }
 
     function createCompanyServiceTable(data) {
             isCreatedTable = true;
