@@ -13322,6 +13322,10 @@ public class BackendDB {
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
+        if (fromBody.CurrencyType != "All") {
+            SS += " And P.CurrencyType = @CurrencyType ";
+        }
+
         //商户订单号查询
         if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
@@ -13397,6 +13401,7 @@ public class BackendDB {
         DBCmd.Parameters.Add("@SubmitType", System.Data.SqlDbType.Int).Value = fromBody.SubmitType;
         DBCmd.Parameters.Add("@ServiceType", System.Data.SqlDbType.VarChar).Value = fromBody.ServiceType;
         DBCmd.Parameters.Add("@ProviderCode", System.Data.SqlDbType.VarChar).Value = fromBody.ProviderCode;
+        DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = fromBody.CurrencyType;
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 

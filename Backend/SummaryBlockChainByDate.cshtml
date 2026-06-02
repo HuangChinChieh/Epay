@@ -1110,12 +1110,12 @@
                     checkServiceTypeData = obj.ServiceTypes;
                     var groupName = "";
                     $("#select_ServiceType").children().remove();
-                    $("#select_ServiceType").append('<option value="0_CNY">  全部  </option>');
                     var optgroup;
                     $.each(obj.ServiceTypes, function (i, item) {
                         if (groupName != obj.ServiceTypes[i].CurrencyType) {
                             groupName = obj.ServiceTypes[i].CurrencyType;
                             optgroup = $('<optgroup label="' + groupName + '">');
+                            optgroup.append('<option value="0_' + groupName + '">  全部' + groupName + '  </option>');
                             $("#select_ServiceType").append(optgroup);
                         }
                         optgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');

@@ -717,6 +717,7 @@ public class BackendController : ApiController {
             int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 3, string.Format("修改商户,商户名称:{0},代付API规则:{1},代付通道代码:{2},代付API规则 :{3},后台IP检查:{4},后台送单是否经过审核:{5}", CompanyData.CompanyName, WithdrawType, CompanyData.AutoWithdrawalServiceType, WithdrawAPIType, BackendLoginIPType, BackendWithdrawType), IP, fingerprint);
             string XForwardIP = CodingControl.GetXForwardedFor();
             CodingControl.WriteXFowardForIP(AdminOP);
+            RedisCache.Company.UpdateCompanyByCode(CompanyData.CompanyCode);
             _CompanyTableResult.ResultCode = APIResult.enumResult.OK;
         } else {
             _CompanyTableResult.ResultCode = APIResult.enumResult.Error;

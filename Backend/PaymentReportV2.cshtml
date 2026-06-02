@@ -1086,6 +1086,7 @@
                             <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 實際商餘 : </span><span style="font-size:15px;margin-left:5px" id="count2"></span>
                             <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 交易总笔数 : </span><span style="font-size:15px;margin-left:5px" id="count3"></span>
                             <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功总笔数 : </span><span style="font-size:15px;margin-left:5px" id="count4"></span>
+                            <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功率 : </span><span style="font-size:15px;margin-left:5px" id="countRate"></span>
                             <span style="font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 手续费总金额 : </span><span style="font-size:15px;margin-left:5px" id="count5"></span>
                             <span style="display:none;font-weight:900;color:#227700;font-size:15px;margin-left:5px"> 成功总金额(含手续费) : </span><span style="display:none;font-size:15px;margin-left:5px" id="count6"></span>
                         </div>
@@ -2204,6 +2205,7 @@ if ('@CheckLoginPermission' == 'false') {
         $('#count2').text(toCurrency(data.SumChargeAndSuccessOrderAmount-data.SumCharge));
         $('#count3').text(data.OrderCount);
         $('#count4').text(data.SuccessOrderCount);
+        $('#countRate').text(data.OrderCount > 0 ? (data.SuccessOrderCount / data.OrderCount * 100).toFixed(2) + '%' : '0%');
         $('#count5').text(toCurrency(data.SumCharge));
         $('#count6').text(toCurrency(data.SumChargeAndSuccessOrderAmount));
         $('#count7').text(toCurrency(data.ProfitAmount));
