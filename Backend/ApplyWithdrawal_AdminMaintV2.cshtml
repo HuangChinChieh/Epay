@@ -1093,6 +1093,7 @@
     var isCreatedTable = false;
     var isProviderTable = false;
     var withdrawalRecordTable;
+    var paymentRecordTable;
     var isCreatedWithdrawalModal = false;
     var isCreatedWithdrawalModal2 = false;
     var isCreatedWithdrawalModal3 = false;
@@ -1209,6 +1210,23 @@
                             </div>
                             </div>`;
         $('body').append(editGroupTable);
+
+        var paymentRecordModalHtml = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="PaymentRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <h4 class="title">订单记录</h4>
+                            </div>
+                            <div class="modal-body">
+                            <table style="width:100%" class="table table-bordered table-striped table-hover dataTable nowrap " id="paymentRecordTable"></table>
+                            </div>
+                            <div class="modal-footer">
+                            <button onclick="contentcancel3()" type="button" class="btn btn-primary btn-round waves-effect">关闭</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>`;
+        $('body').append(paymentRecordModalHtml);
     };
     $('#deteselect').change(function () {
 
@@ -1532,6 +1550,7 @@
                             default:
                                 break;
                         }
+                        tmpdoc += '<button style="margin-left:5px" onclick="PaymentRecord(this)">订单记录</button>';
                         return tmpdoc;
                     }
                 }
@@ -1886,6 +1905,7 @@
                             default:
                                 break;
                         }
+                        tmpdoc += '<button style="margin-left:5px" onclick="PaymentRecord(this)">订单记录</button>';
                         return tmpdoc;
                     }
                 }
@@ -2863,6 +2883,74 @@
 
     function contentcancel2() {
         $('#WithdrawalRecordModal').modal('hide');
+    }
+
+    function contentcancel3() {
+        $('#PaymentRecordModal').modal('hide');
+    }
+
+    function PaymentRecord(objbtn) {
+        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
+
+        parent.wrapperFadeIn();
+        api.PaymentRecord(withdrawSerial, function (success, obj) {
+            if (success) {
+                if (obj.ResultCode == 0) {
+                    if (!paymentRecordTable) {
+                        createPaymentRecordTable(obj.PaymentTableResults);
+                    } else {
+                        paymentRecordTable.clear();
+                        paymentRecordTable.rows.add(obj.PaymentTableResults).draw();
+                    }
+                    $('#PaymentRecordModal').modal('show');
+                    paymentRecordTable.columns.adjust();
+                } else {
+                    switch (obj.ResultCode) {
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        case 6:
+                            parent.warningAlert("没有资料");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                parent.wrapperFadeOut();
+            } else {
+                parent.wrapperFadeOut();
+                parent.warningAlert("网路异常");
+            }
+        });
+    }
+
+    function createPaymentRecordTable(data) {
+        paymentRecordTable = $("#paymentRecordTable").DataTable({
+            data: data,
+            columns: [
+                { "title": "建立时间", "data": "CreateDate2", "width": "160px" },
+                {
+                    "title": "资讯", "data": "Message",
+                    "render": function (data, display, rowdata) {
+                        return '<span style="display:block;white-space:pre-wrap;word-break:break-all;">' + data + '</span>';
+                    }
+                }
+            ],
+            rowCallback: function (row, data) { },
+            filter: true,
+            info: false,
+            ordering: true,
+            processing: true,
+            retrieve: true,
+            selected: true,
+            order: [[0, "desc"]],
+            autoWidth: false,
+            language: chineseTableLang
+        });
+
+        paymentRecordTable.on('page.dt', function () {
+            paymentRecordTable.columns.adjust();
+        });
     }
 
     function ReSendWithdrawal(objbtn, isReSendWithdraw) {
