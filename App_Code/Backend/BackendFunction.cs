@@ -15,20 +15,16 @@ public class BackendFunction {
         JArray RetValue;
         string path = "";
         //初始化設定檔資料
-        if (CurrencyType == "THB")
-        {
+        if (CurrencyType == "THB") {
             path = Pay.ProviderSettingPath + "\\" + "withdrawBankTHB.json";
-        }
-        else if (CurrencyType == "INR")
-        {
+        } else if (CurrencyType == "INR") {
             path = Pay.ProviderSettingPath + "\\" + "withdrawBankINR.json";
-        }
-        else if (CurrencyType == "VND")
-        {
+        } else if (CurrencyType == "VND") {
             path = Pay.ProviderSettingPath + "\\" + "withdrawBankVND.json";
-        }
-        else {
-             path = Pay.ProviderSettingPath + "\\" + "withdrawBankCN.json";
+        } else if (CurrencyType == "JPY") {
+            path = Pay.ProviderSettingPath + "\\" + "withdrawBankJPY.json";
+        } else {
+            path = Pay.ProviderSettingPath + "\\" + "withdrawBankCN.json";
         }
 
         string jsonContent;

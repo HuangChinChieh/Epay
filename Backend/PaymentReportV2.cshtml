@@ -1809,7 +1809,7 @@ if ('@CheckLoginPermission' == 'false') {
         }
 
     function PaymentRecord(objbtn) {
-            var paymentSerial = $($(objbtn).parent().parent().find('td')[0]).html();
+            var paymentSerial = $($(objbtn).parent().parent().find('td')[1]).html();
 
             parent.wrapperFadeIn();
             api.PaymentRecord(paymentSerial, function (success, obj) {

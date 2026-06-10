@@ -1,0 +1,2180 @@
+﻿@{
+    var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
+    var result = bc.CheckLoginPermission(BID);
+    string CheckPermission = "success";
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    string PermissionName = Request.Path.Split('/').Last().Split('.').First();
+    result = bc.CheckPermission(BID,PermissionName);
+
+    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckPermission = "false";
+    }
+
+    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    string CheckLoginPermission = "success";
+    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    {
+        CheckLoginPermission = "false";
+    }
+}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+    <title>@System.Configuration.ConfigurationManager.AppSettings["SiteTitle"]</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Favicon-->
+    <link rel="stylesheet" href="~/Backend/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap Select Css -->
+    <link href="~/Backend/assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Backend/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
+    <link rel="stylesheet" href="~/Backend/assets/plugins/morrisjs/morris.min.css" />
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/Backend/assets/css/main.css">
+    <link rel="stylesheet" href="~/Backend/assets/css/color_skins.css">
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="~/Backend/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+
+    <!-- JQuery sweetalert Css -->
+    <link href="~/Backend/assets/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <!-- JQuery jquery-nestable Css -->
+    <link href="~/Backend/assets/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <!-- datetimepicker Css-->
+    <link href="~/Backend/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <!-- JQuery multi-select Css -->
+    <link href="~/Backend/assets/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/Backend/assets/css/ecommerce.css" rel="stylesheet" />
+    <!-- jquery-ui Css -->
+    <link href="~/Backend/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Backend/assets/css/ui.tabs.overflowResize.css" rel="stylesheet" />
+    <!-- Jquery Core Js -->
+    <script src="~/Backend/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/Backend/assets/js/D3/d3.min.js"></script>
+    <script src="~/Backend/assets/bundles/libscripts.bundle.js"></script> <!--Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js)-->
+    <script src="~/Backend/assets/bundles/vendorscripts.bundle.js"></script>  <!--slimscroll, waves Scripts Plugin Js-->
+    <script src="~/Backend/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/Backend/assets/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
+    <script src="~/Backend/assets/bundles/morrisscripts.bundle.js"></script><!-- Morris Plugin Js -->
+    <script src="~/Backend/assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <script src="~/Backend/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+    <script src="~/Backend/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/Backend/assets/js/pages/index.js"></script>
+    <script src="~/Backend/assets/plugins/nestable/jquery.nestable.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="~/Backend/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
+    <script src="~/Backend/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/Backend/assets/plugins/jquery-datatable/dataTables.responsive.min.js"></script>
+    <script src="~/Backend/assets/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <!-- basic-form-elements Js -->
+    @*<script src="assets/js/pages/forms/basic-form-elements.js"></script>*@
+    <!-- datetimepicker Js -->
+    <script src="~/Backend/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <!-- sweetalert Plugin Js -->
+    <script src="~/Backend/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Backend/assets/plugins/jquery-spinner/js/jquery.spinner.js"></script>
+    <script src="~/Backend/assets/js/BackendJS/BackendAPI.js?20200326"></script>
+    <script src="~/Backend/assets/js/AutoNumeric.js"></script>
+    <script src="~/Backend/assets/js/ion.sound.min.js"></script>
+    <!-- JQuery 頁籤 Js -->
+    <script src="~/Backend/assets/js/jquery-ui.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.overflowResize.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.addTab.js"></script>
+    <script src="~/Backend/assets/js/ui.tabs.closable.js"></script>
+
+    <script src="~/Backend/assets/js/common.js"></script>
+    @*<script src="assets/js/jquery.multi-select.js"></script>*@
+    @*<link href="assets/js/multi-select.css" rel="stylesheet" />*@
+    <style>
+
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black !important;
+            opacity: 1; /* Firefox */
+        }
+
+        .filter-option {
+            color: black !important;
+            opacity: 0.8;
+        }
+        /* fallback */
+        @@font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dtp-buttons {
+            display: none;
+        }
+
+        .navbar
+
+        .divided:hover {
+            cursor: pointer;
+        }
+
+        button, input, optgroup, select, textarea {
+            margin: 0;
+            font-family: "Microsoft JhengHei";
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        form > label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            color: forestgreen !important;
+            background: #DDDDDD !important;
+            border-color: black !important;
+        }
+
+            .selectedItem:hover {
+                color: forestgreen;
+                background: #DDDDDD;
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #dff0d8 !important;
+        }
+
+        .show > .dropdown-toggle {
+            color: #fff !important;
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .btn-timeZone:hover {
+            cursor: pointer;
+        }
+        /*.dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }*/
+        .dtr-title {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: normal;
+        }
+
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .card_title {
+            font-size: 22px;
+        }
+
+        .card_subtitle {
+            padding: 20px;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft JhengHei";
+        }
+
+        * {
+            font-family: 微軟正黑體, 微軟雅黑體, Arial;
+        }
+        /*body{min-width: 1200px;}*/
+        /*body > .bg{background-image: url('../bg/davide-ragusa-716-unsplash.jpg');}*/
+        body > .bg {
+            background-image: url('assets/background/bg.jpg');
+        }
+        /*body > .bg{background-image: url('backgrounds/1.jpg');}*/
+        /*body > .bg{background-image: url('../bg/jeremy-bishop-171845-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/paul-carmona-276464-unsplash.jpg');}*/
+        /*body > .bg{background-image: url('../bg/vinoth-ragunathan-96670-unsplash.jpg');}*/
+        body > .bg {
+            background-size: cover;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            filter: brightness(10);
+        }
+
+        .navbar-brand span {
+            color: #fff;
+        }
+        /*.navbar-nav > li > a i.fa-sync-alt, .navbar-nav > li > a i.fa-bell, .navbar-nav > li > a i.fa-caret-down{font-size: inherit;}*/
+        nav.navbar li > a {
+            color: #fff !important;
+        }
+
+        li.divided > a {
+            display: inline-block;
+            line-height: 30px;
+            padding: 0 15px;
+        }
+
+        span.label.label-transparent-black {
+            position: absolute;
+            top: -10px;
+            left: 26px;
+            z-index: 2;
+        }
+
+            span.label.label-transparent-black:before {
+                content: '';
+                background-color: #FF6B6B;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+            }
+
+        .displaynone, .overlay, .sidebar .menu .list .ml-menu, .menu_sm .sidebar .list li.header, .menu_sm .sidebar .list .detail, .menu_sm .sidebar .list a::before, .menu_sm .sidebar .list a::after, .menu_sm .sidebar .list a span {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .user .profile-photo {
+            display: inline-block;
+            width: 92px;
+            height: 92px;
+            margin: 0 0 4px 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+            transition: 0.2s all;
+        }
+
+            .user .profile-photo img {
+                width: 100%;
+            }
+
+        #current-user {
+            text-align: center;
+            list-style: none;
+            margin: 16px 0 0;
+        }
+
+            #current-user .account p {
+                color: #fff;
+            }
+
+            #current-user .account #layoutCompanyName {
+                font-size: 18px;
+                margin: 6px 0;
+            }
+
+            #current-user .account #layoutLoginAccount {
+                font-size: 14px;
+                font-weight: lighter;
+                margin: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+        #leftsidebar {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sidebar .menu .list a {
+            color: #eee;
+            padding: 12px 16px;
+        }
+
+            .sidebar .menu .list a span {
+                font-size: 16px;
+            }
+
+        .sidebar .menu .list .ml-menu li a {
+            padding: 10px 0 10px 60px;
+        }
+
+            .sidebar .menu .list .ml-menu li a:before {
+                content: '';
+            }
+
+        #timeShowBox {
+            color: #fff;
+            margin: 0;
+        }
+
+        #timeZoneSelect {
+            width: 90%;
+            height: 0;
+            margin: 8px auto 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 32px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+            transition: 0.3s all;
+            font-size: 0;
+        }
+
+            #timeZoneSelect:before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active {
+                height: 54px;
+                padding: 12px 0;
+            }
+
+                #timeZoneSelect.active:before {
+                    border-bottom: 5px solid #fff;
+                }
+
+            #timeZoneSelect .btn-timeZone {
+                display: -webkit-inline-flex;
+                display: -moz-inline-flex;
+                display: -ms-inline-flex;
+                display: -o-inline-flex;
+                display: inline-flex;
+                justify-content: center;
+                -ms-align-items: center;
+                align-items: center;
+                width: 88px;
+                height: 30px;
+                margin: 0 4px;
+                font-size: 12px;
+                color: transparent;
+                background-color: transparent;
+                border-radius: 4px;
+                transition: 0.3s all;
+            }
+
+            #timeZoneSelect.active .btn-timeZone {
+                color: #fff;
+                background-color: #65C3DF;
+            }
+
+        .navbar {
+            min-height: 65px;
+            background-image: url('assets/background/nav_bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        ul.flex, .navLeft, .navRight {
+            display: -webkit-inline-flex !important;
+            display: -moz-inline-flex !important;
+            display: -ms-inline-flex !important;
+            display: -o-inline-flex !important;
+            display: inline-flex !important;
+            justify-content: space-between;
+            -ms-align-items: center;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+            .navLeft li:last-child {
+                position: absolute;
+                left: 214px;
+            }
+
+            .navRight li:nth-child(1), .navRight li:nth-child(2), .navRight li:nth-child(3) {
+                border-right: 1px solid #888;
+                height: 30px;
+            }
+
+        .navRight {
+            margin-right: 12px;
+        }
+        /*.navbar ul.nav li{position: absolute; top: 50%; transform: translateY(-50%);}*/
+        /*.navbar ul.nav li:nth-child(2){left: 150px;}
+        .navbar ul.nav li:nth-child(3){right: 340px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(3) p{margin: 0;}
+        .navbar ul.nav li:nth-child(4){right: 290px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(5){right: 242px; border-right: 1px solid #888; height: 30px;}
+        .navbar ul.nav li:nth-child(6){right: 52px;}
+        .navbar ul.nav li:nth-child(7){right: 6px; border-left: 1px solid #888; height: 30px;}*/
+        .copyright {
+            position: absolute;
+            left: 28px;
+            bottom: 12px;
+            transition: 0.2s all;
+        }
+
+        body .copyright p {
+            margin: 0;
+            font-size: 12px;
+            color: #eee;
+        }
+
+        body.theme-cyan.menu_sm .copyright {
+            left: 4px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .profile-photo {
+            width: 52px;
+            height: 52px;
+            border-width: 2px;
+            transition: 0.2s all;
+        }
+
+        body.theme-cyan.menu_sm .account p {
+            display: none;
+        }
+
+        section.content {
+            margin: 65px 0px 0 250px;
+            background-color: #f5f5f5;
+            border-radius: 0;
+        }
+
+        .container-fluid > .row {
+            padding: 12px 0;
+        }
+
+        .dd-handle {
+            background: none;
+            border: 0;
+        }
+
+            .dd-handle:hover {
+                color: #45B6B0;
+            }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item > .dd-handle {
+            color: #575b61;
+            padding-left: 24px;
+        }
+
+        ol.dd-list > li.dd-item > ol.dd-list > li.dd-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            width: 1px;
+            height: calc(100% + 10px);
+            height: -moz-calc(100% + 10px);
+            height: -webkit-calc(100% + 10px);
+            border-left: 0.5px solid #ddd;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item {
+            /*border-bottom: 1px solid #ddd;*/
+            margin: 6px 0;
+        }
+
+        li.dd-item {
+            padding: 0 12px;
+        }
+
+            li.dd-item > button {
+                position: absolute;
+                left: 10px;
+            }
+
+        .divCompanyTree > ol.dd-list > li.dd-item:last-child {
+            border: 0;
+        }
+
+        .divCompanyTree > ol.dd-list > li.dd-item > .dd-handle {
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 24px;
+        }
+
+        .theme-cyan .sidebar .menu .list {
+            padding: 0;
+        }
+
+            .theme-cyan .sidebar .menu .list > li {
+                padding: 0;
+                margin: 4px 12px;
+            }
+            /*.theme-cyan .sidebar .menu .list li ul li{padding: 0 12px;}*/
+            .theme-cyan .sidebar .menu .list li a:hover {
+                background-color: rgba(0,0,0,0.2);
+            }
+
+            .theme-cyan .sidebar .menu .list li ul {
+                background: rgba(0,0,0,0.35);
+            }
+
+            .theme-cyan .sidebar .menu .list li a:hover {
+                color: #fff;
+            }
+        /*.strongtitle{color: #6f7884; font-size: 22px;}*/
+        .col-lg-7.col-md-7.col-sm-7 > p {
+            margin: 0;
+        }
+
+        .block-header {
+            padding: 0 64px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+            .block-header h2 {
+                color: #565d67;
+                font-weight: bold;
+            }
+
+            .block-header .col {
+                padding: 16px;
+            }
+
+                .block-header .col.col-lg-9.col-md-9.col-sm-9 {
+                    display: -webkit-inline-flex;
+                    display: -moz-inline-flex;
+                    display: -ms-inline-flex;
+                    display: -o-inline-flex;
+                    display: inline-flex;
+                    -ms-align-items: center;
+                    align-items: center;
+                    border-left: 1px dashed #ddd;
+                }
+
+        .tips {
+            font-size: 12px;
+            color: #565d67;
+            padding-left: 12px;
+        }
+
+        #divtree {
+            padding: 0 24px;
+        }
+
+        @@media screen and (min-width: 1600px) {
+            #divtree {
+                padding: 0 56px;
+            }
+        }
+
+        .divtreeTool {
+            font-size: 0;
+        }
+
+            .divtreeTool button {
+                width: calc((100% - 6px * 2)/ 3 );
+                margin: 0 6px 6px 0;
+                font-size: 12px;
+            }
+
+                .divtreeTool button:last-child {
+                    margin-right: 0;
+                }
+
+            .divtreeTool .btn-divtreeTool {
+                padding: 12px 0;
+            }
+
+        .paper-wrap:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 0 42px 42px 0;
+            border-style: solid;
+            border-color: #ffffff #253856;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.3);
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+        }
+
+        .card .header .row .col-lg-7.col-md-7.col-sm-7 {
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            -ms-align-items: center;
+            align-items: center;
+        }
+
+        table {
+            font-size: 14px !important;
+            color: #575b61 !important;
+        }
+
+        .card .body {
+            font-size: 14px !important;
+            color: #575b61 !important;
+            padding: 0 20px !important;
+        }
+
+            .card .body .row, #divCompanyPoint.card .body {
+                margin: 0 0 8px 0;
+            }
+
+        /*.card.wallet {
+            width: 120px;
+        }*/
+
+        .footer {
+            padding: 16px 0;
+        }
+        /*.theme-cyan .card .header h2:before{background: #45B6B0; top: -17px;}*/
+        .ortherText button {
+            margin: 0 8px;
+        }
+
+        .theme-cyan .btn-primary {
+            background: #65C3DF;
+        }
+
+        .dataTables_wrapper input[type="search"]:focus, .dataTables_wrapper input[type="search"]:active {
+            border-bottom: 2px solid #65C3DF;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+            margin: 16px 0 8px;
+        }
+
+
+        .theme-cyan .btn-primary:active, .theme-cyan .btn-primary:hover, .theme-cyan .btn-primary:focus {
+            background: #45B6B0;
+        }
+
+        .sorting_1:focus {
+            outline: 0;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #446288;
+        }
+
+        button.btn-circle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            line-height: 36px;
+        }
+
+        button.btn-round {
+            padding: 9px 24px;
+        }
+
+        table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+            background-color: #65C3DF;
+        }
+
+        footer.footer {
+            text-align: right;
+            padding: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+            footer.footer p {
+                display: inline-block;
+                margin: 0 20px 0 0;
+                font-size: 12px;
+                color: #aaa;
+            }
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: 'Old Standard TT', serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+            color: black;
+        }
+
+        .alert .close {
+            color: black !important;
+            margin-right: 20px;
+        }
+
+        .selectedItem {
+            /*color: forestgreen;*/
+            /*background: #DDDDDD;*/
+            border-color: black;
+        }
+
+            .selectedItem:hover {
+                /*color: forestgreen;*/
+                /*background: #DDDDDD;*/
+            }
+
+        .dd-handle:hover {
+            cursor: pointer;
+        }
+
+        table .selected {
+            background-color: #a2aec7 !important;
+        }
+
+        .show > .dropdown-toggle {
+            /*color: #fff !important;*/
+        }
+
+        .table-responsive > div > table {
+            width: 100%;
+        }
+
+        .dtr-data {
+            word-break: normal;
+            width: auto;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+
+        .divDetailData .card {
+            background-color: #fff;
+        }
+
+        .divDetailData > .card > .header {
+            padding: 12px 16px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .divPointDetail {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+            .divPointDetail .footer {
+                padding: 0;
+            }
+
+            .divPointDetail .card.wallet {
+                border-right: 1px solid rgba(0,0,0,0.1) !important;
+                margin-bottom: 30px;
+                border-radius: 0;
+            }
+
+                .divPointDetail .card.wallet:last-child {
+                    border-right: 0;
+                }
+
+            .divPointDetail .card.wallet {
+                background: none;
+                box-shadow: none;
+            }
+
+                .divPointDetail .card.wallet .header {
+                    padding: 4px 20px 8px;
+                }
+
+                .divPointDetail .card.wallet h2:before {
+                    width: 16px;
+                    height: 2px;
+                    top: -4px;
+                }
+
+                .divPointDetail .card.wallet p.text-muted, .divPointDetail .card.wallet p.wallettext-muted {
+                    color: #6f7884 !important;
+                    margin: 0;
+                    white-space: pre-wrap;
+                    font-size: 18px;
+                }
+
+        /*.table-responsive .dataTables_length .btn-group button {
+            border-radius: 8px !important;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:active,
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button:focus {
+            border-color: #fff;
+        }
+
+        .table-responsive .dataTables_length .btn-group.bootstrap-select.form-control.form-control-sm button span {
+            color: #fff;
+        }*/
+
+        .table-responsive table th {
+            font-weight: normal;
+        }
+    </style>
+</head>
+<style>
+    .dropdown-menu {
+        max-height: 300px !important;
+    }
+
+    .dropdown-header > span {
+        color: blue;
+        font-size:15px;
+    }
+
+    .dropdown-header {
+        background-color: aqua;
+    }
+    
+</style>
+
+<script src="~/Backend/assets/js/daterangepicker.js"></script>
+<link href="~/Backend/assets/css/daterangepicker.css" rel="stylesheet" />
+<script src="~/Backend/assets/js/jquery.quicksearch.js"></script>
+
+<body class="theme-cyan">
+    <div class="block-header paper-wrap">
+        <div class="row">
+            <div class="col col-lg-3 col-md-3 col-sm-3">
+                <h2>商户通道调整</h2>
+            </div>
+            <div class="col col-lg-9 col-md-9 col-sm-9">
+                <div class="tips">
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header"></div>
+                    <div class="body">
+                        <div class="row clearfix">
+
+                            <div class="col-lg-12" id="divCompanyData">
+
+                                <div class="row">
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 商户 : </h6>
+                                    <select class="show-tick" id="select_Company"></select>
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 支付通道 : </h6>
+                                    <div class="row" style="display:inline-block;margin-bottom: 10px;">
+                                        <select class="show-tick" id="select_ServiceType">
+                                            <option value="0"> 支付通道 </option>
+                                        </select>
+                                        <button id="addCompanyService" style="margin-left:5px" type="button" class="btn btn-raised btn-primary btn-round waves-effect float-right">新增通道</button>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <table class="table table-bordered table-striped table-hover dataTable nowrap" style="width:100%" id="table_CompanyServiceTable"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Examples -->
+    </div>
+
+    <div class="container-fluid">
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header"></div>
+                    <div class="body">
+                        <div class="row clearfix">
+
+                            <div class="col-lg-12" id="">
+
+                                <div class="row">
+
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 支付通道 : </h6>
+                                    <div class="row" style="display:inline-block;margin-bottom: 10px;">
+                                        <select class="show-tick" id="select_ServiceTypeByEditProviderService">
+                                            <option value="0"> 支付通道 </option>
+                                        </select>
+                                    </div>
+                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 供应商 : </h6>
+                                    <div class="row" style="display:inline-block;margin-bottom: 10px;">
+                                        <select class="show-tick" id="select_Provider">
+                                            <option value="0"> 尚未选择 </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <select id="pre-selected-options" class="multiple" multiple="multiple" name="multi-select">
+                                     
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Examples -->
+    </div>
+
+    <div id="SetCompanyServiceModalContent">
+
+    </div>
+
+    <div id="ProviderServiceModalContent">
+        <div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="ProviderServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="title">已设定渠道</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="row clearfix" id="divGPayRelationDetail">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="saveCompanyServiceWidth()" type="button" class="btn btn-primary btn-round waves-effect">修改权重</button>
+                        <button onclick="contentcancel2()" type="button" class="btn btn-primary btn-round waves-effect">关闭</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+    var Table;
+    var CData;
+    var CSeleData;
+    var CompanyID;
+    var companyServiceModel;
+    var CompanyServiceType;
+    var checkServiceTypeData;
+    $(document).ready(function () {
+        if ('@CheckLoginPermission' == 'false') {
+                location.href = "Login.cshtml";
+            }
+
+           if ('@CheckPermission' == 'false') {
+            parent.errorAlertCallback("权限不足", function () {
+                parent.GoPage("Home");
+                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+            });
+        }
+
+        pageLoad();
+
+        $('#pre-selected-options').multiSelect({
+            selectableHeader: "<input type='text' style='width:300px;height:40px;margin-bottom:10px;' class='search-input form-control' autocomplete='off' placeholder='查询'>",
+            selectionHeader: "<input type='text' style='width:300px;height:40px;margin-bottom:10px;' class='search-input form-control' autocomplete='off' placeholder='查询'>",
+            afterInit: function (ms) {
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+            },
+            afterSelect: function (value) {
+                this.qs1.cache();
+                this.qs2.cache();
+                if (value.length !=1) {
+                    parent.warningAlert("系统有误");
+                } else {
+                    setCompanyServiceRelationByEditView(value[0], true);
+                }
+             
+            },
+            afterDeselect: function (value) {
+                this.qs1.cache();
+                this.qs2.cache();
+                if (value.length != 1) {
+                    parent.warningAlert("系统有误");
+                } else {
+                    setCompanyServiceRelationByEditView(value[0], false);
+                }
+            }
+        });
+    });
+    function pageLoad() {
+        AdminObject = parent.AdminObject;
+        api = parent.api;
+
+        createCompanySelect();
+        createCompanyServiceTable();
+        getServiceTypeByEditProviderService();
+        createSetCompanyServiceModal();
+        new AutoNumeric.multiple('.thousand-symbols', 'floatPos', {
+            allowDecimalPadding: false, decimalPlaces: 4, modifyValueOnWheel: false,
+            maximumValue: '999999999999999.99', // 調大最大值
+            minimumValue: '0' // 建議同步調大最小值 });
+        });
+        new AutoNumeric.multiple('.percent', 'integer', { allowDecimalPadding: false, decimalPlaces: 4, minimumValue: 0, maximumValue: 100 });
+
+        parent.wrapperFadeOut();
+    }
+
+    function createSetCompanyServiceModal() {
+        $('#SetCompanyServiceModalContent').html("");
+        var dochtml = ' <div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="SetCompanyServiceModal" tabindex="-1" role="dialog" aria-hidden="true">' +
+            '<div class="modal-dialog" role="document">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            ' <h4 class="title">商户通道调整</h4>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<span style="display:block;margin-bottom: 5px;">商戶:<span id="modal_CompanyName" style="margin-left:5px"></span></span>' +
+            '<span style="display:block;margin-bottom: 5px;">费率:<input data-rule="percent" style="margin-left:5px" class="percent" id="input_CollectRate" type="text"><label id="notifyCollectRate" style="color:red;margin-bottom:5px;margin-left:5px;"></label></span>' +
+            '<span style="display:block;margin-bottom: 5px;">最低金额:<input data-rule="currency" style="margin-left:5px" class="thousand-symbols" id="input_MinOnceAmount" type="text"><label id="notifyMinOnceAmount" style="color:red;margin-bottom: 5px;margin-left:5px;"></label></span>' +
+            '<span style="display:block;margin-bottom: 5px;">最高金额:<input data-rule="currency" style="margin-left:5px" class="thousand-symbols" id="input_MaxOnceAmount" type="text"><label id="notifyMaxOnceAmount" style="color:red;margin-bottom: 5px;margin-left:5px;"></label></span>' +
+            '<span style="display:block;margin-bottom: 5px;">每日用量:<input data-rule="currency" style="margin-left:5px" class="thousand-symbols" id="input_MaxDaliyAmount" type="text"></span>' +  
+            '<input id="input_CurrencyType" style="display:none" />' +
+            '<input id="input_ServiceType" style="display:none" />'+
+            '<span style="display:block">状态:' +
+            '<div class="radio inlineblock"><input type="radio" name="State" id="State0" class="with-gap" value="0"><label for="State0">启用</label></div>' +
+            '<div class="radio inlineblock"><input type="radio" name="State" id="State1" class="with-gap" value="1"><label for="State1">停用</label></div>' +
+            '</span>' +
+            '<span style="display:block">结算时间:' +
+            '<div class="radio inlineblock"><input type="radio" name="CheckoutType" id="CheckoutType0" class="with-gap" value="0"><label for="CheckoutType0">当日结算</label></div>' +
+            '<div class="radio inlineblock"><input type="radio" name="CheckoutType" id="CheckoutType1" class="with-gap" value="1"><label for="CheckoutType1">隔日结算</label></div>' +
+            '<div class="radio inlineblock"><input type="radio" name="CheckoutType" id="CheckoutType2" class="with-gap" value="2"><label for="CheckoutType2">当周结算</label></div>' +
+            '</span>' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<button id="saveCompanyServiceBtn" onclick="saveCompanyService()" type="button" class="btn btn-primary btn-round waves-effect">确认</button>' +
+            '<button onclick="contentcancel()" type="button" class="btn btn-primary btn-round waves-effect">取消</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        $('#SetCompanyServiceModalContent').append(dochtml);
+   
+    }
+
+    function setCompanyServiceRelationByEditView(companyID, isAddRelation) {
+        var ServiceType = $("#select_ServiceTypeByEditProviderService").val();
+        var providerCode = $("#select_Provider").val();
+        var currencyType = 'CNY';
+        if (ServiceType == "0") {
+            parent.warningAlert("尚未选择支付通道");
+            return;
+        }
+
+        if (providerCode == "0") {
+            parent.warningAlert("尚未选择供应商")
+            return;
+        }
+        parent.wrapperFadeIn(); 
+        api.setCompanyServiceRelationByEditView(companyID, ServiceType, currencyType, providerCode, isAddRelation, function (success, obj) {
+            if (success) {
+                parent.wrapperFadeOut();
+                if (obj.ResultCode == 0) {
+                    if ($('#select_Company').val() == companyID) {
+                        getCompanyServiceTableResult(companyID);
+                    }
+                    parent.successAlert();
+                }
+                else {
+                    getCompanyServiceRelationByEditView(providerCode, ServiceType);
+            
+                    var message = ""
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 6:
+                            parent.warningAlert(obj.Message);
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    function saveCompanyService() {
+
+        if (!selectedServiceType) {
+            parent.warningAlert("渠道选择错误");
+            return;
+        }
+
+        if ($("#input_CollectRate").val().trim() == "") {
+            parent.warningAlert("尚未输入费率(%)");
+            return;
+        }
+
+        if (!Number.isInteger(parseInt($("#input_CollectRate").val().trim())) || $("#input_CollectRate").val().trim() > 100 || $("#input_CollectRate").val().trim() < 0) {
+            parent.warningAlert("费率(%)只能介于0~100");
+            return;
+        }
+
+        if ($("#input_MinOnceAmount").val().trim() == "") {
+            parent.warningAlert("尚未输入最低金额");
+            return;
+        }
+
+        if ($("#input_MaxOnceAmount").val().trim() == "") {
+            parent.warningAlert("尚未输入最高金额");
+            return;
+        }
+
+        if ($("#input_MaxDaliyAmount").val().trim() == "") {
+            parent.warningAlert("尚未输入交易最大用量");
+            return;
+        }
+
+        if (toNumber($("#input_MinOnceAmount").val()) > toNumber($("#input_MaxOnceAmount").val())) {
+            parent.warningAlert("最低金额不可超过最高金额");
+            return;
+        }
+
+        //目前新增的商戶為其他商戶下線,則驗證是否設定的費率大於上線的交易費率
+        if (selectedServiceType.isUpLine == 0) {
+            if (selectedServiceType.CollectRate > $("#input_CollectRate").val().trim()) {
+                parent.warningAlert("费率(%) 需超过或等于上线额");
+                return;
+            }
+
+
+            if (toNumber($("#input_MinOnceAmount").val()) < selectedServiceType.MinOnceAmount) {
+                parent.warningAlert("最低金额 需超过或等于上线额");
+                $("#input_MinOnceAmount").focus();
+                return;
+            }
+
+            if (toNumber($("#input_MaxOnceAmount").val()) > selectedServiceType.MaxOnceAmount) {
+                parent.warningAlert("最高金额 不可超过上线额");
+                return;
+            }
+
+        }
+
+        var companyID = $('#select_Company').val();
+        var collectRate = $("#input_CollectRate").val().trim();
+        var maxDaliyAmount = $("#input_MaxDaliyAmount").val().trim();
+        var minOnceAmount = $("#input_MinOnceAmount").val().trim();
+        var maxOnceAmount = $("#input_MaxOnceAmount").val().trim();
+        var state = $('input[name="State"]:checked').val();
+        var checkoutType = $('input[name="CheckoutType"]:checked').val();
+
+        $('#saveCompanyServiceBtn').attr("disabled", true);
+        
+        if (CompanyServiceType == 'add') {
+
+            var ServiceType = $("#select_ServiceType").val().split('_')[0];
+            var currencyType = $("#select_ServiceType").val().split('_')[1];
+
+            api.insertCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType, function (success, obj) {
+                if (success) {
+                    $('#saveCompanyServiceBtn').attr("disabled", false);
+                    if (obj.ResultCode == 0) {
+                        parent.successAlert(function () {
+                            getCompanyServiceTableResult(companyID);
+                            $('#SetCompanyServiceModal').modal('hide');
+                        });
+                    }
+                    else {
+                        var message = ""
+                        switch (obj.ResultCode) {
+                            case 4:
+                                parent.errorAlertCallback("权限不足", function () {
+                                    parent.ChangePage("Home");
+                                    parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                                });
+                                break;
+                            case 7:
+                                parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                break;
+                            case 8:
+                                parent.warningAlert("渠道资料已存在");
+                                break;
+                            case 10:
+                                parent.warningAlert("上线额度不足");
+                                break;
+                            default:
+                                parent.warningAlert("其他错误");
+                                break;
+                        }
+                    }
+                }
+            });
+        } else if (CompanyServiceType == 'edit') {
+            var ServiceType = $("#input_ServiceType").val();
+            var currencyType = $("#input_CurrencyType").val();
+
+            api.getGPayRelationByCompany(companyID, ServiceType, currencyType, function (success, obj) {
+                if (success) {
+   
+                    if (obj.ResultCode == 0) {
+                        var providerMinAmount = 0;
+                        var providerMaxAmount = 0;
+                        var providerCostRate = 0;
+                        var providerMaxDaliyAmount = 0;
+                        for (var i = 0; i < obj.ProviderServices.length; i++) {
+                            if (i == 0) {
+                                providerCostRate = obj.ProviderServices[i].CostRate;
+                                providerMinAmount = obj.ProviderServices[i].MinOnceAmount;
+                                providerMaxAmount = obj.ProviderServices[i].MaxOnceAmount;
+                                providerMaxDaliyAmount = obj.ProviderServices[i].MaxDaliyAmount;
+                            } else {
+                                if (providerCostRate < obj.ProviderServices[i].CostRate) {
+                                    providerCostRate = obj.ProviderServices[i].CostRate;
+                                }
+
+                                if (providerMinAmount > obj.ProviderServices[i].MinOnceAmount) {
+                                    providerMinAmount = obj.ProviderServices[i].MinOnceAmount;
+                                }
+                                if (providerMaxAmount < obj.ProviderServices[i].MaxOnceAmount) {
+                                    providerMaxAmount = obj.ProviderServices[i].MaxOnceAmount;
+                                }
+                                if (providerMaxDaliyAmount > obj.ProviderServices[i].MaxDaliyAmount) {
+                                    providerMaxDaliyAmount = obj.ProviderServices[i].MaxDaliyAmount;
+                                }
+                            }
+                        }
+
+                        var showText = "";
+                        if (collectRate < providerCostRate) {
+                            showText += `供应商费率: ${providerCostRate},目前设定费率:${collectRate}<br/>`;
+                        }
+
+                        if (minOnceAmount < providerMinAmount) {
+                            showText += `供应商最小值: ${providerMinAmount},目前设定最小值:${minOnceAmount}<br/>`;
+                        }
+
+                        if (maxOnceAmount > providerMaxAmount) {
+                            showText += `供应商最大值: ${providerMaxAmount},目前设定最大值:${maxOnceAmount}<br/>`;
+                        }
+                        if (showText != "") {
+                            swal({
+                                title: "当前设定超出供应商额度,是否确认更新?",
+                                type: "warning",
+                                text: showText,
+                                html: true,
+                                showCancelButton: true,
+                                closeOnConfirm: false,
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                confirmButtonColor: "#DD6B55",
+                            },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        updateCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType);
+                                    } else {
+                                        $('#saveCompanyServiceBtn').attr("disabled", false);
+                                    }
+                                });
+                        } else {
+                            updateCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType);
+                        }
+
+
+                    } else {
+                        var message = ""
+                        switch (obj.ResultCode) {
+                            case 4:
+                                parent.errorAlertCallback("权限不足", function () {
+                                    parent.ChangePage("Home");
+                                    parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                                });
+                                break;
+                            case 5:
+                                updateCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType);
+                                break;
+                            case 7:
+                                parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                                break;
+                            default:
+                                parent.warningAlert("其他错误");
+                                $('#saveCompanyServiceBtn').attr("disabled", false);
+                                break;
+                        }
+                    }
+                }
+            
+            });
+   
+
+        }
+    }
+
+    function updateCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType) {
+        api.updateCompanyServiceByEditView(companyID, ServiceType, currencyType, collectRate, maxDaliyAmount, minOnceAmount, maxOnceAmount, state, checkoutType, function (success, obj) {
+            if (success) {
+                $('#saveCompanyServiceBtn').attr("disabled", false);
+                if (obj.ResultCode == 0) {
+                    parent.successAlert(function () {
+                        getCompanyServiceTableResult(companyID);
+                        $('#SetCompanyServiceModal').modal('hide');
+                    });
+                }
+                else {
+                    var message = ""
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        case 8:
+                            parent.warningAlert("渠道资料已存在");
+                            break;
+                        case 10:
+                            parent.warningAlert("上线额度不足");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    function contentcancel() {
+        $('#SetCompanyServiceModal').modal('hide');
+    }
+
+    function contentcancel2() {
+        $('#ProviderServiceModal').modal('hide');
+    }
+    
+
+    $('#addCompanyService').click(function () {
+        if ($('#select_Company').val() == "0") {
+            parent.warningAlert("尚未选择商户");
+            return false;
+        }
+
+        if ($("#select_ServiceType").val() == "0") {
+            parent.warningAlert("尚未选择支付通道");
+            return false;
+        }
+
+        var saveServiceType = $("#select_ServiceType").val().split('_')[0];
+        
+        if (companyServiceModel != undefined) {
+            if (companyServiceModel.findIndex(function (data) { return data.ServiceType == saveServiceType;})!=-1) {
+                parent.warningAlert("该商户已有此支付通道");
+                return false;
+            }
+        }
+ 
+       
+        CompanyServiceType = 'add';
+        $('#modal_CompanyName').text($('#select_Company option:selected').text());
+        $('#input_CollectRate').val("");
+        $('#input_MinOnceAmount').val("");
+        $('#input_MaxOnceAmount').val("");
+        $('#input_MaxDaliyAmount').val("");
+   
+      
+        $('input[name="State"]')[0].checked = true;
+        $('input[name="CheckoutType"]')[0].checked = true;
+        $('#input_CurrencyType').val('');
+        $('#input_ServiceType').val('');
+        if (changeNotifyLabelText(saveServiceType)) {
+            $('#SetCompanyServiceModal').modal('show');
+        }
+ 
+
+    })
+
+    function changeNotifyLabelText(ServiceType) {
+       
+        if (checkServiceTypeData) {
+            if (ServiceType == 0) {     
+                $('#notifyCollectRate').text("");
+                $('#notifyMinOnceAmount').text("");
+                $('#notifyMaxOnceAmount').text("");
+
+            } else {
+                var _ServiceType = ServiceType;
+                var _currencyType = 'CNY';
+
+                var selectedServiceTypeIndex = checkServiceTypeData.findIndex(function (d) { return d.ServiceType == _ServiceType && d.CurrencyType == _currencyType })
+                if (selectedServiceTypeIndex == -1) {
+                    parent.warningAlert("渠道选择错误");
+                    return false;
+                } else {
+                    selectedServiceType = checkServiceTypeData[selectedServiceTypeIndex];
+
+                    if (selectedServiceType.isUpLine == 0) {
+                        $('#notifyCollectRate').text("(需超过或等于" + selectedServiceType.CollectRate + "%" + ")");
+                        $('#notifyMinOnceAmount').text("(需超过或等于" + toCurrency(selectedServiceType.MinOnceAmount) + ")");
+                        $('#notifyMaxOnceAmount').text("(最高不可超过" + toCurrency(selectedServiceType.MaxOnceAmount) + ")");
+                    } else {
+                        $('#notifyCollectRate').text('');
+                        $('#notifyMinOnceAmount').text('');
+                        $('#notifyMaxOnceAmount').text('');
+                    }
+                }
+
+
+            }
+
+            return true;
+        }
+
+    }
+
+    $('#select_Company').change(function () {
+        if ($(this).val() != "0") {
+           
+            getCompanyServiceTableResult($(this).val());
+        } else {
+            CompanyServiceTable.clear().draw();
+            $("#select_ServiceType").children().remove();
+            $("#select_ServiceType").append('<option value="0"> 支付通道 </option>');
+            $('#select_ServiceType').selectpicker('refresh');
+            companyServiceModel = undefined;
+        }
+    })
+
+    function createCompanySelect() {
+        api.getCompanyTableResult(function (success, obj) {
+            if (obj.ResultCode == 0) {
+                if (obj.CompanyResults.length > 0) {
+                    $("#select_Company").children().remove();
+                    $("#select_Company").append('<option value="0">尚未选择商户</option>');
+                    $.each(obj.CompanyResults, function (i, item) {
+                        $("#select_Company").append('<option value="' + obj.CompanyResults[i].CompanyID + '">' + obj.CompanyResults[i].CompanyName + '</option>');
+                    })
+
+                    $('#select_Company').selectpicker('refresh');
+                }
+                parent.wrapperFadeOut();
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                }
+                parent.wrapperFadeOut();
+            }
+        });
+    }
+
+    function getServiceType(companyid,companydata) {
+
+        api.getServiceType(companyid, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                if (obj.ServiceTypes.length > 0) {
+                    checkServiceTypeData = obj.ServiceTypes;
+                    $("#select_ServiceType").children().remove();
+                    $("#select_ServiceType").append('<option value="0"> 支付通道 </option>');
+
+                  
+                    var optAPgroup = $('<optgroup style="color:red" label="支付宝">');
+                    var optOBgroup = $('<optgroup style="color:red" label="网银">');
+                    var optWXgroup = $('<optgroup style="color:red" label="微信">');
+                    var optCPgroup = $('<optgroup style="color:red" label="云闪付">');
+                    var optOTHERgroup = $('<optgroup style="color:red" label="其他">');
+
+                    for (var i = 0; i < obj.ServiceTypes.length; i++) {
+
+                        var ServiceTypeCode = trimNumber(obj.ServiceTypes[i].ServiceType);
+                        if (companydata != undefined) {
+                            if (companydata.findIndex(function (data) { return data.ServiceType == obj.ServiceTypes[i].ServiceType; }) == -1) {
+                                switch (ServiceTypeCode) {
+                                    case 'AP':
+                                        optAPgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                        break;
+                                    case 'OB':
+                                        optOBgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                        break;
+                                    case 'WX':
+                                        optWXgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                        break;
+                                    case 'CP':
+                                        optCPgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                        break;
+                                    default:
+                                        optOTHERgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + "_" + obj.ServiceTypes[i].CurrencyType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                        break;
+                                }
+                            }
+                        }
+
+               
+                    }
+
+                    if (optAPgroup.children().length > 0) {
+                        $("#select_ServiceType").append(optAPgroup);
+                    }
+
+                    if (optOBgroup.children().length > 0) {
+                        $("#select_ServiceType").append(optOBgroup);
+                    }
+
+                    if (optWXgroup.children().length > 0) {
+                        $("#select_ServiceType").append(optWXgroup);
+                    }
+
+                    if (optCPgroup.children().length > 0) {
+                        $("#select_ServiceType").append(optCPgroup);
+                    }
+
+                    if (optOTHERgroup.children().length > 0) {
+                        $("#select_ServiceType").append(optOTHERgroup);
+                    }
+               
+                    $('#select_ServiceType').attr("data-size", 5);
+                    $('#select_ServiceType').selectpicker('refresh');
+
+                } else {
+                    checkServiceTypeData = null;
+                    parent.errorAlertAndtoOtrherPage("请先新增渠道", "ServiceType_Create.cshtml", "ServiceType_Create", "支付方式新增");
+                    sessionStorage.setItem("menuselected", "ServiceType_Maint.cshtml");
+                    parent.CloseActivePage(window.frameElement.name);
+                }
+                parent.wrapperFadeOut();
+            } else {
+                var message = ""
+                checkServiceTypeData = null;
+                switch (obj.ResultCode) {
+                    case 5:
+                        parent.errorAlertAndtoOtrherPage("请先新增渠道", "ServiceType_Create.cshtml", "ServiceType_Create", "支付方式新增");
+                        sessionStorage.setItem("menuselected", "ServiceType_Maint.cshtml");
+                        parent.CloseActivePage(window.frameElement.name);
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        message = "其他错误";
+                        parent.warningAlert(message);
+                        break;
+                }
+                parent.wrapperFadeOut();
+
+            }
+        });
+    }
+
+    function getServiceTypeByEditProviderService() {
+
+        api.getServiceType(AdminObject.forCompanyID, function (success, obj) {
+            if (obj.ResultCode == 0) {
+                if (obj.ServiceTypes.length > 0) {
+                    $("#select_ServiceTypeByEditProviderService").children().remove();
+                    $("#select_ServiceTypeByEditProviderService").append('<option value="0"> 支付通道 </option>');
+
+
+                    var optAPgroup = $('<optgroup style="color:red" label="支付宝">');
+                    var optOBgroup = $('<optgroup style="color:red" label="网银">');
+                    var optWXgroup = $('<optgroup style="color:red" label="微信">');
+                    var optCPgroup = $('<optgroup style="color:red" label="云闪付">');
+                    var optOTHERgroup = $('<optgroup style="color:red" label="其他">');
+
+
+
+
+                    for (var i = 0; i < obj.ServiceTypes.length; i++) {
+
+                        var ServiceTypeCode = trimNumber(obj.ServiceTypes[i].ServiceType);
+                        switch (ServiceTypeCode) {
+                            case 'AP':
+                                optAPgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                break;
+                            case 'OB':
+                                optOBgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType +  '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                break;
+                            case 'WX':
+                                optWXgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType +  '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                break;
+                            case 'CP':
+                                optCPgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType +  '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                break;
+                            default:
+                                optOTHERgroup.append('<option value="' + obj.ServiceTypes[i].ServiceType + '">' + obj.ServiceTypes[i].ServiceTypeName + '</option>');
+                                break;
+                        }
+                    }
+
+                    if (optAPgroup.children().length > 0) {
+                        $("#select_ServiceTypeByEditProviderService").append(optAPgroup);
+                    }
+
+                    if (optOBgroup.children().length > 0) {
+                        $("#select_ServiceTypeByEditProviderService").append(optOBgroup);
+                    }
+
+                    if (optWXgroup.children().length > 0) {
+                        $("#select_ServiceTypeByEditProviderService").append(optWXgroup);
+                    }
+
+                    if (optCPgroup.children().length > 0) {
+                        $("#select_ServiceTypeByEditProviderService").append(optCPgroup);
+                    }
+
+                    if (optOTHERgroup.children().length > 0) {
+                        $("#select_ServiceTypeByEditProviderService").append(optOTHERgroup);
+                    }
+
+                    $('#select_ServiceTypeByEditProviderService').attr("data-size", 5);
+                    $('#select_ServiceTypeByEditProviderService').selectpicker('refresh');
+
+                }
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 5:
+                        parent.errorAlertAndtoOtrherPage("请先新增渠道", "ServiceType_Create.cshtml", "ServiceType_Create", "支付方式新增");
+                        sessionStorage.setItem("menuselected", "ServiceType_Maint.cshtml");
+                        parent.CloseActivePage(window.frameElement.name);
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    default:
+                        message = "其他错误";
+                        parent.warningAlert(message);
+                        break;
+                }
+            }
+        });
+    }
+
+    $("#select_ServiceTypeByEditProviderService").change(function () {
+        $("#select_Provider").children().remove();
+        $("#select_Provider").append('<option value="0"> 尚未选择 </option>');
+        $('#select_Provider').selectpicker('refresh');
+        $("#pre-selected-options").children().remove();
+        $('#pre-selected-options').multiSelect('refresh');
+        if ($(this).val() != "0") {
+            api.getProviderByServiceType($(this).val(), function (success, obj) {
+                if (obj.ResultCode == 0) {
+                    if (obj.ProviderTypes.length > 0) {
+                        $("#select_Provider").children().remove();
+                        $("#select_Provider").append('<option value="0"> 尚未选择 </option>');
+                 
+                        for (var i = 0; i < obj.ProviderTypes.length; i++) {
+                            $("#select_Provider").append('<option value="' + obj.ProviderTypes[i].ProviderCode + '">' + obj.ProviderTypes[i].ProviderName + '</option>');
+                        }
+
+                        $('#select_Provider').attr("data-size", 5);
+                        $('#select_Provider').selectpicker('refresh');
+
+                    }
+                } else {
+                    var message = ""
+                    $("#select_Provider").children().remove();
+                    $("#select_Provider").append('<option value="0"> 尚未选择 </option>');
+                    $('#select_Provider').attr("data-size", 5);
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            message = "其他错误";
+                            parent.warningAlert(message);
+                            break;
+                    }
+                }
+            });
+        } 
+    })
+
+    $("#select_Provider").change(function () {
+        $("#pre-selected-options").children().remove();
+        $('#pre-selected-options').multiSelect('refresh');
+        if ($(this).val() != "0" && $("#select_ServiceTypeByEditProviderService").val()!="0") {
+            getCompanyServiceRelationByEditView($(this).val(), $("#select_ServiceTypeByEditProviderService").val());
+        }
+    })
+  
+    function trimNumber(str) {
+        return str.replace(/\d+/g, '');
+    }
+
+    function getCompanyServiceTableResult(companyid) {
+        api.getCompanyServiceTableResult(companyid, function (success, obj) {
+            if (success) {
+                CompanyServiceTable.clear();
+                if (obj.ResultCode == 0) {
+                    var data = obj.CompanyServiceResults.filter(function (v) {
+                        return v.CurrencyType == 'CNY'
+                    })
+                    companyServiceModel = data;
+
+                    CompanyServiceTable.rows.add(data).draw();
+                    getServiceType(companyid, data);
+                } else {
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+                            //warningAlert("沒有資料");
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+
+                parent.wrapperFadeOut();
+            }
+        
+        });
+    }
+
+    function editCompanyService(objbtn) {
+        var currencyType = $(objbtn).data('currencytype');
+        var ServiceType = $(objbtn).data('ServiceType');
+        var row = CompanyServiceTable.row(function (idx, data, node) {
+            if (data.CurrencyType == currencyType && data.ServiceType == ServiceType) {
+                index = idx;
+                return this;
+            }
+        });
+
+        if (index != -1) {
+            $('#modal_CompanyName').text($('#select_Company option:selected').text());
+            $('#input_CollectRate').val(row.data().CollectRate);
+            $('#input_MinOnceAmount').val(row.data().MinOnceAmount);
+            $('#input_MaxOnceAmount').val(row.data().MaxOnceAmount);
+            $('#input_MaxDaliyAmount').val(row.data().MaxDaliyAmount);
+          
+
+
+      
+            $('#input_CurrencyType').val(currencyType);
+            $('#input_ServiceType').val(ServiceType);
+            if (row.data().State==0) {
+                $('input[name="State"]')[0].checked = true;
+            } else {
+                $('input[name="State"]')[1].checked = true;
+            }
+
+            if (row.data().CheckoutType==0) {
+                $('input[name="CheckoutType"]')[0].checked = true;
+            } else if (row.data().CheckoutType == 1){
+                $('input[name="CheckoutType"]')[1].checked = true;
+            } else if (row.data().CheckoutType == 2) {
+                $('input[name="CheckoutType"]')[2].checked = true;
+            }
+
+            CompanyServiceType = 'edit';
+
+            if (changeNotifyLabelText(ServiceType)) {
+                $('#SetCompanyServiceModal').modal('show');
+            }
+        }
+ 
+
+    }
+
+    function editProviderWeight(objbtn) {
+
+        var currencyType = $(objbtn).data('currencytype');
+        var ServiceType = $(objbtn).data('ServiceType');
+        var companyid = $(objbtn).data('forcompanyid');
+   
+        api.getGPayRelationByCompany(companyid, ServiceType, currencyType, function (s, obj) {
+            if (obj.ResultCode == 0) {
+                createGPayRelation(obj.ProviderServices);
+            } else {
+                var message = ""
+                switch (obj.ResultCode) {
+                    case 4:
+                        parent.errorAlertCallback("权限不足", function () {
+                            parent.ChangePage("Home");
+                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                        });
+                        break;
+                    case 7:
+                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                        break;
+                    case 5:
+                        parent.warningAlert("尚未设定渠道");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+    }
+
+    function createGPayRelation(data) {
+        var strGPayRelationDetail = "";
+        var ProviderService = "";
+        var DeviceType = "";
+        $("#divGPayRelationDetail").html("");
+        $.each(data, function (i, item) {
+
+            ProviderService = data[i].State == "0" ? '<span style="color:blue;">启用</span>' : '<span style="color:red;">停用</span>';
+         
+            strGPayRelationDetail += '<div class="col-lg-4 col-md-4 col-sm-4">' +
+                '<div class="card RelationModel_Content" >' +
+                '<div class="header" style="padding-bottom:0">';
+
+            strGPayRelationDetail += '<label class="RelationModel_ProviderCode" data-ServiceType="' + data[i].ServiceType + '" data-currencytype="' + data[i].CurrencyType + '" data-providercode="' + data[i].ProviderCode + '">' + data[i].ProviderName + ' </label>';
+           
+                strGPayRelationDetail += '</div > ' +
+                '<div class="body" style="padding-top:0"> ' +
+                '<p class="text-muted">费率： <span class="RelationModel_CostRate">' + data[i].CostRate + '</span></p>' +
+                '<p class="text-muted">最低金额： <span class="RelationModel_MinOnceAmount">' + toCurrency(data[i].MinOnceAmount) + '</span></p>' +
+                '<p class="text-muted">最高金额： <span class="RelationModel_MaxOnceAmount">' + toCurrency(data[i].MaxOnceAmount) + '</span></p>' +
+                '<p class="text-muted">每日最大用量： <span class="RelationModel_MaxDaliyAmount">' + toCurrency(data[i].MaxDaliyAmount) + '</span></p>' +
+                '<p class="text-muted">币别： <span class="RelationModel_CurrencyType">' + data[i].CurrencyType + '</span></p>' +
+                '<p class="text-muted">状态： <span class="RelationModel_ProviderService">' + ProviderService + '</span></p>' +
+                '<p class="text-muted">权重： <input data-rule="currency" style="width:50%;display: inline-block;" class="form-control RelationModel_Weight" type="text" value="' + data[i].Weight + '"></p>' +
+                '</div ></div ></div > ';
+        })
+        $("#divGPayRelationDetail").html(strGPayRelationDetail);
+        new AutoNumeric.multiple('.RelationModel_Weight', 'integerPos', { allowDecimalPadding: false, decimalPlaces: 0, minimumValue: 1, maximumValue: 100 });
+        $('#ProviderServiceModal').modal('show');
+    }
+
+    function createCompanyServiceTable() {
+
+        CompanyServiceTable = $("#table_CompanyServiceTable").DataTable({
+            columns: [
+                { "title": "支付方式", "data": "ServiceTypeName" },
+                { "title": "支付代码", "data": "ServiceType" },
+                { "title": "渠道数量", "data": "GPayRelationCount" },
+
+                {
+                    "title": "状态", "data": "State",
+                    "render": function (data) {
+                        if (data == 0) {
+                            return '<span style="color:blue;">启用</span>';
+                        } else {
+                            return '<span style="color:red;">停用</span>';
+                        }
+                    }
+                },
+                //{ "title": "幣別", "data": "CurrencyType" },
+                { "title": "费率(%)", "data": "CollectRate" },
+                {
+                    "title": "单笔限额(低)", "data": "MinOnceAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "单笔限额(高)", "data": "MaxOnceAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "每日交易最大用量", "data": "MaxDaliyAmount",
+                    "render": function (data, display, rowdata) {
+                        return toCurrency(data);
+                    }
+                },
+                {
+                    "title": "操作", 
+                    "render": function (data, display, rowdata) {
+                        return `<button data-ServiceType="${rowdata.ServiceType}" data-currencytype="${rowdata.CurrencyType}" onclick="editCompanyService(this)">修改</button><button data-ServiceType="${rowdata.ServiceType}" data-currencytype="${rowdata.CurrencyType}" data-forcompanyid="${rowdata.forCompanyID}"  onclick="editProviderWeight(this)">渠道</button>`;
+                    }
+                }
+                //{
+                //    "title": "(剩餘可下發用量)", "data": "MaxDaliyAmountByUse",
+                //    "render": function (data, display, rowdata) {
+                //        return toCurrency(data);
+                //    }
+                //},
+                //{
+                //    "title": "費率(/次)", "data": "CollectCharge",
+                //    "render": function (data, display, rowdata) {
+                //        return toCurrency(data);
+                //    }
+                //}
+                //{
+                //    "title": "設備類型", "data": "DeviceType",
+                //    "render": function (data) {
+                //        if (data == 0) {
+                //            return 'PC';
+                //        } else {
+                //            return '手機';
+                //        }
+                //    }
+                //}
+            ],
+            rowCallback: function (row, data) { },
+            autoWidth: true,
+            filter: true,         //右上搜尋
+            info: false,
+            ordering: true, //排序
+            processing: true,
+            retrieve: true,
+            paging: true,    //分頁
+            scrollX: true,
+            autoWidth: false,
+            language: chineseTableLang
+        });
+
+        $('#table_CompanyServiceTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                CompanyServiceTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+    }
+
+    function saveCompanyServiceWidth() {
+        var saveProviders = $("#divGPayRelationDetail").find('.RelationModel_ProviderCode');
+        if (saveProviders.length == 0) {
+            parent.warningAlert("没有要设定的供应商");
+            return false;
+        }
+        var lstProviderCode = [];
+        for (var i = 0; i < saveProviders.length; i++) {
+      
+            var provider = new Object();
+            provider.ProviderCode = saveProviders.eq(i).data('providercode');
+            provider.Weight = saveProviders.eq(i).parent().parent().find('.RelationModel_Weight').val();
+            lstProviderCode.push(provider);
+        }
+        var companyID = $('#select_Company').val();
+        var ServiceType = saveProviders.eq(0).data('ServiceType');
+        var currencyType = saveProviders.eq(0).data('currencytype');
+
+        api.updateCompanyServiceWeightByEditView(companyID, ServiceType, currencyType, lstProviderCode, function (success, obj) {
+            if (success) {
+             
+                if (obj.ResultCode == 0) {
+                    parent.successAlert(function () {
+                        $('#ProviderServiceModal').modal('hide');
+                    });
+                }
+                else {
+                    var message = ""
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    function getCompanyServiceRelationByEditView(providerCode, ServiceType) {
+     
+        api.getCompanyServiceRelationByEditView(ServiceType, providerCode, function (success, obj) {
+            parent.wrapperFadeIn();
+            if (success) {
+                $("#pre-selected-options").children().remove();
+                parent.wrapperFadeOut();
+                if (obj.ResultCode == 0) {
+     
+                    console.log(obj.Results);
+                    for (var i = 0; i < obj.Results.length; i++) {
+                     
+                       
+
+                        if (obj.Results[i].isSelected == 1) {
+                            $('#pre-selected-options').append("<option value='" + obj.Results[i].CompanyID + "' selected=true>" + obj.Results[i].CompanyName + "</option>");
+                        } else {
+                            $('#pre-selected-options').append("<option value='" + obj.Results[i].CompanyID + "'>" + obj.Results[i].CompanyName + "</option>");
+                        }     
+                    }
+             
+                    $('#pre-selected-options').multiSelect('refresh');
+                }
+                else {
+
+                    switch (obj.ResultCode) {
+                        case 4:
+                            parent.errorAlertCallback("权限不足", function () {
+                                parent.ChangePage("Home");
+                                parent.CloseActivePage(window.frameElement.id.split('_')[1]);
+                            });
+                            break;
+                        case 5:
+
+                            break;
+                        case 7:
+                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
+                            break;
+                        default:
+                            parent.warningAlert("其他错误");
+                            break;
+                    }
+                    parent.wrapperFadeOut();
+                }
+            }
+           
+        });
+
+    }
+
+</script>
