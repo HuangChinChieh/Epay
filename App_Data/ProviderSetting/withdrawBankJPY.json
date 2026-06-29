@@ -6,7 +6,7 @@
    },
    {
      "BankCode": "JPT0005",
-     "BankName": "三菱日聯銀行"
+     "BankName": "三菱UFJ銀行"
    },
    {
      "BankCode": "JPT0009",
@@ -14,11 +14,11 @@
    },
    {
      "BankCode": "JPT0010",
-     "BankName": "里索那銀行"
+     "BankName": "りそな銀行"
    },
    {
      "BankCode": "JPT0017",
-     "BankName": "埼玉里索那銀行"
+     "BankName": "埼玉りそな銀行"
    },
    {
      "BankCode": "JPT0033",
@@ -30,7 +30,7 @@
    },
    {
      "BankCode": "JPT0035",
-     "BankName": "索尼銀行"
+     "BankName": "ソニー銀行"
    },
    {
      "BankCode": "JPT0036",
@@ -38,11 +38,11 @@
    },
    {
      "BankCode": "JPT0038",
-     "BankName": "住信SBI網絡銀行"
+     "BankName": "住信SBIネット銀行"
    },
    {
      "BankCode": "JPT0039",
-     "BankName": "Jibun Bank"
+     "BankName": "auじぶん銀行"
    },
    {
      "BankCode": "JPT0040",
@@ -74,7 +74,7 @@
    },
    {
      "BankCode": "JPT0118",
-     "BankName": "陸奧銀行"
+     "BankName": "みちのく銀行"
    },
    {
      "BankCode": "JPT0119",
@@ -138,7 +138,7 @@
    },
    {
      "BankCode": "JPT0137",
-     "BankName": "東京都民銀行"
+     "BankName": "きらぼし銀行"
    },
    {
      "BankCode": "JPT0138",
@@ -174,7 +174,7 @@
    },
    {
      "BankCode": "JPT0150",
-     "BankName": "Suruga Bank Ltd."
+     "BankName": "スルガ銀行"
    },
    {
      "BankCode": "JPT0151",
@@ -302,7 +302,7 @@
    },
    {
      "BankCode": "JPT0190",
-     "BankName": "西日本都市銀行"
+     "BankName": "西日本シティ銀行"
    },
    {
      "BankCode": "JPT0191",
@@ -310,15 +310,15 @@
    },
    {
      "BankCode": "JPT0397",
-     "BankName": "新生銀行"
+     "BankName": "SBI新生銀行"
    },
    {
      "BankCode": "JPT0398",
-     "BankName": "GMO青空网上银行"
+     "BankName": "GMOあおぞらネット銀行"
    },
    {
      "BankCode": "JPT9900",
-     "BankName": "郵貯銀行"
+     "BankName": "ゆうちょ銀行"
    },
    {
      "BankCode": "JPT0472",
