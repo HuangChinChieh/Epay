@@ -93,7 +93,7 @@ public class BackendDB {
         }
 
 
-        SS = "SELECT *,(select count(*) from CompanyTable WITH (NOLOCK) where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
+        SS = "SELECT *,(select count(*) from CompanyTable WITH (NOLOCK) where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount from CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
         if (CompanyType != 0) {
             if (CompanyType == 1) {
                 SS += "  AND  c.CompanyID =@CompanyID";
@@ -131,7 +131,7 @@ public class BackendDB {
         }
 
 
-        SS = "SELECT * FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
+        SS = "SELECT * from CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
 
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -161,8 +161,8 @@ public class BackendDB {
         }
 
 
-        SS = " SELECT *,pc.CompanyCode as ParentCompanyCode FROM CompanyTable c WITH (NOLOCK) ";
-        SS += " LEFT JOIN CompanyTable pc on pc.CompanyID=c.ParentCompanyID";
+        SS = " SELECT *,pc.CompanyCode as ParentCompanyCode from CompanyTable c WITH (NOLOCK) ";
+        SS += " LEFT JOIN CompanyTable pc WITH (NOLOCK) on pc.CompanyID=c.ParentCompanyID";
         SS += " WHERE c.SortKey LIKE @SortKey + '%' And c.CompanyID<>@CompanyID";
 
 
@@ -190,7 +190,7 @@ public class BackendDB {
         string SortKey = "";
         DBModel.Company CompanyData;
 
-        SS = "SELECT * FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType=2 ";
+        SS = "SELECT * from CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType=2 ";
 
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -214,7 +214,7 @@ public class BackendDB {
         string SortKey = "";
         DBModel.Company CompanyData;
 
-        SS = "SELECT * FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType=4 ";
+        SS = "SELECT * from CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType=4 ";
 
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -245,7 +245,7 @@ public class BackendDB {
         }
 
 
-        SS = "SELECT *,(select count(*) from CompanyTable where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount FROM CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
+        SS = "SELECT *,(select count(*) from CompanyTable WITH (NOLOCK) where CompanyTable.ParentCompanyID=c.CompanyID ) as ChildCompanyCount from CompanyTable c WITH (NOLOCK) WHERE 1=1 And CompanyType<>0 ";
         if (CompanyType != 0) {
             if (CompanyType == 1) {
                 SS += "  AND  c.CompanyID =@CompanyID";
@@ -640,7 +640,7 @@ public class BackendDB {
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        SS = "SELECT MerchantCode FROM CompanyTable WHERE MerchantCode like @MerchantCode Order By MerchantCode desc";
+        SS = "SELECT MerchantCode FROM CompanyTable WITH (NOLOCK) WHERE MerchantCode like @MerchantCode Order By MerchantCode desc";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
@@ -686,7 +686,7 @@ public class BackendDB {
 
 
 
-        SS = "SELECT * FROM CompanyTable c WITH (NOLOCK) ";
+        SS = "SELECT * from CompanyTable c WITH (NOLOCK) ";
 
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -860,8 +860,8 @@ public class BackendDB {
             }
 
             SS = "SELECT ServiceType.ServiceType,ServiceType.CurrencyType,ServiceType.ServiceTypeName,CollectRate,CollectCharge,MinOnceAmount,MaxOnceAmount,0 as isUpLine," +
-                 " ( SELECT CompanyService.MaxDaliyAmount - ISNULL(sum(MaxDaliyAmount),0) from CompanyService cs" +
-                 " join CompanyTable ct on cs.forCompanyID = ct.CompanyID" +
+                 " ( SELECT CompanyService.MaxDaliyAmount - ISNULL(sum(MaxDaliyAmount),0) from CompanyService cs WITH (NOLOCK)" +
+                 " join CompanyTable ct WITH (NOLOCK) on cs.forCompanyID = ct.CompanyID" +
                  " where cs.ServiceType = CompanyService.ServiceType" +
                  " and cs.CurrencyType = CompanyService.CurrencyType" +
                  " and SortKey LIKE  @SortKey + '%' and ct.CompanyID<> @CompanyID and InsideLevel=@InsideLevel ) as MaxDaliyAmount" +
@@ -910,8 +910,8 @@ public class BackendDB {
             }
 
             SS = "SELECT ServiceType.ServiceType,ServiceType.CurrencyType,ServiceType.ServiceTypeName,CollectRate,CollectCharge,MinOnceAmount,MaxOnceAmount,0 as isUpLine," +
-                 " ( SELECT CompanyService.MaxDaliyAmount - ISNULL(sum(MaxDaliyAmount),0) from CompanyService cs" +
-                 " join CompanyTable ct on cs.forCompanyID = ct.CompanyID" +
+                 " ( SELECT CompanyService.MaxDaliyAmount - ISNULL(sum(MaxDaliyAmount),0) from CompanyService cs WITH (NOLOCK)" +
+                 " join CompanyTable ct WITH (NOLOCK) on cs.forCompanyID = ct.CompanyID" +
                  " where cs.ServiceType = CompanyService.ServiceType" +
                  " and cs.CurrencyType = CompanyService.CurrencyType" +
                  " and SortKey LIKE  @SortKey + '%' and ct.CompanyID<> @CompanyID and InsideLevel=@InsideLevel ) as MaxDaliyAmount" +
@@ -992,7 +992,7 @@ public class BackendDB {
         DataTable DT = null;
 
 
-        SS = " SELECT WithdrawLimit.* FROM WithdrawLimit " +
+        SS = " SELECT WithdrawLimit.* FROM WithdrawLimit WITH (NOLOCK) " +
              " WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType";
 
         if (!String.IsNullOrEmpty(SS)) {
@@ -1020,10 +1020,10 @@ public class BackendDB {
         DataTable DT = null;
         // 0=上游後台出款手續費，1=商戶後台出款手續費/2=商戶api 出款手續費/3=上游 api 手續費
         if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3) { //供應商資料
-            SS = "SELECT * FROM WithdrawLimit WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType";
+            SS = "SELECT * FROM WithdrawLimit WITH (NOLOCK) WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType";
         } else if (data.WithdrawLimitType == 1 || data.WithdrawLimitType == 2) {   //營運商資料
-            SS = " SELECT WithdrawLimit.*,ServiceType.ServiceTypeName FROM WithdrawLimit " +
-                 " LEFT JOIN ServiceType ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
+            SS = " SELECT WithdrawLimit.*,ServiceType.ServiceTypeName FROM WithdrawLimit WITH (NOLOCK) " +
+                 " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
                  " WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType";
         }
 
@@ -1056,8 +1056,8 @@ public class BackendDB {
         DataTable DT = null;
 
 
-        SS = " SELECT WithdrawLimit.*,ServiceType.ServiceTypeName FROM WithdrawLimit " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
+        SS = " SELECT WithdrawLimit.*,ServiceType.ServiceTypeName FROM WithdrawLimit WITH (NOLOCK) " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=WithdrawLimit.ServiceType" +
              "  WHERE ProviderCode =@ProviderCode And WithdrawLimitType IN (0, 3)";
 
         if (!String.IsNullOrEmpty(SS)) {
@@ -1090,13 +1090,13 @@ public class BackendDB {
                   "     CASE  " +
                   "         WHEN EXISTS ( " +
                   "               SELECT 1   " +
-                  "               FROM MemOpt_ProviderBankCardLock M  " +
+                  "               FROM MemOpt_ProviderBankCardLock M WITH (NOLOCK)  " +
                   "               WHERE M.BankCardGUID = ProviderBankCard.BankCardGUID " +
                   "                 AND (M.ExpireDate IS NULL OR M.ExpireDate > GETUTCDATE()) " +
                   "         ) THEN 1    " +
                   "         ELSE 0   " +
                   "     END AS IsAvailable " +
-                  " 	FROM ProviderBankCard  " +
+                  " 	FROM ProviderBankCard WITH (NOLOCK) " +
                   " WHERE forProviderCode =@ProviderCode AND (BankCardState=0 OR BankCardState=1) ";
 
         if (!String.IsNullOrEmpty(SS)) {
@@ -1123,9 +1123,9 @@ public class BackendDB {
         SqlCommand DBCmd = null;
         DataTable DT = null;
         if (WithdrawLimitType == 0 || WithdrawLimitType == 3) { //供應商資料
-            SS = "SELECT * FROM WithdrawLimit WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
+            SS = "SELECT * FROM WithdrawLimit WITH (NOLOCK) WHERE ProviderCode =@ProviderCode And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
         } else if (WithdrawLimitType == 1 || WithdrawLimitType == 2) {   //營運商資料
-            SS = "SELECT * FROM WithdrawLimit WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
+            SS = "SELECT * FROM WithdrawLimit WITH (NOLOCK) WHERE forCompanyID =@forCompanyID And WithdrawLimitType=@WithdrawLimitType And CurrencyType=@CurrencyType ";
         }
 
 
@@ -1156,7 +1156,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "Select Count(*) from  WithdrawLimit where CurrencyType=@CurrencyType And WithdrawLimitType=@WithdrawLimitType ";
+        SS = "Select Count(*) from  WithdrawLimit WITH (NOLOCK) where CurrencyType=@CurrencyType And WithdrawLimitType=@WithdrawLimitType ";
         if (data.WithdrawLimitType == 0 || data.WithdrawLimitType == 3) {
             //供應商資料
             SS += " And ProviderCode=@ProviderCode";
@@ -1479,7 +1479,7 @@ public class BackendDB {
 
         SS = " UPDATE ProxyProviderOrder" +
              " SET ProxyProviderOrder.GroupID =@GroupID " +
-             " FROM ProxyProviderOrder JOIN Withdrawal" +
+             " from ProxyProviderOrder JOIN Withdrawal" +
              " ON Withdrawal.WithdrawSerial = ProxyProviderOrder.forOrderSerial AND ProxyProviderOrder.Type = 1" +
              " WHERE ProxyProviderOrder.forOrderSerial = @forOrderSerial" +
              " AND Withdrawal.Status = 1" +
@@ -1505,7 +1505,7 @@ public class BackendDB {
 
         SS = " UPDATE ProxyProviderOrder" +
              " SET ProxyProviderOrder.GroupID =@GroupID " +
-             " FROM ProxyProviderOrder JOIN Withdrawal" +
+             " from ProxyProviderOrder JOIN Withdrawal" +
              " ON Withdrawal.WithdrawSerial = ProxyProviderOrder.forOrderSerial AND ProxyProviderOrder.Type = 1" +
              " WHERE ProxyProviderOrder.forOrderSerial = @forOrderSerial" +
              " AND Withdrawal.Status = 1" +
@@ -1577,7 +1577,7 @@ public class BackendDB {
         int returnValue = 0;
         object DBReturn;
         SS = "SELECT PPO.GroupID  " +
-             " FROM PaymentTable AS P WITH(NOLOCK) " +
+             " from PaymentTable AS P WITH(NOLOCK) " +
              "  JOIN  ProxyProviderOrder PPO WITH(NOLOCK)  ON PPO.forOrderSerial= P.PaymentSerial AND PPO.Type=0" +
              " WHERE P.PaymentSerial=@PaymentSerial ";
 
@@ -1885,8 +1885,8 @@ public class BackendDB {
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        SS = "SELECT PC.ProviderName,PC.ProviderCode FROM ProviderService PS WITH (NOLOCK) " +
-            "  JOIN ProviderCode PC ON PC.ProviderCode=PS.ProviderCode " +
+        SS = "SELECT PC.ProviderName,PC.ProviderCode from ProviderService PS WITH (NOLOCK) " +
+            "  JOIN ProviderCode PC WITH (NOLOCK) ON PC.ProviderCode=PS.ProviderCode " +
             "WHERE PS.ServiceType =@ServiceType AND PS.CurrencyType=@CurrencyType And PC.ProviderState=0 ";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -2089,7 +2089,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ProxyProvider.*,ProviderName,ProviderCode FROM ProviderCode WITH (NOLOCK)" +
-             " LEFT JOIN ProxyProvider ON ProviderCode.ProviderCode=ProxyProvider.forProviderCode" +
+             " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProviderCode.ProviderCode=ProxyProvider.forProviderCode" +
              " Where CollectType=1 ";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -2349,7 +2349,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "SELECT ProviderState FROM ProviderCode WHERE ProviderCode =@ProviderCode";
+        SS = "SELECT ProviderState FROM ProviderCode WITH (NOLOCK) WHERE ProviderCode =@ProviderCode";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
@@ -2409,8 +2409,8 @@ public class BackendDB {
                  "        WL.MinLimit, " +
                  "        WL.Charge, " +
                  "        WL.CurrencyType" +
-                 " FROM   ProviderCode PC " +
-                 "        LEFT JOIN WithdrawLimit WL " +
+                 " from ProviderCode PC WITH (NOLOCK)  " +
+                 "        LEFT JOIN WithdrawLimit WL  WITH (NOLOCK)" +
                  "               ON WL.ProviderCode = PC.ProviderCode " +
                  "                  AND WL.WithdrawLimitType = 0 " +
                  " ORDER BY PC.ProviderState";
@@ -2445,8 +2445,8 @@ public class BackendDB {
                  "        PS.CurrencyType, " +
                  "        PS.State," +
                  "        PS.CheckoutType" +
-                 " FROM   ProviderService PS" +
-                 "        LEFT JOIN ServiceType ST" +
+                 " from ProviderService PS WITH (NOLOCK)" +
+                 "        LEFT JOIN ServiceType ST WITH (NOLOCK)" +
                  "               ON ST.ServiceType = PS.ServiceType " +
                  " WHERE  1=1 ";
         if (!string.IsNullOrEmpty(Currency)) {
@@ -2479,7 +2479,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT PP.SystemPointValue,PP.CurrencyType" +
-                  " FROM ProviderPoint PP ";
+                  " from ProviderPoint PP WITH (NOLOCK) ";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
@@ -2501,7 +2501,7 @@ public class BackendDB {
         SqlCommand DBCmd = null;
         DataTable DT;
 
-        SS = "SELECT CurrencyType,SUM(ProviderFrozenAmount) SystemPointValue FROM FrozenPoint " +
+        SS = "SELECT CurrencyType,SUM(ProviderFrozenAmount) SystemPointValue FROM FrozenPoint WITH (NOLOCK) " +
                   " WHERE forProviderCode = @ProviderCode and Status = 0  " +
                   " GROUP BY CurrencyType";
         DBCmd = new SqlCommand();
@@ -2528,8 +2528,8 @@ public class BackendDB {
         SS = " SELECT SUM(PP.SystemPointValue) AS Total," +
             " 		SUM(FP.FrozenTotal) AS FrozenTotal," +
                   "        COUNT(*) as Count" +
-                  " FROM ProviderPoint PP " +
-                  "  LEFT JOIN ( SELECT forProviderCode,SUM(ProviderFrozenAmount) FrozenTotal FROM FrozenPoint " +
+                  " from ProviderPoint PP WITH (NOLOCK) " +
+                  "  LEFT JOIN ( SELECT forProviderCode,SUM(ProviderFrozenAmount) FrozenTotal FROM FrozenPoint WITH (NOLOCK) " +
                   "  WHERE Status = 0 GROUP BY forProviderCode) FP ON PP.ProviderCode = FP.forProviderCode ";
 
 
@@ -2628,7 +2628,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "SELECT COUNT(*) FROM ProviderCode WHERE CollectType = 1 AND ProviderState = 0 AND ProviderCode<>@ProviderCode";
+        SS = "SELECT COUNT(*) FROM ProviderCode WITH (NOLOCK) WHERE CollectType = 1 AND ProviderState = 0 AND ProviderCode<>@ProviderCode";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -2905,8 +2905,8 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT CompanyType,AdminTable.*,RoleName,convert(varchar, AdminTable.CreateDate, 120) as CreateDate2 FROM AdminTable WITH (NOLOCK) " +
-             " Left Join AdminRole on AdminRole.AdminRoleID=AdminTable.forAdminRoleID" +
-             " Left Join CompanyTable on CompanyTable.CompanyID=AdminTable.forCompanyID" +
+             " Left Join AdminRole WITH (NOLOCK) on AdminRole.AdminRoleID=AdminTable.forAdminRoleID" +
+             " Left Join CompanyTable WITH (NOLOCK) on CompanyTable.CompanyID=AdminTable.forCompanyID" +
              " WHERE AdminTable.forCompanyID = @forCompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3082,7 +3082,7 @@ public class BackendDB {
         String SS = String.Empty;
         SqlCommand DBCmd;
 
-        SS = " SELECT  ISNULL(SUM(ProviderFrozenAmount), 0) FROM FrozenPoint FP WITH(NOLOCK)" +
+        SS = " SELECT  ISNULL(SUM(ProviderFrozenAmount), 0) from FrozenPoint FP WITH(NOLOCK)" +
              " WHERE FP.forProviderCode = @ProviderCode AND FP.GroupID = @GroupID AND  FP.Status= 0";
 
 
@@ -3103,8 +3103,8 @@ public class BackendDB {
         DataTable DT;
 
 
-        SS = " SELECT PPG.GroupName,ISNULL(TmpTable.FrozenAmount, 0) AS FrozenAmount FROM ProxyProviderGroup PPG WITH(NOLOCK) LEFT JOIN" +
-             " (SELECT FP.GroupID, SUM(ProviderFrozenAmount) AS FrozenAmount FROM FrozenPoint FP WITH(NOLOCK)" +
+        SS = " SELECT PPG.GroupName,ISNULL(TmpTable.FrozenAmount, 0) AS FrozenAmount from ProxyProviderGroup PPG WITH(NOLOCK) LEFT JOIN" +
+             " (SELECT FP.GroupID, SUM(ProviderFrozenAmount) AS FrozenAmount from FrozenPoint FP WITH(NOLOCK)" +
              " JOIN ProxyProviderGroup PPG WITH(NOLOCK) ON PPG.GroupID= FP.GroupID" +
              " WHERE FP.forProviderCode=@ProviderCode AND FP.Status= 0 GROUP BY FP.GroupID" +
              " )  AS TmpTable ON PPG.GroupID = TmpTable.GroupID" +
@@ -3134,15 +3134,15 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ProfitAmount,GroupID,GroupName,PPG.State,PPG.Weight,PPG.PaymentRate, " +
-             " (SELECT ISNULL(SUM(Amount), 0) FROM Withdrawal W WITH(NOLOCK)" +
-             " LEFT JOIN ProxyProviderOrder PPO ON PPO.forOrderSerial = W.WithdrawSerial AND PPO.Type = 1" +
+             " (SELECT ISNULL(SUM(Amount), 0) from Withdrawal W WITH(NOLOCK)" +
+             " LEFT JOIN ProxyProviderOrder PPO WITH (NOLOCK) ON PPO.forOrderSerial = W.WithdrawSerial AND PPO.Type = 1" +
              " WHERE PPG.forProviderCode = W.ProviderCode AND PPG.GroupID = PPO.GroupID AND W.Status = 1) AS CanUsePoint," +
-             " (SELECT ISNULL(COUNT(*), 0) FROM Withdrawal W WITH(NOLOCK)" +
-             " LEFT JOIN ProxyProviderOrder PPO ON PPO.forOrderSerial = W.WithdrawSerial AND PPO.Type = 1" +
+             " (SELECT ISNULL(COUNT(*), 0) from Withdrawal W WITH(NOLOCK)" +
+             " LEFT JOIN ProxyProviderOrder PPO WITH (NOLOCK) ON PPO.forOrderSerial = W.WithdrawSerial AND PPO.Type = 1" +
              " WHERE PPG.forProviderCode = W.ProviderCode AND PPG.GroupID = PPO.GroupID AND W.Status = 1) AS WithdrawalCount," +
-              " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) FROM FrozenPoint FP WITH(NOLOCK)" +
+              " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) from FrozenPoint FP WITH(NOLOCK)" +
              " WHERE FP.forProviderCode = PPG.forProviderCode AND FP.Status = 0 AND FP.GroupID = PPG.GroupID), 0) AS CanUsePoint2 " +
-             " FROM ProxyProviderGroup PPG WITH(NOLOCK)  WHERE PPG.forProviderCode = @forProviderCode ORDER BY GroupID";
+             " from ProxyProviderGroup PPG WITH(NOLOCK)  WHERE PPG.forProviderCode = @forProviderCode ORDER BY GroupID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -3167,9 +3167,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT GroupID,GroupName,PPG.State,PPG.Weight, " +
-             " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) FROM FrozenPoint FP WITH(NOLOCK)" +
+             " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) from FrozenPoint FP WITH(NOLOCK)" +
              " WHERE FP.forProviderCode = PPG.forProviderCode AND FP.Status = 0 AND FP.GroupID = PPG.GroupID), 0) AS CanUsePoint " +
-             " FROM ProxyProviderGroup PPG WITH (NOLOCK) " +
+             " from ProxyProviderGroup PPG WITH (NOLOCK) " +
              " WHERE PPG.forProviderCode = @forProviderCode";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3195,10 +3195,10 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT GroupID,GroupName,PPG.State,PPG.Weight, " +
-             " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) FROM FrozenPoint FP WITH(NOLOCK)" +
+             " ISNULL(CanUsePoint - (SELECT ISNULL(SUM(ProviderFrozenAmount),0) from FrozenPoint FP WITH(NOLOCK)" +
              " WHERE FP.forProviderCode = PPG.forProviderCode AND FP.Status = 0 AND FP.GroupID = PPG.GroupID), 0) AS CanUsePoint " +
-             " FROM ProxyProviderGroup PPG WITH (NOLOCK) " +
-             " WHERE PPG.forProviderCode = (SELECT ProviderCode FROM ProviderCode WHERE CollectType = 1 AND ProviderState = 0)";
+             " from ProxyProviderGroup PPG WITH (NOLOCK) " +
+             " WHERE PPG.forProviderCode = (SELECT ProviderCode FROM ProviderCode WITH (NOLOCK) WHERE CollectType = 1 AND ProviderState = 0)";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -3223,7 +3223,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT PPG.GroupID,PPG.GroupName,PPG.State,PPG.Weight,PPG.MaxAmount,PPG.MinAmount,PPG.PaymentRate " +
-             " FROM ProxyProviderGroup PPG WITH (NOLOCK) " +
+             " from ProxyProviderGroup PPG WITH (NOLOCK) " +
              " WHERE PPG.forProviderCode = @forProviderCode";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3251,7 +3251,7 @@ public class BackendDB {
         SS = " SELECT *,convert(varchar, CreateDate, 120) as CreateDate2," +
             " STUFF((" +
              " Select  ',' + RealName" +
-             " From AdminTable AT " +
+             " from AdminTable AT WITH (NOLOCK) " +
              " where AT.GroupID =ProxyProviderGroup.GroupID " +
              " For Xml Path(''))" +
              " , 1, 1, '') as GroupAccounts " +
@@ -3307,7 +3307,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT * " +
-            " FROM ProxyProviderGroup " +
+            " FROM ProxyProviderGroup WITH (NOLOCK) " +
              " WHERE ProxyProviderGroup.forProviderCode = @forProviderCode And GroupID=@GroupID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3617,9 +3617,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ProxyProviderGroup.GroupName,CompanyType,AdminTable.*,RoleName,convert(varchar, AdminTable.CreateDate, 120) as CreateDate2 FROM AdminTable WITH (NOLOCK) " +
-             " Left Join AdminRole on AdminRole.AdminRoleID=AdminTable.forAdminRoleID" +
-             " Left Join CompanyTable on CompanyTable.CompanyID=AdminTable.forCompanyID" +
-             " Left Join ProxyProviderGroup on ProxyProviderGroup.GroupID=AdminTable.GroupID" +
+             " Left Join AdminRole WITH (NOLOCK) on AdminRole.AdminRoleID=AdminTable.forAdminRoleID" +
+             " Left Join CompanyTable WITH (NOLOCK) on CompanyTable.CompanyID=AdminTable.forCompanyID" +
+             " Left Join ProxyProviderGroup WITH (NOLOCK) on ProxyProviderGroup.GroupID=AdminTable.GroupID" +
              " WHERE AdminTable.forCompanyID = @forCompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3649,11 +3649,11 @@ public class BackendDB {
         SS = " SELECT WIP.CreateDate,AT.RealName,WIP.CompanyCode,WIP.WithdrawalIP AS withdrawalIP,CT.CompanyName,CT.CompanyID AS forCompanyID," +
             " STUFF((" +
              " Select  ',' + CONVERT(varchar(100), IT.ImageID)+'_'+ImageName+'_'+convert(varchar, CreateDate, 120) " +
-             " From ImageTable IT " +
+             " from ImageTable IT WITH (NOLOCK) " +
              " where IT.TransactionID = WIP.WithdrawalIP AND IT.CompanyCode = WIP.CompanyCode And IT.Type=0 " +
              " For Xml Path(''))" +
              " , 1, 1, '') as ImageName" +
-            " FROM WithdrawalIP WIP WITH (NOLOCK) " +
+            " from WithdrawalIP WIP WITH (NOLOCK) " +
             " LEFT JOIN CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " LEFT JOIN AdminTable AT WITH (NOLOCK) on WIP.forAdminID= AT.AdminID " +
             " WHERE CT.CompanyID = @forCompanyID";
@@ -3826,7 +3826,7 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT * FROM ImageTable IT WITH (NOLOCK) " +
+        SS = " SELECT * from ImageTable IT WITH (NOLOCK) " +
             " WHERE IT.ImageID = @ImageID ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -3872,7 +3872,7 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT * FROM WithdrawalIP WIP WITH (NOLOCK) " +
+        SS = " SELECT * from WithdrawalIP WIP WITH (NOLOCK) " +
             " Join CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " WHERE CT.CompanyID = @forCompanyID And WIP.WithdrawalIP=@WithdrawalIP";
 
@@ -3936,11 +3936,11 @@ public class BackendDB {
         SS = " SELECT WIP.CompanyCode,WIP.IP AS withdrawalIP,CT.CompanyName,CT.CompanyID AS forCompanyID," +
             " STUFF((" +
              " Select  ',' + CONVERT(varchar(100), IT.ImageID)+'_'+ImageName+'_'+convert(varchar, CreateDate, 120) " +
-             " From ImageTable IT " +
+             " from ImageTable IT WITH (NOLOCK) " +
              " where IT.TransactionID = WIP.IP AND IT.CompanyCode = WIP.CompanyCode And IT.Type=2 " +
              " For Xml Path(''))" +
              " , 1, 1, '') as ImageName" +
-            " FROM BackendLoginIP WIP WITH (NOLOCK) " +
+            " from BackendLoginIP WIP WITH (NOLOCK) " +
             " Join CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " WHERE CT.CompanyID = @forCompanyID";
 
@@ -3987,7 +3987,7 @@ public class BackendDB {
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
         if (!string.IsNullOrEmpty(CompanyCode)) {
-            SS = " DELETE FROM  BackendLoginIP " +
+            SS = " DELETE FROM BackendLoginIP " +
                  " WHERE IP=@IP And CompanyCode=@CompanyCode ";
 
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -4072,7 +4072,7 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT * FROM BackendLoginIP WIP WITH (NOLOCK) " +
+        SS = " SELECT * from BackendLoginIP WIP WITH (NOLOCK) " +
             " Join CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " WHERE CT.CompanyID = @forCompanyID And WIP.IP=@IP";
 
@@ -4101,7 +4101,7 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT WIP.ImageName,WIP.CompanyCode,WIP.IP AS withdrawalIP,CT.CompanyName,CT.CompanyID AS forCompanyID FROM BackendWithdrawalIP WIP WITH (NOLOCK) " +
+        SS = " SELECT WIP.ImageName,WIP.CompanyCode,WIP.IP AS withdrawalIP,CT.CompanyName,CT.CompanyID AS forCompanyID from BackendWithdrawalIP WIP WITH (NOLOCK) " +
             " Join CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " WHERE CT.CompanyID = @forCompanyID";
 
@@ -4177,7 +4177,7 @@ public class BackendDB {
         System.Data.SqlClient.SqlCommand DBCmd = null;
         string CompanyCode = GetCompanyCodeByCompanyID(CompanyID);
         if (!string.IsNullOrEmpty(CompanyCode)) {
-            SS = " DELETE FROM  BackendWithdrawalIP " +
+            SS = " DELETE FROM BackendWithdrawalIP " +
                  " WHERE IP=@IP And CompanyCode=@CompanyCode ";
 
             DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -4198,7 +4198,7 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " SELECT * FROM BackendWithdrawalIP WIP WITH (NOLOCK) " +
+        SS = " SELECT * from BackendWithdrawalIP WIP WITH (NOLOCK) " +
             " Join CompanyTable CT WITH (NOLOCK) on WIP.CompanyCode= CT.CompanyCode " +
             " WHERE CT.CompanyID = @forCompanyID And WIP.IP=@IP";
 
@@ -4577,11 +4577,11 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT CT.CompanyName,CT.CompanyID," +
-             " IIF(((SELECT COUNT(*) FROM  GPayRelation  GR WHERE SC.ServiceType = GR.ServiceType" +
+             " IIF(((SELECT COUNT(*) from GPayRelation GR WITH (NOLOCK) WHERE SC.ServiceType = GR.ServiceType" +
              " AND GR.CurrencyType = SC.CurrencyType" +
              " AND GR.forCompanyID = SC.forCompanyID" +
              " AND GR.ProviderCode = @ProviderCode) = 0), 0, 1) AS isSelected" +
-             " FROM CompanyTable CT WITH(NOLOCK)" +
+             " from CompanyTable CT WITH(NOLOCK)" +
              " JOIN CompanyService SC WITH(NOLOCK)" +
              " ON CT.CompanyID = SC.forCompanyID" +
              " WHERE SC.ServiceType = @ServiceType AND SC.CurrencyType = @CurrencyType" +
@@ -4857,9 +4857,9 @@ public class BackendDB {
                  "                AND GPayRelation.ServiceType = CompanyService.ServiceType" +
                  "                AND GPayRelation.forCompanyID = CompanyService.forCompanyID) AS GPayRelationCount" +
                  " FROM   CompanyService WITH (NOLOCK)" +
-                 "        LEFT JOIN CompanyTable" +
+                 "        LEFT JOIN CompanyTable WITH (NOLOCK)" +
                  "               ON CompanyService.forCompanyID = CompanyTable.CompanyID" +
-                 "        LEFT JOIN ServiceType" +
+                 "        LEFT JOIN ServiceType WITH (NOLOCK)" +
                  "               ON ServiceType.ServiceType = CompanyService.ServiceType" +
                  " WHERE  CompanyService.forCompanyID = @CompanyID ";
 
@@ -5169,7 +5169,7 @@ public class BackendDB {
                 if (returnValue > 0) {
                     //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0) {
                     //先刪除舊有資料
-                    SS = "DELETE FROM GPayRelation WHERE forCompanyID =@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
+                    SS = "DELETE FROM GPayRelation  WHERE forCompanyID =@forCompanyID And ServiceType=@ServiceType And CurrencyType=@CurrencyType";
 
                     DBCmd = new System.Data.SqlClient.SqlCommand();
                     DBCmd.CommandText = SS;
@@ -5404,9 +5404,9 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
         if (SettingKey == "") {
-            SS = " Select * from WebSetting";
+            SS = " Select * from WebSetting WITH (NOLOCK)";
         } else {
-            SS = " Select * from WebSetting";
+            SS = " Select * from WebSetting WITH (NOLOCK)";
             SS += " WHERE SettingKey=@SettingKey";
         }
 
@@ -5557,10 +5557,10 @@ public class BackendDB {
                 END AS OrderAmount
 
             FROM AgentReceive WITH (NOLOCK)
-            LEFT JOIN ServiceType ON ServiceType.ServiceType = AgentReceive.ServiceType
-            LEFT JOIN CompanyTable ON CompanyTable.CompanyID = AgentReceive.forChildCompanyID
-            LEFT JOIN PaymentTable ON PaymentTable.PaymentID = AgentReceive.forPaymentID
-            LEFT JOIN Withdrawal ON Withdrawal.WithdrawID = AgentReceive.forPaymentID
+            LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType = AgentReceive.ServiceType
+            LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = AgentReceive.forChildCompanyID
+            LEFT JOIN PaymentTable WITH (NOLOCK) ON PaymentTable.PaymentID = AgentReceive.forPaymentID
+            LEFT JOIN Withdrawal WITH (NOLOCK) ON Withdrawal.WithdrawID = AgentReceive.forPaymentID
 
             WHERE AgentReceive.forCompanyID = @CompanyID
               AND AgentReceive.Currency = @CurrencyType
@@ -5622,9 +5622,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ISNULL(SUM(AgentReceive.ReceiveAmount),0) ReceiveAmount,ISNULL(SUM(PaymentTable.PartialOrderAmount),0) PartialOrderAmount FROM AgentReceive WITH (NOLOCK) " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=AgentReceive.ServiceType" +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID=AgentReceive.forChildCompanyID" +
-             " LEFT JOIN PaymentTable ON PaymentTable.PaymentID=AgentReceive.forPaymentID" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=AgentReceive.ServiceType" +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=AgentReceive.forChildCompanyID" +
+             " LEFT JOIN PaymentTable WITH (NOLOCK) ON PaymentTable.PaymentID=AgentReceive.forPaymentID" +
              " WHERE AgentReceive.forCompanyID = @CompanyID AND AgentReceive.Currency = @CurrencyType AND DATEADD(HOUR, @TimeZone, PaymentFinishDate) >= @StartDate AND DATEADD(HOUR, @TimeZone, PaymentFinishDate) <= @EndDate ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -5656,7 +5656,7 @@ public class BackendDB {
         DataTable DT;
 
         if (CurrencyType != "") {
-            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive " +
+            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive WITH (NOLOCK) " +
                      " WHERE forCompanyID = @CompanyID " +
                      " AND Currency = @CurrencyType ";
 
@@ -5667,7 +5667,7 @@ public class BackendDB {
             DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = CurrencyType;
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         } else {
-            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive " +
+            SS = " SELECT ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN ReceiveAmount ELSE 0 END),0) UnCloseAmount,ISNULL(SUM(CASE ReceiveStatus WHEN 0 THEN 0 ELSE ReceiveAmount END),0) CloseAmount FROM AgentReceive WITH (NOLOCK) " +
                      " WHERE forCompanyID = @CompanyID " +
                      " AND Currency = @CurrencyType ";
 
@@ -5760,7 +5760,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ProxyProviderGroup.PaymentRate as CostRate,ProxyProviderGroup.WithdrawalCharge as CostCharge FROM ProviderService WITH (NOLOCK) " +
-             " JOIN ProxyProviderGroup ON ProviderService.ProviderCode = ProxyProviderGroup.forProviderCode " +
+             " JOIN ProxyProviderGroup WITH (NOLOCK) ON ProviderService.ProviderCode = ProxyProviderGroup.forProviderCode " +
              " WHERE ProviderCode =@ProviderCode And ServiceType=@ServiceType And CurrencyType=@CurrencyType AND GroupID = @GroupID";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -5813,7 +5813,7 @@ public class BackendDB {
         DataTable DT;
 
         if (ProviderCode != "") {
-            SS = "SELECT * FROM ProviderService WHERE ProviderCode =@ProviderCode AND ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
+            SS = "SELECT * FROM ProviderService WITH (NOLOCK) WHERE ProviderCode =@ProviderCode AND ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -5823,7 +5823,7 @@ public class BackendDB {
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         } else {
             if (ServiceType != "" && CurrencyType != "") {
-                SS = "SELECT * FROM ProviderService WHERE ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
+                SS = "SELECT * FROM ProviderService WITH (NOLOCK) WHERE ServiceType = @ServiceType AND CurrencyType =@CurrencyType";
                 DBCmd = new SqlCommand();
                 DBCmd.CommandText = SS;
                 DBCmd.CommandType = System.Data.CommandType.Text;
@@ -6055,7 +6055,7 @@ public class BackendDB {
         DataTable DT;
 
         if (PermissionCategoryID != 0) {
-            SS = "SELECT * FROM PermissionCategory WHERE PermissionCategoryID =@PermissionCategoryID";
+            SS = "SELECT * FROM PermissionCategory WITH (NOLOCK) WHERE PermissionCategoryID =@PermissionCategoryID";
             DBCmd = new SqlCommand();
             DBCmd.CommandText = SS;
             DBCmd.CommandType = System.Data.CommandType.Text;
@@ -6163,8 +6163,8 @@ public class BackendDB {
         DataTable DT;
 
         SS = "SELECT Count(*) FROM AdminRolePermission WITH (NOLOCK)" +
-            " JOIN AdminRole ON AdminRole.AdminRoleID=AdminRolePermission.forAdminRoleID " +
-            " JOIN AdminTable ON AdminTable.forAdminRoleID=AdminRole.AdminRoleID " +
+            " JOIN AdminRole WITH (NOLOCK) ON AdminRole.AdminRoleID=AdminRolePermission.forAdminRoleID " +
+            " JOIN AdminTable WITH (NOLOCK) ON AdminTable.forAdminRoleID=AdminRole.AdminRoleID " +
             " WHERE AdminTable.AdminID=@AdminID And forPermissionName=@PermissionName ";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -6414,15 +6414,15 @@ public class BackendDB {
 
         SS = " SELECT PC.ProviderName,PC.ProviderAPIType,PC.ProviderCode, ISNULL(PP.TotalDepositePointValue,0) TotalDepositePointValue,ISNULL(PP.TotalProfitPointValue,0) TotalProfitPointValue, " +
              " (ISNULL(PP.SystemPointValue, 0) - ISNULL(FP.ProviderFrozenAmount, 0)) AS SystemPointValue, ISNULL(FP.ProviderFrozenAmount, 0) ProviderFrozenAmount, ISNULL(FMH.WProfit,0) WithdrawProfit, " +
-             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) FROM Withdrawal W WITH (NOLOCK) " +
+             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) from Withdrawal W WITH (NOLOCK) " +
              " WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91 " +
              " AND W.ProviderCode = PP.ProviderCode AND W.CurrencyType = PP.CurrencyType) AS WithdrawPoint " +
-             " FROM ProviderCode PC " +
-             " LEFT JOIN ProviderPoint PP ON PC.ProviderCode = PP.ProviderCode" +
-             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount FROM FrozenPoint FP " +
+             " from ProviderCode PC WITH (NOLOCK) " +
+             " LEFT JOIN ProviderPoint PP WITH (NOLOCK) ON PC.ProviderCode = PP.ProviderCode" +
+             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount from FrozenPoint FP WITH (NOLOCK) " +
              " WHERE  FP.Status = 0 " +
              " GROUP BY forProviderCode) FP ON FP.forProviderCode = PC.ProviderCode " +
-             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit FROM ProviderManualHistory FMH " +
+             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit from ProviderManualHistory FMH WITH (NOLOCK) " +
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode " +
              " WHERE PC.ProviderState = 0 And PC.forCompanyID=@CompanyID ";
@@ -6450,15 +6450,15 @@ public class BackendDB {
 
         SS = " SELECT PP.PrePaidPoint,PC.ProviderName,PC.ProviderAPIType,PC.ProviderCode, ISNULL(PP.TotalDepositePointValue,0) TotalDepositePointValue,ISNULL(PP.TotalProfitPointValue,0) TotalProfitPointValue, " +
              " (ISNULL(PP.SystemPointValue, 0) - ISNULL(FP.ProviderFrozenAmount, 0)) AS SystemPointValue, ISNULL(FP.ProviderFrozenAmount, 0) ProviderFrozenAmount, ISNULL(FMH.WProfit,0) WithdrawProfit, " +
-             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) FROM Withdrawal W WITH (NOLOCK) " +
+             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) from Withdrawal W WITH (NOLOCK) " +
              " WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91 " +
              " AND W.ProviderCode = PP.ProviderCode AND W.CurrencyType = PP.CurrencyType) AS WithdrawPoint " +
-             " FROM ProviderCode PC " +
-             " LEFT JOIN ProviderPoint PP ON PC.ProviderCode = PP.ProviderCode" +
-             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount FROM FrozenPoint FP " +
+             " from ProviderCode PC WITH (NOLOCK) " +
+             " LEFT JOIN ProviderPoint PP WITH (NOLOCK) ON PC.ProviderCode = PP.ProviderCode" +
+             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount from FrozenPoint FP WITH (NOLOCK) " +
              " WHERE  FP.Status = 0 " +
              " GROUP BY forProviderCode) FP ON FP.forProviderCode = PC.ProviderCode " +
-             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit FROM ProviderManualHistory FMH " +
+             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit from ProviderManualHistory FMH WITH (NOLOCK) " +
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode ";
 
@@ -6488,15 +6488,15 @@ public class BackendDB {
 
         SS = " SELECT PC.ProviderName,PC.ProviderAPIType,PC.ProviderCode, ISNULL(PP.TotalDepositePointValue,0) TotalDepositePointValue,ISNULL(PP.TotalProfitPointValue,0) TotalProfitPointValue, " +
              " (ISNULL(PP.SystemPointValue, 0) - ISNULL(FP.ProviderFrozenAmount, 0)) AS SystemPointValue, ISNULL(FP.ProviderFrozenAmount, 0) ProviderFrozenAmount, ISNULL(FMH.WProfit,0) WithdrawProfit, " +
-             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) FROM Withdrawal W WITH (NOLOCK) " +
+             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) from Withdrawal W WITH (NOLOCK) " +
              " WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91 " +
              " AND W.ProviderCode = PP.ProviderCode AND W.CurrencyType = PP.CurrencyType) AS WithdrawPoint " +
-             " FROM ProviderCode PC " +
+             " from ProviderCode PC WITH (NOLOCK) " +
              " LEFT JOIN ProviderPoint PP WITH (NOLOCK) ON PC.ProviderCode = PP.ProviderCode" +
-             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount FROM FrozenPoint FP WITH (NOLOCK) " +
+             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount from FrozenPoint FP WITH (NOLOCK) " +
              " WHERE  FP.Status = 0 " +
              " GROUP BY forProviderCode) FP ON FP.forProviderCode = PC.ProviderCode " +
-             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit FROM ProviderManualHistory FMH WITH (NOLOCK) " +
+             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit from ProviderManualHistory FMH WITH (NOLOCK) " +
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode WHERE 1=1 And PC.forCompanyID=0";
 
@@ -6528,17 +6528,17 @@ public class BackendDB {
 
         SS = " SELECT WL.BlockChainRate UpBlockChainRate,ISNULL(BCR.Rate,0) AS OKEXRate,PC.ProviderName,PC.ProviderAPIType,PC.ProviderCode, ISNULL(PP.TotalDepositePointValue,0) TotalDepositePointValue,ISNULL(PP.TotalProfitPointValue,0) TotalProfitPointValue, " +
              " (ISNULL(PP.SystemPointValue, 0) - ISNULL(FP.ProviderFrozenAmount, 0)) AS SystemPointValue, ISNULL(FP.ProviderFrozenAmount, 0) ProviderFrozenAmount, ISNULL(FMH.WProfit,0) WithdrawProfit, " +
-             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) FROM Withdrawal W WITH (NOLOCK) " +
+             " (SELECT  ISNULL(SUM(W.Amount + W.CostCharge), 0) from Withdrawal W WITH (NOLOCK) " +
              " WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91 " +
              " AND W.ProviderCode = PP.ProviderCode AND W.CurrencyType = PP.CurrencyType) AS WithdrawPoint " +
-             " FROM ProviderCode PC " +
-             " JOIN WithdrawLimit WL ON WL.ProviderCode=PC.ProviderCode AND WL.ServiceType=@ServiceType AND WL.CurrencyType=@CurrencyType AND WL.WithdrawLimitType=3" +
+             " from ProviderCode PC WITH (NOLOCK) " +
+             " JOIN WithdrawLimit WL WITH (NOLOCK) ON WL.ProviderCode=PC.ProviderCode AND WL.ServiceType=@ServiceType AND WL.CurrencyType=@CurrencyType AND WL.WithdrawLimitType=3" +
              " LEFT JOIN ProviderPoint PP WITH (NOLOCK) ON PC.ProviderCode = PP.ProviderCode" +
              " JOIN BlockChainRate BCR WITH (NOLOCK) ON PP.CurrencyType = BCR.CurrencyType " +
-             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount FROM FrozenPoint FP " +
+             " LEFT JOIN(SELECT forProviderCode, SUM(ISNULL(ProviderFrozenAmount, 0)) ProviderFrozenAmount from FrozenPoint FP WITH (NOLOCK) " +
              " WHERE  FP.Status = 0 " +
              " GROUP BY forProviderCode) FP ON FP.forProviderCode = PC.ProviderCode " +
-             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit FROM ProviderManualHistory FMH " +
+             " LEFT JOIN (SELECT ProviderCode,SUM(ISNULL(Amount, 0)) WProfit from ProviderManualHistory FMH WITH (NOLOCK) " +
              " WHERE FMH.Type = 2 " +
              " GROUP BY ProviderCode) FMH ON FMH.ProviderCode = PC.ProviderCode WHERE WL.BlockChainRate IS NOT NULL ";
 
@@ -6569,7 +6569,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT SystemPointValue " +
-             " FROM ProviderPoint " +
+             " FROM ProviderPoint WITH (NOLOCK) " +
              " WHERE ProviderCode=@ProviderCode ";
 
         DBCmd = new SqlCommand();
@@ -6597,10 +6597,10 @@ public class BackendDB {
         SS = " SELECT PMH.*, " +
                  "        AT.LoginAccount,PC.ProviderName, " +
                  "        CONVERT(VARCHAR, PMH.CreateDate, 120) AS CreateDate2 " +
-                 " FROM   ProviderManualHistory PMH " +
-                 "        LEFT JOIN AdminTable AT " +
+                 " from ProviderManualHistory PMH WITH (NOLOCK) " +
+                 "        LEFT JOIN AdminTable AT WITH (NOLOCK) " +
                  "               ON PMH.forAdminID = AT.AdminID " +
-                  "        LEFT JOIN ProviderCode PC " +
+                  "        LEFT JOIN ProviderCode PC WITH (NOLOCK) " +
                  "               ON PC.ProviderCode = PMH.ProviderCode " +
                  " WHERE  PMH.Type = 2 ";
 
@@ -6650,7 +6650,7 @@ public class BackendDB {
         List<DBViewModel.CompanyServicePointVM> returnValue = null;
 
         SS = " SELECT(CSP.SystemPointValue - (SELECT ISNULL(SUM(W.Amount + W.CollectCharge), 0)" +
-             " FROM Withdrawal W WITH (NOLOCK)  " +
+             " from Withdrawal W WITH (NOLOCK)  " +
              " WHERE W.Status <> 2 " +
              " AND W.Status <> 3 " +
              " AND W.Status <> 90 " +
@@ -6665,9 +6665,9 @@ public class BackendDB {
              " AND FrozenPoint.Status = 0),0) AS FrozenPoint," +
              " ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge,WithdrawLimit.Rate,ServiceType.ServiceSupplyType, " +
              " CSP.*" +
-             " FROM CompanyServicePoint AS CSP" +
-             " LEFT JOIN ServiceType ON CSP.ServiceType=ServiceType.ServiceType And CSP.CurrencyType=ServiceType.CurrencyType " +
-             " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CSP.ServiceType And WithdrawLimit.CurrencyType= CSP.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CSP.CompanyID=WithdrawLimit.forCompanyID" +
+             " from CompanyServicePoint AS CSP WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CSP.ServiceType=ServiceType.ServiceType And CSP.CurrencyType=ServiceType.CurrencyType " +
+             " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CSP.ServiceType And WithdrawLimit.CurrencyType= CSP.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CSP.CompanyID=WithdrawLimit.forCompanyID" +
              " WHERE CSP.CompanyID = @CompanyID ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -6693,7 +6693,7 @@ public class BackendDB {
         DBViewModel.CompanyServicePointVM returnValue = null;
 
         SS = " SELECT(CSP.SystemPointValue - (SELECT ISNULL(SUM(W.Amount + W.CollectCharge), 0)" +
-             " FROM Withdrawal W WITH (NOLOCK) " +
+             " from Withdrawal W WITH (NOLOCK) " +
              " WHERE W.Status <> 2 " +
              " AND W.Status <> 3 " +
              " AND W.Status <> 90 " +
@@ -6708,10 +6708,10 @@ public class BackendDB {
              " AND FrozenPoint.Status = 0),0) AS FrozenPoint," +
              " ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge,WithdrawLimit.Rate, " +
              " CSP.*" +
-             " FROM CompanyServicePoint AS CSP" +
-             " LEFT JOIN ServiceType ON CSP.ServiceType=ServiceType.ServiceType" +
-             " LEFT JOIN BlockChainRate ON CSP.CurrencyType=BlockChainRate.CurrencyType " +
-             " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CSP.ServiceType And WithdrawLimit.CurrencyType= CSP.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CSP.CompanyID=WithdrawLimit.forCompanyID" +
+             " from CompanyServicePoint AS CSP WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CSP.ServiceType=ServiceType.ServiceType" +
+             " LEFT JOIN BlockChainRate WITH (NOLOCK) ON CSP.CurrencyType=BlockChainRate.CurrencyType " +
+             " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CSP.ServiceType And WithdrawLimit.CurrencyType= CSP.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CSP.CompanyID=WithdrawLimit.forCompanyID" +
              " WHERE CSP.CompanyID = @CompanyID " +
              " AND CSP.CurrencyType = @CurrencyType " +
              " AND CSP.ServiceType = @ServiceType ";
@@ -6739,9 +6739,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT *,ServiceTypeName" +
-             " FROM  CompanyServicePoint" +
-             " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-              " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType= CompanyServicePoint.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CompanyServicePoint.CompanyID=WithdrawLimit.forCompanyID" +
+             " FROM  CompanyServicePoint WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+              " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType= CompanyServicePoint.CurrencyType And WithdrawLimit.WithdrawLimitType=1 And CompanyServicePoint.CompanyID=WithdrawLimit.forCompanyID" +
              " WHERE CompanyServicePoint.CompanyID = @CompanyID" +
              " AND CompanyServicePoint.CurrencyType = @CurrencyType" +
              " AND CompanyServicePoint.ServiceType = @ServiceType";
@@ -6770,9 +6770,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT *,ServiceTypeName" +
-             " FROM  CompanyServicePoint" +
-             " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-              " LEFT JOIN WithdrawLimit ON  WithdrawLimit.CurrencyType= CompanyServicePoint.CurrencyType And WithdrawLimit.WithdrawLimitType=2 And CompanyServicePoint.CompanyID=WithdrawLimit.forCompanyID" +
+             " FROM  CompanyServicePoint WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+              " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON  WithdrawLimit.CurrencyType= CompanyServicePoint.CurrencyType And WithdrawLimit.WithdrawLimitType=2 And CompanyServicePoint.CompanyID=WithdrawLimit.forCompanyID" +
              " WHERE CompanyServicePoint.CompanyID = @CompanyID" +
              " AND CompanyServicePoint.CurrencyType = @CurrencyType" +
              " AND CompanyServicePoint.ServiceType = @ServiceType";
@@ -6802,15 +6802,15 @@ public class BackendDB {
 
         SS = " select ProviderName,CH.*,convert(varchar,CreateDate,120) as CreateDate2, " +
              " Case when CH.OperatorType = 0" +
-             " then (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+             " then (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
              " when CH.OperatorType = 1" +
              " then (select Withdrawal.WithdrawSerial from Withdrawal WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
              " when CH.OperatorType = 3" +
-             " then (select ProviderManualHistory.TransactionSerial from ProviderManualHistory where ProviderManualHistory.ProviderManualID = CH.TransactionID )" +
+             " then (select ProviderManualHistory.TransactionSerial from ProviderManualHistory WITH (NOLOCK) where ProviderManualHistory.ProviderManualID = CH.TransactionID )" +
              " else (select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK) where Withdrawal.WithdrawID = CH.TransactionID )" +
              " End as TransactionOrder" +
-             " from ProviderPointHistory CH" +
-             " left join ProviderCode  on ProviderCode.ProviderCode = CH.ProviderCode" +
+             " from ProviderPointHistory CH WITH (NOLOCK)" +
+             " left join ProviderCode WITH (NOLOCK) on ProviderCode.ProviderCode = CH.ProviderCode" +
              " WHERE CH.CreateDate Between @StartDate And @EndDate ";
 
         if (fromBody.OperatorType != 99) {
@@ -6848,11 +6848,11 @@ public class BackendDB {
 
         SS = " select ProviderName,CH.*,convert(varchar,CreateDate,120) as CreateDate2, " +
              " Case when (CH.OperatorType = 0 OR CH.OperatorType = 2) " +
-             " then (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+             " then (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
              " else (select '0')" +
              " End as TransactionOrder" +
-             " from ProviderPrePaidHistory CH" +
-             " left join ProviderCode  on ProviderCode.ProviderCode = CH.ProviderCode" +
+             " from ProviderPrePaidHistory CH WITH (NOLOCK)" +
+             " left join ProviderCode WITH (NOLOCK) on ProviderCode.ProviderCode = CH.ProviderCode" +
              " WHERE CH.CreateDate Between @StartDate And @EndDate ";
 
         if (fromBody.OperatorType != 99) {
@@ -6890,14 +6890,14 @@ public class BackendDB {
 
         SS = " select GroupName,CH.*,convert(varchar,CH.CreateDate,120) as CreateDate2, " +
              " Case when CH.OperatorType = 0" +
-             " then (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+             " then (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
              " when CH.OperatorType = 1" +
              " then (select Withdrawal.WithdrawSerial from Withdrawal WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
              " when CH.OperatorType = 2" +
              " then (select Withdrawal.WithdrawSerial from Withdrawal WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID ) " +
              " else (select Withdrawal.WithdrawSerial from Withdrawal WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
              " End as TransactionOrder" +
-             " from ProxyProviderPointHistory CH" +
+             " from ProxyProviderPointHistory CH WITH (NOLOCK)" +
              " LEFT JOIN ProxyProviderGroup PPG WITH (NOLOCK) ON PPG.GroupID=CH.GroupID " +
              " WHERE CH.CreateDate Between @StartDate And @EndDate And ProviderCode=@ProviderCode ";
 
@@ -6939,7 +6939,7 @@ public class BackendDB {
 
         SS = " SELECT *,ServiceTypeName,CompanyName, " +
              " (SELECT ISNULL(SUM(W.Amount + W.CollectCharge), 0)" +
-             " FROM Withdrawal W  WITH (NOLOCK) " +
+             " from Withdrawal W  WITH (NOLOCK) " +
              " WHERE W.Status <> 2" +
              " AND W.Status <> 3" +
              " AND W.Status <> 8" +
@@ -6953,9 +6953,9 @@ public class BackendDB {
              " AND FrozenPoint.CurrencyType = CompanyServicePoint.CurrencyType" +
              " AND FrozenPoint.ServiceType = CompanyServicePoint.ServiceType" +
              " AND FrozenPoint.Status = 0),0) AS FrozenPoint" +
-             " FROM  CompanyServicePoint" +
-             " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID=CompanyServicePoint.CompanyID" +
+             " FROM  CompanyServicePoint WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=CompanyServicePoint.CompanyID" +
              " WHERE CompanyServicePoint.CurrencyType = @CurrencyType AND CompanyTable.CompanyState=0 " +
              " Order By CompanyServicePoint.CompanyID";
 
@@ -6983,16 +6983,16 @@ public class BackendDB {
         if (string.IsNullOrEmpty(CurrencyType)) {
             SS = " SELECT CompanyServicePoint.*,CompanyService.State,ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge" +
             " FROM  CompanyServicePoint" +
-            " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-            " LEFT JOIN CompanyService ON CompanyService.ServiceType=CompanyServicePoint.ServiceType And CompanyService.CurrencyType=CompanyServicePoint.CurrencyType And CompanyService.forCompanyID=CompanyServicePoint.CompanyID " +
-            " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
+            " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+            " LEFT JOIN CompanyService WITH (NOLOCK) ON CompanyService.ServiceType=CompanyServicePoint.ServiceType And CompanyService.CurrencyType=CompanyServicePoint.CurrencyType And CompanyService.forCompanyID=CompanyServicePoint.CompanyID " +
+            " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
             " WHERE CompanyServicePoint.CompanyID = @CompanyID";
         } else {
             SS = " SELECT CompanyServicePoint.*,CompanyService.State,ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge" +
-                " FROM  CompanyServicePoint" +
-                " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-                " LEFT JOIN CompanyService ON CompanyService.ServiceType=CompanyServicePoint.ServiceType And CompanyService.CurrencyType=CompanyServicePoint.CurrencyType And CompanyService.forCompanyID=CompanyServicePoint.CompanyID " +
-                " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
+                " FROM  CompanyServicePoint WITH (NOLOCK)" +
+                " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+                " LEFT JOIN CompanyService WITH (NOLOCK) ON CompanyService.ServiceType=CompanyServicePoint.ServiceType And CompanyService.CurrencyType=CompanyServicePoint.CurrencyType And CompanyService.forCompanyID=CompanyServicePoint.CompanyID " +
+                " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
                 " WHERE CompanyServicePoint.CompanyID = @CompanyID" +
                 " AND CompanyServicePoint.CurrencyType = @CurrencyType";
         }
@@ -7022,12 +7022,12 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT " +
-             " (SELECT COUNT(FP.FrozenID) FROM FrozenPoint FP WHERE FP.ServiceType = CompanyServicePoint.ServiceType And FP.forCompanyID = @CompanyID AND FP.CurrencyType =@CurrencyType And FP.Status=0) FrozenServiceCount," +
-             " ISNULL((SELECT SUM(FP.CompanyFrozenAmount) FROM FrozenPoint FP WHERE FP.ServiceType = CompanyServicePoint.ServiceType And FP.forCompanyID = @CompanyID AND FP.CurrencyType =@CurrencyType  And FP.Status=0),0) FrozenServicePoint" +
+             " (SELECT COUNT(FP.FrozenID) from FrozenPoint FP WITH (NOLOCK) WHERE FP.ServiceType = CompanyServicePoint.ServiceType And FP.forCompanyID = @CompanyID AND FP.CurrencyType =@CurrencyType And FP.Status=0) FrozenServiceCount," +
+             " ISNULL((SELECT SUM(FP.CompanyFrozenAmount) from FrozenPoint FP WITH (NOLOCK) WHERE FP.ServiceType = CompanyServicePoint.ServiceType And FP.forCompanyID = @CompanyID AND FP.CurrencyType =@CurrencyType  And FP.Status=0),0) FrozenServicePoint" +
              ",CompanyServicePoint.*,ServiceTypeName,WithdrawLimit.MaxLimit,WithdrawLimit.MinLimit,WithdrawLimit.Charge" +
-             " FROM  CompanyServicePoint" +
-             " LEFT JOIN ServiceType ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
-             " LEFT JOIN WithdrawLimit ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
+             " FROM  CompanyServicePoint WITH (NOLOCK)" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON CompanyServicePoint.ServiceType=ServiceType.ServiceType" +
+             " LEFT JOIN WithdrawLimit WITH (NOLOCK) ON WithdrawLimit.ServiceType=CompanyServicePoint.ServiceType And WithdrawLimit.CurrencyType=@CurrencyType And WithdrawLimit.WithdrawLimitType=1 And WithdrawLimit.forCompanyID=@CompanyID" +
              " WHERE CompanyServicePoint.CompanyID = @CompanyID" +
              " AND CompanyServicePoint.CurrencyType = @CurrencyType";
 
@@ -7055,8 +7055,8 @@ public class BackendDB {
 
         if (CurrencyType != "") {
             SS = " SELECT CompanyTable.CompanyName,CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
-                 " FROM   CompanyPoint" +
-                 " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+                 " FROM   CompanyPoint WITH (NOLOCK)" +
+                 " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
                  " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyPoint.forCompanyID = CompanyTable.CompanyID" +
                  " WHERE CompanyPoint.forCompanyID = @CompanyID" +
                  " AND CompanyPoint.CurrencyType = @CurrencyType";
@@ -7069,8 +7069,8 @@ public class BackendDB {
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         } else {
             SS = " SELECT CompanyTable.CompanyName,CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
-                 " FROM   CompanyPoint" +
-                 " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+                 " FROM   CompanyPoint WITH (NOLOCK)" +
+                 " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
                  " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyPoint.forCompanyID = CompanyTable.CompanyID" +
                  " WHERE CompanyPoint.forCompanyID = @CompanyID";
 
@@ -7112,7 +7112,7 @@ public class BackendDB {
     //    {
     //        SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
     //             " FROM   CompanyPoint" +
-    //             " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+    //             " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
     //             " WHERE CompanyPoint.forCompanyID = @CompanyID" +
     //             " AND CompanyPoint.CurrencyType = @CurrencyType";
 
@@ -7127,7 +7127,7 @@ public class BackendDB {
     //    {
     //        SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
     //             " FROM   CompanyPoint" +
-    //             " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+    //             " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
     //             " WHERE CompanyPoint.forCompanyID = @CompanyID";
 
     //        DBCmd = new SqlCommand();
@@ -7169,8 +7169,8 @@ public class BackendDB {
 
         if (CurrencyType != "") {//OB003 内充渠道
             SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
-                 " FROM   CompanyPoint" +
-                 " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+                 " FROM   CompanyPoint WITH (NOLOCK)" +
+                 " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
                  " WHERE CompanyPoint.forCompanyID = @CompanyID" +
                  " AND CompanyPoint.CurrencyType = @CurrencyType";
 
@@ -7182,8 +7182,8 @@ public class BackendDB {
             DT = DBAccess.GetDB(DBConnStr, DBCmd);
         } else {   //OB003 内充渠道
             SS = " SELECT CompanyPoint.*,CompanyServicePoint.SystemPointValue AS AutoWithdrawAmount" +
-                 " FROM   CompanyPoint" +
-                 " LEFT JOIN CompanyServicePoint ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
+                 " FROM   CompanyPoint WITH (NOLOCK)" +
+                 " LEFT JOIN CompanyServicePoint WITH (NOLOCK) ON CompanyServicePoint.CompanyID=CompanyPoint.forCompanyID And CompanyServicePoint.CurrencyType=CompanyPoint.CurrencyType And CompanyServicePoint.ServiceType='OOB02'" +
                  " WHERE CompanyPoint.forCompanyID = @CompanyID";
 
             DBCmd = new SqlCommand();
@@ -7436,7 +7436,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT BankCard.*,BankName FROM BankCard WITH (NOLOCK) " +
-             " JOIN BankCode on BankCode.BankCode=BankCard.BankCode" +
+             " JOIN BankCode WITH (NOLOCK) on BankCode.BankCode=BankCard.BankCode" +
              " WHERE forCompanyID=@forCompanyID ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -7998,7 +7998,7 @@ public class BackendDB {
         SqlCommand DBCmd;
 
         SS = "SELECT Count(*)  " +
-             "FROM PaymentTable AS P WITH(NOLOCK) " +
+             "from PaymentTable AS P WITH(NOLOCK) " +
              " LEFT JOIN  ProxyProviderOrder PPO WITH(NOLOCK) ON PPO.forOrderSerial= P.PaymentSerial AND PPO.Type=0" +
              "WHERE  SubmitType=1 And P.ProcessStatus=8 And P.ProviderCode=@ProviderCode And (PPO.GroupID=0 or PPO.GroupID=@GroupID) ";
 
@@ -8189,7 +8189,7 @@ public class BackendDB {
         int returnValue = -1;
 
         SS = " SELECT COUNT(*) as Count " +
-             " FROM Withdrawal W " +
+             " from Withdrawal W WITH (NOLOCK) " +
              " Where CreateDate" +
              " between DATEADD(minute, -5, GETDATE())" +
              " And GETDATE()" +
@@ -8220,7 +8220,7 @@ public class BackendDB {
         String SS = String.Empty;
         SqlCommand DBCmd;
 
-        SS = " SELECT TOP(1) GWR.ProviderCode FROM CompanyTable CT WITH(NOLOCK)" +
+        SS = " SELECT TOP(1) GWR.ProviderCode from CompanyTable CT WITH(NOLOCK)" +
              " JOIN GPayWithdrawRelation GWR WITH(NOLOCK)  ON GWR.forCompanyID = CT.CompanyID" +
              " AND GWR.CurrencyType = 'JPY'" +
              " JOIN ProviderCode PC WITH(NOLOCK)  ON PC.ProviderCode = GWR.ProviderCode AND PC.CollectType = 1" +
@@ -8277,7 +8277,7 @@ public class BackendDB {
         DBCmd = new System.Data.SqlClient.SqlCommand();
 
         SS = " SELECT convert(varchar, DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC), 120) as CreateDate2,convert(varchar, DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC), 120) as FinishDate2,Withdrawal.* FROM Withdrawal WITH (NOLOCK) " +
-             " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91  And (FloatType=1 OR FloatType=2) ";
+             " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91  And (FloatType=1 OR FloatType=2) ";
 
         //序號過濾
         if (fromBody.WithdrawSerial != "") {
@@ -8330,7 +8330,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT convert(varchar, DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC), 120) as CreateDate2,convert(varchar, DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC), 120) as FinishDate2,Withdrawal.* FROM Withdrawal WITH (NOLOCK) " +
-             " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91 And FloatType=0  ";
+             " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And forCompanyID=@CompanyID And Status<>8 AND Status <> 90 AND Status <> 91 And FloatType=0  ";
 
         //過濾資料
         if (fromBody.Status != 99) { //99代表取得所有資料
@@ -8370,7 +8370,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT Withdrawal.*,ServiceType.ServiceTypeName FROM Withdrawal WITH (NOLOCK) " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=Withdrawal.ServiceType And ServiceType.CurrencyType=Withdrawal.CurrencyType" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=Withdrawal.ServiceType And ServiceType.CurrencyType=Withdrawal.CurrencyType" +
              " WHERE  forCompanyID=@CompanyID And Status=8";
 
 
@@ -9240,7 +9240,7 @@ public class BackendDB {
         DataTable DT;
         DBCmd = new System.Data.SqlClient.SqlCommand();
         object DBreturn;
-        SS = " SELECT CompanyType From Withdrawal W JOIN CompanyTable CT ON CT.CompanyID=W.forCompanyID  " +
+        SS = " SELECT CompanyType from Withdrawal W WITH (NOLOCK) JOIN CompanyTable CT WITH (NOLOCK) ON CT.CompanyID=W.forCompanyID  " +
              " Where WithdrawSerial=@WithdrawSerial ";
 
         DBCmd = new SqlCommand();
@@ -10070,7 +10070,7 @@ public class BackendDB {
         SqlCommand DBCmd;
 
         SS = "Select convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,convert(varchar,Withdrawal.FinishDate,120) as FinishDate2,* from Withdrawal  WITH (NOLOCK)  " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=Withdrawal.ServiceType And ServiceType.CurrencyType=Withdrawal.CurrencyType" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=Withdrawal.ServiceType And ServiceType.CurrencyType=Withdrawal.CurrencyType" +
              " WHERE WithdrawID=@WithdrawID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -10222,7 +10222,7 @@ public class BackendDB {
         SqlCommand DBCmd;
 
         //手動到後台下發
-        SS = " SELECT COUNT(*) FROM Withdrawal " +
+        SS = " SELECT COUNT(*) FROM Withdrawal WITH (NOLOCK) " +
              " JOIN  ProxyProviderOrder  WITH (NOLOCK) ON WithdrawSerial=forOrderSerial And ProxyProviderOrder.Type=1 " +
              " WHERE WithdrawSerial=@WithdrawSerial And Status=1 And HandleByAdminID <> 0  ";
 
@@ -10243,8 +10243,8 @@ public class BackendDB {
         SqlCommand DBCmd;
 
         //手動到後台下發
-        SS = " SELECT COUNT(*) FROM Withdrawal " +
-             " JOIN  ProxyProviderOrder ON WithdrawSerial=forOrderSerial And ProxyProviderOrder.Type=1 " +
+        SS = " SELECT COUNT(*) FROM Withdrawal WITH (NOLOCK) " +
+             " JOIN  ProxyProviderOrder WITH (NOLOCK) ON WithdrawSerial=forOrderSerial And ProxyProviderOrder.Type=1 " +
              " WHERE WithdrawSerial=@WithdrawSerial And Status=1 And GroupID=@GroupID And  HandleByAdminID=0 ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -10265,8 +10265,8 @@ public class BackendDB {
         SqlCommand DBCmd;
 
         //手動到後台下發
-        SS = " SELECT COUNT(*) FROM Withdrawal " +
-             " JOIN  ProxyProviderOrder ON WithdrawSerial=forOrderSerial And ProxyProviderOrder.Type=1 " +
+        SS = " SELECT COUNT(*) FROM Withdrawal WITH (NOLOCK) " +
+             " JOIN  ProxyProviderOrder WITH (NOLOCK) ON WithdrawSerial=forOrderSerial And ProxyProviderOrder.Type=1 " +
              " WHERE WithdrawSerial=@WithdrawSerial And Status=1  And  HandleByAdminID=0 ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -10344,8 +10344,8 @@ public class BackendDB {
         SqlCommand DBCmd;
         DBModel.GetProviderWithdrawalByGroupAmount returnValue = null;
         DataTable DT;
-        SS = " SELECT SUM(Amount) AS TotalAmount,COUNT(*) AS TotalCount  FROM Withdrawal " +
-             " JOIN ProxyProviderOrder ON Withdrawal.WithdrawSerial = ProxyProviderOrder.forOrderSerial " +
+        SS = " SELECT SUM(Amount) AS TotalAmount,COUNT(*) AS TotalCount  FROM Withdrawal WITH (NOLOCK) " +
+             " JOIN ProxyProviderOrder WITH (NOLOCK) ON Withdrawal.WithdrawSerial = ProxyProviderOrder.forOrderSerial " +
              " AND ProxyProviderOrder.Type = 1" +
              " WHERE ProxyProviderOrder.GroupID = @GroupID" +
              " AND Withdrawal.Status = 1" +
@@ -10440,9 +10440,9 @@ public class BackendDB {
         SS += " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
         if (!fromBody.IsSearchWaitReview) {
             if (fromBody.TimeType == "F") {
-                SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
+                SS += " WHERE Withdrawal.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And Status<>8 AND Status <> 90 AND Status <> 91";
             } else {
-                SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
+                SS += " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And Status<>8 AND Status <> 90 AND Status <> 91";
             }
 
             #region 筛选条件
@@ -10559,8 +10559,8 @@ public class BackendDB {
         //     " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
         //     " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
         //     " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode" +
-        //     " LEFT JOIN  ProxyProviderOrder PPO ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
-        //     " LEFT JOIN  ProxyProviderGroup PPG ON PPO.GroupID= PPG.GroupID  " +
+        //     " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK) ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
+        //     " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK) ON PPO.GroupID= PPG.GroupID  " +
         //     " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
 
 
@@ -10729,8 +10729,8 @@ public class BackendDB {
         //     " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
         //     " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
         //     " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode" +
-        //     " LEFT JOIN  ProxyProviderOrder PPO ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
-        //     " LEFT JOIN  ProxyProviderGroup PPG ON PPO.GroupID= PPG.GroupID  " +
+        //     " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK) ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
+        //     " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK) ON PPO.GroupID= PPG.GroupID  " +
         //     " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
 
 
@@ -10775,12 +10775,12 @@ public class BackendDB {
         SS += " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID";
         //SS += " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode";
         SS += " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 ";
-        //SS += " LEFT JOIN  ProxyProviderGroup PPG ON PPO.GroupID= PPG.GroupID  ";
+        //SS += " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK) ON PPO.GroupID= PPG.GroupID  ";
         if (!fromBody.IsSearchWaitReview) {
             if (fromBody.TimeType == "F") {
-                SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate And DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
+                SS += " WHERE Withdrawal.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And Status<>8 AND Status <> 90 AND Status <> 91 ";
             } else {
-                SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate And DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
+                SS += " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) And Status<>8 AND Status <> 90 AND Status <> 91 ";
             }
 
 
@@ -10906,8 +10906,8 @@ public class BackendDB {
         //     " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=Withdrawal.ProviderCode" +
         //     " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
         //     " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode" +
-        //     " LEFT JOIN  ProxyProviderOrder PPO ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
-        //     " LEFT JOIN  ProxyProviderGroup PPG ON PPO.GroupID= PPG.GroupID  " +
+        //     " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK) ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
+        //     " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK) ON PPO.GroupID= PPG.GroupID  " +
         //     " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 ";
 
 
@@ -11012,9 +11012,9 @@ public class BackendDB {
              " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
 
         if (fromBody.TimeType == "F") {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.FinishDateUTC) <= @EndDate  And Status<>8 AND Status <> 90 AND Status <> 91  ";
+            SS += " WHERE Withdrawal.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
         } else {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, Withdrawal.CreateDateUTC) <= @EndDate  And Status<>8 AND Status <> 90 AND Status <> 91  ";
+            SS += " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
         }
 
         //過濾資料
@@ -11204,8 +11204,8 @@ public class BackendDB {
 
 
         SS = "SELECT @CompanyID AS forCompanyID, G.ProviderCode, G.ServiceType, G.CurrencyType, G.Weight "
-           + " FROM CompanyTable C "
-           + " LEFT JOIN GPayRelation G ON C.CompanyID = G.forCompanyID "
+           + " from CompanyTable C  WITH (NOLOCK)"
+           + " LEFT JOIN GPayRelation G WITH (NOLOCK) ON C.CompanyID = G.forCompanyID "
            + " WHERE @SortKey LIKE C.SortKey + '%' "
            + " AND C.InsideLevel = 0 "
            + " AND G.ServiceType = @ServiceType "
@@ -11361,7 +11361,7 @@ public class BackendDB {
         string SS;
         SqlCommand DBCmd = null;
         DataTable DT;
-        SS = " SELECT * FROM GPayRelation WHERE  CurrencyType=@CurrencyType" +
+        SS = " SELECT * FROM GPayRelation WITH (NOLOCK) WHERE  CurrencyType=@CurrencyType" +
              " AND forCompanyID=@forCompanyID";
 
         DBCmd = new SqlCommand();
@@ -11407,7 +11407,7 @@ public class BackendDB {
         ProviderServiceDT = DBAccess.GetDB(DBConnStr, DBCmd);
 
         // 查 GPayRelation
-        SS = " SELECT * FROM GPayRelation" +
+        SS = " SELECT * FROM GPayRelation WITH (NOLOCK) " +
              " WHERE forCompanyID = @CompanyID AND ServiceType = @ServiceType AND CurrencyType = @CurrencyType";
         DBCmd = new SqlCommand();
         DBCmd.CommandText = SS;
@@ -11516,7 +11516,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "DELETE FROM GPayRelation WHERE  ServiceType =@ServiceType AND CurrencyType =@CurrencyType AND forCompanyID =@forCompanyID";
+        SS = "DELETE FROM GPayRelation  WHERE  ServiceType =@ServiceType AND CurrencyType =@CurrencyType AND forCompanyID =@forCompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -11703,7 +11703,7 @@ public class BackendDB {
                 //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0)
                 //{
                 //先刪除舊有資料
-                SS = "DELETE FROM GPayWithdrawRelation WHERE forCompanyID =@forCompanyID  And CurrencyType=@CurrencyType";
+                SS = "DELETE FROM GPayWithdrawRelation  WHERE forCompanyID =@forCompanyID  And CurrencyType=@CurrencyType";
 
                 DBCmd = new System.Data.SqlClient.SqlCommand();
                 DBCmd.CommandText = SS;
@@ -11770,7 +11770,7 @@ public class BackendDB {
                     //if (CompanyType == 0 && CompanyTD.ParentCompanyID == 0)
                     //{
                     //先刪除舊有資料
-                    SS = "DELETE FROM GPayWithdrawRelation WHERE forCompanyID =@forCompanyID  And CurrencyType=@CurrencyType";
+                    SS = "DELETE FROM GPayWithdrawRelation  WHERE forCompanyID =@forCompanyID  And CurrencyType=@CurrencyType";
 
                     DBCmd = new System.Data.SqlClient.SqlCommand();
                     DBCmd.CommandText = SS;
@@ -11814,8 +11814,8 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ServiceTypeName,ProviderName,SummaryProviderByDate.*,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryProviderByDate WITH (NOLOCK) " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryProviderByDate.ServiceType And ServiceType.CurrencyType=SummaryProviderByDate.CurrencyType" +
-             " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode = SummaryProviderByDate.ProviderCode " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryProviderByDate.ServiceType And ServiceType.CurrencyType=SummaryProviderByDate.CurrencyType" +
+             " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode = SummaryProviderByDate.ProviderCode " +
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryProviderByDate.CurrencyType=@CurrencyType AND (SummaryAmount <> 0 OR SummaryWithdrawalAmount <> 0) ";
 
@@ -11889,12 +11889,12 @@ public class BackendDB {
 
         SS = " select ServiceTypeName,CompanyName,CSP.*," +
              " Case when CSP.OperatorType = 0" +
-             " then(select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CSP.TransactionID )" +
+             " then(select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CSP.TransactionID )" +
              " else (select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = CSP.TransactionID ) " +
              " End as TransactionOrder" +
-             " from CompanyServicePointHistory CSP" +
-             " left join CompanyTable CT on CT.CompanyID = CSP.forCompanyID" +
-             " left join ServiceType ST on ST.ServiceType = CSP.ServiceType and ST.CurrencyType = CSP.CurrencyType" +
+             " from CompanyServicePointHistory CSP WITH (NOLOCK)" +
+             " left join CompanyTable CT WITH (NOLOCK) on CT.CompanyID = CSP.forCompanyID" +
+             " left join ServiceType ST WITH (NOLOCK) on ST.ServiceType = CSP.ServiceType and ST.CurrencyType = CSP.CurrencyType" +
              " WHERE CSP.CreateDate Between @StartDate And @EndDate ";
 
         if (SearchData.ServiceType != "0") {
@@ -11932,9 +11932,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT CompanyTable.CompanyType,ServiceTypeName,SummaryBlockChainByDate.*,CompanyTable.CompanyName,ProviderCode.ProviderName,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryBlockChainByDate WITH (NOLOCK)  " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryBlockChainByDate.ServiceType And ServiceType.CurrencyType=SummaryBlockChainByDate.CurrencyType " +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID = SummaryBlockChainByDate.forCompanyID " +
-             " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode = SummaryBlockChainByDate.forProviderCode " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryBlockChainByDate.ServiceType And ServiceType.CurrencyType=SummaryBlockChainByDate.CurrencyType " +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = SummaryBlockChainByDate.forCompanyID " +
+             " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode = SummaryBlockChainByDate.forProviderCode " +
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryBlockChainByDate.CurrencyType=@CurrencyType ";
 
@@ -11975,9 +11975,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT CompanyTable.CompanyType,ServiceTypeName,SummaryCompanyByDate.*,CompanyTable.CompanyName,ProviderCode.ProviderName,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryCompanyByDate WITH (NOLOCK)  " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
-             " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode = SummaryCompanyByDate.forProviderCode " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
+             " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode = SummaryCompanyByDate.forProviderCode " +
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType ";
 
@@ -12018,7 +12018,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT convert(varchar, SummaryDate, 23) as SummaryDate,ISNULL(SUM(SummaryWithdrawalAmount),0) TotalWithdrawalAmount,ISNULL(SUM(SummaryNetAmount),0) TotalNetAmount" +
-            " FROM SummaryCompanyByDate" +
+            " FROM SummaryCompanyByDate WITH (NOLOCK)" +
             " WHERE SummaryDate Between @StartDate And @EndDate" +
             " And SummaryCompanyByDate.CurrencyType = @CurrencyType" +
             " And forCompanyID = @CompanyID" +
@@ -12049,7 +12049,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT SummaryCompanyByHour.*,convert(varchar, SummaryDate, 23) as SummaryTime2 FROM SummaryCompanyByHour WITH (NOLOCK)  " +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID = SummaryCompanyByHour.forCompanyID " +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = SummaryCompanyByHour.forCompanyID " +
              " WHERE SummaryTime Between @StartDate And @EndDate " +
              " And SummaryCompanyByHour.CurrencyType=@CurrencyType ";
 
@@ -12085,9 +12085,9 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ServiceTypeName,SummaryCompanyByDate.*,CompanyTable.CompanyName,ProviderCode.ProviderName,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryCompanyByDate WITH (NOLOCK)  " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
-             " JOIN CompanyTable ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
-             " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode = SummaryCompanyByDate.forProviderCode " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
+             " JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
+             " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode = SummaryCompanyByDate.forProviderCode " +
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType And CompanyTable.CompanyType=2 And SummaryAgentAmount<>0 ";
 
@@ -12128,8 +12128,8 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ServiceTypeName,SummaryCompanyByDate.*,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryCompanyByDate WITH (NOLOCK)  " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
-             " LEFT JOIN CompanyTable ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType And ServiceType.CurrencyType=SummaryCompanyByDate.CurrencyType " +
+             " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID = SummaryCompanyByDate.forCompanyID " +
              " WHERE SummaryDate Between @StartDate And @EndDate " +
              " And SummaryCompanyByDate.CurrencyType=@CurrencyType And CompanyTable.CompanyType=2 And SummaryAgentAmount<>0  And forCompanyID=@CompanyID ";
 
@@ -12178,16 +12178,15 @@ public class BackendDB {
                     SC.CurrencyType,  -- 改這裡，這才是正確來源
                     forCompanyID, 
                     SUM(SummaryAmount) AS SummaryAmount
-                FROM CompanyTable CT 
-                JOIN SummaryCompanyByDate SC ON CT.CompanyID = SC.forCompanyID
+                from CompanyTable CT WITH (NOLOCK) JOIN SummaryCompanyByDate SC WITH (NOLOCK) ON CT.CompanyID = SC.forCompanyID
                 WHERE  
                     CT.SortKey LIKE @SortKey + '%' 
                     AND CT.CompanyID <> @CompanyID  
                     AND SummaryDate BETWEEN @StartDate AND @EndDate 
                 GROUP BY SC.CurrencyType, forCompanyID, SummaryDate, ServiceType
             ) tmpTable 
-            LEFT JOIN CompanyTable CT ON CT.CompanyID = tmpTable.forCompanyID 
-            LEFT JOIN ServiceType ST ON ST.ServiceType = tmpTable.ServiceType 
+            LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CT.CompanyID = tmpTable.forCompanyID 
+            LEFT JOIN ServiceType ST WITH (NOLOCK) ON ST.ServiceType = tmpTable.ServiceType 
             WHERE SummaryAmount <> 0";
         if (SearchData.ServiceType != "0") {
             SS += " And SummaryCompanyByDate.ServiceType=@ServiceType ";
@@ -12219,7 +12218,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT ServiceTypeName,SummaryCompanyByDate.*,convert(varchar, SummaryDate, 23) as SummaryDate2 FROM SummaryCompanyByDate WITH (NOLOCK) " +
-             " LEFT JOIN ServiceType ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType" +
+             " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=SummaryCompanyByDate.ServiceType" +
              " WHERE SummaryCompanyByDate.SummaryDate Between @StartDate And @EndDate And SummaryCompanyByDate.forCompanyID=@CompanyID And SummaryCompanyByDate.CurrencyType=@CurrencyType And SummaryCompanyByDate.ServiceType=@ServiceType";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -12247,7 +12246,7 @@ public class BackendDB {
         String SS = String.Empty;
         SqlCommand DBCmd;
         DataTable DT;
-        SS = " select ServiceType.ServiceTypeName,b.* from(SELECT sum(SummaryNetAmount) as SummaryNetAmounts, ServiceType FROM SummaryCompanyByDate" +
+        SS = " select ServiceType.ServiceTypeName,b.* from(SELECT sum(SummaryNetAmount) as SummaryNetAmounts, ServiceType FROM SummaryCompanyByDate WITH (NOLOCK) " +
              " WHERE SummaryDate Between @StartDate And @EndDate And forCompanyID = @CompanyID And SummaryCompanyByDate.CurrencyType = @CurrencyType group by SummaryCompanyByDate.ServiceType) as b" +
              " LEFT JOIN ServiceType WITH(NOLOCK)" +
              " ON ServiceType.ServiceType = b.ServiceType order by SummaryNetAmounts desc";
@@ -12320,8 +12319,8 @@ public class BackendDB {
         DataTable BeforedayDT = null;
         DayOfWeek Today = DateTime.Now.DayOfWeek;
 
-        SS = " SELECT SummaryAgentAmount,SummaryNetAmount,CheckoutType,SummaryCompanyByDate.ServiceType FROM SummaryCompanyByDate" +
-            " LEFT JOIN CompanyService ON SummaryCompanyByDate.ServiceType = CompanyService.ServiceType" +
+        SS = " SELECT SummaryAgentAmount,SummaryNetAmount,CheckoutType,SummaryCompanyByDate.ServiceType FROM SummaryCompanyByDate WITH (NOLOCK)" +
+            " LEFT JOIN CompanyService WITH (NOLOCK) ON SummaryCompanyByDate.ServiceType = CompanyService.ServiceType" +
             " And SummaryCompanyByDate.CurrencyType = CompanyService.CurrencyType" +
             " And SummaryCompanyByDate.forCompanyID = CompanyService.forCompanyID" +
             " Where SummaryCompanyByDate.forCompanyID = @CompanyID" +
@@ -12442,7 +12441,7 @@ public class BackendDB {
                  "                     WHEN CH.OperatorType = 3 THEN ( SELECT PaymentTable.OrderID FROM   PaymentTable WITH (nolock) WHERE  PaymentTable.PaymentSerial = ( SELECT CompanyManualHistory.TransactionSerial FROM                    CompanyManualHistory WITH (nolock) WHERE　CompanyManualHistory.CompanyManualID = CH.transactionid) ) " +
                  "                     ELSE ( SELECT PaymentTable.OrderID FROM   PaymentTable WITH (NOLOCK) WHERE  PaymentTable.PaymentID = CH.TransactionID ) " +
                  "           END AS DownOrderID " +
-                 " FROM      CompanyPointHistory CH WITH (NOLOCK) " +
+                 " from CompanyPointHistory CH WITH (NOLOCK) " +
                  " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
                  " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
                  " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
@@ -12489,16 +12488,16 @@ public class BackendDB {
         SS = " SELECT CT.CompanyName,CH.ServiceType,ISNULL(ST.ServiceTypeName,'') ServiceTypeName,CH.OperatorType,CH.Value,CH.BeforeValue,CH.ValueByService " +
              " ,CH.BeforeValueByService,TransactionID,DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) AS CreateDate, " +
              " Case when CH.OperatorType = 1" +
-             " then (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+             " then (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
              " when CH.OperatorType = 0" +
              " then (select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
              " when CH.OperatorType = 3" +
-             " then (select CompanyManualHistory.TransactionSerial from CompanyManualHistory where CompanyManualHistory.CompanyManualID = CH.TransactionID )" +
-             " else (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+             " then (select CompanyManualHistory.TransactionSerial from CompanyManualHistory WITH (NOLOCK) where CompanyManualHistory.CompanyManualID = CH.TransactionID )" +
+             " else (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
              " End as TransactionOrder" +
-             " FROM CompanyPointHistory CH " +
-             " LEFT JOIN ServiceType ST ON CH.ServiceType = ST.ServiceType " +
-             " LEFT JOIN CompanyTable CT ON CH.forCompanyID = CT.CompanyID " +
+             " from CompanyPointHistory CH WITH (NOLOCK) " +
+             " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
+             " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
              " WHERE DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
 
         if (SearchData.ServiceType.ToString() != "0") {
@@ -12547,32 +12546,32 @@ public class BackendDB {
              " COALESCE(PT.CostRate, WW.CostCharge, 0) as UpValue," +
              " COALESCE(PT.CollectRate, WW.CollectCharge, 0) as DownValue," +
              " CASE WHEN PT.PaymentSerial is not null" +
-             " then(select ProviderCode.ProviderName from ProviderCode where ProviderCode.ProviderCode = PT.ProviderCode)" +
+             " then(select ProviderCode.ProviderName from ProviderCode WITH (NOLOCK) where ProviderCode.ProviderCode = PT.ProviderCode)" +
              " WHEN WW.WithdrawSerial is not null" +
-             " then(select ProviderCode.ProviderName from ProviderCode where ProviderCode.ProviderCode = WW.ProviderCode)" +
-             " else (SELECT ProviderName FROM ProviderManualHistory LEFT JOIN ProviderCode" +
+             " then(select ProviderCode.ProviderName from ProviderCode WITH (NOLOCK) where ProviderCode.ProviderCode = WW.ProviderCode)" +
+             " else (SELECT ProviderName from ProviderManualHistory WITH (NOLOCK) LEFT JOIN ProviderCode WITH (NOLOCK)" +
              " ON ProviderManualHistory.ProviderCode = ProviderCode.ProviderCode WHERE ProviderManualHistory.ProviderManualID = tmpTable.PHTransactionID)" +
              " end as ProviderName2," +
              " CASE WHEN PT.PaymentSerial is not null" +
              " then(select PT.ProviderCode)" +
              " WHEN WW.WithdrawSerial is not null" +
              " then(select WW.ProviderCode)" +
-             " else (SELECT ProviderCode FROM ProviderManualHistory WHERE ProviderManualHistory.ProviderManualID = tmpTable.PHTransactionID)" +
+             " else (SELECT ProviderCode FROM ProviderManualHistory WITH (NOLOCK) WHERE ProviderManualHistory.ProviderManualID = tmpTable.PHTransactionID)" +
              " end as ProviderCode2," +
              " CASE WHEN PT.PaymentSerial is not null" +
-             " then(select ServiceType.ServiceTypeName from ServiceType where ServiceType.ServiceType = PT.ServiceType)" +
+             " then(select ServiceType.ServiceTypeName from ServiceType WITH (NOLOCK) where ServiceType.ServiceType = PT.ServiceType)" +
              " WHEN WW.WithdrawSerial is not null" +
-             " THEN(select ServiceType.ServiceTypeName from ServiceType where ServiceType.ServiceType = WW.ServiceType)" +
-             " WHEN tmpTable.OperatorType2=4 THEN(select ServiceType.ServiceTypeName from ServiceType where ServiceType.ServiceType = tmpTable.ServiceType) " +
-             " else (SELECT ServiceTypeName FROM CompanyManualHistory LEFT JOIN ServiceType" +
+             " THEN(select ServiceType.ServiceTypeName from ServiceType WITH (NOLOCK) where ServiceType.ServiceType = WW.ServiceType)" +
+             " WHEN tmpTable.OperatorType2=4 THEN(select ServiceType.ServiceTypeName from ServiceType WITH (NOLOCK) where ServiceType.ServiceType = tmpTable.ServiceType) " +
+             " else (SELECT ServiceTypeName from CompanyManualHistory WITH (NOLOCK) LEFT JOIN ServiceType WITH (NOLOCK)" +
              " ON CompanyManualHistory.ServiceType = ServiceType.ServiceType WHERE CompanyManualHistory.CompanyManualID = tmpTable.TransactionID)" +
              " end as ServiceTypeName2," +
              " CASE WHEN PT.PaymentSerial is not null" +
-             " then(select CompanyTable.CompanyName from CompanyTable where CompanyTable.CompanyID = PT.forCompanyID)" +
+             " then(select CompanyTable.CompanyName from CompanyTable WITH (NOLOCK) where CompanyTable.CompanyID = PT.forCompanyID)" +
              " WHEN WW.WithdrawSerial is not null" +
-             " THEN(select CompanyTable.CompanyName from CompanyTable where CompanyTable.CompanyID = WW.forCompanyID)" +
-             " WHEN tmpTable.OperatorType2 = 4 THEN(select CompanyTable.CompanyName from CompanyTable where CompanyTable.CompanyID = tmpTable.forCompanyID)" +
-             " else (select CompanyTable.CompanyName FROM CompanyManualHistory LEFT JOIN CompanyTable" +
+             " THEN(select CompanyTable.CompanyName from CompanyTable WITH (NOLOCK) where CompanyTable.CompanyID = WW.forCompanyID)" +
+             " WHEN tmpTable.OperatorType2 = 4 THEN(select CompanyTable.CompanyName from CompanyTable WITH (NOLOCK) where CompanyTable.CompanyID = tmpTable.forCompanyID)" +
+             " else (select CompanyTable.CompanyName from CompanyManualHistory WITH (NOLOCK) LEFT JOIN CompanyTable WITH (NOLOCK)" +
              " ON CompanyManualHistory.forCompanyID = CompanyTable.CompanyID WHERE CompanyManualHistory.CompanyManualID = tmpTable.TransactionID)" +
              " end as CompanyName2," +
              " CASE WHEN PT.PaymentSerial is not null" +
@@ -12580,7 +12579,7 @@ public class BackendDB {
              " WHEN WW.WithdrawSerial is not null" +
              " THEN(select WW.forCompanyID)" +
              " WHEN tmpTable.OperatorType2=4 THEN(select tmpTable.forCompanyID) " +
-             " else (select CompanyTable.CompanyID FROM CompanyManualHistory LEFT JOIN CompanyTable" +
+             " else (select CompanyTable.CompanyID from CompanyManualHistory WITH (NOLOCK) LEFT JOIN CompanyTable WITH (NOLOCK)" +
              " ON CompanyManualHistory.forCompanyID = CompanyTable.CompanyID WHERE CompanyManualHistory.CompanyManualID = tmpTable.TransactionID)" +
              " end as CompanyID2," +
              " CASE WHEN PT.PaymentSerial is not null" +
@@ -12588,7 +12587,7 @@ public class BackendDB {
              " WHEN WW.WithdrawSerial is not null" +
              " THEN(select WW.ServiceType)" +
              " WHEN tmpTable.OperatorType2 = 4 THEN(select tmpTable.ServiceType)" +
-             " else (SELECT ServiceType FROM CompanyManualHistory WHERE CompanyManualHistory.CompanyManualID = tmpTable.TransactionID)" +
+             " else (SELECT ServiceType FROM CompanyManualHistory WITH (NOLOCK) WHERE CompanyManualHistory.CompanyManualID = tmpTable.TransactionID)" +
              " end as ServiceType2," +
              " CreateDate2" +
              " FROM(" +
@@ -12603,25 +12602,25 @@ public class BackendDB {
             " WHEN PH.OperatorType = 2 THEN 1" +
             " ELSE PH.OperatorType END) As OperatorType2," +
             " IIF(CH.TransactionID is not null," +
-            " Case when CH.OperatorType = 1 then(select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+            " Case when CH.OperatorType = 1 then(select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
             " when CH.OperatorType = 0 then(select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = CH.TransactionID )" +
-            " when CH.OperatorType = 2 then(select CONVERT(varchar(50), AgentClose.AgentCloseID) from AgentClose where AgentClose.AgentCloseID = CH.TransactionID )" +
+            " when CH.OperatorType = 2 then(select CONVERT(varchar(50), AgentClose.AgentCloseID) from AgentClose WITH (NOLOCK) where AgentClose.AgentCloseID = CH.TransactionID )" +
             " when CH.OperatorType = 3" +
             " then(select CompanyManualHistory.TransactionSerial" +
-            " from CompanyManualHistory where CompanyManualHistory.CompanyManualID = CH.TransactionID )" +
-            " else (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = CH.TransactionID )" +
+            " from CompanyManualHistory WITH (NOLOCK) where CompanyManualHistory.CompanyManualID = CH.TransactionID )" +
+            " else (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = CH.TransactionID )" +
             " End," +
             " Case when PH.OperatorType = 0" +
-            " then(select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = PH.TransactionID )" +
+            " then(select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = PH.TransactionID )" +
             " when PH.OperatorType = 2" +
             " then(select Withdrawal.WithdrawSerial from Withdrawal  WITH (NOLOCK)  where Withdrawal.WithdrawID = PH.TransactionID )" +
             " when PH.OperatorType = 3" +
             " then(select ProviderManualHistory.TransactionSerial" +
-            " from ProviderManualHistory where ProviderManualHistory.ProviderManualID = PH.TransactionID )" +
-            " else (select PaymentTable.PaymentSerial from PaymentTable where PaymentTable.PaymentID = PH.TransactionID ) End" +
+            " from ProviderManualHistory WITH (NOLOCK) where ProviderManualHistory.ProviderManualID = PH.TransactionID )" +
+            " else (select PaymentTable.PaymentSerial from PaymentTable WITH (NOLOCK) where PaymentTable.PaymentID = PH.TransactionID ) End" +
             " ) as TransactionOrder" +
-            " FROM CompanyPointHistory CH" +
-            " FULL OUTER JOIN ProviderPointHistory PH" +
+            " from CompanyPointHistory CH WITH (NOLOCK)" +
+            " FULL OUTER JOIN ProviderPointHistory PH WITH (NOLOCK)" +
             " ON CASE" +
             " WHEN CH.TransactionID = PH.TransactionID  AND CH.OperatorType = 0 AND PH.OperatorType = 2 THEN 1" +
             " WHEN CH.TransactionID = PH.TransactionID  AND CH.OperatorType = 1 AND PH.OperatorType = 0 THEN 1" +
@@ -12629,8 +12628,8 @@ public class BackendDB {
             " ELSE 0 END = 1 " +
             " WHERE (CH.CreateDate between @StartDate and @EndDate OR PH.CreateDate between @StartDate and @EndDate) " +
             " ) AS tmpTable" +
-            " LEFT JOIN PaymentTable PT ON PT.PaymentSerial = TransactionOrder" +
-            " LEFT JOIN Withdrawal WW ON WW.WithdrawSerial = TransactionOrder" +
+            " LEFT JOIN PaymentTable PT WITH (NOLOCK) ON PT.PaymentSerial = TransactionOrder" +
+            " LEFT JOIN Withdrawal WW WITH (NOLOCK) ON WW.WithdrawSerial = TransactionOrder" +
             " WHERE CreateDate2 between @StartDate and @EndDate";
 
 
@@ -12685,7 +12684,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT PaymentTransferLog.*,ProviderCode.ProviderName FROM PaymentTransferLog WITH (NOLOCK) " +
-             " LEFT JOIN ProviderCode ON ProviderCode.ProviderCode=PaymentTransferLog.forProviderCode " +
+             " LEFT JOIN ProviderCode WITH (NOLOCK) ON ProviderCode.ProviderCode=PaymentTransferLog.forProviderCode " +
              " WHERE CreateDate >= @StartDate And CreateDate <= @EndDate ";
 
         if (fromBody.ProcessStatus != 99) {
@@ -12730,11 +12729,11 @@ public class BackendDB {
              "       B.BankType, " +
              "       C.CompanyName, " +
              "       C.CompanyCode " +
-             " FROM PaymentTable AS P " +
-             " LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             " LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             " LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
+             " from PaymentTable AS P WITH (NOLOCK) " +
+             " LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             " LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             " LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             " LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode " +
              " WHERE P.ProcessStatus = 7";
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -12765,11 +12764,11 @@ public class BackendDB {
              "       B.BankType, " +
              "       C.CompanyName, " +
              "       C.CompanyCode " +
-             " FROM PaymentTable AS P " +
-             " LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             " LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             " LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
+             " from PaymentTable AS P WITH (NOLOCK) " +
+             " LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             " LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             " LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             " LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode " +
              " WHERE (P.ProcessStatus = 7 or P.forPaymentSerial <>'')" +
              " And P.CreateDate >= @StartDate And P.CreateDate <= @EndDate ";
 
@@ -12798,7 +12797,7 @@ public class BackendDB {
 
         SS = " SELECT ROWID,CreateDate ";
         SS += " FROM(SELECT PaymentSerial, ROW_NUMBER() OVER(ORDER BY CreateDate) AS ROWID,CreateDate ";
-        SS += " FROM PaymentTable";
+        SS += " FROM PaymentTable WITH (NOLOCK)";
         SS += " Where 1=1 ";
         SS += " And ProviderCode = @ProviderCode";
 
@@ -12861,11 +12860,11 @@ public class BackendDB {
             SS += "       convert(varchar, P.CreateDate, 120) as CreateDate2, ";
             SS += "       convert(varchar, P.OrderDate, 120) as OrderDate2, ";
             SS += "       convert(varchar, P.FinishDate, 120) as FinishDate2 ";
-            SS += "FROM PaymentTable AS P ";
-            SS += "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType ";
-            SS += "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode ";
-            SS += "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID ";
-            SS += "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode ";
+            SS += "from PaymentTable AS P WITH (NOLOCK) ";
+            SS += "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType ";
+            SS += "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode ";
+            SS += "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID ";
+            SS += "LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode ";
             SS += " Where 1=1 ";
             SS += " And P.ProviderCode = @ProviderCode";
 
@@ -12920,7 +12919,7 @@ public class BackendDB {
         SS = " SELECT P.* ,PaymentRate,AT.RealName,  " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             " FROM PaymentTable AS P WITH (NOLOCK) " +
+             " from PaymentTable AS P WITH (NOLOCK) " +
              " LEFT JOIN AdminTable AT WITH (NOLOCK) ON AT.AdminID=P.ConfirmAdminID " +
              " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= P.PaymentSerial AND PPO.Type=0" +
              " WHERE P.CreateDate >= @StartDate And P.CreateDate <= @EndDate And SubmitType=1 And P.ProviderCode=@ProviderCode" +
@@ -12986,7 +12985,7 @@ public class BackendDB {
              "       C.MerchantCode, " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P WITH (NOLOCK)  " +
+             "from PaymentTable AS P WITH (NOLOCK)  " +
              "LEFT JOIN ServiceType AS S WITH (NOLOCK)  ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC WITH (NOLOCK)  ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C WITH (NOLOCK)   ON C.CompanyID = P.forCompanyID " +
@@ -13063,7 +13062,7 @@ public class BackendDB {
              "       C.MerchantCode, " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P WITH (NOLOCK)  " +
+             "from PaymentTable AS P WITH (NOLOCK)  " +
              "LEFT JOIN ServiceType AS S WITH (NOLOCK)  ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC WITH (NOLOCK)  ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C WITH (NOLOCK)   ON C.CompanyID = P.forCompanyID " +
@@ -13111,7 +13110,7 @@ public class BackendDB {
              "       C.MerchantCode, " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P  WITH (NOLOCK)  " +
+             "from PaymentTable AS P  WITH (NOLOCK)  " +
              "LEFT JOIN ServiceType AS S  WITH (NOLOCK)  ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC  WITH (NOLOCK)  ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C  WITH (NOLOCK)   ON C.CompanyID = P.forCompanyID " +
@@ -13164,18 +13163,18 @@ public class BackendDB {
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.CreateDateUTC), 120) as CreateDate2, " +
              "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.FinishDateUTC), 120) as FinishDate2 " +
-             "FROM PaymentTable AS P " +
-             "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
-             " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID " +
-             " LEFT JOIN ProviderBankCard AS PBC ON PDB.forBankCardGUID = PBC.BankCardGUID ";
+             "from PaymentTable AS P WITH (NOLOCK) " +
+             "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             "LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode " +
+             " LEFT JOIN PaymentDetailBankCard AS PDB WITH (NOLOCK) ON PDB.forPaymentID = P.PaymentID " +
+             " LEFT JOIN ProviderBankCard AS PBC WITH (NOLOCK) ON PDB.forBankCardGUID = PBC.BankCardGUID ";
 
         if (fromBody.TimeType == "F") {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
+            SS += " WHERE P.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         } else {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
+            SS += " WHERE P.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         }
 
 
@@ -13305,13 +13304,13 @@ public class BackendDB {
             " ELSE PartialOrderAmount * CollectRate * 0.01 END) + SUM(PaymentAmount) WHERE(P.ProcessStatus = 4 OR P.ProcessStatus = 2)) AS SumChargeAndSuccessOrderAmount," +
             " (Select SUM(CASE WHEN PC.DecimalPlaces=1 THEN ROUND(PartialOrderAmount * (CollectRate- CostRate) * 0.01,0) " +
             " ELSE PartialOrderAmount * (CollectRate- CostRate) * 0.01 END) WHERE(P.ProcessStatus = 4 OR P.ProcessStatus = 2)) AS SumProviderCharge" +
-            " FROM PaymentTable AS P " +
-            " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode ";
+            " from PaymentTable AS P WITH (NOLOCK) " +
+            " LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode ";
 
         if (fromBody.TimeType == "F") {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
+            SS += " WHERE P.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         } else {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
+            SS += " WHERE P.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         }
         if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
 
@@ -13468,17 +13467,17 @@ public class BackendDB {
         SS += "       C.MerchantCode, ";
         SS += "       convert(varchar, DATEADD(HOUR, @TimeZone, P.CreateDateUTC), 120) as CreateDate2, ";
         SS += "       convert(varchar, DATEADD(HOUR, @TimeZone, P.FinishDateUTC), 120) as FinishDate2 ";
-        SS += " FROM PaymentTable AS P ";
-        SS += " LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType ";
-        SS += " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode ";
-        SS += " LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID ";
-        SS += " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID ";
-        SS += " LEFT JOIN ProviderBankCard AS PBC ON PDB.forBankCardGUID = PBC.BankCardGUID ";
+        SS += " from PaymentTable AS P WITH (NOLOCK) ";
+        SS += " LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType ";
+        SS += " LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode ";
+        SS += " LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID ";
+        SS += " LEFT JOIN PaymentDetailBankCard AS PDB WITH (NOLOCK) ON PDB.forPaymentID = P.PaymentID ";
+        SS += " LEFT JOIN ProviderBankCard AS PBC WITH (NOLOCK) ON PDB.forBankCardGUID = PBC.BankCardGUID ";
 
         if (fromBody.TimeType == "F") {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.FinishDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.FinishDateUTC) <= @EndDate ";
+            SS += " WHERE P.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         } else {
-            SS += " WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate ";
+            SS += " WHERE P.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) ";
         }
         #region 筛选条件
         if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
@@ -13757,11 +13756,11 @@ public class BackendDB {
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P " +
-             "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode ";
+             "from PaymentTable AS P WITH (NOLOCK) " +
+             "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             "LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode ";
 
         for (int i = 0; i < fromBody.PaymentIDs.Count; i++) {
             parameters[i] = string.Format("@PaymentID{0}", i);
@@ -13809,11 +13808,11 @@ public class BackendDB {
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P " +
-             "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
+             "from PaymentTable AS P WITH (NOLOCK) " +
+             "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             "LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode " +
              "WHERE P.CreateDate >= @StartDate And P.CreateDate <= @EndDate ";
 
         if (fromBody.CompanyID != -99) {//-99代表所有營運商(有選營運商)
@@ -13903,11 +13902,11 @@ public class BackendDB {
              "       C.CompanyCode, " +
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.CreateDateUTC), 120) as CreateDate2, " +
              "       convert(varchar, DATEADD(HOUR, @TimeZone, P.FinishDateUTC), 120) as FinishDate2 " +
-             "FROM PaymentTable AS P WITH(NOLOCK) " +
+             "from PaymentTable AS P WITH(NOLOCK) " +
              "LEFT JOIN ServiceType AS S WITH(NOLOCK) ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC WITH(NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C WITH(NOLOCK)  ON C.CompanyID = P.forCompanyID " +
-             "WHERE DATEADD(HOUR, @TimeZone, P.CreateDateUTC) >= @StartDate AND DATEADD(HOUR, @TimeZone, P.CreateDateUTC) <= @EndDate " +
+             "WHERE P.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND P.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate) " +
              "And P.forCompanyID = @CompanyID";
 
 
@@ -14242,7 +14241,7 @@ public class BackendDB {
              "       C.MerchantCode, " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P  WITH (NOLOCK)  " +
+             "from PaymentTable AS P  WITH (NOLOCK)  " +
              "LEFT JOIN ServiceType AS S  WITH (NOLOCK)  ON P.ServiceType = S.ServiceType " +
              "LEFT JOIN ProviderCode AS PC  WITH (NOLOCK)  ON PC.ProviderCode = P.ProviderCode " +
              "LEFT JOIN CompanyTable AS C  WITH (NOLOCK)   ON C.CompanyID = P.forCompanyID " +
@@ -14287,10 +14286,10 @@ public class BackendDB {
              "       AT.RealName, " +
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM PaymentTable AS P " +
-             "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
+             "from PaymentTable AS P WITH (NOLOCK) " +
+             "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
              " LEFT JOIN AdminTable AT WITH (NOLOCK) ON AT.AdminID=P.ConfirmAdminID " +
              "WHERE P.PaymentSerial=@PaymentSerial";
 
@@ -15142,7 +15141,7 @@ public class BackendDB {
         }
 
         SS = " SELECT ServiceTypeName,CompanyPointHistory.*,convert(varchar, CreateDate, 121) as CreateDate2 From CompanyPointHistory WITH (NOLOCK) ";
-        SS += " LEFT JOIN ServiceType ON ServiceType.ServiceType=CompanyPointHistory.ServiceType AND ServiceType.CurrencyType=CompanyPointHistory.CurrencyType";
+        SS += " LEFT JOIN ServiceType WITH (NOLOCK) ON ServiceType.ServiceType=CompanyPointHistory.ServiceType AND ServiceType.CurrencyType=CompanyPointHistory.CurrencyType";
         SS += " Where TransactionID=@TransactionID And OperatorType=4";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -15170,7 +15169,7 @@ public class BackendDB {
         DataTable DT;
 
         SS = " SELECT T.*, PC.ProviderName" +
-             " FROM ProviderServiceTier T WITH (NOLOCK)" +
+             " from ProviderServiceTier T WITH (NOLOCK)" +
              " JOIN ProviderCode PC WITH (NOLOCK) ON PC.ProviderCode = T.ProviderCode" +
              " WHERE T.ProviderCode = @ProviderCode" +
              "   AND T.ServiceType  = @ServiceType" +
@@ -15441,12 +15440,12 @@ public class BackendDB {
         SqlCommand DBCmd;
         DataTable DT;
 
-        SS = " Select ServiceTypeName,CP.*, STUFF((Select  distinct(',' + ProviderName)  From GPayRelation GP" +
-             " LEFT JOIN ProviderCode PC ON PC.ProviderCode = GP.ProviderCode where CP.forCompanyID = @CompanyID" +
+        SS = " Select ServiceTypeName,CP.*, STUFF((Select  distinct(',' + ProviderName)  from GPayRelation GP WITH (NOLOCK)" +
+             " LEFT JOIN ProviderCode PC WITH (NOLOCK) ON PC.ProviderCode = GP.ProviderCode where CP.forCompanyID = @CompanyID" +
              " AND GP.ServiceType = CP.ServiceType  For Xml Path('')) , 1, 1, '') as ProviderName,PS.State ProviderState" +
-             " From CompanyService CP LEFT JOIN ServiceType ST ON ST.ServiceType = CP.ServiceType" +
-             " LEFT JOIN GPayRelation GR ON GR.forCompanyID = CP.forCompanyID AND GR.ServiceType = CP.ServiceType AND CP.CurrencyType = GR.CurrencyType" +
-             " LEFT JOIN ProviderService PS ON GR.ServiceType = PS.ServiceType AND GR.ProviderCode = PS.ProviderCode   where CP.forCompanyID = @CompanyID";
+             " from CompanyService CP WITH (NOLOCK) LEFT JOIN ServiceType ST WITH (NOLOCK) ON ST.ServiceType = CP.ServiceType" +
+             " LEFT JOIN GPayRelation GR WITH (NOLOCK) ON GR.forCompanyID = CP.forCompanyID AND GR.ServiceType = CP.ServiceType AND CP.CurrencyType = GR.CurrencyType" +
+             " LEFT JOIN ProviderService PS WITH (NOLOCK) ON GR.ServiceType = PS.ServiceType AND GR.ProviderCode = PS.ProviderCode   where CP.forCompanyID = @CompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
@@ -15473,15 +15472,15 @@ public class BackendDB {
         SS = " select ServiceTypeName,CP.*," +
              " STUFF((" +
              " Select  ',' + ProviderName" +
-             " From GPayRelation GP LEFT JOIN" +
+             " from GPayRelation GP WITH (NOLOCK) LEFT JOIN" +
              " ProviderCode PC ON PC.ProviderCode = GP.ProviderCode" +
              " where forCompanyID = @CompanyID AND GP.ServiceType = CP.ServiceType AND GP.CurrencyType = 'JPY'" +
              " For Xml Path(''))" +
              " , 1, 1, '') as ProviderName,PS.State ProviderState " +
-             " From CompanyService CP" +
-             " LEFT JOIN ServiceType ST ON ST.ServiceType=CP.ServiceType" +
-             "  LEFT JOIN GPayRelation GR ON GR.forCompanyID = CP.forCompanyID AND GR.ServiceType = CP.ServiceType " +
-             " LEFT JOIN ProviderService PS ON GR.ServiceType = PS.ServiceType AND GR.ProviderCode = PS.ProviderCode " +
+             " from CompanyService CP WITH (NOLOCK) " +
+             " LEFT JOIN ServiceType ST WITH (NOLOCK) ON ST.ServiceType=CP.ServiceType" +
+             "  LEFT JOIN GPayRelation GR WITH (NOLOCK) ON GR.forCompanyID = CP.forCompanyID AND GR.ServiceType = CP.ServiceType " +
+             " LEFT JOIN ProviderService PS WITH (NOLOCK) ON GR.ServiceType = PS.ServiceType AND GR.ProviderCode = PS.ProviderCode " +
              " where  CP.forCompanyID = @CompanyID And CP.CurrencyType = 'JPY' And CP.State=0";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -15511,13 +15510,13 @@ public class BackendDB {
         SS = " SELECT PermissionTable.*," +
              "        PermissionCategory.Description AS CategoryDescription," +
              "        PermissionCategory.PermissionCategoryName" +
-             " FROM   PermissionTable" +
-             "        INNER JOIN PermissionCategory" +
+             " FROM   PermissionTable WITH (NOLOCK)" +
+             "        INNER JOIN PermissionCategory WITH (NOLOCK)" +
              "                ON PermissionCategory.PermissionCategoryID = PermissionTable.PermissionCategoryID" +
              " WHERE  PermissionName IN(SELECT AdminRolePermission.forPermissionName" +
-             "                          FROM   AdminRolePermission" +
+             "                          FROM   AdminRolePermission WITH (NOLOCK)" +
              "                          WHERE  forAdminRoleID IN (SELECT AdminTable.forAdminRoleID" +
-             "                                                    FROM   AdminTable" +
+             "                                                    FROM   AdminTable WITH (NOLOCK)" +
              "                                                    WHERE  AdminID = @AdminID)) " +
              " ORDER  BY PermissionCategory.SortIndex,PermissionTable.SortIndex ";
 
@@ -15573,9 +15572,9 @@ public class BackendDB {
              "        AT.LoginAccount, " +
              "        CT.CompanyName, " +
              "        CONVERT(VARCHAR, DATEADD(HOUR, @TimeZone - 8, AOP.CreateDate), 120) AS CreateDate2 " +
-             " FROM   AdminOPLog AOP " +
-             "        LEFT JOIN AdminTable AT ON AOP.forAdminID = AT.AdminID " +
-             "        LEFT JOIN CompanyTable CT ON AOP.forCompanyID = CT.CompanyID " +
+             " from AdminOPLog AOP WITH (NOLOCK)  " +
+             "        LEFT JOIN AdminTable AT WITH (NOLOCK) ON AOP.forAdminID = AT.AdminID " +
+             "        LEFT JOIN CompanyTable CT WITH (NOLOCK) ON AOP.forCompanyID = CT.CompanyID " +
              " WHERE  DATEADD(HOUR, @TimeZone - 8, AOP.CreateDate) BETWEEN @StartDate AND @EndDate  ";
 
         if (fromBody.Type != -1) {
@@ -15623,10 +15622,10 @@ public class BackendDB {
         SS = " SELECT PMH.*, " +
                  "        AT.LoginAccount,PC.ProviderName, " +
                  "        CONVERT(VARCHAR, PMH.CreateDate, 120) AS CreateDate2 " +
-                 " FROM   ProviderManualHistory PMH " +
-                 "        LEFT JOIN AdminTable AT " +
+                 " from ProviderManualHistory PMH WITH (NOLOCK) " +
+                 "        LEFT JOIN AdminTable AT WITH (NOLOCK) " +
                  "               ON PMH.forAdminID = AT.AdminID " +
-                  "        LEFT JOIN ProviderCode PC " +
+                  "        LEFT JOIN ProviderCode PC WITH (NOLOCK) " +
                  "               ON PC.ProviderCode = PMH.ProviderCode " +
                  " WHERE  PMH.CreateDate >= @StartDate And PMH.CreateDate <= @EndDate ";
 
@@ -15674,7 +15673,7 @@ public class BackendDB {
                  "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
                  "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
                  "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-                 " FROM PaymentTable AS P WITH(NOLOCK) " +
+                 " from PaymentTable AS P WITH(NOLOCK) " +
                  " LEFT JOIN ServiceType AS S WITH(NOLOCK)  ON P.ServiceType = S.ServiceType " +
                  " LEFT JOIN ProviderCode AS PC WITH(NOLOCK)  ON PC.ProviderCode = P.ProviderCode " +
                  " LEFT JOIN CompanyTable AS C WITH(NOLOCK)   ON C.CompanyID = P.forCompanyID " +
@@ -15723,11 +15722,11 @@ public class BackendDB {
                  "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
                  "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
                  "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-                 " FROM PaymentTable AS P " +
-                 " LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-                 " LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-                 " LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-                 " LEFT JOIN PaymentDetailBankCard AS PDB ON PDB.forPaymentID = P.PaymentID " +
+                 " from PaymentTable AS P WITH (NOLOCK) " +
+                 " LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+                 " LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+                 " LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+                 " LEFT JOIN PaymentDetailBankCard AS PDB WITH (NOLOCK) ON PDB.forPaymentID = P.PaymentID " +
                  " WHERE PaymentSerial=@TransactionSerial ";
         } else {
             SS = " SELECT ProviderName,convert(varchar,Withdrawal.CreateDate,120) as CreateDate2,convert(varchar,Withdrawal.FinishDate,120) as FinishDate2,Withdrawal.*,Amount AS OrderAmount,CompanyName,Status AS ProcessStatus,Withdrawal.WithdrawType as Accounting FROM Withdrawal WITH (NOLOCK) " +
@@ -15765,13 +15764,13 @@ public class BackendDB {
                   "        CONVERT(VARCHAR, CMH.CreateDate, 120) AS CreateDate2, " +
                   "        ST.ServiceTypeName, " +
                   "        CT.CompanyName " +
-                  " FROM   CompanyManualHistory CMH " +
-                  "        LEFT JOIN AdminTable AT " +
+                  " from CompanyManualHistory CMH WITH (NOLOCK) " +
+                  "        LEFT JOIN AdminTable AT  WITH (NOLOCK)" +
                   "               ON CMH.forAdminID = AT.AdminID " +
-                  "        LEFT JOIN ServiceType ST " +
+                  "        LEFT JOIN ServiceType ST  WITH (NOLOCK)" +
                   "               ON ST.ServiceType = CMH.ServiceType " +
                   "                  AND ST.CurrencyType = CMH.CurrencyType " +
-                  "        LEFT JOIN CompanyTable CT " +
+                  "        LEFT JOIN CompanyTable CT  WITH (NOLOCK)" +
                   "               ON CT.CompanyID = CMH.forCompanyID " +
                   " WHERE  CMH.CreateDate >= @StartDate And CMH.CreateDate <= @EndDate ";
 
@@ -16024,15 +16023,15 @@ public class BackendDB {
         string SummaryDateString = string.Empty;
 
         SS = " SELECT GroupName,FP.*,CT.CompanyName,PC.ProviderName,convert(varchar,FP.CreateDate,120) as CreateDate2, " +
-             " (SELECT RealName From AdminTable WHERE AdminTable.AdminID=FrozenAdminID) as FrozenAdminName," +
-             " (SELECT RealName From AdminTable WHERE AdminTable.AdminID=UnFrozenAdminID) as UnFrozenAdminName," +
+             " (SELECT RealName From AdminTable WITH (NOLOCK) WHERE AdminTable.AdminID=FrozenAdminID) as FrozenAdminName," +
+             " (SELECT RealName From AdminTable WITH (NOLOCK) WHERE AdminTable.AdminID=UnFrozenAdminID) as UnFrozenAdminName," +
              " STUFF((" +
              " Select  ',' + CONVERT(varchar(100), IT.ImageID)+'_'+ImageName+'_'+convert(varchar, CreateDate, 120) " +
-             " From ImageTable IT " +
+             " from ImageTable IT WITH (NOLOCK) " +
              " where IT.TransactionID =CONVERT(varchar(100), FP.FrozenID) And IT.Type=1 " +
              " For Xml Path(''))" +
              " , 1, 1, '') as ImageName" +
-             " FROM   FrozenPoint FP WITH(NOLOCK) " +
+             " from FrozenPoint FP WITH(NOLOCK) " +
              " LEFT JOIN  CompanyTable CT WITH(NOLOCK) ON FP.forCompanyID = CT.CompanyID  " +
              " LEFT JOIN  ProviderCode PC WITH(NOLOCK) ON FP.forProviderCode = PC.ProviderCode " +
              " LEFT JOIN  ProxyProviderGroup PPG WITH(NOLOCK) ON PPG.GroupID = FP.GroupID ";
@@ -16097,7 +16096,7 @@ public class BackendDB {
         string SummaryDateString = string.Empty;
 
         SS = " SELECT FP.forPaymentSerial,FP.CompanyFrozenAmount,FP.Status,FP.BankCard,FP.BankCard,FP.BankName,FP.BankCardName " +
-             " FROM   FrozenPoint FP WITH(NOLOCK) WHERE FP.CompanyFrozenAmount>0 ";
+             " from FrozenPoint FP WITH(NOLOCK) WHERE FP.CompanyFrozenAmount>0 ";
 
         if (fromBody.PaymentSerial != "") {
             SS += "        AND FP.forPaymentSerial = @PaymentSerial ";
@@ -16170,9 +16169,9 @@ public class BackendDB {
         string SummaryDateString = string.Empty;
 
         SS = " SELECT GroupName,FP.*,convert(varchar,FP.CreateDate,120) as CreateDate2 " +
-             " FROM   FrozenPoint FP WITH(NOLOCK) " +
+             " from FrozenPoint FP WITH(NOLOCK) " +
 
-             " LEFT JOIN  ProxyProviderGroup PPG ON PPG.GroupID = FP.GroupID " +
+             " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK) ON PPG.GroupID = FP.GroupID " +
              " WHERE  FP.CreateDate >= @StartDate And FP.CreateDate <= @EndDate AND FP.forProviderCode = @ProviderCode  ";
 
         if (fromBody.PaymentSerial != "") {
@@ -16222,9 +16221,8 @@ public class BackendDB {
         DataTable DT;
         string SummaryDateString = string.Empty;
 
-        SS = @" SELECT CWL.*,CT.CompanyName FROM CompanyWhiteList CWL 
-                JOIN CompanyWhiteListProviderBankCard CWLP ON CWL.WhiteListID = CWLP.WhiteListID 
-                JOIN CompanyTable CT ON CT.CompanyID = CWL.forCompanyID 
+        SS = @" SELECT CWL.*,CT.CompanyName from CompanyWhiteList CWL WITH (NOLOCK) JOIN CompanyWhiteListProviderBankCard CWLP WITH (NOLOCK) ON CWL.WhiteListID = CWLP.WhiteListID 
+                JOIN CompanyTable CT WITH (NOLOCK) ON CT.CompanyID = CWL.forCompanyID 
                 WHERE CWLP.BankCardGUID=@BankCardGUID ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -16499,7 +16497,7 @@ public class BackendDB {
         string SummaryDateString = string.Empty;
 
         SS = " SELECT *,convert(varchar,CreateDate,120) as CreateDate2 " +
-             " FROM   BlackList  " +
+             " FROM BlackList WITH (NOLOCK) " +
              " WHERE  1=1 ";
 
         if (fromBody.CompanyID != -99) {
@@ -16570,7 +16568,7 @@ public class BackendDB {
         string SummaryDateString = string.Empty;
 
         SS = " SELECT * " +
-             " FROM   BlackList  " +
+             " FROM BlackList WITH (NOLOCK) " +
              " WHERE  BlackListID=@BlackListID ";
 
 
@@ -16644,9 +16642,9 @@ public class BackendDB {
 
         for (int i = 0; i < data.Count; i++) {
             SS = " INSERT INTO RiskControlPaymentTable(forPaymentID)" +
-          " SELECT PaymentID FROM PaymentTable PT" +
+          " SELECT PaymentID from PaymentTable PT WITH (NOLOCK)" +
           " WHERE PT.PaymentID NOT IN(SELECT forPaymentID" +
-          " FROM RiskControlPaymentTable)" +
+          " FROM RiskControlPaymentTable WITH (NOLOCK))" +
           " AND PT.FinishDate between @StartDate And @EndDate" +
           " AND PT.ClientIP = @UserIP";
 
@@ -16684,12 +16682,12 @@ public class BackendDB {
              "       convert(varchar, P.CreateDate, 120) as CreateDate2, " +
              "       convert(varchar, P.OrderDate, 120) as OrderDate2, " +
              "       convert(varchar, P.FinishDate, 120) as FinishDate2 " +
-             "FROM RiskControlPaymentTable AS RCP " +
-             "LEFT JOIN PaymentTable AS P ON RCP.forPaymentID = P.PaymentID " +
-             "LEFT JOIN ServiceType AS S ON P.ServiceType = S.ServiceType " +
-             "LEFT JOIN ProviderCode AS PC ON PC.ProviderCode = P.ProviderCode " +
-             "LEFT JOIN CompanyTable AS C  ON C.CompanyID = P.forCompanyID " +
-             "LEFT JOIN BankCode AS B ON B.BankCode = P.BankCode " +
+             "from RiskControlPaymentTableAS RCP WITH (NOLOCK)  " +
+             "LEFT JOIN PaymentTable AS P WITH (NOLOCK) ON RCP.forPaymentID = P.PaymentID " +
+             "LEFT JOIN ServiceType AS S WITH (NOLOCK) ON P.ServiceType = S.ServiceType " +
+             "LEFT JOIN ProviderCode AS PC WITH (NOLOCK) ON PC.ProviderCode = P.ProviderCode " +
+             "LEFT JOIN CompanyTable AS C WITH (NOLOCK) ON C.CompanyID = P.forCompanyID " +
+             "LEFT JOIN BankCode AS B WITH (NOLOCK) ON B.BankCode = P.BankCode " +
              "WHERE P.SubmitType=0 ";
 
         DBCmd.CommandText = SS;
@@ -17013,10 +17011,9 @@ public class BackendDB {
         System.Data.DataTable DT;
 
         SS = @"SELECT(CP.PointValue - (SELECT ISNULL(SUM(W.Amount + W.CollectCharge), 0)
-             FROM Withdrawal W     WHERE W.Status<> 2 AND W.Status<> 3 AND W.Status<> 8
+             from Withdrawal W WITH (NOLOCK) WHERE W.Status<> 2 AND W.Status<> 3 AND W.Status<> 8
              AND W.Status<> 90 AND W.Status<> 91 AND W.forCompanyID = CP.forCompanyID AND W.CurrencyType = CP.CurrencyType)
-             - (SELECT ISNULL(SUM(SC.SummaryNetAmount), 0)       FROM CompanyService CS
-             INNER JOIN SummaryCompanyByDate SC ON CS.forCompanyID = SC.forCompanyID
+             - (SELECT ISNULL(SUM(SC.SummaryNetAmount), 0)       from CompanyService CS WITH (NOLOCK) INNER JOIN SummaryCompanyByDate SC WITH (NOLOCK) ON CS.forCompanyID = SC.forCompanyID
              AND CS.CurrencyType = SC.CurrencyType AND SC.ServiceType = CS.ServiceType
              AND((CS.CheckoutType = 0 AND 1 = 0)
              OR(CS.CheckoutType = 1 AND SC.SummaryDate = dbo.GetReportDate(GETDATE(), CT.Timezone))
@@ -17024,10 +17021,9 @@ public class BackendDB {
              (SC.SummaryDate = dbo.GetReportDate(GETDATE(), CT.Timezone) OR SC.SummaryDate = dbo.GetReportDate(DATEADD(day, -1, getdate()), CT.Timezone)))
              OR(CS.CheckoutType = 2 AND DATEPART(WEEKDAY, GETDATE() - 1) = 6 AND  SC.SummaryDate = dbo.GetReportDate(GETDATE(), CT.Timezone)))	
              WHERE CS.forCompanyID = CP.forCompanyID AND CS.CurrencyType = CP.CurrencyType)) AS CanUsePoint,
-             ISNULL((Select SUM(CompanyFrozenAmount) FROM FrozenPoint where FrozenPoint.forCompanyID = CP.forCompanyID
+             ISNULL((Select SUM(CompanyFrozenAmount) FROM FrozenPoint WITH (NOLOCK) where FrozenPoint.forCompanyID = CP.forCompanyID
              AND FrozenPoint.CurrencyType = CP.CurrencyType AND FrozenPoint.Status = 0),0) AS FrozenPoint,
-             CP.*FROM CompanyPoint AS CP
-             LEFT JOIN CompanyTable CT ON CT.CompanyID = CP.forCompanyID
+             CP.*from CompanyPoint AS CP WITH (NOLOCK) LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CT.CompanyID = CP.forCompanyID
              WHERE CP.forCompanyID = @CompanyID  AND CP.CurrencyType = @CurrencyType ";
 
 
@@ -17262,11 +17258,10 @@ public class BackendDB {
         System.Data.DataTable DT;
         SS = @" SELECT (CP.PointValue  
              	-(SELECT ISNULL(SUM(W.Amount + W.CollectCharge),0)  
-                	   FROM Withdrawal W  WITH (NOLOCK)   
+                	   from Withdrawal W  WITH (NOLOCK)   
              	   WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91 AND W.forCompanyID = CP.forCompanyID AND W.CurrencyType = CP.CurrencyType) 
              	-(SELECT ISNULL(SUM(SC.SummaryNetAmount),0)  
-             	   FROM CompanyService CS  
-             	   INNER JOIN SummaryCompanyByDate SC ON CS.forCompanyID = SC.forCompanyID AND CS.CurrencyType = SC.CurrencyType AND SC.ServiceType = CS.ServiceType  
+             	   from CompanyService CS WITH (NOLOCK) INNER JOIN SummaryCompanyByDate SC WITH (NOLOCK) ON CS.forCompanyID = SC.forCompanyID AND CS.CurrencyType = SC.CurrencyType AND SC.ServiceType = CS.ServiceType  
              			AND   ((CS.CheckoutType = 0 AND 1 = 0 )  
              			      OR (CS.CheckoutType = 1 AND SC.SummaryDate = dbo.GetReportDate(GETDATE(),CT.Timezone)) 
              			      OR (CS.CheckoutType = 2 AND DATEPART(WEEKDAY, GETDATE()-1) = 7 AND  
@@ -17274,13 +17269,12 @@ public class BackendDB {
              				  OR (CS.CheckoutType = 2 AND DATEPART(WEEKDAY, GETDATE()-1) = 6 AND  SC.SummaryDate = dbo.GetReportDate(GETDATE(),CT.Timezone))) 
              	   WHERE CS.forCompanyID = CP.forCompanyID AND CS.CurrencyType = CP.CurrencyType)) AS CanUsePoint,  
               (SELECT ISNULL(SUM(W.Amount + W.CollectCharge), 0)  
-              FROM Withdrawal W  WITH (NOLOCK)   
+              from Withdrawal W  WITH (NOLOCK)   
               WHERE W.Status <> 2 AND W.Status <> 3 AND W.Status <> 8  AND W.Status <> 90 AND W.Status <> 91  
               AND W.forCompanyID = CP.forCompanyID AND W.CurrencyType = CP.CurrencyType) AS InWithdrawProcessPoint,  
-              	 ISNULL((Select SUM(CompanyFrozenAmount) FROM FrozenPoint where FrozenPoint.forCompanyID=CP.forCompanyID AND FrozenPoint.CurrencyType=CP.CurrencyType AND FrozenPoint.Status=0),0) AS FrozenPoint, 
+              	 ISNULL((Select SUM(CompanyFrozenAmount) FROM FrozenPoint WITH (NOLOCK) where FrozenPoint.forCompanyID=CP.forCompanyID AND FrozenPoint.CurrencyType=CP.CurrencyType AND FrozenPoint.Status=0),0) AS FrozenPoint, 
              	   CP.*  
-              FROM CompanyPoint AS CP  
-			  LEFT JOIN CompanyTable CT WITH(NOLOCK) ON CT.CompanyID = CP.forCompanyID
+              from CompanyPoint  AS CP WITH (NOLOCK) LEFT JOIN CompanyTable CT WITH(NOLOCK) ON CT.CompanyID = CP.forCompanyID
               WHERE CP.forCompanyID = @CompanyID  
               AND CP.CurrencyType = @CurrencyType ";
 
