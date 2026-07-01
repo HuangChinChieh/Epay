@@ -1495,6 +1495,7 @@ public class FromBody {
         public string TimeType { get; set; }
         public string ServiceType { get; set; }
         public string PatchDescription { get; set; }
+        public string UserName { get; set; }
         public List<int> PaymentIDs { get; set; }
     }
 

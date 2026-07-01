@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="2" virtualPath="/C:/Program Files/Git/testpayprecompile/Test/TestFile/Test.cshtml" hash="55a14f35" filehash="3d3205009ce" flags="110000" assembly="App_Web_nqvmylyq" type="ASP._Page_Test_TestFile_Test_cshtml">
+    <filedeps>
+        <filedep name="/C:/Program Files/Git/testpayprecompile/Test/TestFile/Test.cshtml" />
+    </filedeps>
+</preserve>

@@ -986,6 +986,11 @@
                                 <input autocomplete="off" type="text" id="input_OrderID" placeholder="订单号" class="form-control" style="width:70%;line-height: inherit;">
                             </div>
 
+                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 会员实名 : </h6>
+                            <div class="input-group" style="width:150px">
+                                <input autocomplete="off" type="text" id="input_UserName" placeholder="会员实名" class="form-control" style="line-height: inherit;">
+                            </div>
+
                             <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 提交方式 : </h6>
                             <div class="row" style="margin-bottom: 10px;width: 100px;">
                                 <select class="show-tick" id="select_submitType"></select>
@@ -1715,6 +1720,7 @@ if ('@CheckLoginPermission' == 'false') {
                              d.ProcessStatus = $('#select_processStatus').val().split(",");
                              d.ProviderCode = $('#select_providercode').val();
                              d.CurrencyType = $("#selectCurrencyType option:selected").attr("data-value");
+                             d.UserName = ($('#input_UserName').val() || '').trim();
                 }
             },
             deferLoading: 0,

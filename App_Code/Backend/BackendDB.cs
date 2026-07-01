@@ -13568,6 +13568,11 @@ public class BackendDB {
         if (!string.IsNullOrEmpty(fromBody.search.value)) {
             SS += " And (P.PaymentSerial like '%'+@SearchFilter+'%' OR  P.OrderID like '%'+@SearchFilter+'%'  OR  C.CompanyName like '%'+@SearchFilter+'%'  OR  PC.ProviderName like '%'+@SearchFilter+'%'  OR  S.ServiceTypeName like '%'+@SearchFilter+'%' OR    P.UserIP like '%'+@SearchFilter+'%'  OR    P.ClientIP like '%'+@SearchFilter+'%' ) ";
         }
+
+        if (!string.IsNullOrEmpty(fromBody.UserName)) {
+            SS += " And P.UserName=@UserName ";
+            DBCmd.Parameters.Add("@UserName", System.Data.SqlDbType.NVarChar).Value = fromBody.UserName;
+        }
         #endregion
 
 

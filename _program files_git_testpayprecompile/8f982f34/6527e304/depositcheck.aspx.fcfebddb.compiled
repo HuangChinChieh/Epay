@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="3" virtualPath="/C:/Program Files/Git/testpayprecompile/Test/DepositCheck.aspx" hash="fffffff4b8955d7e" filehash="f882c8cd63f9977e" flags="110000" assembly="App_Web_5k1cqlom" type="ASP.test_depositcheck_aspx">
+    <filedeps>
+        <filedep name="/C:/Program Files/Git/testpayprecompile/Test/DepositCheck.aspx" />
+        <filedep name="/C:/Program Files/Git/testpayprecompile/Test/DepositCheck.aspx.cs" />
+    </filedeps>
+</preserve>

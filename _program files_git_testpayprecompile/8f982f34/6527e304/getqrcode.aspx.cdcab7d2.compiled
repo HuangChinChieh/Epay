@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="3" virtualPath="/C:/Program Files/Git/testpayprecompile/GetQRCode.aspx" hash="fffffff4b8955d7e" filehash="696b853a82d8adf8" flags="110000" assembly="App_Web_13bv0cjb" type="ASP.getqrcode_aspx">
+    <filedeps>
+        <filedep name="/C:/Program Files/Git/testpayprecompile/GetQRCode.aspx" />
+        <filedep name="/C:/Program Files/Git/testpayprecompile/GetQRCode.aspx.cs" />
+    </filedeps>
+</preserve>

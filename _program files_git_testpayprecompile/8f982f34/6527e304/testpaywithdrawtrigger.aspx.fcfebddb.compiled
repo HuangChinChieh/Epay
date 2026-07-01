@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="3" virtualPath="/C:/Program Files/Git/testpayprecompile/Test/TestPayWithdrawTrigger.aspx" hash="fffffff4b8955d7e" filehash="a52340049f1154de" flags="110000" assembly="App_Web_5k1cqlom" type="ASP.test_testpaywithdrawtrigger_aspx">
+    <filedeps>
+        <filedep name="/C:/Program Files/Git/testpayprecompile/Test/TestPayWithdrawTrigger.aspx" />
+        <filedep name="/C:/Program Files/Git/testpayprecompile/Test/TestPayWithdrawTrigger.aspx.cs" />
+    </filedeps>
+</preserve>

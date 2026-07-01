@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="3" virtualPath="/C:/Program Files/Git/testpayprecompile/TestIP.aspx" hash="fffffff4b8955d7e" filehash="ffffde41fa662258" flags="110000" assembly="App_Web_13bv0cjb" type="ASP.testip_aspx">
+    <filedeps>
+        <filedep name="/C:/Program Files/Git/testpayprecompile/TestIP.aspx" />
+    </filedeps>
+</preserve>
