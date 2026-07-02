@@ -2708,7 +2708,7 @@ public class BackendController : ApiController {
 
         if (AdminData.CompanyType == 0) {
 
-        } else if (AdminData.CompanyType == 4) {
+        } else if (AdminData.CompanyType == 1 || AdminData.CompanyType == 2 || AdminData.CompanyType == 4) {
             fromBody.CompanyID = AdminData.forCompanyID;
         } else {
             _PaymentTableResult.ResultCode = APIResult.enumResult.VerificationError;
@@ -2742,7 +2742,7 @@ public class BackendController : ApiController {
 
         if (AdminData.CompanyType == 0) {
 
-        } else if (AdminData.CompanyType == 4) {
+        } else if (AdminData.CompanyType == 1 || AdminData.CompanyType == 2 || AdminData.CompanyType == 4) {
             fromBody.CompanyID = AdminData.forCompanyID;
         } else {
             _PaymentTableResult.ResultCode = (int)APIResult.enumResult.VerificationError;
@@ -9582,7 +9582,7 @@ public class BackendController : ApiController {
 
         if (AdminData.CompanyType == 0) {
 
-        } else if (AdminData.CompanyType == 4) {
+        } else if (AdminData.CompanyType == 1 || AdminData.CompanyType == 2 || AdminData.CompanyType == 4) {
             fromBody.CompanyID = AdminData.forCompanyID;
         } else {
             _PaymentTableResult.ResultCode = (int)APIResult.enumResult.VerificationError;

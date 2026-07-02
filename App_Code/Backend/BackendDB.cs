@@ -12444,7 +12444,7 @@ public class BackendDB {
                  " from CompanyPointHistory CH WITH (NOLOCK) " +
                  " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
                  " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
-                 " WHERE     DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
+                 " WHERE     CH.CreateDate >= DATEADD(HOUR, 8 - @TimeZone, @StartDate) AND CH.CreateDate <= DATEADD(HOUR, 8 - @TimeZone, @EndDate) ";
 
         if (SearchData.CompanyID != 0) {
             SS += " AND CH.forCompanyID = @CompanyID ";
@@ -12461,8 +12461,8 @@ public class BackendDB {
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
-        DBCmd.Parameters.Add("@StartDate", SqlDbType.VarChar).Value = SearchData.StartDate.ToString("yyyy/MM/dd") + " 00:00:00.000";
-        DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = SearchData.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
+        DBCmd.Parameters.Add("@StartDate", SqlDbType.DateTime).Value = SearchData.StartDate.Date;
+        DBCmd.Parameters.Add("@EndDate", SqlDbType.DateTime).Value = SearchData.EndDate.Date.AddDays(1).AddSeconds(-1);
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = SearchData.CompanyID;
         DBCmd.Parameters.Add("@OperatorType", SqlDbType.Int).Value = SearchData.OperatorType;
         DBCmd.Parameters.Add("@CurrencyType", SqlDbType.VarChar).Value = SearchData.CurrencyType;
@@ -12498,7 +12498,7 @@ public class BackendDB {
              " from CompanyPointHistory CH WITH (NOLOCK) " +
              " LEFT JOIN ServiceType ST WITH (NOLOCK) ON CH.ServiceType = ST.ServiceType " +
              " LEFT JOIN CompanyTable CT WITH (NOLOCK) ON CH.forCompanyID = CT.CompanyID " +
-             " WHERE DATEADD(HOUR, @TimeZone - 8, CH.CreateDate) BETWEEN @StartDate AND @EndDate ";
+             " WHERE CH.CreateDate >= DATEADD(HOUR, 8 - @TimeZone, @StartDate) AND CH.CreateDate <= DATEADD(HOUR, 8 - @TimeZone, @EndDate) ";
 
         if (SearchData.ServiceType.ToString() != "0") {
             SS += " AND CH.ServiceType = @ServiceType ";
@@ -12518,8 +12518,8 @@ public class BackendDB {
         DBCmd = new System.Data.SqlClient.SqlCommand();
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
-        DBCmd.Parameters.Add("@StartDate", SqlDbType.VarChar).Value = SearchData.StartDate.ToString("yyyy/MM/dd") + " 00:00:00.000";
-        DBCmd.Parameters.Add("@EndDate", SqlDbType.VarChar).Value = SearchData.EndDate.ToString("yyyy/MM/dd") + " 23:59:59.999";
+        DBCmd.Parameters.Add("@StartDate", SqlDbType.DateTime).Value = SearchData.StartDate.Date;
+        DBCmd.Parameters.Add("@EndDate", SqlDbType.DateTime).Value = SearchData.EndDate.Date.AddDays(1).AddSeconds(-1);
         DBCmd.Parameters.Add("@CompanyID", SqlDbType.Int).Value = SearchData.CompanyID;
         DBCmd.Parameters.Add("@OperatorType", SqlDbType.Int).Value = SearchData.OperatorType;
         DBCmd.Parameters.Add("@ServiceType", SqlDbType.VarChar).Value = SearchData.ServiceType;

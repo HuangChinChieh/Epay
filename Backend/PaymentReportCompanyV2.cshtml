@@ -1,26 +1,23 @@
 ﻿@{
     var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
-    var result = bc.CheckLoginPermission(BID);
+    //此頁為商戶使用，CheckLoginPermission 僅允許 CompanyType=0 或 4，商戶帳號 CompanyType 為 1/2，不應執行
+    //var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
-        CheckPermission = "false";
-    }
 
     string PermissionName = Request.Path.Split('/').Last().Split('.').First();
-    result = bc.CheckPermission(BID,PermissionName);
+    var result = bc.CheckPermission(BID,PermissionName);
 
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
         CheckPermission = "false";
     }
 
-    var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
-    string CheckLoginPermission = "success";
-    if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
-        CheckLoginPermission = "false";
-    }
+    //var resultCheckLoginIP = bc.CheckLoginIPByCompany(BID);
+    //string CheckLoginPermission = "success";
+    //if (resultCheckLoginIP.ResultCode != BackendController.APIResult.enumResult.OK)
+    //{
+    //    CheckLoginPermission = "false";
+    //}
 }
 <head>
     <meta charset="utf-8">
@@ -963,11 +960,6 @@
                     <div class="header"></div>
                     <div class="body">
                         <div class="row">
-                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 切换渠道 : </h6>
-                            <span style="z-index:500;">
-                                <select class="show-tick" id="select_providercode" data-live-search="true"></select>
-                            </span>
-
                             <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 幣別 : </h6>
                             <div class="row" style="margin-bottom: 10px;width: 100px;">
                                 <select id="selectCurrencyType" class="form-select form-select-sm">
@@ -1017,7 +1009,7 @@
 
                         <div class="row">
                             <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 支付方式 : </h6>
-                            <span style="z-index:500;">
+                            <span style="z-index:450;">
                                 <select class="show-tick" id="select_ServiceType"></select>
                             </span>
                                 <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 状态 : </h6>
@@ -1111,10 +1103,6 @@
     var seleCurrency = parent.API_GetSelectCurrency();
 
     $(document).ready(function () {
-        
-if ('@CheckLoginPermission' == 'false') {
-                location.href = "Login.cshtml";
-            }
 
               if ('@CheckPermission' == 'false') {
             parent.errorAlertCallback("权限不足", function () {
@@ -1154,7 +1142,6 @@ if ('@CheckLoginPermission' == 'false') {
 
         new AutoNumeric.multiple('#setsecond', 'integer', { decimalPlaces: 0, minimumValue: 0, maximumValue: 100 });
 
-        getProviderCodeResult();
         createProcessStatus();
         createSubmitType();
         getServiceTypeResult();
@@ -1359,9 +1346,7 @@ if ('@CheckLoginPermission' == 'false') {
                 },
                 { "title": "商户订单号", "data": "OrderID" },
                 { "title": "商户名称", "data": "CompanyName" },
-                { "title": "渠道名称", "data": "ProviderName" },
                 //{ "title": "供应商订单号", "data": "ProviderOrderID" },
-                { "title": "支付方式", "data": "ServiceTypeName" },
                 {
                     "title": "状态", "data": "ProcessStatus",
                     "render": function (data) {//0=新建(準備 PaymentSerial)/1=尚未提交/2=交易成功，尚未通知商戶/3=交易失敗/4=交易成功，通知商戶成功/5=供應商資料不一致/6=系統問題
@@ -1494,7 +1479,7 @@ if ('@CheckLoginPermission' == 'false') {
                              d.StartAmount = $('#startAmount').val().trim();
                              d.EndAmount = $('#endAmount').val().trim();
                              d.ProcessStatus = $('#select_processStatus').val().split(",");
-                             d.ProviderCode = $('#select_providercode').val();
+                             d.ProviderCode = "0";
 
                              console.log("d", d);
                 }
@@ -1506,7 +1491,7 @@ if ('@CheckLoginPermission' == 'false') {
             processing: true,
             retrieve: true,
             selected: true,
-            order: [[14, "desc"]],
+            order: [[12, "desc"]],
             scrollX: true,
             autoWidth: false,
             language: chineseTableLang
@@ -1700,31 +1685,6 @@ if ('@CheckLoginPermission' == 'false') {
         parent.showSelectCompany_menu($('#companyLabel'), window.frameElement.id);
     });
 
-    function getProviderCodeResult() {
-        api.getProviderCodeResultByShowType(function (success, obj) {
-            if (obj.ResultCode == 0) {
-                createProviderSelect(obj.ProviderTypes);
-                parent.wrapperFadeOut();
-            } else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                    case 5:
-
-                        break;
-                    default:
-                        message = "其他错误";
-                        parent.warningAlert(message);
-                        break;
-                }
-                parent.wrapperFadeOut();
-
-            }
-        });
-    }
-
     function getServiceTypeResult() {
         api.getServiceType(AdminObject.forCompanyID, function (s, o) {
             if (s) {
@@ -1749,18 +1709,6 @@ if ('@CheckLoginPermission' == 'false') {
                 }
             }
         });
-    }
-
-    function createProviderSelect(providerdata) {
-        $("#select_providercode").append('<option value="0">' + "全部" + '</option>');
-        if (providerdata) {
-            $.each(providerdata, function (i, item) {
-
-                $("#select_providercode").append('<option value="' + providerdata[i].ProviderCode + '">' + providerdata[i].ProviderName + '</option>');
-            })
-
-            $('#select_providercode').selectpicker('refresh');
-        }
     }
 
     function createSubmitType() {
@@ -1806,14 +1754,15 @@ if ('@CheckLoginPermission' == 'false') {
                 var startAmount = $('#startAmount').val().trim();
                 var endAmount = $('#endAmount').val().trim();
                 var processStatus = $('#select_processStatus').val().split(",");
-                var providerCode = $('#select_providercode').val();
+                var providerCode = "0";
+                var timeType = "";
 
-                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, function (success, obj) {
+                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, function (success, obj) {
                     if (success) {
 
 
                         if (obj.ResultCode == 0) {
-                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '渠道名称', '支付方式', '状态', '申请金额', '费率(%)', '手续费', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP']];
+                            var exceldata = [['平台订单号', '商户订单号', '商户名称', '状态', '申请金额', '费率(%)', '手续费', '实际金额(-手續費)','實收金額', '提交方式', '提交时间', '完成时间', '商户提供IP']];
                        
                             for (var i = 0; i < obj.PaymentTableResults.length; i++) {
                                 var data = obj.PaymentTableResults[i];
@@ -1875,7 +1824,7 @@ if ('@CheckLoginPermission' == 'false') {
 
                                 partialOrderAmount = (data.PartialOrderAmount * data.CollectRate * 0.01) + data.CollectCharge;
 
-                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, data.ProviderName, data.ServiceTypeName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP);
+                                var tmpArray = new Array(PaymentSerial, data.OrderID, data.CompanyName, ProcessStatus, data.OrderAmount, data.CollectRate, partialOrderAmount, data.PaymentAmount, data.PartialOrderAmount, SubmitType, CreateDate, FinishDate, data.ClientIP);
                                 exceldata.push(tmpArray);
                             }
 

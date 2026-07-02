@@ -1,14 +1,11 @@
 ﻿@{
     var bc = new BackendController(); string BID = HttpContext.Current.Request.Cookies.AllKeys.Contains("BID") == true ?  HttpContext.Current.Request.Cookies["BID"].Value.ToString():"";
-    var result = bc.CheckLoginPermission(BID);
+    //此頁為商戶使用，CheckLoginPermission 僅允許 CompanyType=0 或 4，商戶帳號 CompanyType 為 1/2，不應執行
+    //var result = bc.CheckLoginPermission(BID);
     string CheckPermission = "success";
-    if (result.ResultCode != BackendController.APIResult.enumResult.OK)
-    {
-        CheckPermission = "false";
-    }
 
     string PermissionName = Request.Path.Split('/').Last().Split('.').First();
-    result = bc.CheckPermission(BID,PermissionName);
+    var result = bc.CheckPermission(BID,PermissionName);
 
     if (result.ResultCode != BackendController.APIResult.enumResult.OK)
     {
@@ -937,7 +934,7 @@
     <div class="block-header paper-wrap">
         <div class="row">
             <div class="col col-lg-3 col-md-3 col-sm-3">
-                <h2>提现审核</h2>
+                <h2>提现查詢</h2>
             </div>
             <div class="col col-lg-9 col-md-9 col-sm-9">
                 <div class="tips">
@@ -963,14 +960,6 @@
                                     </div>
                                     <select class="show-tick" id="select_Status"></select>
                               
-                                </div>
-                                <div class="row" style="margin-top: 10px">
-
-                                    <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 切换渠道 : </h6>
-                                    <span style="z-index:500;">
-                                        <select class="show-tick" id="select_providercode" data-live-search="true"></select>
-                                    </span>
-
                                 </div>
 
                                 <div class="row" style="margin-bottom: 10px;margin-top:10px">
@@ -1156,7 +1145,6 @@
 
         CreateWithdrawalStatusSelect();
         createWithdrawalTable2();
-        getProviderCodeResult();
         reciprocal();
 
         var objWithdrawalRecordTable = `<div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="WithdrawalRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -1203,6 +1191,8 @@
                             </div>
                             </div>`;
         $('body').append(editGroupTable);
+
+        parent.wrapperFadeOut();
     };
     $('#deteselect').change(function () {
 
@@ -1283,76 +1273,8 @@
 
         Table = $("#table_WithdrawalTable").DataTable({
             columns: [
-                {
-                    "title": "审核", "data": "Status",
-                    "render": function (data, display, rowdata) {
-                        switch (data) {
-                            case 0:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-                            case 1:
-                                if (rowdata.WithdrawType == 1 && rowdata.ProviderCode == 'AsiaPlay888') {
-                                    return '<button onclick="QueryAPIWithdrawal(this)">查询</button>';
-                                } else {
-                                    return '';
-                                }
-
-                                break;
-                            case 9:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-                            case 13:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-
-                            default:
-                                return '';
-                                break;
-                        }
-                    }
-                },
                 { "title": "提现序号", "data": "WithdrawSerial" },
                 { "title": "商户单号", "data": "DownOrderID" },
-                {
-                    "title": "转单", "data": "WithdrawType",
-                    "render": function (data, display, rowdata) {
-                        if (data == 0) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '<input class="changeProviderGroupCheckBox" type="checkbox" style="width:20px;height:20px;" data-withdrawserial="' + rowdata.WithdrawSerial + '" onclick="changeProviderGroupCheckBox(this)">';
-                                    } else {
-                                        return '';
-                                    }
-                                } else {
-                                    return '';
-                                }
-                            } else {
-                                return '';
-                            }
-
-                        } else if (data == 1) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '<input class="changeProviderGroupCheckBox"  type="checkbox" style="width:20px;height:20px;" data-withdrawserial="' + rowdata.WithdrawSerial + '" onclick="changeProviderGroupCheckBox(this)">';
-                                    } else {
-                                        return '';
-                                    }
-
-                                } else {
-                                    return '';
-                                }
-
-                            } else {
-                                return '';
-                            }
-
-                        } else {
-                            return '';
-                        }
-                    }
-                },
                 {  //下發狀態，0=建立/1=進行中/2=成功/3=失敗/4=審核確認中/5=匯款處理中/6=匯款完成，成功，審核中/7=匯款完成，失敗，審核中
                     "title": "状态", "data": "Status",
                     "render": function (data) {
@@ -1404,65 +1326,11 @@
                     "title": "付款方式", "data": "WithdrawType",
                     "render": function (data, display, rowdata) {
                         if (data == 0) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '上游处理中</br><select style="margin-top:5px;" class="select_proxyProviderGroupData"></select>';
-                                    } else {
-                                        return '上游处理中</br>处理人:' + rowdata.RealName1;
-                                    }
-                                } else {
-                                    return '手动</br><button onclick="confirmManualWithdrawal(this,2)" style="background-color:green">成功</button><button onclick="confirmManualWithdrawal(this,0)">取消</button><button onclick="confirmManualWithdrawal(this,3)" style="background-color:red">失败</button>';
-                                }
-                            } else {
-                                return '手动';
-                            }
-
+                            return '手动';
                         } else if (data == 1) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '上游处理中</br><select style="margin-top:5px;" class="select_proxyProviderGroupData"></select>';
-                                    } else {
-                                        return '上游处理中</br>处理人:' + rowdata.RealName1;
-                                    }
-
-                                } else {
-                                    return 'API代付';
-                                }
-
-                            } else {
-                                return 'API代付';
-                            }
-
+                            return 'API代付';
                         } else {
                             return '';
-                        }
-                    }
-                },
-                {
-                    "title": "供应商", "data": "ProviderName",
-                    "render": function (data, display, rowdata) {
-                        if (rowdata.GroupName) {
-                            var strProviderName = '';
-                            if (data != null) {
-                                strProviderName = data;
-                            }
-
-                            strProviderName = strProviderName+ "(" + rowdata.GroupName + ")";
-                            if (rowdata.CompanyDescription != '' && rowdata.CompanyDescription != null) {
-                                strProviderName += '</br>备注:' + rowdata.CompanyDescription;
-                            }              
-                            return strProviderName;
-                        } else {
-                            var strProviderName = '';
-                            if (data != null) {
-                                strProviderName = data;
-                            }
-                            if (rowdata.CompanyDescription != '' && rowdata.CompanyDescription != null) {
-                                strProviderName += '</br>备注:' + rowdata.CompanyDescription;
-                            }          
-                            return strProviderName;
                         }
                     }
                 },
@@ -1487,10 +1355,10 @@
                             } else {
                                 return toCurrency((rowdata.Amount * rowdata.WithdrawRate * 0.01) + rowdata.CollectCharge);
                             }
-                         
+
                         } else {
                             return 0;
-                        }    
+                        }
                     }
                 },
                 {
@@ -1513,7 +1381,7 @@
                         }
                     }
                 },
-                { "title": "审核者", "data": "RealName2" },
+                { "title": "审核者", "data": "RealName2", "visible": false },
                 {
                     "title": "城市/省份/分行", "data": "OwnCity",
                     "render": function (data, display, rowdata) {
@@ -1526,24 +1394,10 @@
                     "title": "功能", "data": "FloatType",
                     "render": function (data, display, rowdata) {
                         var tmpdoc = '';
-                        if (rowdata.FloatType != 0) {
-                            tmpdoc += '<button style="margin-left:5px" onclick="WithdrawalRecord(this)">调帐记录</button>';
-                        }
-
-                        switch (rowdata.Status) {
-                            case 2:
-                                if (rowdata.DownStatus != 2 && data != 0) {
-                                    tmpdoc += '<button style="margin-left:5px" onclick="ReSendWithdrawal(this,true)">补单</button>';
-                                }
-                                break;
-                            case 3:
-                                if (rowdata.DownStatus != 2 && data != 0) {
-                                    tmpdoc += '<button style="margin-left:5px" onclick="ReSendWithdrawal(this,true)">补单</button>';
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        //先隱藏，之後要開放商戶查看調帳記錄時再打開
+                        //if (rowdata.FloatType != 0) {
+                        //    tmpdoc += '<button style="margin-left:5px" onclick="WithdrawalRecord(this)">调帐记录</button>';
+                        //}
                         return tmpdoc;
                     }
                 }
@@ -1565,8 +1419,8 @@
                     d.IsSearchWaitReview = IsSearchWaitReview;
                     d.CompanyID = 0;
                     d.Status = $('#select_Status').val();
-                    d.ProviderCode = $('#select_providercode').val();
-                    d.GroupID = $('#select_proxyProviderGroup').val();
+                    d.ProviderCode = "0";
+                    d.GroupID = 0;
 
                 }
             },
@@ -1578,7 +1432,7 @@
             retrieve: true,
             selected: true,
             scrollX: true,
-            order: [[1, "desc"]],
+            order: [[0, "desc"]],
             autoWidth: false,
             language: chineseTableLang
         }).on('xhr.dt', function (e, settings, d, xhr) {
@@ -1634,120 +1488,14 @@
 
     }
 
-    function changeProviderGroupByAdmin(groupID, withdrawSerial) {
-
-        api.changeProviderGroupByAdmin(groupID, withdrawSerial, function (success, obj) {
-            if (obj.ResultCode == 0) {
-                parent.successAlert4('<span style="color:blue">'+obj.WithdrawalResult.WithdrawSerial + '</span></br>已转移至</br><span style="color:red">' + obj.WithdrawalResult.GroupName + '</span>');
-                if (obj.Message == "ChangeToOtherGroup") {
-                    modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult);
-                }
-
-            } else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                    case 9:
-                        modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult);
-                        parent.warningAlert(obj.Message + " 审核中");
-                        break;
-                    case 8:
-
-                        modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult);
-                        parent.warningAlert("订单已被其他人转移群组");
-                        break;
-                    case 99:
-                        parent.warningAlert("订单已由其他人处理完成,请重新查询");
-                        break;
-                    default:
-                        message = obj + ",其他错误(更换群组)";
-                        parent.warningAlert(message);
-                        break;
-                }
-                parent.wrapperFadeOut();
-
-            }
-        });
-    }
-
     function createWithdrawalTable(data) {
         isCreatedTable = true;
 
         Table = $("#table_WithdrawalTable").DataTable({
             data: data,
             columns: [
-                {
-                    "title": "审核", "data": "Status",
-                    "render": function (data, display, rowdata) {
-                        switch (data) {
-                            case 0:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-                            case 1:
-                                if (rowdata.WithdrawType == 1 && rowdata.ProviderCode == 'AsiaPlay888') {
-                                    return '<button onclick="QueryAPIWithdrawal(this)">查询</button>';
-                                } else {
-                                    return '';
-                                }
-
-                                break;
-                            case 9:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-                            case 13:
-                                return '<button onclick="WithdrawalReview(this)">审核</button>';
-                                break;
-
-                            default:
-                                return '';
-                                break;
-                        }
-                    }
-                },
                 { "title": "提现序号", "data": "WithdrawSerial" },
                 { "title": "商户单号", "data": "DownOrderID" },
-                {
-                    "title": "转单", "data": "WithdrawType",
-                    "render": function (data, display, rowdata) {
-                        if (data == 0) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '<input type="checkbox" data-withdrawserial="' + rowdata.WithdrawSerial + '" onclick="changeProviderGroupCheckBox(this)">';
-                                    } else {
-                                        return '';
-                                    }
-                                } else {
-                                    return '';
-                                }
-                            } else {
-                                return '';
-                            }
-
-                        } else if (data == 1) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '<input type="checkbox" data-withdrawserial="' + rowdata.WithdrawSerial + '" onclick="changeProviderGroupCheckBox(this)">';
-                                    } else {
-                                        return '';
-                                    }
-
-                                } else {
-                                    return '';
-                                }
-
-                            } else {
-                                return '';
-                            }
-
-                        } else {
-                            return '';
-                        }
-                    }
-                },
                 {  //下發狀態，0=建立/1=進行中/2=成功/3=失敗/4=審核確認中/5=匯款處理中/6=匯款完成，成功，審核中/7=匯款完成，失敗，審核中
                     "title": "状态", "data": "Status",
                     "render": function (data) {
@@ -1799,49 +1547,11 @@
                     "title": "付款方式", "data": "WithdrawType",
                     "render": function (data, display, rowdata) {
                         if (data == 0) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '上游处理中</br><select style="margin-top:5px;" class="select_proxyProviderGroupData"></select>';
-                                    } else {
-                                        return '上游处理中</br>处理人:' + rowdata.RealName1;
-                                    }
-                                } else {
-                                    return '手动</br><button onclick="confirmManualWithdrawal(this,2)" style="background-color:green">成功</button><button onclick="confirmManualWithdrawal(this,0)">取消</button><button onclick="confirmManualWithdrawal(this,3)" style="background-color:red">失败</button>';
-                                }
-                            } else {
-                                return '手动';
-                            }
-
+                            return '手动';
                         } else if (data == 1) {
-                            if (rowdata.Status == 1) {
-                                if (rowdata.forProviderCode) {
-                                    if (rowdata.HandleByAdminID == 0) {
-                                        return '上游处理中</br><select style="margin-top:5px;" class="select_proxyProviderGroupData"></select>';
-                                    } else {
-                                        return '上游处理中</br>处理人:' + rowdata.RealName1;
-                                    }
-
-                                } else {
-                                    return 'API代付';
-                                }
-
-                            } else {
-                                return 'API代付';
-                            }
-
+                            return 'API代付';
                         } else {
                             return '';
-                        }
-                    }
-                },
-                {
-                    "title": "供应商", "data": "ProviderName",
-                    "render": function (data, display, rowdata) {
-                        if (rowdata.GroupName) {
-                            return data + "(" + rowdata.GroupName + ")";
-                        } else {
-                            return data;
                         }
                     }
                 },
@@ -1893,7 +1603,7 @@
                         }
                     }
                 },
-                { "title": "审核者", "data": "RealName2" },
+                { "title": "审核者", "data": "RealName2", "visible": false },
                 {
                     "title": "城市/省份/分行", "data": "OwnCity",
                     "render": function (data, display, rowdata) {
@@ -1906,24 +1616,10 @@
                     "title": "功能", "data": "FloatType",
                     "render": function (data, display, rowdata) {
                         var tmpdoc = '';
-                        if (rowdata.FloatType != 0) {
-                            tmpdoc += '<button style="margin-left:5px" onclick="WithdrawalRecord(this)">调帐记录</button>';
-                        }
-
-                        switch (rowdata.Status) {
-                            case 2:
-                                if (rowdata.DownStatus != 2 && data != 0) {
-                                    tmpdoc += '<button style="margin-left:5px" onclick="ReSendWithdrawal(this,true)">补单</button>';
-                                }
-                                break;
-                            case 3:
-                                if (rowdata.DownStatus != 2 && data != 0) {
-                                    tmpdoc += '<button style="margin-left:5px" onclick="ReSendWithdrawal(this,true)">补单</button>';
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        //先隱藏，之後要開放商戶查看調帳記錄時再打開
+                        //if (rowdata.FloatType != 0) {
+                        //    tmpdoc += '<button style="margin-left:5px" onclick="WithdrawalRecord(this)">调帐记录</button>';
+                        //}
                         return tmpdoc;
                     }
                 }
@@ -1936,7 +1632,7 @@
             retrieve: true,
             selected: true,
             scrollX: true,
-            order: [[1, "desc"]],
+            order: [[0, "desc"]],
             autoWidth: false,
             language: chineseTableLang
         });
@@ -2002,13 +1698,6 @@
 
     }
 
-    $('#select_providercode').change(function () {
-        if ($(this).val() != "YE888") {
-            $('#select_proxyProviderGroup').val("0");
-            $('#select_proxyProviderGroup').selectpicker('refresh');
-        }
-    })
-
     function getWithdrawalTableResult() {
         var withdrawSerial = $('#input_WithdrawSerial').val();
         var companyid = 0;
@@ -2016,8 +1705,8 @@
         var startdate = dateinputval[0];
         var enddate = dateinputval[1] + ":59.999";
         var status = $('#select_Status').val();
-        var providerCode = $('#select_providercode').val();
-        var groupID = $('#select_proxyProviderGroup').val();
+        var providerCode = "0";
+        var groupID = 0;
         parent.wrapperFadeIn();
         api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, function (success, obj) {
             if (success) {
@@ -2225,464 +1914,9 @@
         $('#select_Status').selectpicker('refresh');
     }
 
-    function WithdrawalReview(objbtn) {
-        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-
-        api.getWithdrawalResultByWithdrawSerial(withdrawSerial, function (success, obj) {
-            if (obj.ResultCode == 0) {
-                if (obj.WithdrawalResult.Status == 0) {
-                    WithdrawalReviewConfirm(obj.WithdrawalResult);
-                } else {
-                    parent.warningAlert("目前状态无法审核");
-                }
-            } else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 4:
-                        parent.errorAlertCallback("权限不足", function () {
-                            parent.ChangePage("Home");
-                            parent.CloseActivePage(window.frameElement.id.split('_')[1]);
-                        });
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                }
-            }
-        });
-
-    }
-
-    function QueryAPIWithdrawal(objbtn) {
-        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-
-        parent.wrapperFadeIn();
-        api.queryAPIWithdrawal(withdrawSerial, function (success, obj) {
-            if (success) {
-                parent.wrapperFadeOut();
-                if (obj.ResultCode == 0) {
-                    modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                    swal({
-                        title: obj.WithdrawalResult.Message,
-                        type: "success",
-                        confirmButtonText: "确认",
-                        closeOnConfirm: true
-                    });
-
-                }
-                else {
-                    switch (obj.ResultCode) {
-                        case 7:
-                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                            break;
-                        case 4:
-                            parent.errorAlert("没有权限", "Login.cshtml");
-                            break;
-                        case 6:
-                            modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                            parent.warningAlert(obj.WithdrawalResult.Message);
-                            break;
-                        default:
-                            message = "其他错误";
-                            parent.warningAlert(message);
-                            break;
-                    }
-                }
-            } else {
-                parent.warningAlert("网路异常");
-                parent.wrapperFadeOut();
-            }
-
-        });
-
-    }
-
-    function WithdrawalReviewConfirm(data) {
-
-        if (!isCreatedWithdrawalModal) {
-            isCreatedWithdrawalModal = true;
-            createWithdrawalModal();
-        }
-
-        $('#modal_ServiceTypePoint').text('');
-        $('#modal_ServiceTypeName').text('');
-        $('#modal_ServiceType').text('');
-
-        getProviderCodeResult2(data.forCompanyID, data.ServiceType, data.CurrencyType);
-
-        $('#modal_CompanyName').text(data.CompanyName);
-        $('#modal_WithdrawSerial').text(data.WithdrawSerial);
-        $('#modal_BankCard').text(data.BankCard);
-        $('#modal_CurrencyType').text(data.CurrencyType);
-        $('#modal_Amount').text(toCurrency(data.Amount));
-        $('#modal_BankName').text(data.BankName);
-        $('#modal_BankBranchName').text(data.BankBranchName);
-        $('#modal_BankCardName').text(data.BankCardName);
-        $('#modal_OwnCity').text(data.OwnCity);
-        $('#modal_OwnProvince').text(data.OwnProvince);
-        $('input[name="PayType"]')[1].checked = true;
-        $('#WithdrawalModal').modal('show');
-    }
-
-    function createWithdrawalModal() {
-        $('#WithdrawalModalContent').html("");
-        var dochtml = ' <div class="modal fade" style="background-color: rgba(0, 0, 0, 0.4);" data-backdrop=false id="WithdrawalModal" tabindex="-1" role="dialog" aria-hidden="true">' +
-            '<div class="modal-dialog" role="document">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            ' <h4 class="title" id="WithdrawalModalModalLabel">api出款审核</h4>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<span style="display:block">商戶:<span id="modal_CompanyName" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">提现序号:<span id="modal_WithdrawSerial" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">银行名称:<span id="modal_BankName" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">分行名称:<span id="modal_BankBranchName" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">银行卡号:<span id="modal_BankCard" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">持卡人姓名:<span id="modal_BankCardName" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">所属城市:<span id="modal_OwnCity" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">所属省份:<span id="modal_OwnProvince" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">币别:<span id="modal_CurrencyType" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">金额:<span id="modal_Amount" style="margin-left:5px"></span></span>' +
-            '<span style="display:block">付款类型:' +
-            '<div class="radio inlineblock"><input type="radio" name="PayType" id="PayType0" class="with-gap" value="0"><label for="PayType0">手动下发</label></div>' +
-            '<div class="radio inlineblock"><input type="radio" name="PayType" id="PayType1" class="with-gap" value="1"><label for="PayType1">API代付</label></div>' +
-            '</span>' +
-            '<div id="div_select_providercode"><span>供应商: <select class="show-tick" id="modal_select_providercode"></select></span></div>' +
-            '<div id="div_select_companyservicepoint"><span>商户扣款支付类型: <select class="show-tick" id="modal_select_companyservicepoint"></select></span></div>' +
-            '<span id="span_select_companyservicepoint" style="display:block">商户扣款支付类型:<span id="modal_ServiceTypeName" style="margin-left:5px"></span><span>(剩余额度: ' + '<span id="modal_ServiceTypePoint" style="color:red;">' + '</span> )</span></span>' +
-            '<span id="modal_ServiceType" style="display:none"></span>' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '<button onclick="saveReviewResult(1)" type="button" class="btn btn-primary btn-round waves-effect">确认</button>' +
-            '<button onclick="saveReviewResult(3)" type="button" class="btn btn-primary btn-round waves-effect">失敗</button>' +
-            '<button onclick="contentcancel()" type="button" class="btn btn-primary btn-round waves-effect">取消</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-        $('#WithdrawalModalContent').append(dochtml);
-        $('input[name="PayType"]')[1].checked = true;
-        $('input[type=radio][name=PayType]').change(function () {
-            if (this.value == 0) {
-                $('#div_select_providercode').find("[data-supportapi=false]").each(function () {
-                    $(this).show();
-                });
-            } else {
-                $('#div_select_providercode').find("[data-supportapi=false]").each(function () {
-                    $(this).hide();
-                });
-            }
-        })
-    }
-
-    function modifyRowValueByFirstConfirm(withdrawSerial, withdrawdata) {
-
-        var index = -1;
-        var row = Table.row(function (idx, data, node) {
-            if (data.WithdrawSerial == withdrawSerial) {
-                index = idx;
-                return this;
-            }
-        });
-        if (index != -1) {
-
-            Table.row(row).data(withdrawdata);
-
-            Table.row(row).data(Table.row(row).data()).draw(false);
-
-        }
-
-    }
-
-    function modifyRowValue(withdrawSerial, status, bankDescription) {
-        var index = -1;
-        var row = Table.row(function (idx, data, node) {
-            if (data.WithdrawSerial == withdrawSerial) {
-                index = idx;
-                return this;
-            }
-        });
-        if (index != -1) {
-
-            Table.row(row).data().Status = status;
-            Table.row(row).data().BankDescription = bankDescription;
-
-            Table.row(row).data(Table.row(row).data()).draw(false);
-        }
-
-    }
-
-    function modifyRowValueAfterRejectDescription(withdrawSerial, status, rejectDescription) {
-        var index = -1;
-        var row = Table.row(function (idx, data, node) {
-            if (data.WithdrawSerial == withdrawSerial) {
-                index = idx;
-                return this;
-            }
-        });
-        if (index != -1) {
-
-            Table.row(row).data().Status = status;
-            Table.row(row).data().RejectDescription = rejectDescription;
-
-            Table.row(row).data(Table.row(row).data()).draw(false);
-        }
-
-    }
-
-    function confirmManualWithdrawal(objbtn, status) {
-        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-        var status = status;
-
-        parent.wrapperFadeIn();
-        api.confirmManualWithdrawal(withdrawSerial, status, function (success, obj) {
-            if (success) {
-
-                parent.wrapperFadeOut();
-                if (obj.ResultCode == 0) {
-                    modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                    swal({
-                        title: "审核完成",
-                        type: "success",
-                        confirmButtonText: "确认",
-                        closeOnConfirm: true
-                    });
-                }
-                else {
-                    switch (obj.ResultCode) {
-                        case 7:
-                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                            break;
-                        case 4:
-                            parent.errorAlert("没有权限", "Login.cshtml");
-                            break;
-                        case 6:
-                            modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                            parent.warningAlert(obj.WithdrawalResult.Message);
-                            break;
-                        default:
-                            message = "其他错误";
-                            parent.warningAlert(message);
-                            break;
-                    }
-                }
-            } else {
-                parent.warningAlert("网路异常");
-                parent.wrapperFadeOut();
-            }
-
-        });
-    }
-
-    function confirmAutoWithdrawal(objbtn) {
-        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-        parent.wrapperFadeIn();
-        api.confirmAutoWithdrawal(withdrawSerial, status, function (success, obj) {
-            if (success) {
-                parent.wrapperFadeOut();
-                if (obj.ResultCode == 0) {
-                    modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                    swal({
-                        title: obj.WithdrawalResult.Message,
-                        type: "success",
-                        confirmButtonText: "确认",
-                        closeOnConfirm: true
-                    });
-                }
-                else {
-                    switch (obj.ResultCode) {
-                        case 7:
-                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                            break;
-                        case 4:
-                            parent.errorAlert("没有权限", "Login.cshtml");
-                            break;
-                        case 6:
-                            modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                            parent.warningAlert(obj.WithdrawalResult.Message);
-                            break;
-                        default:
-                            message = "其他错误";
-                            parent.warningAlert(message);
-                            break;
-                    }
-                }
-            } else {
-                parent.warningAlert("网路异常");
-                parent.wrapperFadeOut();
-            }
-
-        });
-    }
-
-    function saveReviewResult(modifyStatus) {
-        var withdrawSerial = $('#modal_WithdrawSerial').text();
-        var status = modifyStatus;
-        var providerCode = $('#modal_select_providercode').val();
-        //var providerPoint = toNumber($("#modal_select_providercode option:selected").text().split('/')[1]);
-        var ServiceType = $('#modal_ServiceType').text().trim();
-        var withdrawType = $('input[name="PayType"]:checked').val();
-        //var ServiceTypePoint = parseFloat($('#modal_ServiceTypePoint').text().trim());
-        if (providerCode == "-1") {
-            parent.warningAlert("尚未选择供应商");
-            return;
-        }
-
-        if (ServiceType == "") {
-            if ($('#modal_select_companyservicepoint').val() == "-1") {
-                parent.warningAlert("尚未选择支付通道");
-                return;
-            } else {
-                ServiceType = $('#modal_select_companyservicepoint').val();
-            }
-        }
-
-        //var bankDescription = $('#modal_BankDescription').val();
-        $('#WithdrawalModal').modal('hide');
-        parent.wrapperFadeIn();
-        api.updateWithdrawalResultByWithdrawSerial(withdrawSerial, status, providerCode, withdrawType, ServiceType, function (success, obj) {
-            if (success) {
-
-                parent.wrapperFadeOut();
-                if (obj.ResultCode == 0) {
-                    modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                    swal({
-                        title: obj.WithdrawalResult.Message,
-                        type: "success",
-                        confirmButtonText: "确认",
-                        closeOnConfirm: true
-                    });
-
-                }
-                else {
-                    switch (obj.ResultCode) {
-                        case 7:
-                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                            break;
-                        case 4:
-                            parent.errorAlert("没有权限", "Login.cshtml");
-                            break;
-                        case 6:
-                            modifyRowValueByFirstConfirm(withdrawSerial, obj.WithdrawalResult.WithdrawalData);
-                            parent.warningAlert(obj.WithdrawalResult.Message);
-                            break;
-                        default:
-                            message = "其他错误";
-                            parent.warningAlert(message);
-                            break;
-                    }
-                }
-            } else {
-                parent.warningAlert("网路异常");
-                parent.wrapperFadeOut();
-            }
-
-        });
-    }
-
-    function contentcancel() {
-        $('#WithdrawalModal').modal('hide');
-    }
-
-    function getProviderCodeResult2(companyid, ServiceType,currencyType) {
-        $('#modal_select_providercode').find('option').remove();
-        $('#modal_select_companyservicepoint').find('option').remove();
-        api.getAllProviderPoint(companyid, function (success, obj) {
-            if (obj.ResultCode == 0) {
-                var providerDataSort = obj.ProviderPointResults.sort(function (a, b) {
-
-                    if (a.ProviderCode > b.ProviderCode) {
-                        return 1;
-                    } else if (a.ProviderCode < b.ProviderCode) {
-                        return -1;
-                    }
-
-                    return 0;
-                });
-
-                createProviderSelect2(providerDataSort);
-                checkCompanyServiceExist(obj.CompanyServicePointResults, ServiceType, currencyType);
-                parent.wrapperFadeOut();
-            } else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                    case 5:
-
-                        break;
-                    default:
-                        message = "其他错误";
-                        parent.warningAlert(message);
-                        break;
-                }
-                parent.wrapperFadeOut();
-
-            }
-        });
-    }
-
-    function createProviderSelect2(providerdata2) {
-
-        if (providerdata2) {
-            $("#modal_select_providercode").append('<option value="-1">' + '选择供应商' + '</option>');
-
-            $.each(providerdata2, function (i, item) {
-                var boolProviderAPIType = false;
-                var ProviderAPIType = providerdata2[i].ProviderAPIType;
-                if ((ProviderAPIType & 2) == 2) {
-                    boolProviderAPIType = true;
-                }
-
-                $("#modal_select_providercode").append('<option data-supportapi=' + boolProviderAPIType + ' value="' + providerdata2[i].ProviderCode + '">' + providerdata2[i].ProviderName + " / " + toCurrency(providerdata2[i].SystemPointValue - providerdata2[i].WithdrawPoint) + '</option>');
-            })
-        }
-
-        $('#div_select_providercode').find("[data-supportapi=false]").each(function () {
-            $(this).show();
-        });
-    }
-
-    function checkCompanyServiceExist(data, selectedServiceType,currencyType) {
-     
-        data = data.filter(function (element) {
-            return element.State == 0 && element.CurrencyType == currencyType;
-        });
-
-        if (data) {
-            var selecteddata = data.find(function (element) {
-                return element.ServiceType == selectedServiceType;
-            });
-
-            if (selecteddata) {
-                $('#span_select_companyservicepoint').show();
-                $('#div_select_companyservicepoint').hide();
-                $('#modal_ServiceTypePoint').text(selecteddata.SystemPointValue);
-                $('#modal_ServiceTypeName').text(selecteddata.ServiceTypeName);
-                $('#modal_ServiceType').text(selecteddata.ServiceType);
-            } else {
-                $('#span_select_companyservicepoint').hide();
-                $('#div_select_companyservicepoint').show();
-                createCompanyServiceSelect(data);
-            }
-
-        }
-    }
-
-    function createCompanyServiceSelect(data) {
-
-        if (data) {
-            $("#modal_select_companyservicepoint").append('<option value="-1">' + '选择扣款通道' + '</option>');
-
-            $.each(data, function (i, item) {
-
-                $("#modal_select_companyservicepoint").append('<option  value="' + data[i].ServiceType + '">' + data[i].ServiceTypeName + " / " + toCurrency(data[i].SystemPointValue) + " /限额:" + toCurrency(data[i].MinLimit) + "~" + toCurrency(data[i].MaxLimit) + ",手续费:" + data[i].Charge + '</option>');
-            })
-        }
-    }
-
     function WithdrawalRecord(objbtn) {
-        var withdrawalSerial = $($(objbtn).parent().parent().find('td')[1]).html();
+        //欄位「审核」已移除，提现序号現在是第一欄（index 0）
+        var withdrawalSerial = $($(objbtn).parent().parent().find('td')[0]).html();
 
         parent.wrapperFadeIn();
         api.WithdrawalRecord(withdrawalSerial, function (success, obj) {
@@ -2765,41 +1999,6 @@
         $('#WithdrawalRecordModal').modal('hide');
     }
 
-    function ReSendWithdrawal(objbtn, isReSendWithdraw) {
-        var withdrawSerial = $($(objbtn).parent().parent().find('td')[1]).html();
-
-        parent.wrapperFadeIn();
-        api.reSendWithdrawal(withdrawSerial, isReSendWithdraw, function (success, obj) {
-            if (success) {
-                if (obj.ResultCode == 0) {
-                    swal({
-                        title: "已成功发送",
-                        type: "success",
-                        confirmButtonText: "确认",
-                        closeOnConfirm: true
-                    })
-
-                } else {
-                    var message = ""
-                    switch (obj.ResultCode) {
-                        case 7:
-                            parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                            break;
-                        default:
-                            parent.warningAlert(obj.Message);
-                            break;
-                    }
-                }
-
-                parent.wrapperFadeOut();
-            } else {
-                parent.warningAlert("网路异常");
-                parent.wrapperFadeOut();
-            }
-
-        });
-    }
-
     $('#Excel_download').click(function () {
         if (typeof (Worker) !== "undefined") {
             if (typeof (w) == "undefined") {
@@ -2830,7 +2029,8 @@
 
         var exceldata = [];
         if (Table.rows().data().length > 0) {
-            var tmpArray = new Array('提现序号', '商户单号', '状态', '付款方式', '供应商', '商户', '银行卡资讯', '申请金额', '手续费', '建立时间', '完成时间', '审核者', '城市/省份/分行', '实际金额');
+            //先隱藏「供应商」「审核者」，之後要開放商戶查看時再打開
+            var tmpArray = new Array('提现序号', '商户单号', '状态', '付款方式', '商户', '银行卡资讯', '申请金额', '手续费', '建立时间', '完成时间', '城市/省份/分行', '实际金额');
              exceldata.push(tmpArray);
             //console.log('start_data:' + new Date());
             for (var i = 0; i < Table.rows().data().length; i++) {
@@ -2846,24 +2046,9 @@
                 }
 
                 if (data.WithdrawType == 0) {
-                    if (data.Status == 1) {
-                        if (data.forProviderCode) {
-                            WithdrawType = '上游处理中';
-                        } else {
-                            WithdrawType = '手动';
-                        }
-                    } else {
-                        WithdrawType = '手动';
-                    }
-
+                    WithdrawType = '手动';
                 } else if (data.WithdrawType == 1) {
-                    if (data.Status == 1) {
-                        WithdrawType = 'API代付';
-                        //return 'API代付</br><button onclick="confirmAutoWithdrawal(this)">查询结果</button>';
-                    } else {
-                        WithdrawType = 'API代付';
-                    }
-
+                    WithdrawType = 'API代付';
                 } else {
                     WithdrawType = '';
                 }
@@ -2898,7 +2083,7 @@
 
                 BankCard = data.BankName + "/" + data.BankCard + "/" + data.BankCardName;
                 OwnCity = `${data.OwnCity}/${data.OwnProvince}/${data.BankBranchName}`;
-                var tmpArray = new Array(data.WithdrawSerial, data.DownOrderID, Status, WithdrawType, data.ProviderName, data.CompanyName, BankCard, data.Amount, data.CollectCharge, data.CreateDate2, FinishDate, data.RealName2, OwnCity, data.FinishAmount);
+                var tmpArray = new Array(data.WithdrawSerial, data.DownOrderID, Status, WithdrawType, data.CompanyName, BankCard, data.Amount, data.CollectCharge, data.CreateDate2, FinishDate, OwnCity, data.FinishAmount);
                 exceldata.push(tmpArray);
             }
         }
@@ -2914,7 +2099,7 @@
             var startdate = dateinputval[0];
             var enddate = dateinputval[1] + ":59.999";
             var status = $('#select_Status').val();
-            var providerCode = $('#select_providercode').val();
+            var providerCode = "0";
             var groupID = 0;
             parent.wrapperFadeIn();
             api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, function (success, obj) {
@@ -2923,7 +2108,8 @@
                     parent.wrapperFadeOut();
                     if (obj.ResultCode == 0) {
 
-                        var exceldata = [['提现序号', '商户单号', '状态', '付款方式', '供应商', '商户', '银行卡资讯', '申请金额', '手续费', '建立时间', '完成时间', '审核者', '城市/省份/分行', '实际金额']];
+                        //先隱藏「供应商」「审核者」，之後要開放商戶查看時再打開
+                        var exceldata = [['提现序号', '商户单号', '状态', '付款方式', '商户', '银行卡资讯', '申请金额', '手续费', '建立时间', '完成时间', '城市/省份/分行', '实际金额']];
                         var TableData = obj.WithdrawalResults;
 
                         for (var i = 0; i < TableData.length; i++) {
@@ -3000,7 +2186,7 @@
 
                             BankCard = data.BankName + "/" + data.BankCard + "/" + data.BankCardName;
                             OwnCity = `${data.OwnCity}/${data.OwnProvince}/${data.BankBranchName}`;
-                            var tmpArray = new Array(data.WithdrawSerial, data.DownOrderID, Status, WithdrawType, data.ProviderName, data.CompanyName, BankCard, data.Amount, collectCharge, data.CreateDate2, FinishDate, data.RealName2, OwnCity, data.FinishAmount);
+                            var tmpArray = new Array(data.WithdrawSerial, data.DownOrderID, Status, WithdrawType, data.CompanyName, BankCard, data.Amount, collectCharge, data.CreateDate2, FinishDate, OwnCity, data.FinishAmount);
                             exceldata.push(tmpArray);
                         }
 
@@ -3026,42 +2212,6 @@
 
     }
 
-    function getProviderCodeResult() {
-        api.getProviderCodeResultByShowType(function (success, obj) {
-            if (obj.ResultCode == 0) {
-                createProviderSelect(obj.ProviderTypes);
-                parent.wrapperFadeOut();
-            } else {
-                var message = ""
-                switch (obj.ResultCode) {
-                    case 7:
-                        parent.errorAlert("您已断线请重新登入", "Login.cshtml");
-                        break;
-                    case 5:
-
-                        break;
-                    default:
-                        message = "其他错误";
-                        parent.warningAlert(message);
-                        break;
-                }
-                parent.wrapperFadeOut();
-
-            }
-        });
-    }
-
-    function createProviderSelect(providerdata) {
-        $("#select_providercode").append('<option value="0">' + "全部" + '</option>');
-        if (providerdata) {
-            $.each(providerdata, function (i, item) {
-
-                $("#select_providercode").append('<option value="' + providerdata[i].ProviderCode + '">' + providerdata[i].ProviderName + '</option>');
-            })
-
-            $('#select_providercode').selectpicker('refresh');
-        }
-    }
 
     function dateTimeStr() {
         var dateTime = new Date();
@@ -3121,18 +2271,6 @@
             return buf;
         }
         return blob;
-    }
-
-    function changeProviderGroupCheckBox(obj) {
-        if (!boolTimeStop) {
-            parent.warningAlert("请先停止计时器");
-            if ($(obj).is(':checked')) {
-                $(obj).prop('checked', false);
-            } else {
-                $(obj).prop('checked', true);
-            }
-     
-        }
     }
 
 </script>
