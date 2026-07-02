@@ -6412,6 +6412,211 @@ public class BackendController : ApiController {
         return _CompanyServicePointResult;
     }
 
+    [HttpPost]
+    [ActionName("GetCompanyServicePointBalanceByAdmin")]
+    public CompanyServicePointByService GetCompanyServicePointBalanceByAdmin([FromBody] FromBody.CompanyServicePointBalanceQuery fromBody) {
+        CompanyServicePointByService retValue = new CompanyServicePointByService();
+        BackendDB backendDB = new BackendDB();
+        RedisCache.BIDContext.BIDInfo AdminData;
+
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+            retValue.ResultCode = APIResult.enumResult.SessionError;
+            return retValue;
+        } else {
+            AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
+        }
+
+        if (AdminData.CompanyType != 0) {
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            return retValue;
+        }
+
+        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode)) {
+            RedisCache.BIDContext.ClearBID(fromBody.BID);
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            return retValue;
+        }
+
+        DBViewModel.CompanyServicePointVM companyServicePoint = backendDB.GetCanUseCompanyServicePointByService(fromBody.forCompanyID, fromBody.ServiceType, fromBody.CurrencyType);
+        if (companyServicePoint != null) {
+            retValue.CompanyServicePoint = companyServicePoint;
+            retValue.ResultCode = APIResult.enumResult.OK;
+        } else {
+            retValue.ResultCode = APIResult.enumResult.NoData;
+        }
+
+        return retValue;
+    }
+
+    [HttpPost]
+    [ActionName("TransferCompanyServicePoint")]
+    public APIResult TransferCompanyServicePoint([FromBody] FromBody.CompanyServicePointTransfer Model) {
+        APIResult retValue = new APIResult();
+        BackendDB backendDB = new BackendDB();
+        BackendFunction backendFunction = new BackendFunction();
+        string fingerprint = GetFingerprint();
+
+        //驗證權限
+        RedisCache.BIDContext.BIDInfo AdminData;
+        if (!RedisCache.BIDContext.CheckBIDExist(Model.BID)) {
+            retValue.ResultCode = APIResult.enumResult.SessionError;
+            return retValue;
+        } else {
+            AdminData = RedisCache.BIDContext.GetBIDInfo(Model.BID);
+        }
+
+        if (!Pay.IsTestSite) {
+            if (!CodingControl.CheckXForwardedFor()) {
+                backendDB.InsertBotSendLog(AdminData.CompanyCode, "公司代碼:" + AdminData.CompanyCode + ",偵測到非反代IP活動：" + CodingControl.GetXForwardedFor());
+                RedisCache.BIDContext.ClearBID(Model.BID);
+                retValue.ResultCode = APIResult.enumResult.VerificationError;
+                retValue.Message = "";
+                return retValue;
+            }
+        }
+
+        if (AdminData.CompanyType != 0) {
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            return retValue;
+        }
+
+        if (!backendDB.CheckLoginIP(CodingControl.GetUserIP(), AdminData.CompanyCode)) {
+            RedisCache.BIDContext.ClearBID(Model.BID);
+            retValue.ResultCode = APIResult.enumResult.VerificationError;
+            retValue.Message = "";
+            return retValue;
+        }
+
+        #region 傳入參數檢查
+        if (string.IsNullOrEmpty(Model.FromServiceType) || string.IsNullOrEmpty(Model.ToServiceType)) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "請選擇轉出與轉入渠道";
+            return retValue;
+        }
+
+        if (Model.FromServiceType == Model.ToServiceType) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉出與轉入渠道不可相同";
+            return retValue;
+        }
+
+        if (Model.Amount <= 0) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "金額須大於0";
+            return retValue;
+        }
+
+        if (string.IsNullOrEmpty(Model.Description)) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "請輸入備註";
+            return retValue;
+        }
+        #endregion
+
+        #region 渠道與餘額檢查
+        DBViewModel.CompanyServicePointVM fromPoint = backendDB.GetCanUseCompanyServicePointByService(Model.forCompanyID, Model.FromServiceType, Model.CurrencyType);
+        if (fromPoint == null) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉出渠道不存在";
+            return retValue;
+        }
+
+        DBViewModel.CompanyServicePointVM toPoint = backendDB.GetCanUseCompanyServicePointByService(Model.forCompanyID, Model.ToServiceType, Model.CurrencyType);
+        if (toPoint == null) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉入渠道不存在";
+            return retValue;
+        }
+
+        if (Model.Amount > (fromPoint.CanUsePoint - fromPoint.FrozenPoint)) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉出渠道可用金額不足";
+            return retValue;
+        }
+        #endregion
+
+        string transferSerial = "TXFR" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        string strCompanyName = backendDB.GetCompanyNameByCompanyID(Model.forCompanyID);
+        string strFromServiceTypeName = backendDB.GetServiceTypeNameByServiceType(Model.FromServiceType, Model.CurrencyType);
+        string strToServiceTypeName = backendDB.GetServiceTypeNameByServiceType(Model.ToServiceType, Model.CurrencyType);
+        string description = "渠道互轉[" + transferSerial + "]" + strFromServiceTypeName + "→" + strToServiceTypeName + ":" + Model.Description;
+
+        DBModel.CompanyManualHistory outModel = new DBModel.CompanyManualHistory {
+            ServiceType = Model.FromServiceType,
+            forCompanyID = Model.forCompanyID,
+            Type = 1,
+            CurrencyType = Model.CurrencyType,
+            Amount = Model.Amount * -1,
+            Description = description,
+            TransactionSerial = transferSerial
+        };
+
+        int outReturn = backendDB.InsertCompanyManualHistory(outModel, AdminData.AdminID);
+        if (outReturn != 0) {
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉出扣款失敗:" + GetCompanyManualHistoryErrorMessage(outReturn);
+            return retValue;
+        }
+
+        DBModel.CompanyManualHistory inModel = new DBModel.CompanyManualHistory {
+            ServiceType = Model.ToServiceType,
+            forCompanyID = Model.forCompanyID,
+            Type = 0,
+            CurrencyType = Model.CurrencyType,
+            Amount = Model.Amount,
+            Description = description,
+            TransactionSerial = transferSerial
+        };
+
+        int inReturn = backendDB.InsertCompanyManualHistory(inModel, AdminData.AdminID);
+        if (inReturn != 0) {
+            //轉入失敗，把轉出的金額自動退回，避免只扣不加
+            DBModel.CompanyManualHistory rollbackModel = new DBModel.CompanyManualHistory {
+                ServiceType = Model.FromServiceType,
+                forCompanyID = Model.forCompanyID,
+                Type = 0,
+                CurrencyType = Model.CurrencyType,
+                Amount = Model.Amount,
+                Description = "渠道互轉失敗自動退回[" + transferSerial + "]",
+                TransactionSerial = transferSerial + "R"
+            };
+            backendDB.InsertCompanyManualHistory(rollbackModel, AdminData.AdminID);
+
+            retValue.ResultCode = APIResult.enumResult.Error;
+            retValue.Message = "轉入加點失敗，已自動退回轉出金額:" + GetCompanyManualHistoryErrorMessage(inReturn);
+            return retValue;
+        }
+
+        retValue.ResultCode = APIResult.enumResult.OK;
+        string IP = backendFunction.CheckIPInTW(CodingControl.GetUserIP());
+        int AdminOP = backendDB.InsertAdminOPLog(AdminData.forCompanyID, AdminData.AdminID, 1, "渠道間轉帳,商户名称:" + strCompanyName + ",币别:" + Model.CurrencyType + ",轉出:" + strFromServiceTypeName + ",轉入:" + strToServiceTypeName + ",金額:" + Model.Amount + ",转帐单号:" + transferSerial, IP, fingerprint);
+        string XForwardIP = CodingControl.GetXForwardedFor();
+        CodingControl.WriteXFowardForIP(AdminOP);
+
+        return retValue;
+    }
+
+    private string GetCompanyManualHistoryErrorMessage(int code) {
+        switch (code) {
+            case -1:
+                return "後台操作人員不存在";
+            case -2:
+                return "商戶錢包不存在";
+            case -3:
+                return "商戶支付方式有誤";
+            case -4:
+                return "缺少相關說明";
+            case -5:
+                return "鎖定失敗";
+            case -6:
+                return "異動記錄新增失敗";
+            case -7:
+                return "加扣點失敗";
+            default:
+                return "其他錯誤";
+        }
+    }
+
     [HttpGet]
     [HttpPost]
     [ActionName("GetCompanyServicePointDetail")]

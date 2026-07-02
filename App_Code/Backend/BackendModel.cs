@@ -1351,6 +1351,23 @@ public class FromBody {
         public string BID { get; set; }
     }
 
+    public class CompanyServicePointBalanceQuery {
+        public string BID { get; set; }
+        public int forCompanyID { get; set; }
+        public string ServiceType { get; set; }
+        public string CurrencyType { get; set; }
+    }
+
+    public class CompanyServicePointTransfer {
+        public string BID { get; set; }
+        public int forCompanyID { get; set; }
+        public string CurrencyType { get; set; }
+        public string FromServiceType { get; set; }
+        public string ToServiceType { get; set; }
+        public decimal Amount { get; set; }
+        public string Description { get; set; }
+    }
+
     public class FrozenPoint : DBModel.FrozenPoint {
         public string BID { get; set; }
         public bool BoolActualProviderFrozenAmount { get; set; }

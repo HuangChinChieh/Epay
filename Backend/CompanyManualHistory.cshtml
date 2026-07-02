@@ -950,6 +950,7 @@
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 ortherText">
                                 <button title="新增" id="btnCreate" type="button" class="btn btn-raised btn-primary btn-circle waves-effect float-right"><i class="fas fa-plus"></i></button>
+                                <button title="渠道間轉帳" id="btnTransfer" type="button" class="btn btn-raised btn-primary btn-round waves-effect float-right" style="margin-right:8px;">渠道間轉帳</button>
                             </div>
                         </div>
                     </div>
@@ -1051,6 +1052,21 @@
             };
             sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
             parent.GoPage("CompanyManualHistory", "商户金额调整", "CompanyManualHistory_Create.cshtml");
+
+        })
+
+        //渠道間轉帳
+        $("#btnTransfer").on("click", function () {
+            var data = {
+                backID: window.frameElement.id.split('_')[1]
+            }
+
+            var tmpdata = {
+                type: "CompanyServicePointTransfer",
+                data: data
+            };
+            sessionStorage.setItem("TempData", JSON.stringify(tmpdata));
+            parent.GoPage("CompanyServicePointTransfer", "渠道間轉帳", "CompanyServicePointTransfer_Create.cshtml");
 
         })
 

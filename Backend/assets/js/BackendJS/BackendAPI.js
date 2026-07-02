@@ -7100,6 +7100,61 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
+    this.getCompanyServicePointBalanceByAdmin = function (Company, ServiceType, currency, cb) {
+        var url = APIUrl + "/GetCompanyServicePointBalanceByAdmin";
+        var postData;
+
+        postData = {
+            BID: BID,
+            forCompanyID: Company,
+            ServiceType: ServiceType,
+            CurrencyType: currency
+        };
+
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+
+                if (cb) {
+                    cb(true, obj);
+                }
+            } else {
+                if (cb) {
+                    cb(false, text);
+                }
+            }
+        });
+    };
+
+    this.transferCompanyServicePoint = function (Company, currency, FromServiceType, ToServiceType, Amount, Description, cb) {
+        var url = APIUrl + "/TransferCompanyServicePoint";
+        var postData;
+
+        postData = {
+            BID: BID,
+            forCompanyID: Company,
+            CurrencyType: currency,
+            FromServiceType: FromServiceType,
+            ToServiceType: ToServiceType,
+            Amount: Amount,
+            Description: Description
+        };
+
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+
+                if (cb) {
+                    cb(true, obj);
+                }
+            } else {
+                if (cb) {
+                    cb(false, text);
+                }
+            }
+        });
+    };
+
     this.insertManualHistory = function (Company, ServiceType, TransactionSerial, Amount, Description, Type, currency, providerCode, cb) {
         var url = APIUrl + "/InsertManualHistory";
         var postData;
