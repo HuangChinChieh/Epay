@@ -162,6 +162,8 @@
             timeDate2();
 
             AdminObject = JSON.parse(AdminJsonData);
+            initIdleLock();
+
             if (AdminObject.CompanyType == 0 || AdminObject.CompanyType == 3) {
                 //聲音檔設定
                 ion.sound({
@@ -890,6 +892,121 @@
         }
         //#endregion
 
+        //#region 闲置自动锁屏
+        var idleLockTimer;
+        var idleLockLastTouch = 0;
+
+        function initIdleLock() {
+            if (!AdminObject || AdminObject.BackendIdleLockEnable !== 0 || !AdminObject.BackendIdleLockSeconds || AdminObject.BackendIdleLockSeconds <= 0) {
+                return;
+            }
+
+            if (AdminObject.IsLocked) {
+                showIdleLock();
+            } else {
+                bindIdleLockActivityEvents();
+                resetIdleLockTimer();
+            }
+        }
+
+        function bindIdleLockActivityEvents() {
+            $(document).on('mousemove.idlelock keydown.idlelock click.idlelock scroll.idlelock', onIdleLockActivity);
+            $('#menuContent iframe').each(function () {
+                bindIframeIdleLockEvents(this);
+            });
+        }
+
+        function unbindIdleLockActivityEvents() {
+            $(document).off('.idlelock');
+            $('#menuContent iframe').each(function () {
+                try {
+                    if (this.contentDocument) {
+                        $(this.contentDocument).off('.idlelock');
+                    }
+                } catch (e) { }
+            });
+        }
+
+        //子頁面是各自獨立的iframe，操作事件不會冒泡到上層document，需個別綁定
+        function bindIframeIdleLockEvents(iframeEl) {
+            try {
+                if (iframeEl && iframeEl.contentDocument) {
+                    $(iframeEl.contentDocument).off('.idlelock').on('mousemove.idlelock keydown.idlelock click.idlelock scroll.idlelock', onIdleLockActivity);
+                }
+            } catch (e) { }
+        }
+
+        function isIdleLocked() {
+            return $("#idleLockOverlay").css("display") != "none";
+        }
+
+        function onIdleLockActivity() {
+            resetIdleLockTimer();
+
+            var now = Date.now();
+            if (now - idleLockLastTouch > 5000) {
+                idleLockLastTouch = now;
+                api.touchActivity(function (success, obj) {
+                    if (success && obj.ResultCode == 7) {
+                        unbindIdleLockActivityEvents();
+                        errorAlert("您已斷線請重新登入", "Login.cshtml");
+                    }
+                });
+            }
+        }
+
+        function resetIdleLockTimer() {
+            if (idleLockTimer) {
+                clearTimeout(idleLockTimer);
+            }
+            idleLockTimer = setTimeout(showIdleLock, AdminObject.BackendIdleLockSeconds * 1000);
+        }
+
+        function showIdleLock() {
+            if (idleLockTimer) {
+                clearTimeout(idleLockTimer);
+            }
+            unbindIdleLockActivityEvents();
+            $("#idleLockErrorMsg").text("");
+            $("#idleLockPasswordInput").val("");
+            $("#idleLockOverlay").css("display", "block");
+            setTimeout(function () { $("#idleLockPasswordInput").focus(); }, 100);
+        }
+
+        function unlockIdleLock() {
+            var password = $("#idleLockPasswordInput").val();
+
+            if (password == "") {
+                $("#idleLockErrorMsg").text("请输入密码");
+                return;
+            }
+
+            api.unlockSession(password, function (success, obj) {
+                if (success && obj.ResultCode == 0) {
+                    $("#idleLockOverlay").css("display", "none");
+                    bindIdleLockActivityEvents();
+                    resetIdleLockTimer();
+                } else if (success && obj.ResultCode == 7) {
+                    errorAlert("您已斷線請重新登入", "Login.cshtml");
+                } else {
+                    $("#idleLockErrorMsg").text("密碼錯誤");
+                    $("#idleLockPasswordInput").val("").focus();
+                }
+            });
+        }
+
+        $(document).on('click', '#btnIdleUnlock', function () {
+            unlockIdleLock();
+        });
+
+        $(document).on('keydown', '#idleLockPasswordInput', function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                unlockIdleLock();
+            }
+        });
+        //#endregion
+
         //#region 警告訊息
 
         function warningAlert(title) {
@@ -1217,6 +1334,11 @@
                 $("#menuTab").append("<li><a href='#" + PageID + "' class='closable' id='tab_" + PageID + "' style='font-size:15px !important'>" + PageID + "</a></li>");
                 $("#menuContent").append("<div style='height:100%;padding:0 !important' id='" + PageID + "'><iframe id='iframe_" + PageID + "' name='" + PageID + "' style='width:100%;height:100%;border:white' src='" + PageID + ".cshtml'></iframe></div>");
                 $(".tabpanel").tabs("refresh");
+                document.getElementById('iframe_' + PageID).onload = function () {
+                    if (!isIdleLocked()) {
+                        bindIframeIdleLockEvents(this);
+                    }
+                };
             } else {
                 if (!AdminObject.CheckGoogleKeySuccess) {
 
@@ -1228,6 +1350,11 @@
                     $("#menuTab").append("<li><a href='#" + PageID + "' class='closable' id='tab_" + PageID + "' style='font-size:15px !important'>" + TitleName + "</a></li>");
                     $("#menuContent").append("<div style='height:100%;padding:0 !important' id='" + PageID + "'><iframe id='iframe_" + PageID + "' name='" + PageID + "' style='width:100%;height:100%;border:white' src='" + PageURL + "'></iframe></div>");
                     $(".tabpanel").tabs("refresh");
+                    document.getElementById('iframe_' + PageID).onload = function () {
+                        if (!isIdleLocked()) {
+                            bindIframeIdleLockEvents(this);
+                        }
+                    };
 
                     //tabs click event
                     $("#tab_" + PageID).click(function () {
@@ -1356,6 +1483,14 @@
     </script>
 </head>
 <body class="theme-violet">
+    <div id="idleLockOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.96);z-index:90000;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1c2126;padding:40px;border-radius:8px;width:320px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,0.5);">
+            <div style="color:#fff;margin-bottom:20px;font-size:16px;">畫面已鎖定，請輸入密碼解鎖</div>
+            <input type="password" id="idleLockPasswordInput" class="form-control" placeholder="請輸入密碼" style="margin-bottom:10px;background:#fff;color:#333;" />
+            <div id="idleLockErrorMsg" style="color:#ff6b6b;font-size:12px;min-height:16px;margin-bottom:10px;"></div>
+            <a id="btnIdleUnlock" class="btn btn-primary btn-round btn-block" style="background:#ffbf36;color:black !important">解鎖</a>
+        </div>
+    </div>
     <div class="bg"></div>
     <!-- Page Loader -->
     <div class="page-loader-wrapper">

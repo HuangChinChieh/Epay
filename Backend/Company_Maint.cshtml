@@ -1097,6 +1097,16 @@
                                         <span id="b_Description"></span>
                                     </div>
                                 </div>
+                                <div class="row" style="margin:0">
+                                    <div class="col-lg-6 col-md-6">
+                                        <span> 后台闲置自动锁屏：</span>
+                                        <span id="pBackendIdleLockEnable"></span>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <span> 闲置秒数：</span>
+                                        <span id="pBackendIdleLockSeconds"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="footer">
                             </div>
@@ -2030,6 +2040,15 @@
                 $('#pBackendWithdrawType').text('否');
                 $('#pBackendWithdrawType').css('color', 'red');
             }
+
+            if (CSeleData[0].BackendIdleLockEnable == 0) {
+                $('#pBackendIdleLockEnable').text('启用');
+                $('#pBackendIdleLockEnable').css('color', 'blue');
+            } else {
+                $('#pBackendIdleLockEnable').text('停用');
+                $('#pBackendIdleLockEnable').css('color', 'red');
+            }
+            $('#pBackendIdleLockSeconds').text(CSeleData[0].BackendIdleLockSeconds);
 
 
             selectedParentCompanyID = CSeleData[0]["ParentCompanyID"];

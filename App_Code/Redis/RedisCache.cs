@@ -1059,6 +1059,11 @@ public static class RedisCache {
 
 
             CompanyDT = Company.GetCompanyByCode(CompanyCode);
+            if (CompanyDT != null && CompanyDT.Rows.Count > 0 && !CompanyDT.Columns.Contains("BackendIdleLockEnable")) {
+                //快取是舊資料(缺欄位)，強制重讀DB並刷新快取
+                CompanyDT = Company.UpdateCompanyByCode(CompanyCode);
+            }
+
             if (CompanyDT != null) {
                 if (CompanyDT.Rows.Count > 0) {
                     Admin = PayDB.GetAdminByLoginAccount(LoginAccount);
@@ -1078,6 +1083,11 @@ public static class RedisCache {
                         BI.AccessIP = AccessIP;
                         BI.SortKey = Admin.SortKey;
                         BI.CheckGoogleKeySuccess = CheckGoogleKeySuccess;
+                        BI.BackendIdleLockEnable = (CompanyDT.Columns.Contains("BackendIdleLockEnable") && CompanyDT.Rows[0]["BackendIdleLockEnable"] != DBNull.Value)
+                            ? (int)CompanyDT.Rows[0]["BackendIdleLockEnable"] : 1;
+                        BI.BackendIdleLockSeconds = (CompanyDT.Columns.Contains("BackendIdleLockSeconds") && CompanyDT.Rows[0]["BackendIdleLockSeconds"] != DBNull.Value)
+                            ? (int)CompanyDT.Rows[0]["BackendIdleLockSeconds"] : 0;
+                        BI.LastActivityTime = DateTime.Now;
 
                         ClearExpireBID(BI.AdminID);
                         UpdateBID(BI);
@@ -1209,11 +1219,42 @@ public static class RedisCache {
                                 case "CHECKGOOGLEKEYSUCCESS":
                                     RetValue.CheckGoogleKeySuccess = Value == "True" ? true : false;
                                     break;
+                                case "BACKENDIDLELOCKENABLE":
+                                    RetValue.BackendIdleLockEnable = Convert.ToInt32(Value);
+                                    break;
+                                case "BACKENDIDLELOCKSECONDS":
+                                    RetValue.BackendIdleLockSeconds = Convert.ToInt32(Value);
+                                    break;
+                                case "LASTACTIVITYTIME":
+                                    RetValue.LastActivityTime = DateTime.FromBinary(Convert.ToInt64(Value));
+                                    break;
                                 default:
                                     break;
                             }
                         }
+
+                        RetValue.IsLocked = RetValue.BackendIdleLockEnable == 0
+                            && RetValue.BackendIdleLockSeconds > 0
+                            && (DateTime.Now - RetValue.LastActivityTime).TotalSeconds >= RetValue.BackendIdleLockSeconds;
                     }
+                }
+            }
+
+            return RetValue;
+        }
+
+        public static bool TouchActivity(string BID) {
+            bool RetValue = false;
+
+            if (string.IsNullOrEmpty(BID) == false) {
+                string Key;
+                StackExchange.Redis.IDatabase Client = Pay.GetRedisClient(DBIndex);
+
+                Key = XMLPath + ":BID." + BID;
+
+                if (Client.KeyExists(Key.ToUpper())) {
+                    Client.HashSet(Key.ToUpper(), "LastActivityTime", DateTime.Now.ToBinary());
+                    RetValue = true;
                 }
             }
 
@@ -1298,6 +1339,9 @@ public static class RedisCache {
             T.HashSetAsync(Key1.ToUpper(), "AccessIP", BI.AccessIP);
             T.HashSetAsync(Key1.ToUpper(), "SortKey", BI.SortKey);
             T.HashSetAsync(Key1.ToUpper(), "CheckGoogleKeySuccess", System.Convert.ToString(BI.CheckGoogleKeySuccess));
+            T.HashSetAsync(Key1.ToUpper(), "BackendIdleLockEnable", System.Convert.ToString(BI.BackendIdleLockEnable));
+            T.HashSetAsync(Key1.ToUpper(), "BackendIdleLockSeconds", System.Convert.ToString(BI.BackendIdleLockSeconds));
+            T.HashSetAsync(Key1.ToUpper(), "LastActivityTime", BI.LastActivityTime.ToBinary());
             T.HashSetAsync(Key2.ToUpper(), "BID_" + BI.BID, System.DateTime.Now.ToBinary());
 
             for (int _I = 1; _I <= 3; _I++) {
@@ -1326,6 +1370,10 @@ public static class RedisCache {
             public string SortKey;
             public bool CheckGoogleKeySuccess;
             public string CurrencyType;
+            public int BackendIdleLockEnable;
+            public int BackendIdleLockSeconds;
+            public DateTime LastActivityTime;
+            public bool IsLocked;
         }
     }
 

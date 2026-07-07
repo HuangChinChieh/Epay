@@ -16,6 +16,41 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
+    this.touchActivity = function (cb) {
+        var url = APIUrl + "/TouchActivity";
+
+        callServiceByPost(url, BID, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+
+                if (cb)
+                    cb(true, obj);
+            } else {
+                if (cb)
+                    cb(false, text);
+            }
+        });
+    };
+
+    this.unlockSession = function (password, cb) {
+        var url = APIUrl + "/UnlockSession";
+        var postData = {
+            BID: BID,
+            Password: password
+        }
+        callServiceByPost(url, postData, function (success, text) {
+            if (success == true) {
+                var obj = getJSON(text);
+
+                if (cb)
+                    cb(true, obj);
+            } else {
+                if (cb)
+                    cb(false, text);
+            }
+        });
+    };
+
     this.updateAllCompanyKey = function (cb) {
         var url = APIUrl + "/UpdateAllCompanyKey";
         var postData = {
@@ -4723,7 +4758,7 @@ var BackendAPI = function (BID, APIUrl) {
     };
 
 
-    this.insertCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, cb) {
+    this.insertCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, backendIdleLockEnable, backendIdleLockSeconds, cb) {
         var url = APIUrl + "/InsertCompanyTableResult";
         var postData;
 
@@ -4749,7 +4784,9 @@ var BackendAPI = function (BID, APIUrl) {
             BackendWithdrawIPType: backendWithdrawIPType,
             Timezone: timezone,
             DailyWithdrawalLimit: DailyWithdrawalLimit,
-            HasDownstream: hasDownstream
+            HasDownstream: hasDownstream,
+            BackendIdleLockEnable: backendIdleLockEnable,
+            BackendIdleLockSeconds: backendIdleLockSeconds
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -4767,7 +4804,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, cb) {
+    this.updateCompanyTableResult = function (companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, backendIdleLockEnable, backendIdleLockSeconds, cb) {
         var url = APIUrl + "/UpdateCompanyTableResult";
         var postData;
 
@@ -4797,7 +4834,9 @@ var BackendAPI = function (BID, APIUrl) {
             BackendWithdrawIPType: backendWithdrawIPType,
             Timezone: timezone,
             DailyWithdrawalLimit: DailyWithdrawalLimit,
-            HasDownstream: hasDownstream
+            HasDownstream: hasDownstream,
+            BackendIdleLockEnable: backendIdleLockEnable,
+            BackendIdleLockSeconds: backendIdleLockSeconds
         };
 
         callServiceByPost(url, postData, function (success, text) {

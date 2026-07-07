@@ -253,6 +253,8 @@ public class DBModel {
         public int BackendWithdrawIPType { get; set; }
         public decimal Timezone { get; set; }
         public int HasDownstream { get; set; }
+        public int BackendIdleLockEnable { get; set; }
+        public int BackendIdleLockSeconds { get; set; }
     }
 
     public class CompanyWithKey {
@@ -1289,6 +1291,11 @@ public class FromBody {
 
     public class Company : DBModel.Company {
         public string BID { get; set; }
+    }
+
+    public class UnlockSession {
+        public string BID { get; set; }
+        public string Password { get; set; }
     }
 
     public class GetBankDataSet {

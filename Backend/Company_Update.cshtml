@@ -1065,6 +1065,22 @@
                                 </div>
                             </div>
 
+                            <label>后台闲置自动锁屏 : </label>
+                            <div class="form-group">
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="BackendIdleLockEnable" id="BackendIdleLockEnable0" class="with-gap" value="0">
+                                    <label for="BackendIdleLockEnable0">启用</label>
+                                </div>
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="BackendIdleLockEnable" id="BackendIdleLockEnable1" class="with-gap" value="1">
+                                    <label for="BackendIdleLockEnable1">停用</label>
+                                </div>
+                                <div class="inlineblock" style="margin-left:10px">
+                                    <label style="font-weight: bold;">闲置多少秒后锁屏 : </label>
+                                    <input type="number" id="BackendIdleLockSeconds" class="form-control" style="width:120px;display:inline-block" value="300" min="10">
+                                </div>
+                            </div>
+
                             <label for="proxyProviderGroups">对应供应商群组<span style="color:red">(不指定请勿勾选)</span> : </label>
                             <div id="proxyProviderGroups"></div>
                             @*<select class="form-control show-tick" id="select_proxyProviderGroup"></select>*@
@@ -1222,7 +1238,8 @@
         $("#Timezone").val(EditData.data.Timezone);
         $("#Description").val(EditData.data.Description);
         $("#DailyWithdrawalLimit").val(EditData.data.DailyWithdrawalLimit);
-        
+        $("#BackendIdleLockSeconds").val(EditData.data.BackendIdleLockSeconds);
+
         $("input[name*='CompanyType'][value='" + EditData.data.CompanyType + "']").prop("checked", true);
         $("input[name*='CompanyState'][value='" + EditData.data.CompanyState + "']").prop("checked", true);
         $("input[name*='WithdrawType'][value='" + EditData.data.WithdrawType + "']").prop("checked", true);
@@ -1231,6 +1248,7 @@
         $("input[name*='BackendWithdrawType'][value='" + EditData.data.BackendWithdrawType + "']").prop("checked", true);
         $("input[name*='CheckCompanyWithdrawType'][value='" + EditData.data.CheckCompanyWithdrawType + "']").prop("checked", true);
         $("input[name*='HasDownstream'][value='" + EditData.data.HasDownstream + "']").prop("checked", true);
+        $("input[name*='BackendIdleLockEnable'][value='" + EditData.data.BackendIdleLockEnable + "']").prop("checked", true);
         if (EditData.data.WithdrawAPIType != "0") {
             checkedWithdrawAPIType(EditData.data.WithdrawAPIType);
         }
@@ -1274,6 +1292,8 @@
             var description = $("#Description").val();
             var DailyWithdrawalLimit = $("#DailyWithdrawalLimit").val();
             var hasDownstream = $('input[name=HasDownstream]:checked').val();
+            var backendIdleLockEnable = $('input[name=BackendIdleLockEnable]:checked').val();
+            var backendIdleLockSeconds = $("#BackendIdleLockSeconds").val();
 
             var providerGroups = "";
             if (providerGroupsData.length > 0) {
@@ -1298,6 +1318,11 @@
                 return;
             }
 
+            if (backendIdleLockEnable == "0" && (backendIdleLockSeconds == "" || parseInt(backendIdleLockSeconds) <= 0)) {
+                parent.warningAlert("闲置多少秒后锁屏为必填，且需大于0");
+                return;
+            }
+
             ServiceType = $("#select_ServiceType").val();
             var checkCompanyWithdrawUrl = $("#CheckCompanyWithdrawUrl").val();
 
@@ -1309,7 +1334,7 @@
                 withdrawAPIType += parseInt($("#WithdrawAPIType2:checked").val());
             }
 
-            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, Timezone, DailyWithdrawalLimit, hasDownstream, function (success, obj) {
+            api.updateCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, companyID, companyState, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, checkCompanyWithdrawUrl, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroups, checkCompanyWithdrawType, description, backendWithdrawIPType, Timezone, DailyWithdrawalLimit, hasDownstream, backendIdleLockEnable, backendIdleLockSeconds, function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {

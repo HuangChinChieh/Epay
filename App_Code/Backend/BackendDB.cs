@@ -465,7 +465,9 @@ public class BackendDB {
                      "               Timezone," +
                      "               DailyWithdrawalLimit," +
                      "               CurrencyType," +
-                     "               HasDownstream)" +
+                     "               HasDownstream," +
+                     "               BackendIdleLockEnable," +
+                     "               BackendIdleLockSeconds)" +
                      "   VALUES" +
                      "              (@CompanyType," +
                      "               @CompanyName," +
@@ -492,7 +494,9 @@ public class BackendDB {
                      "               @Timezone," +
                      "               @DailyWithdrawalLimit," +
                      "               @CurrencyType," +
-                     "               @HasDownstream)" +
+                     "               @HasDownstream," +
+                     "               @BackendIdleLockEnable," +
+                     "               @BackendIdleLockSeconds)" +
                      "                      SELECT @@IDENTITY;";
             DBCmd = new System.Data.SqlClient.SqlCommand();
             DBCmd.CommandText = SS;
@@ -522,6 +526,8 @@ public class BackendDB {
             DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
             DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
             DBCmd.Parameters.Add("@HasDownstream", SqlDbType.Int).Value = company.HasDownstream;
+            DBCmd.Parameters.Add("@BackendIdleLockEnable", SqlDbType.Int).Value = company.BackendIdleLockEnable;
+            DBCmd.Parameters.Add("@BackendIdleLockSeconds", SqlDbType.Int).Value = company.BackendIdleLockSeconds;
 
             CompanyID = int.Parse(T.GetDBValue(DBCmd).ToString());
         });
@@ -540,7 +546,7 @@ public class BackendDB {
         string SS;
         System.Data.SqlClient.SqlCommand DBCmd = null;
 
-        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone,DailyWithdrawalLimit=@DailyWithdrawalLimit,HasDownstream=@HasDownstream " +
+        SS = "UPDATE CompanyTable SET ParentCompanyID=@ParentCompanyID,CompanyName=@CompanyName,CompanyType=@CompanyType, CompanyState=@CompanyState, CompanyCode=@CompanyCode, URL=@URL,ContacterName=@ContacterName,ContacterMobile=@ContacterMobile,ContacterMethod=@ContacterMethod,ContacterMethodAccount=@ContacterMethodAccount,ContacterEmail=@ContacterEmail,WithdrawType=@WithdrawType,AutoWithdrawalServiceType=@AutoWithdrawalServiceType,CheckCompanyWithdrawUrl=@CheckCompanyWithdrawUrl,WithdrawAPIType=@WithdrawAPIType,BackendLoginIPType=@BackendLoginIPType,BackendWithdrawType=@BackendWithdrawType,ProviderGroups=@ProviderGroups,CheckCompanyWithdrawType=@CheckCompanyWithdrawType,Description=@Description,BackendWithdrawIPType=@BackendWithdrawIPType,Timezone=@Timezone,DailyWithdrawalLimit=@DailyWithdrawalLimit,HasDownstream=@HasDownstream,BackendIdleLockEnable=@BackendIdleLockEnable,BackendIdleLockSeconds=@BackendIdleLockSeconds " +
              " WHERE CompanyID=@CompanyID";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
@@ -571,6 +577,8 @@ public class BackendDB {
         DBCmd.Parameters.Add("@BackendWithdrawIPType", SqlDbType.Int).Value = company.BackendWithdrawIPType;
         DBCmd.Parameters.Add("@Timezone", SqlDbType.Decimal).Value = company.Timezone;
         DBCmd.Parameters.Add("@HasDownstream", SqlDbType.Int).Value = company.HasDownstream;
+        DBCmd.Parameters.Add("@BackendIdleLockEnable", SqlDbType.Int).Value = company.BackendIdleLockEnable;
+        DBCmd.Parameters.Add("@BackendIdleLockSeconds", SqlDbType.Int).Value = company.BackendIdleLockSeconds;
 
         returnValue = DBAccess.ExecuteDB(Pay.DBConnStr, DBCmd);
 

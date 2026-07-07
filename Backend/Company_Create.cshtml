@@ -1064,6 +1064,22 @@
                                 </div>
                             </div>
 
+                            <label>后台闲置自动锁屏 : </label>
+                            <div class="form-group">
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="BackendIdleLockEnable" id="BackendIdleLockEnable0" class="with-gap" value="0">
+                                    <label for="BackendIdleLockEnable0">启用</label>
+                                </div>
+                                <div class="radio inlineblock">
+                                    <input type="radio" name="BackendIdleLockEnable" id="BackendIdleLockEnable1" class="with-gap" value="1" checked="checked">
+                                    <label for="BackendIdleLockEnable1">停用</label>
+                                </div>
+                                <div class="inlineblock" style="margin-left:10px">
+                                    <label style="font-weight: bold;">闲置多少秒后锁屏 : </label>
+                                    <input type="number" id="BackendIdleLockSeconds" class="form-control" style="width:120px;display:inline-block" value="300" min="10">
+                                </div>
+                            </div>
+
                             <label>允许代付方式 : </label>
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-6" style="padding:0px">
@@ -1277,8 +1293,15 @@
             var backendWithdrawType = $('input[name=BackendWithdrawType]:checked').val();
             var providerGroupID ="0";
             var hasDownstream = $('input[name=HasDownstream]:checked').val();
+            var backendIdleLockEnable = $('input[name=BackendIdleLockEnable]:checked').val();
+            var backendIdleLockSeconds = $("#BackendIdleLockSeconds").val();
 
-            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, function (success, obj) {
+            if (backendIdleLockEnable == "0" && (backendIdleLockSeconds == "" || parseInt(backendIdleLockSeconds) <= 0)) {
+                parent.warningAlert("闲置多少秒后锁屏为必填，且需大于0");
+                return;
+            }
+
+            api.insertCompanyTableResult(companyName, companyCode, URL, companyType, parentCompanyID, contacterName, contacterMobile, contacterMethod, contacterMethodAccount, contacterEmail, withdrawType, ServiceType, backendLoginIPType, withdrawAPIType, backendWithdrawType, providerGroupID, currencyType, backendWithdrawIPType, timezone, DailyWithdrawalLimit, hasDownstream, backendIdleLockEnable, backendIdleLockSeconds, function (success, obj) {
                 if (success) {
                     if (obj.ResultCode == 0) {
                         TempData = {

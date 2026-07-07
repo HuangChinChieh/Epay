@@ -994,6 +994,18 @@
                                 </div>
 
                             </div>
+                            <div class="row" style="margin:0">
+
+                                <div class="col-lg-6 col-md-6">
+                                    <span> 后台闲置自动锁屏：</span>
+                                    <span id="pBackendIdleLockEnable"></span>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <span> 闲置秒数：</span>
+                                    <span id="pBackendIdleLockSeconds"></span>
+                                </div>
+
+                            </div>
 
                         </div>
                     </div>
@@ -1162,6 +1174,9 @@
 
         $("#pContacterMethodAccount").text(CSeleData["ContacterMethodAccount"]);
         $("#pContacterEmail").text(CSeleData["ContacterEmail"]);
+
+        $("#pBackendIdleLockEnable").html(CSeleData["BackendIdleLockEnable"] == 0 ? '<span style="color: blue;">启用</span>' : '<span style="color: red;">停用</span>');
+        $("#pBackendIdleLockSeconds").text(CSeleData["BackendIdleLockSeconds"]);
 
     }
     //#endregion

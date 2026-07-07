@@ -147,6 +147,47 @@ public class BackendController : ApiController {
         return returnValue;
     }
 
+    [ActionName("TouchActivity")]
+    [HttpGet]
+    [HttpPost]
+    public APIResult TouchActivity(string BID) {
+        APIResult returnValue = new APIResult();
+
+        if (!RedisCache.BIDContext.CheckBIDExist(BID)) {
+            returnValue.ResultCode = APIResult.enumResult.SessionError;
+            return returnValue;
+        }
+
+        RedisCache.BIDContext.TouchActivity(BID);
+        returnValue.ResultCode = APIResult.enumResult.OK;
+
+        return returnValue;
+    }
+
+    [ActionName("UnlockSession")]
+    [HttpPost]
+    public APIResult UnlockSession([FromBody] FromBody.UnlockSession fromBody) {
+        APIResult returnValue = new APIResult();
+        BackendFunction backendFunction = new BackendFunction();
+
+        if (!RedisCache.BIDContext.CheckBIDExist(fromBody.BID)) {
+            returnValue.ResultCode = APIResult.enumResult.SessionError;
+            return returnValue;
+        }
+
+        RedisCache.BIDContext.BIDInfo AdminData = RedisCache.BIDContext.GetBIDInfo(fromBody.BID);
+
+        if (!backendFunction.CheckPassword(fromBody.Password, AdminData.AdminID)) {
+            returnValue.ResultCode = APIResult.enumResult.PasswordEmpty;
+            return returnValue;
+        }
+
+        RedisCache.BIDContext.TouchActivity(fromBody.BID);
+        returnValue.ResultCode = APIResult.enumResult.OK;
+
+        return returnValue;
+    }
+
     [ActionName("CheckLoginPermission")]
     [HttpGet]
     [HttpPost]
