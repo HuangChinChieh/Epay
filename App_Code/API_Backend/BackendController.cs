@@ -150,7 +150,7 @@ public class BackendController : ApiController {
     [ActionName("TouchActivity")]
     [HttpGet]
     [HttpPost]
-    public APIResult TouchActivity(string BID) {
+    public APIResult TouchActivity([FromBody] string BID) {
         APIResult returnValue = new APIResult();
 
         if (!RedisCache.BIDContext.CheckBIDExist(BID)) {

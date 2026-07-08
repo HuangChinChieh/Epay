@@ -977,7 +977,21 @@
                             <div class="row" style="margin-bottom: 10px;width: 100px;">
                                 <select class="show-tick" id="select_submitType"></select>
                             </div>
-                            <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 时间 : </h6>
+                            @*<h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 商户名称 : </h6>
+                                <div class="input-group" style="width:250px;margin-left:10px">
+                                    <input type="text" id="input_CompanyName" placeholder="商户名称" class="form-control" style="width:70%;line-height: inherit;">
+                                </div>
+                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;">  渠道 : </h6>
+                                <div class="input-group" style="width:250px;margin-left:10px">
+                                    <input type="text" id="input_ProviderName" placeholder="渠道名称" class="form-control" style="width:70%;line-height: inherit;">
+                                </div>*@
+                        </div>
+
+                        <div class="row">
+                            <div class="row" style="margin-bottom: 10px;width: 150px;">
+                                <select class="show-tick" id="select_timeType"></select>
+                            </div>
+                            <h6 style="margin-top: 10px; margin-right: 10px; margin-left: 15px; margin-left: 30px;"> 时间 : </h6>
                             <input id="dateinput" style="width:250px;height: 41px;margin-right:5px" class="form-control" />
                             <select id="deteselect" style="width: 110px;">
                                 <option value="0">今日</option>
@@ -996,14 +1010,6 @@
                                 <input id="showtime" style="width:52px" class="form-control" type="text" readonly="readonly">
                             </div>
                             <button style="margin-left: 15px;margin-bottom: 10px;background-color: crimson;" class="btn btn-raised btn-default btn-round waves-effect" type="button" id="btnstopTime">停止</button>
-                            @*<h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;"> 商户名称 : </h6>
-                                <div class="input-group" style="width:250px;margin-left:10px">
-                                    <input type="text" id="input_CompanyName" placeholder="商户名称" class="form-control" style="width:70%;line-height: inherit;">
-                                </div>
-                                <h6 style="margin-top: 10px;margin-right: 10px;margin-left: 15px;">  渠道 : </h6>
-                                <div class="input-group" style="width:250px;margin-left:10px">
-                                    <input type="text" id="input_ProviderName" placeholder="渠道名称" class="form-control" style="width:70%;line-height: inherit;">
-                                </div>*@
                         </div>
 
 
@@ -1126,6 +1132,7 @@
             endDate: end,
             timePicker: true,
             timePicker24Hour: true,
+            dateLimit: { months: 2 },
             locale: {
 
                 "applyLabel": "確認",
@@ -1144,6 +1151,7 @@
 
         createProcessStatus();
         createSubmitType();
+        createTimeType();
         getServiceTypeResult();
         createPaymentTable2();
 
@@ -1255,6 +1263,15 @@
         paymentRecordTable.on('page.dt', function () {
             paymentRecordTable.columns.adjust();
         });
+    }
+
+    function checkDateRangeLimit() {
+        var picker = $('#dateinput').data('daterangepicker');
+        if (picker.endDate.diff(picker.startDate, 'months', true) > 2) {
+            parent.warningAlert('查询区间最多只能选择2个月');
+            return false;
+        }
+        return true;
     }
 
     $('#deteselect').change(function () {
@@ -1472,9 +1489,10 @@
                              d.EndDate = dateinputval[1] + ":59.999";
                              d.IsAutoLoad = IsAutoLoad;
                              d.CurrencyType = $("#selectCurrencyType option:selected").attr("data-value");
-                            
+
                              d.OrderID = $('#input_OrderID').val().trim();
                              d.SubmitType = $('#select_submitType').val();
+                             d.TimeType = $('#select_timeType').val();
                              d.ServiceType = $('#select_ServiceType').val();
                              d.StartAmount = $('#startAmount').val().trim();
                              d.EndAmount = $('#endAmount').val().trim();
@@ -1676,6 +1694,9 @@
     }
 
     $('#btnsearch').click(function () {
+        if (!checkDateRangeLimit()) {
+            return;
+        }
         IsAutoLoad = false;
         Table.draw();
     })
@@ -1719,6 +1740,12 @@
         $('#select_submitType').selectpicker('refresh');
     }
 
+    function createTimeType() {
+        $("#select_timeType").append('<option value="C">' + "建立時間" + '</option>');
+        $("#select_timeType").append('<option value="F">' + "完成時間" + '</option>');
+        $('#select_timeType').selectpicker('refresh');
+    }
+
     function createProcessStatus() {
         //0=新建(準備 PaymentSerial)/1=尚未提交/2=交易成功，尚未通知商戶/3=交易失敗/4=交易成功，通知商戶成功/5=供應商資料不一致/6=系統問題
         $("#select_processStatus").append('<option value="99">' + "全部" + '</option>');
@@ -1738,6 +1765,10 @@
 
     function CreateExcel() {
 
+            if (!checkDateRangeLimit()) {
+                return;
+            }
+
             if (Table.rows().data().length > 0) {
 
                 var dateinputval = $('#dateinput').val().split('-');
@@ -1755,7 +1786,7 @@
                 var endAmount = $('#endAmount').val().trim();
                 var processStatus = $('#select_processStatus').val().split(",");
                 var providerCode = "0";
-                var timeType = "";
+                var timeType = $('#select_timeType').val();
 
                 api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, function (success, obj) {
                     if (success) {

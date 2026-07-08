@@ -896,8 +896,12 @@
         var idleLockTimer;
         var idleLockLastTouch = 0;
 
+        function isIdleLockFeatureEnabled() {
+            return !!AdminObject && AdminObject.BackendIdleLockEnable === 0 && AdminObject.BackendIdleLockSeconds > 0;
+        }
+
         function initIdleLock() {
-            if (!AdminObject || AdminObject.BackendIdleLockEnable !== 0 || !AdminObject.BackendIdleLockSeconds || AdminObject.BackendIdleLockSeconds <= 0) {
+            if (!isIdleLockFeatureEnabled()) {
                 return;
             }
 
@@ -1335,7 +1339,7 @@
                 $("#menuContent").append("<div style='height:100%;padding:0 !important' id='" + PageID + "'><iframe id='iframe_" + PageID + "' name='" + PageID + "' style='width:100%;height:100%;border:white' src='" + PageID + ".cshtml'></iframe></div>");
                 $(".tabpanel").tabs("refresh");
                 document.getElementById('iframe_' + PageID).onload = function () {
-                    if (!isIdleLocked()) {
+                    if (isIdleLockFeatureEnabled() && !isIdleLocked()) {
                         bindIframeIdleLockEvents(this);
                     }
                 };
@@ -1351,7 +1355,7 @@
                     $("#menuContent").append("<div style='height:100%;padding:0 !important' id='" + PageID + "'><iframe id='iframe_" + PageID + "' name='" + PageID + "' style='width:100%;height:100%;border:white' src='" + PageURL + "'></iframe></div>");
                     $(".tabpanel").tabs("refresh");
                     document.getElementById('iframe_' + PageID).onload = function () {
-                        if (!isIdleLocked()) {
+                        if (isIdleLockFeatureEnabled() && !isIdleLocked()) {
                             bindIframeIdleLockEvents(this);
                         }
                     };
