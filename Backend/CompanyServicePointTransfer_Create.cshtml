@@ -455,7 +455,7 @@
                         })
                         $('#select_currency').selectpicker('refresh');
 
-                        $('#select_currency').off('change').change(function () {
+                        $('#select_currency').off('change.transferPage').on('change.transferPage', function () {
                             CreateServiceTypeSelects(selCompanyid, $(this).val());
                         });
 
@@ -515,7 +515,7 @@
                         $('#select_FromServiceType').selectpicker('refresh');
                         $('#select_ToServiceType').selectpicker('refresh');
 
-                        $('#select_FromServiceType').off('change').change(function () {
+                        $('#select_FromServiceType').off('change.transferPage').on('change.transferPage', function () {
                             RefreshFromServicePointBalance(companyid, currency, $(this).val());
                         });
 
@@ -531,6 +531,24 @@
             });
         }
 
+        //可用金額顯示：無條件捨去小數點後兩位（不四捨五入），避免顯示的金額大於資料庫實際可轉出金額
+        function floorCurrency(num) {
+            num = Number(num);
+            if (isNaN(num)) return "0.00";
+
+            //先取足夠精度的字串再手動截斷，避免 Math.floor(num*100)/100 的浮點誤差
+            var fixed = Math.abs(num).toFixed(6);
+            var dotIndex = fixed.indexOf('.');
+            var truncated = fixed.substring(0, dotIndex) + '.' + fixed.substring(dotIndex + 1, dotIndex + 3);
+
+            //截斷後數值仍為0時不顯示負號，避免出現 "-0.00" 這種誤導的顯示
+            var isNegative = num < 0 && parseFloat(truncated) !== 0;
+
+            var parts = truncated.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return (isNegative ? '-' : '') + parts.join('.');
+        }
+
         function RefreshFromServicePointBalance(companyid, currency, serviceType) {
             if (serviceType == -99 || !serviceType) {
                 $('#divBalanceInfo').hide();
@@ -542,7 +560,7 @@
                 parent.wrapperFadeOut();
                 if (success && obj.ResultCode == 0 && obj.CompanyServicePoint) {
                     var canUsePoint = obj.CompanyServicePoint.CanUsePoint - obj.CompanyServicePoint.FrozenPoint;
-                    $('#spanFromCanUsePoint').text(toCurrency(canUsePoint));
+                    $('#spanFromCanUsePoint').text(floorCurrency(canUsePoint));
                     $('#spanFromCanUsePoint').removeClass('balance-warning').addClass('balance-value');
                     $('#divBalanceInfo').show();
                 } else {
