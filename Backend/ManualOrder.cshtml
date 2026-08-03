@@ -348,14 +348,14 @@
                         showResult(selectedCompanyCode, obj.OrderID, rowData.ServiceTypeName,
                                    amount, rowData.CurrencyType, obj.PayUrl);
                     } else {
-                        parent.errorAlert('建單失敗：' + (obj.Message || JSON.stringify(obj)));
+                        parent.warningAlert('建單失敗：' + (obj.Message || JSON.stringify(obj)));
                     }
                 } catch (ex) {
-                    parent.errorAlert('回應解析失敗：' + resp);
+                    parent.warningAlert('回應解析失敗：' + resp);
                 }
             },
             error: function () {
-                parent.errorAlert('建單請求失敗，請稍後再試');
+                parent.warningAlert('建單請求失敗，請稍後再試');
             },
             complete: function () {
                 $(btn).prop('disabled', false).text('建立訂單');
