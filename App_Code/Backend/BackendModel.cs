@@ -1836,7 +1836,6 @@ public class FromBody {
         public List<JQueryDataTableOrder> order { get; set; }
         public JQueryDataTableSearch search { get; set; }
         public bool IsAutoLoad { get; set; }
-        public bool IsSearchWaitReview { get; set; }
     }
 
     public class WithdrawalSet {
@@ -1859,6 +1858,7 @@ public class FromBody {
         public decimal MaxAmount { get; set; }
         public int GroupID { get; set; }
         public string TimeType { get; set; }
+        public bool IsSearchWaitReview { get; set; }
     }
 
     public class WithdrawalReportSet {

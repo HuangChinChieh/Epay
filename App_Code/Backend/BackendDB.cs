@@ -10955,34 +10955,48 @@ public class BackendDB {
              " LEFT JOIN CompanyTable WITH (NOLOCK) ON CompanyTable.CompanyID=Withdrawal.forCompanyID" +
              " LEFT JOIN ProxyProvider WITH (NOLOCK) ON ProxyProvider.forProviderCode=Withdrawal.ProviderCode" +
              " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
-             " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  " +
-             " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 And CompanyTable.CompanyType<>4 ";
-
-        //過濾資料
-        if (fromBody.Status != 99) { //99代表取得所有資料
-            SS += " And Status=@Status";
-        }
-        //供应商过滤
-        if (fromBody.ProviderCode != "0") { //99代表取得所有資料
-            SS += " And Withdrawal.ProviderCode=@ProviderCode";
-        }
-
-        //序號過濾
-        if (fromBody.WithdrawSerial != "") {
-            SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
-        }
-
-        //營運商過濾
-        if (fromBody.CompanyID != 0) {
-            SS += " And Withdrawal.forCompanyID=@CompanyID";
-        }
-
-        //群組選擇
-        if (fromBody.GroupID != 0) {
-            SS += " And PPO.GroupID=@GroupID";
-        }
+             " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
 
         DBCmd = new System.Data.SqlClient.SqlCommand();
+
+        if (fromBody.IsSearchWaitReview) {
+            SS += " WHERE Status IN ({0}) AND (FloatType=0 OR FloatType=1) And CompanyTable.CompanyType<>4 ";
+            fromBody.LstStatus = new List<int>() { 0, 1, 13, 14 };
+            var parameters = new string[fromBody.LstStatus.Count];
+            for (int i = 0; i < fromBody.LstStatus.Count; i++) {
+                parameters[i] = string.Format("@Status{0}", i);
+                DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
+            }
+
+            SS = string.Format(SS, string.Join(", ", parameters));
+        } else {
+            SS += " WHERE Withdrawal.CreateDate >= @StartDate And Withdrawal.CreateDate <= @EndDate And Status<>8 AND Status <> 90 AND Status <> 91 And CompanyTable.CompanyType<>4 ";
+
+            //過濾資料
+            if (fromBody.Status != 99) { //99代表取得所有資料
+                SS += " And Status=@Status";
+            }
+            //供应商过滤
+            if (fromBody.ProviderCode != "0") { //99代表取得所有資料
+                SS += " And Withdrawal.ProviderCode=@ProviderCode";
+            }
+
+            //序號過濾
+            if (fromBody.WithdrawSerial != "") {
+                SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
+            }
+
+            //營運商過濾
+            if (fromBody.CompanyID != 0) {
+                SS += " And Withdrawal.forCompanyID=@CompanyID";
+            }
+
+            //群組選擇
+            if (fromBody.GroupID != 0) {
+                SS += " And PPO.GroupID=@GroupID";
+            }
+        }
+
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@StartDate", SqlDbType.DateTime).Value = fromBody.StartDate;
@@ -11019,37 +11033,50 @@ public class BackendDB {
              " LEFT JOIN  ProxyProviderOrder PPO WITH (NOLOCK)  ON PPO.forOrderSerial= Withdrawal.WithdrawSerial AND PPO.Type=1 " +
              " LEFT JOIN  ProxyProviderGroup PPG WITH (NOLOCK)  ON PPO.GroupID= PPG.GroupID  ";
 
-        if (fromBody.TimeType == "F") {
-            SS += " WHERE Withdrawal.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
-        } else {
-            SS += " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
-        }
-
-        //過濾資料
-        if (fromBody.Status != 99) { //99代表取得所有資料
-            SS += " And Status=@Status";
-        }
-        //供应商过滤
-        if (fromBody.ProviderCode != "0") { //99代表取得所有資料
-            SS += " And Withdrawal.ProviderCode=@ProviderCode";
-        }
-
-        //序號過濾
-        if (fromBody.WithdrawSerial != "") {
-            SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
-        }
-
-        //營運商過濾
-        if (fromBody.CompanyID != 0) {
-            SS += " And Withdrawal.forCompanyID=@CompanyID";
-        }
-
-        //群組選擇
-        if (fromBody.GroupID != 0) {
-            SS += " And PPO.GroupID=@GroupID";
-        }
-
         DBCmd = new System.Data.SqlClient.SqlCommand();
+
+        if (fromBody.IsSearchWaitReview) {
+            SS += " WHERE Status IN ({0}) AND (FloatType=0 OR FloatType=1) ";
+            fromBody.LstStatus = new List<int>() { 0, 1, 13, 14 };
+            var parameters = new string[fromBody.LstStatus.Count];
+            for (int i = 0; i < fromBody.LstStatus.Count; i++) {
+                parameters[i] = string.Format("@Status{0}", i);
+                DBCmd.Parameters.AddWithValue(parameters[i], fromBody.LstStatus[i]);
+            }
+
+            SS = string.Format(SS, string.Join(", ", parameters));
+        } else {
+            if (fromBody.TimeType == "F") {
+                SS += " WHERE Withdrawal.FinishDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.FinishDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
+            } else {
+                SS += " WHERE Withdrawal.CreateDateUTC >= DATEADD(HOUR, -@TimeZone, @StartDate) AND Withdrawal.CreateDateUTC <= DATEADD(HOUR, -@TimeZone, @EndDate)  And Status<>8 AND Status <> 90 AND Status <> 91  ";
+            }
+
+            //過濾資料
+            if (fromBody.Status != 99) { //99代表取得所有資料
+                SS += " And Status=@Status";
+            }
+            //供应商过滤
+            if (fromBody.ProviderCode != "0") { //99代表取得所有資料
+                SS += " And Withdrawal.ProviderCode=@ProviderCode";
+            }
+
+            //序號過濾
+            if (fromBody.WithdrawSerial != "") {
+                SS += " And (WithdrawSerial=@WithdrawSerial or DownOrderID=@WithdrawSerial) ";
+            }
+
+            //營運商過濾
+            if (fromBody.CompanyID != 0) {
+                SS += " And Withdrawal.forCompanyID=@CompanyID";
+            }
+
+            //群組選擇
+            if (fromBody.GroupID != 0) {
+                SS += " And PPO.GroupID=@GroupID";
+            }
+        }
+
         DBCmd.CommandText = SS;
         DBCmd.CommandType = CommandType.Text;
         DBCmd.Parameters.Add("@StartDate", SqlDbType.DateTime).Value = fromBody.StartDate;
@@ -13195,6 +13222,10 @@ public class BackendDB {
             SS += " And P.ProviderCode = @ProviderCode ";
         }
 
+        if (fromBody.CurrencyType != "All") {
+            SS += " And P.CurrencyType = @CurrencyType ";
+        }
+
         //商户订单号查询
         if (!string.IsNullOrEmpty(fromBody.OrderID)) {
             LstOrderID = fromBody.OrderID.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\r\n", "").Split(',').ToList();
@@ -13255,6 +13286,11 @@ public class BackendDB {
             SS += " And P.SubmitType >= @SubmitType";
         }
 
+        if (!string.IsNullOrEmpty(fromBody.UserName)) {
+            SS += " And P.UserName=@UserName ";
+            DBCmd.Parameters.Add("@UserName", System.Data.SqlDbType.NVarChar).Value = fromBody.UserName;
+        }
+
         DBCmd.CommandText = SS;
         DBCmd.CommandType = System.Data.CommandType.Text;
         DBCmd.Parameters.Add("@CompanyID", System.Data.SqlDbType.Int).Value = fromBody.CompanyID;
@@ -13267,6 +13303,7 @@ public class BackendDB {
         DBCmd.Parameters.Add("@SubmitType", System.Data.SqlDbType.Int).Value = fromBody.SubmitType;
         DBCmd.Parameters.Add("@ServiceType", System.Data.SqlDbType.VarChar).Value = fromBody.ServiceType;
         DBCmd.Parameters.Add("@ProviderCode", System.Data.SqlDbType.VarChar).Value = fromBody.ProviderCode;
+        DBCmd.Parameters.Add("@CurrencyType", System.Data.SqlDbType.VarChar).Value = fromBody.CurrencyType;
         DBCmd.Parameters.Add("@TimeZone", System.Data.SqlDbType.Int).Value = Pay.TimeZone;
         DT = DBAccess.GetDB(DBConnStr, DBCmd);
 

@@ -2102,7 +2102,7 @@
             var providerCode = "0";
             var groupID = 0;
             parent.wrapperFadeIn();
-            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, function (success, obj) {
+            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, "", IsSearchWaitReview, function (success, obj) {
                 if (success) {
 
                     parent.wrapperFadeOut();

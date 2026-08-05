@@ -3335,7 +3335,7 @@
             var providerCode = $('#select_providercode').val();
             var groupID = $('#select_proxyProviderGroup').val();
             parent.wrapperFadeIn();
-            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, function (success, obj) {
+            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, "", IsSearchWaitReview, function (success, obj) {
                 if (success) {
 
                     parent.wrapperFadeOut();

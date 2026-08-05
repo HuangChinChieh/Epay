@@ -3106,7 +3106,7 @@
             var timeType = $('#select_timeType').val();
             var groupID = 0;
             parent.wrapperFadeIn();
-            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID,timeType ,function (success, obj) {
+            api.getWithdrawalAdminTableResult(withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, timeType, IsSearchWaitReview, function (success, obj) {
                 if (success) {
 
                     parent.wrapperFadeOut();

@@ -1787,8 +1787,9 @@
                 var processStatus = $('#select_processStatus').val().split(",");
                 var providerCode = "0";
                 var timeType = $('#select_timeType').val();
+                var currencyType = $("#selectCurrencyType option:selected").attr("data-value");
 
-                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, function (success, obj) {
+                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, currencyType, "", function (success, obj) {
                     if (success) {
 
 

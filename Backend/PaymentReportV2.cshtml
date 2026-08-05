@@ -2038,8 +2038,10 @@ if ('@CheckLoginPermission' == 'false') {
                 var endAmount = $('#endAmount').val().trim();
                 var processStatus = $('#select_processStatus').val().split(",");
                 var providerCode = $('#select_providercode').val();
+                var currencyType = $("#selectCurrencyType option:selected").attr("data-value");
+                var userName = ($('#input_UserName').val() || '').trim();
 
-                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType ,function (success, obj) {
+                api.getPaymentTableResultByAdmin(companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, currencyType, userName, function (success, obj) {
                     if (success) {
 
 

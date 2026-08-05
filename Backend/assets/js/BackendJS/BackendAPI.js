@@ -1964,7 +1964,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getWithdrawalAdminTableResult2 = function (withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, cb) {
+    this.getWithdrawalAdminTableResult2 = function (withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, isSearchWaitReview, cb) {
         var url = APIUrl + "/GetWithdrawalAdminTableResult2";
         var postData;
 
@@ -1976,7 +1976,8 @@ var BackendAPI = function (BID, APIUrl) {
             Enddate: enddate,
             Status: status,
             ProviderCode: providerCode,
-            GroupID: groupID
+            GroupID: groupID,
+            IsSearchWaitReview: isSearchWaitReview
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -1992,7 +1993,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getWithdrawalAdminTableResult = function (withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, timeType, cb) {
+    this.getWithdrawalAdminTableResult = function (withdrawSerial, companyid, startdate, enddate, status, providerCode, groupID, timeType, isSearchWaitReview, cb) {
         var url = APIUrl + "/GetWithdrawalAdminTableResult";
         var postData;
 
@@ -2005,7 +2006,8 @@ var BackendAPI = function (BID, APIUrl) {
             Status: status,
             ProviderCode: providerCode,
             GroupID: groupID,
-            TimeType: timeType
+            TimeType: timeType,
+            IsSearchWaitReview: isSearchWaitReview
         };
 
         callServiceByPost(url, postData, function (success, text) {
@@ -3361,7 +3363,7 @@ var BackendAPI = function (BID, APIUrl) {
         });
     };
 
-    this.getPaymentTableResultByAdmin = function (companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, cb) {
+    this.getPaymentTableResultByAdmin = function (companyid, startDate, endDate, orderID, companyName, providerName, submitType, ServiceType, processStatus, startAmount, endAmount, providerCode, timeType, currencyType, userName, cb) {
         var url = APIUrl + "/GetPaymentTableResultByAdmin";
         var postData;
 
@@ -3379,7 +3381,9 @@ var BackendAPI = function (BID, APIUrl) {
             StartAmount: startAmount,
             EndAmount: endAmount,
             ProviderCode: providerCode,
-            TimeType: timeType
+            TimeType: timeType,
+            CurrencyType: currencyType,
+            UserName: userName
         };
 
         callServiceByPost(url, postData, function (success, text) {
